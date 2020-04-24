@@ -1,0 +1,87 @@
+<h1>Listado de Pacientes</h1>
+<hr>
+
+
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/persona/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table *ngIf="!cargando && personas.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Cedula</th>
+      <th scope="col">Nombres</th>
+      <th scope="col">Apellidos</th>
+      <th scope="col">Edad</th>
+      <th scope="col">Direccion</th>
+      <th scope="col">Email</th>
+      <th scope="col">Estado Civil</th>
+      <th scope="col">Fecha Nac.</th>
+      <th scope="col">Nacionalidad</th>
+      <th scope="col">Sexo</th>
+      <th scope="col">Telefono</th>
+      <th scope="col">Celular</th>
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let persona of personas; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ persona.cedula }}</td>
+      <td>{{ persona.nombres }}</td>
+      <td>{{ persona.apellidos }}</td>
+      <td>{{ persona.edad }}</td>
+      <td>{{ persona.direccion }}</td>
+      <td>{{ persona.email }}</td>
+      <td>{{ persona.estadocivil }}</td>
+      <td>{{ persona.fechadenacimiento }}</td>
+      <td>{{ persona.nacionalidad }}</td>
+      <td>{{ persona.sexo }}</td>
+      <td>{{ persona.telefono }}</td>
+      <td>{{ persona.celular}}</td>
+
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/persona', persona.id ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarPersona( persona, i ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!cargando && personas.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>
