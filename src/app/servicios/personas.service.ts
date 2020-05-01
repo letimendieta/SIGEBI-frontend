@@ -9,8 +9,9 @@ import { map, delay } from 'rxjs/operators';
 })
 export class PersonasService {
 
-  private url = 'https://sigebi-app.firebaseio.com/';
+  //private url = 'https://sigebi-app.firebaseio.com/';
 
+  private url = 'http://localhost:8080';
 
   constructor( private http: HttpClient ) { }
 
@@ -55,7 +56,7 @@ export class PersonasService {
 
 
   getPersonas() {
-    return this.http.get(`${ this.url }/personas.json`)
+    return this.http.get(`${ this.url }/personas`)/*/personas.json*/
             .pipe(
               map( this.crearArreglo ),
               delay(0)
