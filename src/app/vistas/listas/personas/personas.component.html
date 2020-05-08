@@ -18,6 +18,7 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
+      <th scope="col">id</th>
       <th scope="col">Cedula</th>
       <th scope="col">Nombres</th>
       <th scope="col">Apellidos</th>
@@ -36,14 +37,15 @@
   <tbody>
     <tr *ngFor="let persona of personas; let i = index">
       <th scope="row">{{ i + 1 }}</th>
+      <td>{{ persona.personaId }}</td>
       <td>{{ persona.cedula }}</td>
       <td>{{ persona.nombres }}</td>
       <td>{{ persona.apellidos }}</td>
       <td>{{ persona.edad }}</td>
       <td>{{ persona.direccion }}</td>
       <td>{{ persona.email }}</td>
-      <td>{{ persona.estadocivil }}</td>
-      <td>{{ persona.fechadenacimiento }}</td>
+      <td>{{ persona.estadoCivil }}</td>
+      <td>{{ persona.fechaNacimiento }}</td>
       <td>{{ persona.nacionalidad }}</td>
       <td>{{ persona.sexo }}</td>
       <td>{{ persona.telefono }}</td>
@@ -52,7 +54,7 @@
       <td>
 
         <button class="btn btn-info"
-                [routerLink]="['/persona', persona.id ]">
+                [routerLink]="['/persona', persona.personaId ]">
         <i class="fa fa-edit"></i>
         </button>
 

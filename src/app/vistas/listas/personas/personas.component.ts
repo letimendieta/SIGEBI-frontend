@@ -39,7 +39,8 @@ export class PersonasComponent implements OnInit {
 
       if ( resp.value ) {
         this.personas.splice(i, 1);
-        this.personasService.borrarPersona( persona.id ).subscribe();
+        this.personasService.borrarPersona( persona.personaId ).subscribe();
+        this.ngOnInit();
       }
 
     });

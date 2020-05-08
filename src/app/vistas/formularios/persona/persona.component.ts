@@ -30,7 +30,7 @@ export class PersonaComponent implements OnInit {
       this.personasService.getPersona( id )
         .subscribe( (resp: PersonaModelo) => {
           this.persona = resp;
-          this.persona.id = id;
+          //this.persona.personaId = id;
         });
 
     }
@@ -55,7 +55,7 @@ export class PersonaComponent implements OnInit {
 
     let peticion: Observable<any>;
 
-    if ( this.persona.id ) {
+    if ( this.persona.personaId ) {
       peticion = this.personasService.actualizarPersona( this.persona );
     } else {
       peticion = this.personasService.crearPersona( this.persona );
@@ -70,8 +70,6 @@ export class PersonaComponent implements OnInit {
 });
 
     });
-
-
 
 
   }
