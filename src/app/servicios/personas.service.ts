@@ -22,7 +22,6 @@ export class PersonasService {
             .pipe(
               map( (resp: any) => {
                 //persona.id = resp.name;
-                console.log(resp);
                 return persona;
               })
             );
@@ -35,9 +34,9 @@ export class PersonasService {
       ...persona
     };
 
-    //delete personaTemp.personaId;
+    delete personaTemp.personaId;
 
-    return this.http.put(`${ this.url }/personas/`, personaTemp);
+    return this.http.put(`${ this.url }/personas/${ persona.personaId }`, personaTemp);
 
 
   }
@@ -51,7 +50,7 @@ export class PersonasService {
 
   getPersona( id: string ) {
 
-    return this.http.get(`${ this.url }/personas/${ id }`);
+    return this.http.get(`${ this.url }/personas/${ id }.json`);
 
   }
 
