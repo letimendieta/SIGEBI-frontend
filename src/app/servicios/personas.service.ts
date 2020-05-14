@@ -18,13 +18,7 @@ export class PersonasService {
 
   crearPersona( persona: PersonaModelo ) {
 
-    return this.http.post(`${ this.url }/personas`, persona)
-            .pipe(
-              map( (resp: any) => {
-                //persona.id = resp.name;
-                return persona;
-              })
-            );
+    return this.http.post(`${ this.url }/personas`, persona);
 
   }
 
@@ -34,9 +28,9 @@ export class PersonasService {
       ...persona
     };
 
-    delete personaTemp.personaId;
+    //delete personaTemp.personaId;
 
-    return this.http.put(`${ this.url }/personas/${ persona.personaId }`, personaTemp);
+    return this.http.put(`${ this.url }/personas/`, personaTemp);
 
 
   }
@@ -48,15 +42,23 @@ export class PersonasService {
   }
 
 
-  getPersona( id: string ) {
+  getPersona( id: number ) {
 
-    return this.http.get(`${ this.url }/personas/${ id }.json`);
+    return this.http.get(`${ this.url }/personas/${ id }`);
 
   }
 
 
   getPersonas() {
     return this.http.get(`${ this.url }/personas`)/*/personas.json*/
+            .pipe(
+              map( this.crearArreglo ),
+              delay(0)
+            );
+  }
+
+  buscarPersonas() {
+    return this.http.get(`${ this.url }/personas/buscar`)/*/personas.json*/
             .pipe(
               map( this.crearArreglo ),
               delay(0)

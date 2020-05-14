@@ -27,14 +27,12 @@ export class PersonaComponent implements OnInit {
 
     if ( id !== 'nuevo' ) {
 
-      this.personasService.getPersona( id )
+      this.personasService.getPersona( Number(id) )
         .subscribe( (resp: PersonaModelo) => {
           this.persona = resp;
           //this.persona.personaId = id;
         });
-
     }
-
   }
 
   guardar( form: NgForm ) {
@@ -66,11 +64,18 @@ export class PersonaComponent implements OnInit {
       Swal.fire({
                 icon: 'info',
                 title: this.persona.nombres,
-                text: 'Se actualizó correctamente',
-});
+                text: resp.mensaje,
+              }).then( resp => {
 
+        if ( resp.value ) {
+          if ( this.persona.personaId ) {
+            //volver a la lista de personas
+          }else{
+            //limpiar
+          }
+        }
+
+      });
     });
-
-
   }
 }

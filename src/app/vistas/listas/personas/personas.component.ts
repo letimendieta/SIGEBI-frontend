@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonasService } from '../../../servicios/personas.service';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,7 +20,7 @@ export class PersonasComponent implements OnInit {
   ngOnInit() {
 
     this.cargando = true;
-    this.personasService.getPersonas()
+    this.personasService.buscarPersonas()
       .subscribe( resp => {
         this.personas = resp;
         this.cargando = false;
@@ -38,16 +39,22 @@ export class PersonasComponent implements OnInit {
     }).then( resp => {
 
       if ( resp.value ) {
+        let peticion: Observable<any>;
         this.personas.splice(i, 1);
-        this.personasService.borrarPersona( persona.personaId ).subscribe();
-        this.ngOnInit();
+        peticion = this.personasService.borrarPersona( persona.personaId );
+        peticion.subscribe( resp => {
+          Swal.fire({
+                    icon: 'info',
+                    title: persona.nombres,
+                    text: resp.mensaje,
+                  }).then( resp => {
+            if ( resp.value ) {
+              this.ngOnInit();
+            }
+          });
+        });
       }
 
     });
-
-
-
   }
-
-
 }
