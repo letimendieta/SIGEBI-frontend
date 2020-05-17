@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+  background-image: url("/assets/images/fpuna_logo_institucional.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom right;
+
+}
