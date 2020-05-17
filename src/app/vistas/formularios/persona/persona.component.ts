@@ -76,6 +76,12 @@ export class PersonaComponent implements OnInit {
         }
 
       });
-    });
+    }, e => {Swal.fire({
+              icon: 'error',
+              title: 'Algo salio mal',
+              text: e.status +'. '+e.error.errors[0],
+            })
+       }
+    );
   }
 }

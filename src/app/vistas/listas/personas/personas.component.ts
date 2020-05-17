@@ -40,8 +40,9 @@ export class PersonasComponent implements OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        this.personas.splice(i, 1);
+        //this.personas.splice(i, 1);
         peticion = this.personasService.borrarPersona( persona.personaId );
+
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'info',
@@ -52,7 +53,14 @@ export class PersonasComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        });
+        }, e => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Algo salio mal',
+                  text: e.status +'. '+e.error.errors[0],
+                })
+            }
+        );
       }
 
     });
