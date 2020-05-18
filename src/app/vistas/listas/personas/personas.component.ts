@@ -12,8 +12,8 @@ import Swal from 'sweetalert2';
 export class PersonasComponent implements OnInit {
 
   personas: PersonaModelo[] = [];
+  buscador: PersonaModelo = new PersonaModelo();
   cargando = false;
-
 
   constructor( private personasService: PersonasService) { }
 
@@ -25,10 +25,17 @@ export class PersonasComponent implements OnInit {
         this.personas = resp;
         this.cargando = false;
       });
-
   }
 
-  borrarPersona( persona: PersonaModelo, i: number ) {
+  buscadorPersonas() {
+    this.personasService.buscarPersonasFiltros(this.buscador)
+    .subscribe( resp => {
+      this.personas = resp;
+      this.cargando = false;
+    });
+  }
+
+  borrarPersona( persona: PersonaModelo) {
 
     Swal.fire({
       title: '¿Está seguro?',
@@ -40,7 +47,6 @@ export class PersonasComponent implements OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        //this.personas.splice(i, 1);
         peticion = this.personasService.borrarPersona( persona.personaId );
 
         peticion.subscribe( resp => {

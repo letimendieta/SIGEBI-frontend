@@ -31,7 +31,13 @@ export class PersonaComponent implements OnInit {
         .subscribe( (resp: PersonaModelo) => {
           this.persona = resp;
           //this.persona.personaId = id;
-        });
+        }, e => {Swal.fire({
+                  icon: 'error',
+                  title: 'Algo salio mal',
+                  text: e.status +'. '+e.error.errors[0],
+                })
+           }
+         );
     }
   }
 
