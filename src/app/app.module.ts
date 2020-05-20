@@ -1,27 +1,22 @@
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-
 import { AppComponent } from './app.component';
-import { PersonaComponent } from './vistas/formularios/persona/persona.component';
-import { PersonasComponent } from './vistas/listas/personas/personas.component';
-import { HeaderComponent } from './vistas/general/header/header.component';
-import { FooterComponent } from './vistas/general/footer/footer.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DefaultModule } from 'src/app/general/layouts/default/default.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PersonaComponent,
-    PersonasComponent,
-    HeaderComponent,
-    FooterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    DefaultModule,
     FormsModule,
     HttpClientModule
   ],
