@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonaModelo } from '../modelos/persona.modelo';
 import { map, delay } from 'rxjs/operators';
+import { HttpParams } from "@angular/common/http";
 
 
 @Injectable({
@@ -28,8 +29,6 @@ export class PersonasService {
       ...persona
     };
 
-    //delete personaTemp.personaId;
-
     return this.http.put(`${ this.url }/personas/`, personaTemp);
 
 
@@ -50,7 +49,7 @@ export class PersonasService {
 
 
   getPersonas() {
-    return this.http.get(`${ this.url }/personas`)/*/personas.json*/
+    return this.http.get(`${ this.url }/personas`)
             .pipe(
               map( this.crearArreglo ),
               delay(0)
@@ -58,11 +57,23 @@ export class PersonasService {
   }
 
   buscarPersonas() {
-    return this.http.get(`${ this.url }/personas/buscar`)/*/personas.json*/
+    return this.http.get(`${ this.url }/personas/buscar`)
             .pipe(
               map( this.crearArreglo ),
               delay(0)
             );
+  }
+
+  buscarPersonasFiltros( persona: PersonaModelo ) {
+    let params = new HttpParams();
+    params = params.append('filtros', JSON.stringify(persona));
+
+    return this.http.get(`${ this.url }/personas/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArreglo ),
+        delay(0)
+      );
+
   }
 
   private crearArreglo( personasObj: object ) {
@@ -72,15 +83,10 @@ export class PersonasService {
     Object.keys( personasObj ).forEach( key => {
 
       const persona: PersonaModelo = personasObj[key];
-      //persona.id = key;
-
       personas.push( persona );
     });
-
 
     return personas;
 
   }
-
-
 }
