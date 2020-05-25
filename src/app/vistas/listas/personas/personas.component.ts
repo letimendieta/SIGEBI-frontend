@@ -34,7 +34,18 @@ export class PersonasComponent implements OnInit {
     .subscribe( resp => {
       this.personas = resp;
       this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.error.mensaje,
+      })
     });
+  }
+
+  limpiar() {
+    this.buscador = new PersonaModelo();
+    this.buscadorPersonas();
   }
 
   borrarPersona( persona: PersonaModelo ) {

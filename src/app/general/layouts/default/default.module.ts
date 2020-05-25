@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DefaultComponent } from './default.component';
 import { PersonaComponent } from 'src/app/vistas/formularios/persona/persona.component';
 import { PersonasComponent } from 'src/app/vistas/listas/personas/personas.component';
+import { PacienteComponent } from 'src/app/vistas/formularios/paciente/paciente.component';
+import { PacientesComponent } from 'src/app/vistas/listas/pacientes/pacientes.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -17,7 +19,9 @@ import { DashboardService } from 'src/app/vistas/dashboard.service';
   declarations: [
     DefaultComponent,
     PersonasComponent,
-    PersonaComponent
+    PersonaComponent,
+    PacientesComponent,
+    PacienteComponent
   ],
   imports: [
     CommonModule,

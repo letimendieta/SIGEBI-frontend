@@ -68,7 +68,7 @@
 
       <div class="form-group col-md-6">
           <label>Edad</label>
-          <input type="text"
+          <input type="number"
                  class="form-control"
                  [(ngModel)]="persona.edad"
                  name="edad"
@@ -144,6 +144,75 @@
                  name="celular"
                  placeholder="Celular">
       </div>
+      <div class="form-group">
+        <label>Carrera</label>
+        <input type="number"
+              class="form-control"
+              [(ngModel)]="persona.carreraId"
+              name="carreraId"
+              placeholder="Carrera">
+    </div>
+    <div class="form-group">
+        <label>Departamento</label>
+        <input type="number"
+              class="form-control"
+              [(ngModel)]="persona.departamentoId"
+              name="departamentoId"
+              placeholder="Departamento">
+    </div>
+    <div class="form-group">
+        <label>Dependencia</label>
+        <input type="number"
+              class="form-control"
+              [(ngModel)]="persona.dependenciaId"
+              name="dependenciaId"
+              placeholder="Dependencia">
+    </div>
+    <div class="form-group">
+        <label>Estamento</label>
+        <input type="number"
+              class="form-control"
+              [(ngModel)]="persona.estamentoId"
+              name="estamentoId"
+              placeholder="Estamento">
+    </div>
+
+    <div class="form-group">
+        <label>Fecha creacion</label>
+        <input type="text"
+              class="form-control"
+              [(ngModel)]="persona.fechaCreacion"
+              name="fechaCreacion"
+              disabled="disabled"
+              placeholder="Fecha creacion">
+    </div>
+    <div class="form-group">
+        <label>Fecha modificacion</label>
+        <input type="text"
+              class="form-control"
+              [(ngModel)]="persona.fechaModificacion"
+              name="fechaModificacion"
+              disabled="disabled"
+              placeholder="Fecha modificacion">
+    </div>
+    <div class="form-group">
+        <label>Usuario creacion</label>
+        <input type="text"
+              class="form-control"
+              [(ngModel)]="persona.usuarioCreacion"
+              name="usuarioCreacion"
+              disabled="disabled"
+              placeholder="Usuario creacion">
+    </div>
+    <div class="form-group">
+        <label>Usuario modificacion</label>
+        <input type="text"
+              class="form-control"
+              [(ngModel)]="persona.usuarioModificacion"
+              name="usuarioModificacion"
+              disabled="disabled"
+              placeholder="Usuario modificacion">
+    </div>
 </div>
       <hr>
       <div class="form-group text-center">
