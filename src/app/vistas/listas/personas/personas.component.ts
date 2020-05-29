@@ -21,7 +21,7 @@ export class PersonasComponent implements OnInit {
   ngOnInit() {
 
     this.cargando = true;
-    this.personasService.buscarPersonas()
+    this.personasService.buscarPersonasFiltros(null)
       .subscribe( resp => {
         this.personas = resp;
         this.cargando = false;

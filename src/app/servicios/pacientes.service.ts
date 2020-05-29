@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PersonaModelo } from '../modelos/persona.modelo';
 import { PacienteModelo } from '../modelos/paciente.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
@@ -63,7 +62,8 @@ export class PacientesService {
 
   buscarPacientesFiltros( paciente: PacienteModelo ) {
     let params = new HttpParams();
-    params = params.append('filtros', JSON.stringify(paciente));
+    var filtros = paciente == null ? new PacienteModelo() : paciente;
+    params = params.append('filtros', JSON.stringify(filtros));
 
     return this.http.get(`${ this.url }/pacientes/buscar/`,{params:params})
       .pipe(

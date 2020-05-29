@@ -66,8 +66,9 @@ export class PersonasService {
 
   buscarPersonasFiltros( persona: PersonaModelo ) {
     let params = new HttpParams();
-    params = params.append('filtros', JSON.stringify(persona));
-
+    var filtros = persona == null ? new PersonaModelo() : persona;
+    
+    params = params.append('filtros', JSON.stringify(filtros));
     return this.http.get(`${ this.url }/personas/buscar/`,{params:params})
       .pipe(
         map( this.crearArreglo ),

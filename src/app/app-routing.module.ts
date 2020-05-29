@@ -6,6 +6,8 @@ import { PersonasComponent } from './vistas/listas/personas/personas.component';
 import { PersonaComponent } from './vistas/formularios/persona/persona.component';
 import { PacientesComponent } from './vistas/listas/pacientes/pacientes.component';
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
+import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
+import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
 
 const routes: Routes = [{
   path: '',
@@ -24,6 +26,13 @@ const routes: Routes = [{
   },{
     path: 'paciente/:id',
     component: PacienteComponent
+  },
+  {
+    path: 'funcionarios',
+    component: FuncionariosComponent
+  },{
+    path: 'funcionario/:id',
+    component: FuncionarioComponent
   }
   ]
 }];
