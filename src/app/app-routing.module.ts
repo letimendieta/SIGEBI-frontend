@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DefaultComponent } from './general/layouts/default/default.component';
+import { LoginComponent } from './vistas/formularios/login/login.component';
 import { PersonasComponent } from './vistas/listas/personas/personas.component';
 import { PersonaComponent } from './vistas/formularios/persona/persona.component';
 import { PacientesComponent } from './vistas/listas/pacientes/pacientes.component';
@@ -9,8 +10,11 @@ import { PacienteComponent } from './vistas/formularios/paciente/paciente.compon
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
 
-const routes: Routes = [{
-  path: '',
+const routes: Routes = [
+  { path: 'login', component: LoginComponent},
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  {
+  path: 'inicio',
   component: DefaultComponent,
   children: [
   {

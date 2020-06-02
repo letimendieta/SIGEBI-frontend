@@ -1,0 +1,15 @@
+.main-div mat-card{
+  padding: 0px;
+}
+
+.login-form{
+  padding: 20px;
+}
+
+div {
+ background-image: url("https://image.freepik.com/vector-gratis/fondo-concepto-medicina-ciencia_41814-21.jpg");
+ -webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
