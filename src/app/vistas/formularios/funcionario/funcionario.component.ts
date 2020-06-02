@@ -4,9 +4,11 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
-import { FuncionariosService } from '../../../servicios/funcionarios.service';
-
 import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { ParametroModelo } from '../../../modelos/parametro.modelo';
+
+import { FuncionariosService } from '../../../servicios/funcionarios.service';
+import { ParametrosService } from '../../../servicios/parametros.service';
 
 import Swal from 'sweetalert2';
 
@@ -16,28 +18,63 @@ import Swal from 'sweetalert2';
   styleUrls: ['./funcionario.component.css']
 })
 export class FuncionarioComponent implements OnInit {
-
+  crear = false;
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   persona: PersonaModelo = new PersonaModelo();
-
-  modificar: boolean = false;
-
+  listaEstadoCivil: ParametroModelo;
+  listaSexo: ParametroModelo;
+  listaNacionalidad: ParametroModelo;
 
   constructor( private funcionariosService: FuncionariosService,
+               private parametrosService: ParametrosService,
                private route: ActivatedRoute ) { }
 
   ngOnInit() {
 
     const id = this.route.snapshot.paramMap.get('id');
+    this.obtenerParametros();
 
     if ( id !== 'nuevo' ) {
-      //this.modificar = true;
       this.funcionariosService.getFuncionario( Number(id) )
         .subscribe( (resp: FuncionarioModelo) => {
           this.funcionario = resp;
           this.persona = resp.personas;
         });
+    }else{
+      this.crear = true;
     }
+  }
+
+  obtenerParametros() {
+    var estadoCivilParam = new ParametroModelo();
+    estadoCivilParam.codigoParametro = "EST_CIVIL";
+    estadoCivilParam.estado = "A";
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
+
+    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaEstadoCivil = resp;
+    });
+
+    var sexoParam = new ParametroModelo();
+    sexoParam.codigoParametro = "SEXO";
+    sexoParam.estado = "A";
+
+    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaSexo = resp;
+    });
+
+    var nacionalidadParam = new ParametroModelo();
+    nacionalidadParam.codigoParametro = "NACIONALIDAD";
+    nacionalidadParam.estado = "A";
+
+    this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaNacionalidad = resp;
+    });
+    
   }
 
   obtenerPersona( id : number ){

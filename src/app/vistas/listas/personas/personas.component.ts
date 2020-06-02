@@ -13,13 +13,11 @@ export class PersonasComponent implements OnInit {
 
   personas: PersonaModelo[] = [];
   buscador: PersonaModelo = new PersonaModelo();
-  cargando = false;
-
+  cargando = false;  
 
   constructor( private personasService: PersonasService) { }
 
-  ngOnInit() {
-
+  ngOnInit() {    
     this.cargando = true;
     this.personasService.buscarPersonasFiltros(null)
       .subscribe( resp => {
