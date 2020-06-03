@@ -12,7 +12,7 @@ import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionar
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
-  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
   path: 'inicio',
   component: DefaultComponent,

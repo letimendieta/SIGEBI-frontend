@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LoginModelo } from '../modelos/login.modelo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
+  private url = 'http://localhost:8080';
+  constructor( private http: HttpClient ) { }
 
-  constructor() { }
+  acceder( login: LoginModelo) {
+
+    return this.http.post(`${ this.url }/login`, login);
+
+  }
 }
