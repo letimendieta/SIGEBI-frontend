@@ -1,0 +1,126 @@
+
+<h1>Parametro </h1>
+<hr>
+
+<div class="row text-right">
+  <div class="col">
+    <button class="btn btn-danger"
+            routerLink="/parametros">
+      <i class="fa fa-arrow-left"></i>
+      Regresar
+    </button>
+  </div>
+</div>
+
+<div class="row animated fadeIn faster">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+              Parametro
+      </div>
+      <div class="card-body">
+
+        <form (ngSubmit)="guardar( f )" #f="ngForm">
+          
+          <div class="form-group" [hidden]="crear">
+            <label>ID</label>
+            <input type="text"
+                  class="form-control"
+                  placeholder="ID"
+                  [(ngModel)]="parametro.parametroId"
+                  name="id"
+                  disabled="disabled">
+            <small class="form-text text-muted">Este campo es autogenerado</small>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-5">            
+          
+              <label>Codigo</label>
+              <input type="text"
+                    class="form-control"
+                    placeholder="Codigo Parametro"
+                    [(ngModel)]="parametro.codigoParametro"
+                    name="codigoParametro"
+                    required>
+          
+              <label>Descripcion</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.descripcion"
+                    name="decripcion"
+                    placeholder="Descripcion">
+
+              <label>Nombre</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.nombre"
+                    name="nombre"
+                    placeholder="Nombre">
+          
+              <label>Valor</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.valor"
+                    name="valor"
+                    placeholder="Valor">
+                  
+              <label>Descripcion Valor</label>
+              <input type="text"
+                      class="form-control"
+                      [(ngModel)]="parametro.descripcionValor"
+                      name="descripcionValor"
+                      placeholder="Descripcion valor">                
+            </div>
+          </div>
+
+          <div class="form-row" [hidden]="crear">
+            <div class="col-lg-5"> 
+              <label>Fecha creacion</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.fechaCreacion"
+                    name="fechaCreacion"
+                    disabled="disabled"
+                    placeholder="Fecha creacion">
+
+              <label>Fecha modificacion</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.fechaModificacion"
+                    name="fechaModificacion"
+                    disabled="disabled"
+                    placeholder="Fecha modificacion">
+            </div>
+            <div class="col-lg-5"> 
+              <label>Usuario creacion</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.usuarioCreacion"
+                    name="usuarioCreacion"
+                    disabled="disabled"
+                    placeholder="Usuario creacion">
+
+              <label>Usuario modificacion</label>
+              <input type="text"
+                    class="form-control"
+                    [(ngModel)]="parametro.usuarioModificacion"
+                    name="usuarioModificacion"
+                    disabled="disabled"
+                    placeholder="Usuario modificacion">
+            </div> 
+          </div>
+          <hr>
+          <div class="form-group text-center">
+            <button type="submit"
+                    class="btn btn-primary ">
+              <i class="fa fa-save"></i>
+              Guardar
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

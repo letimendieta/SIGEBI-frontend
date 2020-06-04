@@ -1,0 +1,120 @@
+<h1>Listado de Parametros</h1>
+<hr>
+
+<div class="container">
+    <h1>Buscador</h1>
+
+    <div class="form-row">
+        <div class="form-group">
+          <label for="parametroId">Parametro Id</label>
+          <input type="number" class="form-control" id="parametroId"
+          [(ngModel)]="buscador.parametroId" name="buscador.parametroId">
+        </div>
+        <div class="form-group">
+          <label for="codigoParametro">Codigo</label>
+          <input type="text" class="form-control" id="codigoParametro"
+          [(ngModel)]="buscador.codigoParametro" name="codigoParametro">
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripcion</label>
+          <input type="text" class="form-control" id="descripcion"
+          [(ngModel)]="buscador.descripcion" name="descripcion">
+        </div>        
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="valor">Valor</label>
+        <input type="text" class="form-control" id="valor"
+        [(ngModel)]="buscador.valor" name="valor">
+      </div>
+      <div class="form-group">
+        <label for="descripcionValor">Descripcion Valor</label>
+        <input type="text" class="form-control" id="descripcionValor"
+        [(ngModel)]="buscador.descripcionValor" name="descripcionValor">
+      </div>
+    </div>
+
+    <div class="col-log-4">
+      <div class="form-horizontal">
+        <button type="submit"
+        (click)="buscadorParametros()" class="btn btn-success">Buscar</button>
+        <button type="submit"
+        (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+      </div>
+    </div>
+
+</div>
+
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/parametro/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && parametros.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">id</th>
+      <th scope="col">codigoParametro</th>
+      <th scope="col">descripcion</th>
+      <th scope="col">nombre</th>
+      <th scope="col">valor</th>
+      <th scope="col">descripcionValor</th>
+      <th scope="col">estado</th>     
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let parametro of parametros; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ parametro.parametroId }}</td>
+      <td>{{ parametro.codigoParametro }}</td>
+      <td>{{ parametro.descripcion }}</td>
+      <td>{{ parametro.nombre }}</td>
+      <td>{{ parametro.valor }}</td>
+      <td>{{ parametro.descripcionValor }}</td>
+      <td>{{ parametro.estado }}</td>  
+
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/parametro', parametro.parametroId ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarParametro( parametro ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!cargando && parametros.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>

@@ -75,6 +75,20 @@ export class ParametrosService {
 
   }
 
+  buscarParametrosFiltrosTabla( parametro: ParametroModelo ) {
+    let params = new HttpParams();
+    var filtros = parametro == null ? new ParametroModelo() : parametro;
+    
+    params = params.append('filtros', JSON.stringify(filtros));
+    //params = params.append('orderBy', orderBy);
+    //params = params.append('orderDir', orderDir);
+    return this.http.get(`${ this.url }/parametros/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
   private crearArreglo( parametrosObj: object ) {
 
     const parametros: ParametroModelo[] = [];

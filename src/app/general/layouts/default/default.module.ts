@@ -7,6 +7,8 @@ import { PacienteComponent } from 'src/app/vistas/formularios/paciente/paciente.
 import { PacientesComponent } from 'src/app/vistas/listas/pacientes/pacientes.component';
 import { FuncionarioComponent } from 'src/app/vistas/formularios/funcionario/funcionario.component';
 import { FuncionariosComponent } from 'src/app/vistas/listas/funcionarios/funcionarios.component';
+import { ParametroComponent } from 'src/app/vistas/formularios/parametro/parametro.component';
+import { ParametrosComponent } from 'src/app/vistas/listas/parametros/parametros.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -25,7 +27,9 @@ import { DashboardService } from 'src/app/vistas/dashboard.service';
     PacientesComponent,
     PacienteComponent,
     FuncionariosComponent,
-    FuncionarioComponent
+    FuncionarioComponent,
+    ParametrosComponent,
+    ParametroComponent
   ],
   imports: [
     CommonModule,

@@ -9,6 +9,8 @@ import { PacientesComponent } from './vistas/listas/pacientes/pacientes.componen
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
+import { ParametrosComponent } from './vistas/listas/parametros/parametros.component';
+import { ParametroComponent } from './vistas/formularios/parametro/parametro.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -37,6 +39,13 @@ const routes: Routes = [
   },{
     path: 'funcionario/:id',
     component: FuncionarioComponent
+  },
+  {
+    path: 'parametros',
+    component: ParametrosComponent
+  },{
+    path: 'parametro/:id',
+    component: ParametroComponent
   }
   ]
 }];
