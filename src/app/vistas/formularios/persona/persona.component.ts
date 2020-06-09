@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgForm } from '@angular/forms';
+
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -15,11 +16,14 @@ import Swal from 'sweetalert2';
 })
 export class PersonaComponent implements OnInit {
 
+  forma: FormGroup;
+
   persona: PersonaModelo = new PersonaModelo();
 
 
   constructor( private personasService: PersonasService,
-               private route: ActivatedRoute ) { }
+               private route: ActivatedRoute,
+              private fb: FormBuilder ) { this.crearFormulario();}
 
   ngOnInit() {
 
@@ -34,12 +38,23 @@ export class PersonaComponent implements OnInit {
     }
   }
 
-  guardar( form: NgForm ) {
+  guardar(  ) {
 
-    if ( form.invalid ) {
-      console.log('Formulario no válido');
-      return;
-    }
+
+      if ( this.forma.invalid ) {
+
+    return Object.values( this.forma.controls ).forEach( control => {
+
+    if ( control instanceof FormGroup ) {
+    Object.values( control.controls ).forEach( control => control.markAsTouched() );
+  } else {
+  control.markAsTouched();
+}
+});
+
+
+}
+
 
     Swal.fire({
       title: 'Espere',
@@ -86,9 +101,47 @@ export class PersonaComponent implements OnInit {
             })
        }
     );
+
+
+    // Posteo de información
+    this.forma.reset({
+      nombre: this.persona.nombres
+    });
+
   }
 
   limpiar(){
     this.persona = new PersonaModelo();
   }
+
+  get cedulaNoValido() {
+    return this.forma.get('cedula').invalid && this.forma.get('cedula').touched
+  }
+
+  get nombreNoValido() {
+    return this.forma.get('nombre').invalid && this.forma.get('nombre').touched
+  }
+
+  get apellidoNoValido() {
+  return this.forma.get('apellido').invalid && this.forma.get('apellido').touched
+}
+
+get correoNoValido() {
+  return this.forma.get('correo').invalid && this.forma.get('correo').touched
+}
+
+
+
+
+crearFormulario() {
+
+  this.forma = this.fb.group({
+    cedula  : ['', [ Validators.required, Validators.minLength(6) ]  ],
+    nombre  : ['', [ Validators.required, Validators.minLength(5) ]  ],
+    apellido: ['', [Validators.required] ],
+    correo  : ['', [ Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ]
+  });
+
+}
+
 }

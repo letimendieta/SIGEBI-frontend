@@ -24,8 +24,7 @@
   <div class="card-body">
 
 
-    <form (ngSubmit)="guardar( f )"
-          #f="ngForm">
+    <form  [formGroup]="forma" (ngSubmit)="guardar(  )" >
 
       <div class="form-group">
         <label>ID</label>
@@ -45,7 +44,11 @@
                  placeholder="Cedula"
                  [(ngModel)]="persona.cedula"
                  name="cedula"
-                 required>
+                 formControlName="cedula"
+               [class.is-invalid]="cedulaNoValido">
+        <small *ngIf="cedulaNoValido" class="text-danger">
+          Ingrese 6 letras
+        </small>
       </div>
       <div class="form-group col-md-6">
           <label>Nombres</label>
@@ -54,7 +57,11 @@
                  placeholder="Nombres"
                  [(ngModel)]="persona.nombres"
                  name="nombres"
-                 required>
+                 formControlName="nombre"
+               [class.is-invalid]="nombreNoValido">
+        <small *ngIf="nombreNoValido" class="text-danger">
+          Ingrese 5 letras
+        </small>
       </div>
 
       <div class="form-group col-md-6">
@@ -63,7 +70,12 @@
                  class="form-control"
                  [(ngModel)]="persona.apellidos"
                  name="apellidos"
-                 placeholder="Apellidos">
+                 placeholder="Apellidos"
+                 formControlName="apellido"
+               [class.is-invalid]="apellidoNoValido">
+        <small *ngIf="apellidoNoValido" class="text-danger">
+                Ingrese el apellido
+        </small>
       </div>
 
       <div class="form-group col-md-6">
@@ -90,7 +102,12 @@
                  class="form-control"
                  [(ngModel)]="persona.email"
                  name="email"
-                 placeholder="Email">
+                 placeholder="Email"
+                 formControlName="correo"
+             [class.is-invalid]="correoNoValido">
+      <small *ngIf="correoNoValido" class="text-danger">
+              Ingrese el correo
+      </small>
       </div>
   <div class="form-row">
       <div class="form-group col-md-4">

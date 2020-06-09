@@ -9,13 +9,14 @@ import { PacientesComponent } from './vistas/listas/pacientes/pacientes.componen
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   {
-  path: 'inicio',
-  component: DefaultComponent,
+  path: '',
+  component: DefaultComponent,canActivate: [ AuthGuard ],
   children: [
   {
     path: 'personas',

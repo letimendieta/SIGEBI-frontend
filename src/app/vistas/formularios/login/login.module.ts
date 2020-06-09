@@ -7,6 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {FlexLayoutModule } from '@angular/flex-layout';
 import {LoginComponent } from 'src/app/vistas/formularios/login/login.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import {LoginComponent } from 'src/app/vistas/formularios/login/login.component'
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FormsModule
   ]
 })
 export class LoginModule { }
