@@ -9,6 +9,7 @@ import { PacientesComponent } from './vistas/listas/pacientes/pacientes.componen
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
+import { AuthGuard } from './guards/auth.guard';
 import { ParametrosComponent } from './vistas/listas/parametros/parametros.component';
 import { ParametroComponent } from './vistas/formularios/parametro/parametro.component';
 import { ProcedimientosComponent } from './vistas/listas/procedimientos/procedimientos.component';
@@ -21,7 +22,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   {
   path: '',
-  component: DefaultComponent,
+  component: DefaultComponent,canActivate: [ AuthGuard ],
   children: [
   {
     path: 'personas',

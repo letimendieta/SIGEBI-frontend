@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../../../servicios/login.service';
-import { LoginModelo } from '../../../modelos/login.modelo';
+import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+
+import { UsuarioModelo } from 'src/app/modelos/usuario.modelo';
+import { LoginService } from 'src/app/servicios/login.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,36 +13,58 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  login: LoginModelo = new LoginModelo();
 
-  constructor( private loginService: LoginService ) { }
+  usuario: UsuarioModelo = new UsuarioModelo();
+  recordarme = false;
 
-  ngOnInit(): void {
-    
+  constructor( private auth: LoginService,
+               private router: Router ) { }
+
+  ngOnInit() {
+
+    if ( localStorage.getItem('usuario') ) {
+      this.usuario.usuario = localStorage.getItem('usuario');
+      this.recordarme = true;
+    }
+
   }
 
-  acceder(  ) {
 
-    let peticion: Observable<any>;
+  login( form: NgForm ) {
 
-    peticion = this.loginService.acceder(this.login);
+    if (  form.invalid ) { return; }
 
-    peticion.subscribe( resp => {
+    Swal.fire({
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
 
-      Swal.fire({
-                icon: 'info',
-                title: 'OK',
-                text: resp.mensaje,
-              }).then( resp => {
 
+    this.auth.login( this.usuario )
+      .subscribe( resp => {
+
+        console.log(resp);
+        Swal.close();
+
+        if ( this.recordarme ) {
+          localStorage.setItem('usuario', this.usuario.usuario);
+        }
+
+
+        this.router.navigateByUrl('/');
+
+      }, (err) => {
+
+        console.log(err.error.error.message);
+        Swal.fire({
+          title: 'Error al autenticar',
+          text: err.error.error.message,
+          icon: 'error'
+        });
       });
-    }, e => {Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: e.status +'. '+e.error.errors[0],
-            })
-       }
-    );
+
   }
 
 }

@@ -21,6 +21,8 @@ import { SharedModule } from 'src/app/general/shared.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardService } from 'src/app/vistas/dashboard.service';
+import {ReactiveFormsModule} from '@angular/forms'
+
 
 
 @NgModule({
@@ -47,7 +49,8 @@ import { DashboardService } from 'src/app/vistas/dashboard.service';
     MatDividerModule,
     FlexLayoutModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     DashboardService
