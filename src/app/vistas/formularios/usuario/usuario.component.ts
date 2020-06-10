@@ -3,29 +3,32 @@ import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
-import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { UsuarioModelo } from '../../../modelos/usuario.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
+import { PersonaModelo } from '../../../modelos/persona.modelo';
 
-import { FuncionariosService } from '../../../servicios/funcionarios.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
 import { ParametrosService } from '../../../servicios/parametros.service';
 
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-funcionario',
-  templateUrl: './funcionario.component.html',
-  styleUrls: ['./funcionario.component.css']
+  selector: 'app-usuario',
+  templateUrl: './usuario.component.html',
+  styleUrls: ['./usuario.component.css']
 })
-export class FuncionarioComponent implements OnInit {
+export class UsuarioComponent implements OnInit {
   crear = false;
-  funcionario: FuncionarioModelo = new FuncionarioModelo();
+  usuario: UsuarioModelo = new UsuarioModelo();
   persona: PersonaModelo = new PersonaModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
 
-  constructor( private funcionariosService: FuncionariosService,
+  modificar: boolean = false;
+
+
+  constructor( private usuariosService: UsuariosService,
                private parametrosService: ParametrosService,
                private route: ActivatedRoute ) { }
 
@@ -35,9 +38,9 @@ export class FuncionarioComponent implements OnInit {
     this.obtenerParametros();
 
     if ( id !== 'nuevo' ) {
-      this.funcionariosService.getFuncionario( Number(id) )
-        .subscribe( (resp: FuncionarioModelo) => {
-          this.funcionario = resp;
+      this.usuariosService.getUsuario( Number(id) )
+        .subscribe( (resp: UsuarioModelo) => {
+          this.usuario = resp;
           this.persona = resp.personas;
         });
     }else{
@@ -79,7 +82,7 @@ export class FuncionarioComponent implements OnInit {
 
   obtenerPersona( id : number ){
 
-    this.funcionariosService.getPersona( id )
+    this.usuariosService.getPersona( id )
         .subscribe( (resp: PersonaModelo) => {
           this.persona = resp;
         }, e => {
@@ -110,29 +113,29 @@ export class FuncionarioComponent implements OnInit {
 
     let peticion: Observable<any>;       
 
-    if ( this.funcionario.funcionarioId ) {
+    if ( this.usuario.usuarioId ) {
       this.persona.usuarioModificacion = 'admin';
-      this.funcionario.personas = this.persona;
-      this.funcionario.usuarioModificacion = 'admin';
-      peticion = this.funcionariosService.actualizarFuncionario( this.funcionario );
+      this.usuario.personas = this.persona;
+      this.usuario.usuarioModificacion = 'admin';
+      peticion = this.usuariosService.actualizarUsuario( this.usuario );
     } else {
       this.persona.usuarioCreacion = 'admin';
-      this.funcionario.personas = this.persona;
-      this.funcionario.usuarioCreacion = 'admin';
-      peticion = this.funcionariosService.crearFuncionario( this.funcionario );
+      this.usuario.personas = this.persona;
+      this.usuario.usuarioCreacion = 'admin';
+      peticion = this.usuariosService.crearUsuario( this.usuario );
     }
 
     peticion.subscribe( resp => {
 
       Swal.fire({
                 icon: 'success',
-                title: this.funcionario.personas.nombres,
+                title: this.usuario.personas.nombres,
                 text: resp.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.funcionario.funcionarioId ) {
-            //volver a la lista de funcionarios
+          if ( this.usuario.usuarioId ) {
+            //volver a la lista de usuarios
           }else{
             this.limpiar();
           }
@@ -157,7 +160,7 @@ export class FuncionarioComponent implements OnInit {
   }
 
   limpiar(){
-    this.funcionario = new FuncionarioModelo();
+    this.usuario = new UsuarioModelo();
     this.persona = new PersonaModelo();
   }
 }

@@ -1,0 +1,121 @@
+<h1>Listado de Procedimientos</h1>
+<hr>
+
+<div class="container">
+    <h1>Buscador</h1>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="procedimientoId">Procedimiento Id</label>
+        <input type="number" class="form-control" id="procedimientoId"
+        [(ngModel)]="buscador.procedimientoId" name="procedimientoId">
+      </div>
+
+      <div class="form-group">
+        <label for="cedula">Paciente Cedula</label>
+        <input type="text" class="form-control" id="cedula"
+        [(ngModel)]="pacientePersona.cedula" name="cedula">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nombres">Paciente Nombres</label>
+        <input type="text" class="form-control" id="nombres"
+        [(ngModel)]="pacientePersona.nombres" name="nombres">
+      </div>
+
+      <div class="form-group">
+        <label for="apellidos">Paciente Apellidos</label>
+        <input type="text" class="form-control" id="apellidos"
+        [(ngModel)]="pacientePersona.apellidos" name="apellidos">
+      </div>
+    </div>
+
+    <div class="col-log-4">
+      <div class="form-horizontal">
+        <button type="submit"
+        (click)="buscadorProcedimientos()" class="btn btn-success">Buscar</button>
+        <button type="submit"
+        (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/procedimiento/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && procedimientos.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">id</th>
+      <th scope="col">Paciente Cedula</th>
+      <th scope="col">Paciente Nombres</th>
+      <th scope="col">Paciente Apellidos</th>
+      <th scope="col">Funcionario Cedula</th>
+      <th scope="col">Funcionario Nombres</th>
+      <th scope="col">Funcionario Apellidos</th>
+      <th scope="col">InsumoId</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Hora</th>
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let procedimiento of procedimientos; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ procedimiento.procedimientoId }}</td>
+      <td>{{ procedimiento.pacientes.personas.cedula }}</td>
+      <td>{{ procedimiento.pacientes.personas.nombres }}</td>
+      <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
+      <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
+      <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
+      <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
+      <td>{{ procedimiento.insumoId }}</td>
+      <td>{{ procedimiento.fecha }}</td>
+      <td>{{ procedimiento.hora}}</td>
+
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarProcedimiento( procedimiento ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!cargando && procedimientos.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>

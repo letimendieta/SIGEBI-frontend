@@ -22,34 +22,40 @@
 
         <form (ngSubmit)="guardar( f )" #f="ngForm">
           <!-- Funcionario Id-->
-          <div class="form-group col-md-6" [hidden]="crear">
-            <label>Funcionario Id</label>
-            <input type="number"
-                  class="form-control"
-                  placeholder="Funcionario Id"
-                  [(ngModel)]="funcionario.funcionarioId"
-                  name="funcionarioId" disabled="true">
-            <small class="form-text text-muted">Este campo es autogenerado</small>
-          </div>          
+          <div class="row">
+            <div class="col-lg-5">
+                  <div class="form-group" [hidden]="crear">
+                        <label>Funcionario Id</label>
+                        <input type="number"
+                              class="form-control"
+                              placeholder="Funcionario Id"
+                              [(ngModel)]="funcionario.funcionarioId"
+                              name="funcionarioId" disabled="true">
+                        <small class="form-text text-muted">Este campo es autogenerado</small>
+                  </div> 
+            </div>
+          </div>       
 
           <!-- Datos Personales-->
             <div class="row">
                   <div class="col-lg-5">
                         <div class="form group">
-                              <label>Persona Id</label>
-                              <div class="input-group">
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="ID"
-                                          [(ngModel)]="persona.personaId"
-                                          name="id">
-                                    <span class="input-group-btn">
-                                          <button class="btn btn-outline-info" 
-                                                (click)="obtenerPersona( persona.personaId )">
-                                                Buscar
-                                          </button>
-                                    </span>
-                              </div>     
+                              <div class="form group">                                       
+                                    <label>Persona Id</label>
+                                    <div class="input-group">
+                                          <input type="text"
+                                                class="form-control"
+                                                placeholder="ID"
+                                                [(ngModel)]="persona.personaId"
+                                                name="id">
+                                          <span class="input-group-btn">
+                                                <button class="btn btn-outline-info" 
+                                                      (click)="obtenerPersona( persona.personaId )">
+                                                      Buscar
+                                                </button>
+                                          </span>
+                                    </div>
+                              </div> 
 
                               <label>C.I</label>
                               <input type="text"

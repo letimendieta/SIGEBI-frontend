@@ -23,15 +23,19 @@
         <form (ngSubmit)="guardar( f )" #f="ngForm">
           
           <!-- Datos Personales-->
-          <div class="form-group" [hidden]="crear">
-            <label>ID</label>
-            <input type="text"
-                  class="form-control"
-                  placeholder="ID"
-                  [(ngModel)]="persona.personaId"
-                  name="id"
-                  disabled="disabled">
-            <small class="form-text text-muted">Este campo es autogenerado</small>
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="form-group" [hidden]="crear">
+                <label>ID</label>
+                <input type="text"
+                      class="form-control"
+                      placeholder="ID"
+                      [(ngModel)]="persona.personaId"
+                      name="id"
+                      disabled="disabled">
+                <small class="form-text text-muted">Este campo es autogenerado</small>
+              </div>
+            </div>
           </div>
 
           <div class="row">
@@ -103,7 +107,7 @@
 
             <div class="col-lg-5">
               <label>Estado Civil</label>
-              <select ui-select2 placeholder="Estado Civil" 
+              <select ui-seldivect2 placeholder="Estado Civil" 
                 class="form-control input-sm"          
                 [(ngModel)]="persona.estadoCivil" name = "estadoCivil"
                 uppercase>

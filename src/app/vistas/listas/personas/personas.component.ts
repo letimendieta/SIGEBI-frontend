@@ -63,7 +63,7 @@ export class PersonasComponent implements OnInit {
 
         peticion.subscribe( resp => {
           Swal.fire({
-                    icon: 'info',
+                    icon: 'success',
                     title: persona.nombres,
                     text: resp.mensaje,
                   }).then( resp => {

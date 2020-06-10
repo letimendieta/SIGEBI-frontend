@@ -1,0 +1,230 @@
+
+<h1>Procedimiento </h1>
+<hr>
+
+<div class="row text-right">
+  <div class="col">
+    <button class="btn btn-danger"
+            routerLink="/procedimientos">
+      <i class="fa fa-arrow-left"></i>
+      Regresar
+    </button>
+  </div>
+</div>
+
+<div class="row animated fadeIn faster">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+              Datos del Procedimiento
+      </div>
+      <div class="card-body">
+
+            <form #f="ngForm">
+                  <div class="row">
+                        <div class="col-lg-5">
+                              <!-- Procedimiento Id-->
+                              <div class="form-group" [hidden]="crear">
+                                    <label>Procedimiento Id</label>
+                                    <input type="number"
+                                          class="form-control"
+                                          placeholder="Procedimiento Id"
+                                          [(ngModel)]="procedimiento.procedimientoId"
+                                          name="procedimientoId" disabled="true">
+                                    <small class="form-text text-muted">Este campo es autogenerado</small>
+                              </div>
+                        </div>
+                  </div>
+
+                  <!-- Datos Paciente-->
+                  <div class="row">
+                        <div class="col-lg-5">
+                              <div class="form group">
+                                    <label>Paciente Id</label>
+                                    <div class="input-group">
+                                          <input type="text"
+                                                class="form-control"
+                                                placeholder="ID"
+                                                [(ngModel)]="paciente.pacienteId"
+                                                name="pacienteId">
+                                          <span class="input-group-btn">
+                                                <button class="btn btn-outline-info" 
+                                                      (click)="obtenerPaciente( paciente.pacienteId )">
+                                                      Buscar
+                                                </button>
+                                          </span>
+                                    </div>
+                              </div>
+
+                              <label>C.I</label>
+                              <input type="text"
+                                    class="form-control"
+                                    placeholder="Cedula"
+                                    [(ngModel)]="pacientePersona.cedula"
+                                    disabled="disabled"
+                                    name="pacientePersona.cedula">
+                  
+                              <label>Nombres</label>
+                              <input type="text"
+                                    class="form-control"
+                                    placeholder="Nombres"
+                                    [(ngModel)]="pacientePersona.nombres"
+                                    disabled="disabled"
+                                    name="pacientePersona.nombres">
+                        
+                              <label>Apellidos</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="pacientePersona.apellidos"
+                                    name="pacientePersona.apellidos"  
+                                    disabled="disabled"
+                                    placeholder="Apellidos">                              
+                              
+                        </div>
+
+                        <!-- Datos del Funcionario-->
+                        <div class="col-lg-5">
+                              <div class="form group">
+                                    <label>Funcionario Id</label>                           
+                                    <div class="input-group">
+                                          <input type="text"
+                                                class="form-control"
+                                                placeholder="Funcionaros Id"
+                                                [(ngModel)]="funcionario.funcionarioId"
+                                                name="funcionarioId">
+                                          <span class="input-group-btn">
+                                                <button class="btn btn-outline-info"
+                                                (click)="obtenerFuncionario( funcionario.funcionarioId )">
+                                                      Buscar
+                                                </button>
+                                          </span>
+                                    </div>
+                              </div>
+                        
+                              <label>C.I</label>
+                              <input type="text"
+                                    class="form-control"
+                                    placeholder="Cedula"
+                                    [(ngModel)]="funcionarioPersona.cedula"
+                                    disabled="disabled"
+                                    name="funcionarioPersona.cedula">
+                  
+                              <label>Nombres</label>
+                              <input type="text"
+                                    class="form-control"
+                                    placeholder="Nombres"
+                                    [(ngModel)]="funcionarioPersona.nombres"
+                                    disabled="disabled"
+                                    name="funcionarioPersona.nombres">
+                        
+                              <label>Apellidos</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="funcionarioPersona.apellidos"
+                                    name="funcionarioPersona.apellidos"  
+                                    disabled="disabled"
+                                    placeholder="Apellidos"> 
+                        </div>
+                  </div>
+
+                  
+
+                  <hr>
+                  
+
+                  <div class="form-row">
+                        <div class="col-lg-5">
+                              <label>Insumo Id</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.insumoId"
+                                    name="insumoId"                                     
+                                    placeholder="Insumo Id">
+                        </div>
+
+                        <div class="col-lg-5">
+                              <label>Fecha</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.fecha"
+                                    name="fecha"                                     
+                                    placeholder="Fecha">
+                        
+                              <label>Hora</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.hora"
+                                    name="hora"                                     
+                                    placeholder="Hora">
+                        </div>                
+                  </div>
+
+                  <div class="form-row">
+                        <div class="col-lg-10">
+                              <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">Notas</label>
+                                    <textarea class="form-control" 
+                                          [(ngModel)]="procedimiento.notas"
+                                          name = "notas"
+                                          maxlength="500" rows="5">
+                                    </textarea>
+                              </div>
+                        </div>
+                  </div>
+                  
+                  <div class="form-row" [hidden]="crear">
+                        <div class="col-lg-5"> 
+                              <label>Fecha creacion</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.fechaCreacion"
+                                    name="fechaCreacion"  
+                                    disabled="disabled"
+                                    placeholder="Fecha creacion">
+
+                              <label>Fecha modificacion</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.fechaModificacion"
+                                    name="fechaModificacion"  
+                                    disabled="disabled"
+                                    placeholder="Fecha modificacion">  
+                        </div>
+
+                        <div class="col-lg-5">                                                 
+                              <label>Usuario creacion</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.usuarioCreacion"
+                                    name="usuarioCreacion"  
+                                    disabled="disabled"
+                                    placeholder="Usuario creacion">
+                        
+                              <label>Usuario modificacion</label>
+                              <input type="text"
+                                    class="form-control"
+                                    [(ngModel)]="procedimiento.usuarioModificacion"
+                                    name="usuarioModificacion"  
+                                    disabled="disabled"
+                                    placeholder="Usuario modificacion">                                    
+                        </div>                        
+                  </div>
+
+                  <div class="form-group text-center">
+                        <button type="submit" 
+                              class="btn btn-primary"
+                              (click)="guardar( f )">
+                        <i class="fa fa-save"></i>
+                        Guardar
+                        </button>
+                  </div>
+
+            </form>
+      </div>
+    </div>
+
+    
+      
+
+  </div>
+</div>

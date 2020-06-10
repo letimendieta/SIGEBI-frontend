@@ -9,6 +9,10 @@ import { FuncionarioComponent } from 'src/app/vistas/formularios/funcionario/fun
 import { FuncionariosComponent } from 'src/app/vistas/listas/funcionarios/funcionarios.component';
 import { ParametroComponent } from 'src/app/vistas/formularios/parametro/parametro.component';
 import { ParametrosComponent } from 'src/app/vistas/listas/parametros/parametros.component';
+import { ProcedimientosComponent } from 'src/app/vistas/listas/procedimientos/procedimientos.component';
+import { ProcedimientoComponent } from 'src/app/vistas/formularios/procedimiento/procedimiento.component';
+import { UsuarioComponent } from 'src/app/vistas/formularios/usuario/usuario.component';
+import { UsuariosComponent } from 'src/app/vistas/listas/usuarios/usuarios.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -29,7 +33,11 @@ import { DashboardService } from 'src/app/vistas/dashboard.service';
     FuncionariosComponent,
     FuncionarioComponent,
     ParametrosComponent,
-    ParametroComponent
+    ParametroComponent,
+    ProcedimientosComponent,
+    ProcedimientoComponent,
+    UsuariosComponent,
+    UsuarioComponent
   ],
   imports: [
     CommonModule,

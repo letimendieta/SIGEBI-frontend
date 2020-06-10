@@ -63,7 +63,7 @@ export class ParametrosComponent implements OnInit {
 
         peticion.subscribe( resp => {
           Swal.fire({
-                    icon: 'info',
+                    icon: 'success',
                     title: parametro.codigoParametro,
                     text: resp.mensaje,
                   }).then( resp => {

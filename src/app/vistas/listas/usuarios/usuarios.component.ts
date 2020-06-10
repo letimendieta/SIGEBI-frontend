@@ -1,41 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import { FuncionariosService } from '../../../servicios/funcionarios.service';
-import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
+import { UsuariosService } from '../../../servicios/usuarios.service';
+import { UsuarioModelo } from '../../../modelos/usuario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-funcionarios',
-  templateUrl: './funcionarios.component.html',
-  styleUrls: ['./funcionarios.component.css']
+  selector: 'app-usuarios',
+  templateUrl: './usuarios.component.html',
+  styleUrls: ['./usuarios.component.css']
 })
-export class FuncionariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit {
 
-  funcionarios: FuncionarioModelo[] = [];
+  usuarios: UsuarioModelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
-  buscador: FuncionarioModelo = new FuncionarioModelo();
+  buscador: UsuarioModelo = new UsuarioModelo();
   cargando = false;
 
 
-  constructor( private funcionariosService: FuncionariosService) { }
+  constructor( private usuariosService: UsuariosService) { }
 
   ngOnInit() {
 
     this.cargando = true;
-    this.funcionariosService.buscarFuncionariosFiltros(null)
+    this.usuariosService.buscarUsuariosFiltros(null)
       .subscribe( resp => {
-        this.funcionarios = resp;
+        this.usuarios = resp;
         this.cargando = false;
       });
 
   }
 
-  buscadorFuncionarios() {
+  buscadorUsuarios() {
     this.buscador.personas = this.persona;
-    this.funcionariosService.buscarFuncionariosFiltros(this.buscador)
+    this.usuariosService.buscarUsuariosFiltros(this.buscador)
     .subscribe( resp => {
-      this.funcionarios = resp;
+      this.usuarios = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -47,16 +47,16 @@ export class FuncionariosComponent implements OnInit {
   }
 
   limpiar() {
-    this.buscador = new FuncionarioModelo();
+    this.buscador = new UsuarioModelo();
     this.persona = new PersonaModelo();   
-    this.buscadorFuncionarios();
+    this.buscadorUsuarios();
   }
 
-  borrarFuncionario( funcionario: FuncionarioModelo ) {
+  borrarUsuario( usuario: UsuarioModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',
-      text: `Está seguro que desea borrar a ${ funcionario.personas.nombres }`,
+      text: `Está seguro que desea borrar a ${ usuario.personas.nombres }`,
       icon: 'question',
       showConfirmButton: true,
       showCancelButton: true
@@ -64,12 +64,12 @@ export class FuncionariosComponent implements OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        peticion = this.funcionariosService.borrarFuncionario( funcionario.funcionarioId );
+        peticion = this.usuariosService.borrarUsuario( usuario.usuarioId );
 
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: funcionario.personas.nombres,
+                    title: usuario.personas.nombres,
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

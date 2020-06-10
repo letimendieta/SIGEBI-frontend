@@ -21,16 +21,19 @@
       <div class="card-body">
 
         <form (ngSubmit)="guardar( f )" #f="ngForm">
-          
-          <div class="form-group" [hidden]="crear">
-            <label>ID</label>
-            <input type="text"
-                  class="form-control"
-                  placeholder="ID"
-                  [(ngModel)]="parametro.parametroId"
-                  name="id"
-                  disabled="disabled">
-            <small class="form-text text-muted">Este campo es autogenerado</small>
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="form-group" [hidden]="crear">
+                <label>ID</label>
+                <input type="text"
+                      class="form-control"
+                      placeholder="ID"
+                      [(ngModel)]="parametro.parametroId"
+                      name="id"
+                      disabled="disabled">
+                <small class="form-text text-muted">Este campo es autogenerado</small>
+              </div>
+            </div>
           </div>
 
           <div class="row">
@@ -70,7 +73,16 @@
                       class="form-control"
                       [(ngModel)]="parametro.descripcionValor"
                       name="descripcionValor"
-                      placeholder="Descripcion valor">                
+                      placeholder="Descripcion valor">
+
+              <label>Estado</label>
+              <select ui-select2 class="form-control input-sm"
+                [(ngModel)]="parametro.estado" name = "estado"
+                uppercase>
+                <option value="">----SELECCIONE----</option>
+                <option value="A">Activo</option>
+                <option value="I">Inactivo</option>
+              </select>
             </div>
           </div>
 

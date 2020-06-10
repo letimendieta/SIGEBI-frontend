@@ -1,11 +1,11 @@
 
-<h1>Paciente </h1>
+<h1>Usuario </h1>
 <hr>
 
 <div class="row text-right">
   <div class="col">
     <button class="btn btn-danger"
-            routerLink="/pacientes">
+            routerLink="/usuarios">
       <i class="fa fa-arrow-left"></i>
       Regresar
     </button>
@@ -16,21 +16,21 @@
   <div class="col">
     <div class="card">
       <div class="card-header">
-              Datos del Paciente
+              Datos del Usuario
       </div>
       <div class="card-body">
 
             <form (ngSubmit)="guardar( f )" #f="ngForm">
+                  <!-- Usuario Id-->
                   <div class="row">
                         <div class="col-lg-5">
-                              <!-- Paciente Id-->
                               <div class="form-group" [hidden]="crear">
-                                    <label>Paciente Id</label>
+                                    <label>Usuario Id</label>
                                     <input type="number"
                                           class="form-control"
-                                          placeholder="Paciente Id"
-                                          [(ngModel)]="paciente.pacienteId"
-                                          name="pacienteId" disabled="true">
+                                          placeholder="Usuario Id"
+                                          [(ngModel)]="usuario.usuarioId"
+                                          name="usuarioId" disabled="true">
                                     <small class="form-text text-muted">Este campo es autogenerado</small>
                               </div>
                         </div>
@@ -61,8 +61,7 @@
                                     class="form-control"
                                     placeholder="Cedula"
                                     [(ngModel)]="persona.cedula"
-                                    name="cedula"  
-                                    required>
+                                    name="cedula">
                   
                               <label>Nombres</label>
                               <input type="text"
@@ -223,24 +222,41 @@
                   </div>
 
                   <hr>
-                  <!-- Datos del Paciente-->
+                  <!-- Datos del Usuario-->
                   <div class="form-row">
                         <div class="col-lg-5"> 
-                              <label>Grupo Sanguineo</label>
+                              <label>Funcionario Id</label>
                               <input type="text"
                                     class="form-control"
-                                    placeholder="Grupo Sanguineo"
-                                    [(ngModel)]="paciente.grupoSanguineo"
-                                    name="grupoSanguineo"
-                                    required>
+                                    placeholder="Funcionario Id"
+                                    [(ngModel)]="usuario.funcionarioId"
+                                    name="funcionarioId"
+                                    >
                         
-                              <label>Seguro Medico</label>
+                              <label>Codigo Usuario</label>
                               <input type="text"
                                     class="form-control"
-                                    placeholder="Seguro Medico"
-                                    [(ngModel)]="paciente.seguroMedico"
-                                    name="seguroMedico" 
+                                    placeholder="Codigo Usuario"
+                                    [(ngModel)]="usuario.codigoUsuario"
+                                    name="codigoUsuario" 
                                     required>
+
+                              <label>Password</label>
+                              <input type="password"
+                                    class="form-control"
+                                    placeholder="Password"
+                                    [(ngModel)]="usuario.password"
+                                    name="password" 
+                                    required>
+
+                              <label>Estado</label>
+                              <select ui-select2 class="form-control input-sm"
+                                    [(ngModel)]="usuario.estado" name = "estado"
+                                    uppercase>
+                                    <option value="">----SELECCIONE----</option>
+                                    <option value="A">Activo</option>
+                                    <option value="I">Inactivo</option>
+                              </select>
                         </div>
                   </div>
                   
@@ -249,7 +265,7 @@
                               <label>Fecha creacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="paciente.fechaCreacion"
+                                    [(ngModel)]="usuario.fechaCreacion"
                                     name="fechaCreacion"  
                                     disabled="disabled"
                                     placeholder="Fecha creacion">
@@ -257,7 +273,7 @@
                               <label>Fecha modificacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="paciente.fechaModificacion"
+                                    [(ngModel)]="usuario.fechaModificacion"
                                     name="fechaModificacion"  
                                     disabled="disabled"
                                     placeholder="Fecha modificacion">  
@@ -267,7 +283,7 @@
                               <label>Usuario creacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="paciente.usuarioCreacion"
+                                    [(ngModel)]="usuario.usuarioCreacion"
                                     name="usuarioCreacion"  
                                     disabled="disabled"
                                     placeholder="Usuario creacion">
@@ -275,24 +291,22 @@
                               <label>Usuario modificacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="paciente.usuarioModificacion"
+                                    [(ngModel)]="usuario.usuarioModificacion"
                                     name="usuarioModificacion"  
                                     disabled="disabled"
                                     placeholder="Usuario modificacion">                                    
                         </div>                        
                   </div>
+
+                  <div class="form-group text-center">
+                        <button type="submit"
+                              class="btn btn-primary ">
+                        <i class="fa fa-save"></i>
+                        Guardar
+                        </button>
+                  </div>
             </form>
       </div>
     </div>
-
-    
-      <div class="form-group text-center">
-            <button type="submit"
-                  class="btn btn-primary ">
-            <i class="fa fa-save"></i>
-            Guardar
-            </button>
-      </div>
-
   </div>
 </div>

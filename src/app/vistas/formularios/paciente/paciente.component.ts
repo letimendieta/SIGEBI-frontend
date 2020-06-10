@@ -128,7 +128,7 @@ export class PacienteComponent implements OnInit {
     peticion.subscribe( resp => {
 
       Swal.fire({
-                icon: 'info',
+                icon: 'success',
                 title: this.paciente.personas.nombres,
                 text: resp.mensaje,
               }).then( resp => {

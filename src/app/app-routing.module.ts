@@ -11,12 +11,16 @@ import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
 import { ParametrosComponent } from './vistas/listas/parametros/parametros.component';
 import { ParametroComponent } from './vistas/formularios/parametro/parametro.component';
+import { ProcedimientosComponent } from './vistas/listas/procedimientos/procedimientos.component';
+import { ProcedimientoComponent } from './vistas/formularios/procedimiento/procedimiento.component';
+import { UsuariosComponent } from './vistas/listas/usuarios/usuarios.component';
+import { UsuarioComponent } from './vistas/formularios/usuario/usuario.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   {
-  path: 'inicio',
+  path: '',
   component: DefaultComponent,
   children: [
   {
@@ -46,6 +50,20 @@ const routes: Routes = [
   },{
     path: 'parametro/:id',
     component: ParametroComponent
+  },
+  {
+    path: 'procedimientos',
+    component: ProcedimientosComponent
+  },{
+    path: 'procedimiento/:id',
+    component: ProcedimientoComponent
+  },
+  {
+    path: 'usuarios',
+    component: UsuariosComponent
+  },{
+    path: 'usuario/:id',
+    component: UsuarioComponent
   }
   ]
 }];
