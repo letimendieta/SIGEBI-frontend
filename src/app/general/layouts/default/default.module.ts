@@ -13,6 +13,27 @@ import { ProcedimientosComponent } from 'src/app/vistas/listas/procedimientos/pr
 import { ProcedimientoComponent } from 'src/app/vistas/formularios/procedimiento/procedimiento.component';
 import { UsuarioComponent } from 'src/app/vistas/formularios/usuario/usuario.component';
 import { UsuariosComponent } from 'src/app/vistas/listas/usuarios/usuarios.component';
+import { AreaComponent } from 'src/app/vistas/formularios/area/area.component';
+import { AreasComponent } from 'src/app/vistas/listas/areas/areas.component';
+import { CarrerasComponent } from 'src/app/vistas/listas/carreras/carreras.component';
+import { CarreraComponent } from 'src/app/vistas/formularios/carrera/carrera.component';
+import { DepartamentosComponent } from 'src/app/vistas/listas/departamentos/departamentos.component';
+import { DepartamentoComponent } from 'src/app/vistas/formularios/departamento/departamento.component';
+import { DependenciasComponent } from 'src/app/vistas/listas/dependencias/dependencias.component';
+import { DependenciaComponent } from 'src/app/vistas/formularios/dependencia/dependencia.component';
+import { EstamentosComponent } from 'src/app/vistas/listas/estamentos/estamentos.component';
+import { EstamentoComponent } from 'src/app/vistas/formularios/estamento/estamento.component';
+import { CitasComponent } from 'src/app/vistas/listas/citas/citas.component';
+import { CitaComponent } from 'src/app/vistas/formularios/cita/cita.component';
+import { HorariosComponent } from 'src/app/vistas/listas/horarios/horarios.component';
+import { HorarioComponent } from 'src/app/vistas/formularios/horario/horario.component';
+import { StocksComponent } from 'src/app/vistas/listas/stocks/stocks.component';
+import { StockComponent } from 'src/app/vistas/formularios/stock/stock.component';
+import { InsumosComponent } from 'src/app/vistas/listas/insumos/insumos.component';
+import { InsumoComponent } from 'src/app/vistas/formularios/insumo/insumo.component';
+import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
+import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
+import { UploadFilesComponent } from 'src/app/vistas/upload-files/upload-files.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -39,7 +60,28 @@ import {ReactiveFormsModule} from '@angular/forms'
     ProcedimientosComponent,
     ProcedimientoComponent,
     UsuariosComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    AreasComponent,
+    AreaComponent,
+    CarrerasComponent,
+    CarreraComponent,
+    DepartamentosComponent,
+    DepartamentoComponent,
+    DependenciasComponent,
+    DependenciaComponent,
+    EstamentosComponent,
+    EstamentoComponent,
+    CitasComponent,
+    CitaComponent,
+    HorariosComponent,
+    HorarioComponent,
+    StocksComponent,
+    StockComponent,
+    InsumosComponent,
+    InsumoComponent,
+    HistorialesClinicosComponent,
+    HistorialClinicoComponent,
+    UploadFilesComponent
   ],
   imports: [
     CommonModule,

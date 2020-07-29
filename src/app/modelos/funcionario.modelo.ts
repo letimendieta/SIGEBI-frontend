@@ -4,12 +4,12 @@ export class FuncionarioModelo {
 
     funcionarioId: number;
     areaId: number;
-    fechaIngreso: string;
-    fechaEgreso: string;
+    fechaIngreso: Date;
+    fechaEgreso: Date;
     estado: string;
-    fechaCreacion: string;
+    fechaCreacion: Date;
     usuarioCreacion: string;
-    fechaModificacion: string;
+    fechaModificacion: Date;
     usuarioModificacion: string;
     personas: PersonaModelo;
 

@@ -6,9 +6,9 @@ export class PacienteModelo {
     historialId: number;
     grupoSanguineo: string;
     seguroMedico: string;
-    fechaCreacion: string;
+    fechaCreacion: Date;
     usuarioCreacion: string;
-    fechaModificacion: string;
+    fechaModificacion: Date;
     usuarioModificacion: string;
     personas: PersonaModelo;
 

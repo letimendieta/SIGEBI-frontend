@@ -1,46 +1,79 @@
 <h1>Listado de Usuarios</h1>
 <hr>
 
-<div class="container">
-    <h1>Buscador</h1>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="usuarioId">Usuario Id</label>
-        <input type="number" class="form-control" id="usuarioId"
-        [(ngModel)]="buscador.usuarioId" name="usuarioId">
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">
+    <form [formGroup]="buscadorForm">
+      <div class="form-row">
+        <div class="col-lg-5">
+          <div class="form-group form-inline col-md-5">
+            <label for="usuarioId" class="col-sm-7 col-form-label">Usuario Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="usuarioId"
+              formControlName="usuarioId" name="usuarioId">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="codigoUsuario" class="col-sm-7 col-form-label">Codigo Usuario</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="codigoUsuario"
+              formControlName="codigoUsuario" name="codigoUsuario">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="cedula" class="col-sm-7 col-form-label">Cedula</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="cedula"
+              formControlName="cedula" name="cedula">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="form-group form-inline col-md-5">
+            <label for="nombres" class="col-sm-7 col-form-label">Nombre</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="nombres"
+              formControlName="nombres" name="nombres">
+            </div>
+          </div>
+  
+          <div class="form-group form-inline col-md-5">
+            <label for="apellidos" class="col-sm-7 col-form-label">Apellidos</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="apellidos"
+              formControlName="apellidos" name="apellidos">
+            </div>
+          </div>
+          <div class="form-group form-inline col-md-5">
+            <label for="estado" class="col-sm-7 col-form-label">Estado</label>
+            <div class="col-sm-3">
+              <select class="custom-select"
+                  formControlName="estado" name = "estado">
+                <option value=null [selected]="true">TODOS</option>
+                <option value="A">ACTIVO</option>
+                <option value="I">INACTIVO</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="cedula">Cedula</label>
-        <input type="text" class="form-control" id="cedula"
-        [(ngModel)]="persona.cedula" name="cedula">
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorUsuarios()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="nombres">Nombre</label>
-        <input type="text" class="form-control" id="nombres"
-        [(ngModel)]="persona.nombres" name="nombres">
-      </div>
-
-      <div class="form-group">
-        <label for="apellidos">Apellidos</label>
-        <input type="text" class="form-control" id="apellidos"
-        [(ngModel)]="persona.apellidos" name="apellidos">
-      </div>
-    </div>
-
-    <div class="col-log-4">
-      <div class="form-horizontal">
-        <button type="submit"
-        (click)="buscadorUsuarios()" class="btn btn-success">Buscar</button>
-        <button type="submit"
-        (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-      </div>
-    </div>
+    </form>
+  </div>
 </div>
-
+<br>
 <div class="row">
   <div class="col text-right">
     <button routerLink="/usuario/nuevo"
@@ -59,19 +92,11 @@
       <th scope="col">#</th>
       <th scope="col">id</th>
       <th scope="col">Codigo Usuario</th>
+      <th scope="col">Persona Id</th>
+      <th scope="col">Funcionario Id</th>
       <th scope="col">Cedula</th>
       <th scope="col">Nombres</th>
-      <th scope="col">Apellidos</th>
-      <th scope="col">Edad</th>
-      <th scope="col">Direccion</th>
-      <th scope="col">Email</th>
-      <th scope="col">Estado Civil</th>
-      <th scope="col">Fecha Nac.</th>
-      <th scope="col">Nacionalidad</th>
-      <th scope="col">Sexo</th>
-      <th scope="col">Telefono</th>
-      <th scope="col">Celular</th>
-      <th scope="col">Funcionario Id</th>
+      <th scope="col">Apellidos</th>      
       <th scope="col">Estado</th>
       <th scope="col">Editar/Borrar</th>
     </tr>
@@ -81,19 +106,11 @@
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ usuario.usuarioId }}</td>
       <td>{{ usuario.codigoUsuario }}</td>
+      <td>{{ usuario.personas.personaId }}</td>
+      <td>{{ usuario.funcionarios.funcionarioId }}</td>      
       <td>{{ usuario.personas.cedula }}</td>
       <td>{{ usuario.personas.nombres }}</td>
       <td>{{ usuario.personas.apellidos }}</td>      
-      <td>{{ usuario.personas.edad }}</td>
-      <td>{{ usuario.personas.direccion }}</td>
-      <td>{{ usuario.personas.email }}</td>
-      <td>{{ usuario.personas.estadoCivil }}</td>
-      <td>{{ usuario.personas.fechaNacimiento }}</td>
-      <td>{{ usuario.personas.nacionalidad }}</td>
-      <td>{{ usuario.personas.sexo }}</td>
-      <td>{{ usuario.personas.telefono }}</td>
-      <td>{{ usuario.personas.celular}}</td>
-      <td>{{ usuario.funcionarioId }}</td>
       <td>{{ usuario.estado }}</td>
 
       <td>

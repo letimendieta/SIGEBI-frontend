@@ -20,7 +20,7 @@
       </div>
       <div class="card-body">
 
-        <form (ngSubmit)="guardar( f )" #f="ngForm">
+        <form [formGroup]="parametroForm" (ngSubmit)="guardar( )">
           <div class="row">
             <div class="col-lg-5">
               <div class="form-group" [hidden]="crear">
@@ -28,9 +28,8 @@
                 <input type="text"
                       class="form-control"
                       placeholder="ID"
-                      [(ngModel)]="parametro.parametroId"
-                      name="id"
-                      disabled="disabled">
+                      formControlName="parametroId"
+                      name="id">
                 <small class="form-text text-muted">Este campo es autogenerado</small>
               </div>
             </div>
@@ -43,45 +42,44 @@
               <input type="text"
                     class="form-control"
                     placeholder="Codigo Parametro"
-                    [(ngModel)]="parametro.codigoParametro"
+                    formControlName="codigoParametro"
                     name="codigoParametro"
                     required>
           
               <label>Descripcion</label>
               <input type="text"
                     class="form-control"
-                    [(ngModel)]="parametro.descripcion"
+                    formControlName="descripcion"
                     name="decripcion"
                     placeholder="Descripcion">
 
               <label>Nombre</label>
               <input type="text"
                     class="form-control"
-                    [(ngModel)]="parametro.nombre"
+                    formControlName="nombre"
                     name="nombre"
                     placeholder="Nombre">
           
               <label>Valor</label>
               <input type="text"
                     class="form-control"
-                    [(ngModel)]="parametro.valor"
+                    formControlName="valor"
                     name="valor"
                     placeholder="Valor">
                   
               <label>Descripcion Valor</label>
               <input type="text"
                       class="form-control"
-                      [(ngModel)]="parametro.descripcionValor"
+                      formControlName="descripcionValor"
                       name="descripcionValor"
                       placeholder="Descripcion valor">
 
               <label>Estado</label>
-              <select ui-select2 class="form-control input-sm"
-                [(ngModel)]="parametro.estado" name = "estado"
+              <select class="custom-select"
+                formControlName="estado" name = "estado"
                 uppercase>
-                <option value="">----SELECCIONE----</option>
-                <option value="A">Activo</option>
-                <option value="I">Inactivo</option>
+                <option value="A" [selected]="true">ACTIVO</option>
+                <option value="I">INACTIVO</option>
               </select>
             </div>
           </div>
@@ -89,46 +87,45 @@
           <div class="form-row" [hidden]="crear">
             <div class="col-lg-5"> 
               <label>Fecha creacion</label>
-              <input type="text"
+              <input type="datetime-local"
                     class="form-control"
-                    [(ngModel)]="parametro.fechaCreacion"
+                    formControlName="fechaCreacion"
                     name="fechaCreacion"
-                    disabled="disabled"
                     placeholder="Fecha creacion">
 
               <label>Fecha modificacion</label>
-              <input type="text"
+              <input type="datetime-local"
                     class="form-control"
-                    [(ngModel)]="parametro.fechaModificacion"
+                    formControlName="fechaModificacion"
                     name="fechaModificacion"
-                    disabled="disabled"
                     placeholder="Fecha modificacion">
             </div>
             <div class="col-lg-5"> 
               <label>Usuario creacion</label>
               <input type="text"
                     class="form-control"
-                    [(ngModel)]="parametro.usuarioCreacion"
+                    formControlName="usuarioCreacion"
                     name="usuarioCreacion"
-                    disabled="disabled"
                     placeholder="Usuario creacion">
 
               <label>Usuario modificacion</label>
               <input type="text"
                     class="form-control"
-                    [(ngModel)]="parametro.usuarioModificacion"
+                    formControlName="usuarioModificacion"
                     name="usuarioModificacion"
-                    disabled="disabled"
                     placeholder="Usuario modificacion">
             </div> 
           </div>
+          <br>
           <hr>
+          <br>
           <div class="form-group text-center">
             <button type="submit"
                     class="btn btn-primary ">
               <i class="fa fa-save"></i>
               Guardar
             </button>
+            <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
           </div>
 
         </form>

@@ -6,9 +6,17 @@ import { Observable } from 'rxjs';
 
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
+import { CarreraModelo } from '../../../modelos/carrera.modelo';
+import { DepartamentoModelo } from '../../../modelos/departamento.modelo';
+import { DependenciaModelo } from '../../../modelos/dependencia.modelo';
+import { EstamentoModelo } from '../../../modelos/estamento.modelo';
 
 import { PersonasService } from '../../../servicios/personas.service';
 import { ParametrosService } from '../../../servicios/parametros.service';
+import { CarrerasService } from '../../../servicios/carreras.service';
+import { DepartamentosService } from '../../../servicios/departamentos.service';
+import { DependenciasService } from '../../../servicios/dependencias.service';
+import { EstamentosService } from '../../../servicios/estamentos.service';
 
 import Swal from 'sweetalert2';
 
@@ -19,36 +27,47 @@ import Swal from 'sweetalert2';
 })
 export class PersonaComponent implements OnInit {
   crear = false;
-  forma: FormGroup;
+  personaForm: FormGroup;
 
   persona: PersonaModelo = new PersonaModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
+  listaCarreras: CarreraModelo;
+  listaDepartamentos: DepartamentoModelo;
+  listaDependencias: DependenciaModelo;
+  listaEstamentos: EstamentoModelo;
 
   constructor( private personasService: PersonasService,
                private parametrosService: ParametrosService,
+               private carrerasService: CarrerasService,
+               private departamentosService: DepartamentosService,
+               private dependenciasService: DependenciasService,
+               private estamentosService: EstamentosService,
                private route: ActivatedRoute, 
-              private fb: FormBuilder ) { this.crearFormulario();}
-               ) { }
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  }              
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.obtenerParametros();
+    this.listarCarreras();
+    this.listarDepartamentos();
+    this.listarDependencias();
+    this.listarEstamentos();
 
     if ( id !== 'nuevo' ) {
       
       this.personasService.getPersona( Number(id) )
         .subscribe( (resp: PersonaModelo) => {
-          this.persona = resp;
+          this.personaForm.patchValue(resp);
         });
     }else{
       this.crear = true;
     }
-
   }
 
-  guardar(  ) {
   obtenerParametros() {
     var estadoCivilParam = new ParametroModelo();
     estadoCivilParam.codigoParametro = "EST_CIVIL";
@@ -81,25 +100,60 @@ export class PersonaComponent implements OnInit {
     
   }
 
-  guardar( form: NgForm ) {
+  listarCarreras() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
 
+    this.carrerasService.buscarCarrerasFiltros(null, orderBy, orderDir )
+      .subscribe( (resp: CarreraModelo) => {
+        this.listaCarreras = resp;
+    });
+  }
 
+  listarDepartamentos() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
 
-      if ( this.forma.invalid ) {
+    this.departamentosService.buscarDepartamentosFiltros(null, orderBy, orderDir )
+      .subscribe( (resp: DepartamentoModelo) => {
+        this.listaDepartamentos = resp;
+    });
+  }
 
-    return Object.values( this.forma.controls ).forEach( control => {
+  listarDependencias() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
 
-    if ( control instanceof FormGroup ) {
-    Object.values( control.controls ).forEach( control => control.markAsTouched() );
-  } else {
-  control.markAsTouched();
-}
-});
+    this.dependenciasService.buscarDependenciasFiltros(null, orderBy, orderDir )
+      .subscribe( (resp: DependenciaModelo) => {
+        this.listaDependencias = resp;
+    });
+  }
 
+  listarEstamentos() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
 
-}
+    this.estamentosService.buscarEstamentosFiltros(null, orderBy, orderDir )
+      .subscribe( (resp: EstamentoModelo) => {
+        this.listaEstamentos = resp;
+    });
+  }
 
+  guardar( ) {
 
+    if ( this.personaForm.invalid ) {
+
+      return Object.values( this.personaForm.controls ).forEach( control => {
+
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
+    }
+    
     Swal.fire({
       title: 'Espere',
       text: 'Guardando información',
@@ -108,8 +162,8 @@ export class PersonaComponent implements OnInit {
     });
     Swal.showLoading();
 
-
     let peticion: Observable<any>;
+    this.persona = this.personaForm.getRawValue();
 
     if ( this.persona.personaId ) {
       //Modificar
@@ -136,56 +190,86 @@ export class PersonaComponent implements OnInit {
             this.limpiar();
           }
         }
-
       });
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+e.error.errors[0],
+              text: e.status +'. '+ this.obtenerError(e),
             })
        }
     );
-
-
-    // Posteo de información
-    this.forma.reset({
-      nombre: this.persona.nombres
-    });
-
   }
 
   limpiar(){
     this.persona = new PersonaModelo();
+    this.personaForm.reset();
+  }
+
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
   }
 
   get cedulaNoValido() {
-    return this.forma.get('cedula').invalid && this.forma.get('cedula').touched
+    return this.personaForm.get('cedula').invalid && this.personaForm.get('cedula').touched
   }
 
   get nombreNoValido() {
-    return this.forma.get('nombre').invalid && this.forma.get('nombre').touched
+    return this.personaForm.get('nombres').invalid && this.personaForm.get('nombres').touched
   }
 
   get apellidoNoValido() {
-  return this.forma.get('apellido').invalid && this.forma.get('apellido').touched
-}
+    return this.personaForm.get('apellidos').invalid && this.personaForm.get('apellidos').touched
+  }
 
-get correoNoValido() {
-  return this.forma.get('correo').invalid && this.forma.get('correo').touched
-}
+  get correoNoValido() {
+    return this.personaForm.get('email').invalid && this.personaForm.get('email').touched
+  }
 
+  crearFormulario() {
 
+    this.personaForm = this.fb.group({
+      personaId  : [null, [] ],
+      cedula  : [null, [ Validators.required, Validators.minLength(6) ]  ],
+      nombres  : [null, [ Validators.required, Validators.minLength(5) ]  ],
+      apellidos: [null, [Validators.required] ],
+      fechaNacimiento: [null, [] ],
+      edad: [null, [] ],
+      direccion: [null, [] ],
+      sexo: [null, [] ],
+      estadoCivil: [null, [] ],
+      nacionalidad: [null, [] ],
+      telefono: [null, [] ],
+      email  : [null, [ Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ],
+      celular: [null, [] ],
+      carreraId: [null, [] ],
+      departamentoId: [null, [] ],
+      dependenciaId: [null, [] ],
+      estamentoId: [null, [] ],
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ],   
+    });
 
+    this.personaForm.get('personaId').disable();
 
-crearFormulario() {
-
-  this.forma = this.fb.group({
-    cedula  : ['', [ Validators.required, Validators.minLength(6) ]  ],
-    nombre  : ['', [ Validators.required, Validators.minLength(5) ]  ],
-    apellido: ['', [Validators.required] ],
-    correo  : ['', [ Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ]
-  });
-
-}
+    this.personaForm.get('fechaCreacion').disable();
+    this.personaForm.get('fechaModificacion').disable();
+    this.personaForm.get('usuarioCreacion').disable();
+    this.personaForm.get('usuarioModificacion').disable();    
+  }
 
 }

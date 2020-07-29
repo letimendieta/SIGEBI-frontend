@@ -1,0 +1,125 @@
+
+<h1>Carrera </h1>
+<hr>
+
+<div class="row text-right">
+  <div class="col">
+    <button class="btn btn-danger"
+            routerLink="/carreras">
+      <i class="fa fa-arrow-left"></i>
+      Regresar
+    </button>
+  </div>
+</div>
+
+<div class="row animated fadeIn faster">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+              Datos Carreras
+      </div>
+      <div class="card-body">
+
+        <form [formGroup]="carreraForm" (ngSubmit)="guardar( )">
+          
+          <!-- Datos Carrera-->
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="form-group" [hidden]="crear">
+                <label>ID</label>
+                <input type="text"
+                      class="form-control"
+                      placeholder="ID"
+                      placeholder="carreraId"
+                      formControlName="carreraId" 
+                      name="id">
+                <small class="form-text text-muted">Este campo es autogenerado</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-5">
+              <div>
+                <label>Codigo</label>
+                  <input type="text"
+                        class="form-control"
+                        placeholder="Codigo"                      
+                        name="codigo"
+                        formControlName="codigo"
+                        [class.is-invalid]="codigoNoValido">
+                    <small *ngIf="codigoNoValido" class="text-danger">
+                      Ingrese codigo
+                    </small>
+              </div>
+
+              <div>
+                <label>Descripcion</label>
+                <input type="text"
+                      class="form-control"
+                      placeholder="Descripcion"
+                      formControlName="descripcion"
+                      name="descripcion"
+                      [class.is-invalid]="descripcionNoValido">
+                  <small *ngIf="descripcionNoValido" class="text-danger">
+                    Ingrese descripcion
+                  </small>
+              </div>
+           
+              <label>Estado</label>
+              <select class="custom-select"
+                    formControlName="estado" name = "estado">
+                <option value="A" [selected]="true">ACTIVO</option>
+                <option value="I">INACTIVO</option>
+              </select>              
+            </div>
+          </div>
+          <div class="form-row" [hidden]="crear">
+            <div class="col-lg-5"> 
+              <label>Fecha creacion</label>
+              <input type="datetime-local"
+                    class="form-control"
+                    formControlName="fechaCreacion"
+                    name="fechaCreacion"
+                    placeholder="Fecha creacion">
+
+              <label>Fecha modificacion</label>
+              <input type="datetime-local"
+                    class="form-control"
+                    formControlName="fechaModificacion"
+                    name="fechaModificacion"
+                    placeholder="Fecha modificacion">
+            </div>
+            <div class="col-lg-5"> 
+              <label>Usuario creacion</label>
+              <input type="text"
+                    class="form-control"
+                    formControlName="usuarioCreacion"
+                    name="usuarioCreacion"
+                    placeholder="Usuario creacion">
+
+              <label>Usuario modificacion</label>
+              <input type="text"
+                    class="form-control"
+                    formControlName="usuarioModificacion"
+                    name="usuarioModificacion"
+                    placeholder="Usuario modificacion">
+            </div> 
+          </div>
+          <br>
+          <hr>
+          <br>
+          <div class="form-group text-center">
+            <button type="submit"
+                    class="btn btn-primary ">
+              <i class="fa fa-save"></i>
+              Guardar
+            </button>
+            <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

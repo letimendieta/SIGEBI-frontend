@@ -7,11 +7,10 @@ export class ProcedimientoModelo {
     insumoId: number;
     notas: string;
     cantidadInsumo: number;
-    fecha: string;
-    hora: string;
-    fechaCreacion: string;
+    fecha: Date;
+    fechaCreacion: Date;
     usuarioCreacion: string;
-    fechaModificacion: string;
+    fechaModificacion: Date;
     usuarioModificacion: string;    
     pacientes: PacienteModelo;
     funcionarios: FuncionarioModelo;

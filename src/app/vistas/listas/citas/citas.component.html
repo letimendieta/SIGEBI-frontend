@@ -1,0 +1,225 @@
+<h1>Listado de Citas</h1>
+<hr>
+
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">    
+    <form [formGroup]="buscadorForm">
+      <div class="form-row">
+        <div class="col-lg-4"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="citaId" class="col-sm-7 col-form-label">Cita Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="citaId"
+                formControlName="citaId" name="citaId">
+            </div>
+          </div>
+          <div formGroupName="areas" class="form-group form-inline col-md-5">
+            <label for="areaId" class="col-sm-7 col-form-label">Area</label>
+            <div class="col-sm-3"> 
+              <select class="form-control input-sm" name="areaId"
+                  formControlName="areaId">
+                  <option value=null [selected]="true">TODOS</option>
+                  <option *ngFor="let item of listaAreas; let i = index"
+                  value="{{item.areaId}}">
+                  {{item.codigo}} - {{item.descripcion}}
+                  </option>
+              </select>
+            </div> 
+          </div>
+        
+          <div class="form-group form-inline col-md-5">
+            <label for="fecha" class="col-sm-7 col-form-label">Fecha cita</label>
+            <div class="col-sm-3">
+              <input type="date" class="form-control" id="fecha"
+                formControlName="fecha" name="fecha">
+            </div>            
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="hora" class="col-sm-7 col-form-label">Hora cita</label>
+            <div class="col-sm-3">
+              <input type="time" class="form-control" id="hora"
+              formControlName="hora" name="hora">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="estado" class="col-sm-7 col-form-label">Estado</label>
+            <div class="col-sm-3">
+              <select class="custom-select"
+                  formControlName="estado" name = "estado">
+                <option value=null [selected]="true">TODOS</option>
+                <option value="A">ACTIVO</option>
+                <option value="I">INACTIVO</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="pacientes" class="col-lg-4">  
+          <div class="form group">
+            <div class="form-group form-inline col-md-5">
+              <label for="pacienteId" class="col-sm-7 col-form-label">Paciente Id</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control"
+                  formControlName="pacienteId" name="pacienteId">
+                </div>
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="pacienteCedula" class="col-sm-7 col-form-label">Paciente Cedula</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="pacienteCedula"
+                formControlName="pacienteCedula" name="pacienteCedula">
+              </div>  
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="pacienteNombres" class="col-sm-7 col-form-label">Paciente Nombres</label>
+              <div class="col-sm-3">   
+                <input type="text" class="form-control" id="pacienteNombres"
+                  formControlName="pacienteNombres" name="pacienteNombres">
+              </div> 
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="pacienteApellidos" class="col-sm-7 col-form-label">Paciente Apellidos</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="pacienteApellidos"
+                formControlName="pacienteApellidos" name="pacienteApellidos">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="funcionarios" class="col-lg-4"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="funcionarioId" class="col-sm-7 col-form-label">Funcionario Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control"
+              formControlName="funcionarioId" name="funcionarioId">
+            </div>
+          </div> 
+
+          <div class="form-group form-inline col-md-5">
+            <label for="funcionarioCedula" class="col-sm-7 col-form-label">Funcionario Cedula</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="funcionarioCedula"
+              formControlName="funcionarioCedula" name="funcionarioCedula">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="funcionarioNombres" class="col-sm-7 col-form-label">Funcionario Nombres</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="funcionarioNombres"
+              formControlName="funcionarioNombres" name="funcionarioNombres">
+            </div> 
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="funcionarioApellidos" class="col-sm-7 col-form-label">Funcionario Apellidos</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="funcionarioApellidos"
+                formControlName="funcionarioApellidos" name="funcionarioApellidos">
+            </div>
+          </div>
+        </div>        
+      </div>
+
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorCitas()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
+      </div>    
+    </form>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/cita/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && citas.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">id</th>
+      <th scope="col">Paciente Id</th>
+      <th scope="col">Paciente Cedula</th>
+      <th scope="col">Paciente Nombres</th>
+      <th scope="col">Paciente Apellidos</th>
+      <th scope="col">Funcionario Id</th>
+      <th scope="col">Funcionario Cedula</th>
+      <th scope="col">Funcionario Nombres</th>
+      <th scope="col">Funcionario Apellidos</th>
+      <th scope="col">Codigo Area</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Hora</th>
+      <th scope="col">Estado</th>
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cita of citas; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ cita.citaId }}</td>
+      <td>{{ cita.pacientes.pacienteId }}</td>
+      <td>{{ cita.pacientes.personas.cedula }}</td>
+      <td>{{ cita.pacientes.personas.nombres }}</td>
+      <td>{{ cita.pacientes.personas.apellidos }}</td>
+      <td>{{ cita.funcionarios.funcionarioId }}</td>
+      <td>{{ cita.funcionarios.personas.cedula }}</td>
+      <td>{{ cita.funcionarios.personas.nombres }}</td>
+      <td>{{ cita.funcionarios.personas.apellidos }}</td>
+      <td>{{ cita.areas.codigo }}</td>
+      <td>{{ cita.fecha | date : 'dd-MM-yyyy'}}</td>
+      <td>{{ cita.hora}}</td>
+      <td>{{ cita.estado}}</td>
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/cita', cita.citaId ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarCita( cita ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!cargando && citas.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>

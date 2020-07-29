@@ -1,7 +1,7 @@
 export class UsuarioModelo {
 
   usuario:string;
-  password:string;
+  contrasenha:string;
 
 
 }

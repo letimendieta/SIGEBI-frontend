@@ -1,0 +1,167 @@
+<h1>Listado de horarios</h1>
+<hr>
+
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">
+    <form [formGroup]="buscadorForm">
+      <div class="form-row" >
+        <div class="col-lg-5"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="horarioDisponibleId" class="col-sm-7 col-form-label">Horario Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="horarioDisponibleId"
+                formControlName="horarioDisponibleId" name="horarioDisponibleId">
+            </div>  
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="fecha" class="col-sm-7 col-form-label">Fecha</label>
+            <div class="col-sm-3">
+              <input type="date" class="form-control" id="fecha"
+              formControlName="fecha" name="fecha">
+            </div>
+          </div> 
+        
+          <div class="form-group form-inline col-md-5">
+            <label for="estado" class="col-sm-7 col-form-label">Estado</label>
+            <div class="col-sm-3">
+              <select class="custom-select"
+                  formControlName="estado" name = "estado">
+                <option value=null [selected]="true">TODOS</option>
+                <option value="A">ACTIVO</option>
+                <option value="I">INACTIVO</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="funcionarios" class="col-lg-5"> 
+          <div class="form group">
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioId" class="col-sm-7 col-form-label">Funcionario Id</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control"
+                formControlName="funcionarioId" name="funcionarioId">
+              </div>
+            </div>      
+            <div class="form-group form-inline col-md-5">
+              <label for="cedula" class="col-sm-7 col-form-label">Funcionario Cedula</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="cedula"
+                formControlName="cedula" name="cedula">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="nombres" class="col-sm-7 col-form-label">Funcionario Nombres</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="nombres"
+                formControlName="nombres" name="nombres">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="apellidos" class="col-sm-7 col-form-label">Funcionario Apellidos</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="apellidos"
+                formControlName="apellidos" name="apellidos">
+              </div>
+            </div>
+          </div>
+        </div>               
+      </div>
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorHorarios()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
+      </div>      
+    </form>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/horario/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && horarios.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">id</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Hora Inicio</th>
+      <th scope="col">Hora Fin</th>
+      <th scope="col">Funcionario Id</th>
+      <th scope="col">Funcionario Cedula</th>
+      <th scope="col">Funcionario Nombres</th>
+      <th scope="col">Funcionario Apellidos</th>
+      <th scope="col">Estado</th>
+      <th scope="col">Fecha Creacion</th>
+      <th scope="col">Usuario Creacion</th>
+      <th scope="col">Fecha Modificacion</th>
+      <th scope="col">Usuario Modificacion</th>     
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let horario of horarios; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ horario.horarioDisponibleId }}</td>
+      <td>{{ horario.fecha | date : 'dd-MM-yyyy' }}</td>
+      <td>{{ horario.horaInicio }}</td>
+      <td>{{ horario.horaFin }}</td>
+      <td>{{ horario.funcionarios.funcionarioId }}</td>
+      <td>{{ horario.funcionarios.personas.cedula }}</td>
+      <td>{{ horario.funcionarios.personas.nombres }}</td>
+      <td>{{ horario.funcionarios.personas.apellidos }}</td>
+      <td>{{ horario.estado }}</td>
+      <td>{{ horario.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+      <td>{{ horario.usuarioCreacion }}</td>
+      <td>{{ horario.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+      <td>{{ horario.usuarioModificacion }}</td>     
+
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/horario', horario.horarioDisponibleId ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarHorario( horario ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!cargando && horarios.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>

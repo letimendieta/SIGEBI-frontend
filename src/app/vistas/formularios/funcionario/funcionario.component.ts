@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -20,14 +20,18 @@ import Swal from 'sweetalert2';
 export class FuncionarioComponent implements OnInit {
   crear = false;
   funcionario: FuncionarioModelo = new FuncionarioModelo();
-  persona: PersonaModelo = new PersonaModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
 
+  funcionarioForm: FormGroup;
+
   constructor( private funcionariosService: FuncionariosService,
                private parametrosService: ParametrosService,
-               private route: ActivatedRoute ) { }
+               private route: ActivatedRoute,
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  } 
 
   ngOnInit() {
 
@@ -37,8 +41,7 @@ export class FuncionarioComponent implements OnInit {
     if ( id !== 'nuevo' ) {
       this.funcionariosService.getFuncionario( Number(id) )
         .subscribe( (resp: FuncionarioModelo) => {
-          this.funcionario = resp;
-          this.persona = resp.personas;
+          this.funcionarioForm.patchValue(resp);
         });
     }else{
       this.crear = true;
@@ -77,29 +80,32 @@ export class FuncionarioComponent implements OnInit {
     
   }
 
-  obtenerPersona( id : number ){
-
+  obtenerPersona( ){
+    var id = this.funcionarioForm.get('personas').get('personaId').value;
     this.funcionariosService.getPersona( id )
-        .subscribe( (resp: PersonaModelo) => {
-          this.persona = resp;
-        }, e => {
-            Swal.fire({
-              icon: 'info',
-              //title: 'Algo salio mal',
-              text: e.status +'. '+e.error.mensaje,
-            })
-          }
-        );
-
+      .subscribe( (resp: PersonaModelo) => {
+        this.funcionarioForm.get('personas').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e),
+          })
+          this.funcionarioForm.get('personas').get('personaId').setValue(null);
+        }
+      );
   }
   
-  guardar( form: NgForm ) {
+  guardar( ) {
 
-    if ( form.invalid ) {
-      console.log('Formulario no válido');
-      return;
+    if ( this.funcionarioForm.invalid ){
+      return Object.values( this.funcionarioForm.controls ).forEach( control => {
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
     }
-
     Swal.fire({
       title: 'Espere',
       text: 'Guardando información',
@@ -108,16 +114,18 @@ export class FuncionarioComponent implements OnInit {
     });
     Swal.showLoading();
 
-    let peticion: Observable<any>;       
+    let peticion: Observable<any>;
+    
+    this.funcionario = this.funcionarioForm.getRawValue();
 
     if ( this.funcionario.funcionarioId ) {
-      this.persona.usuarioModificacion = 'admin';
-      this.funcionario.personas = this.persona;
+      this.funcionario.personas.usuarioModificacion = 'admin';
       this.funcionario.usuarioModificacion = 'admin';
       peticion = this.funcionariosService.actualizarFuncionario( this.funcionario );
     } else {
-      this.persona.usuarioCreacion = 'admin';
-      this.funcionario.personas = this.persona;
+      if(!this.funcionario.personas.personaId){
+        this.funcionario.personas.usuarioCreacion = 'admin';
+      }
       this.funcionario.usuarioCreacion = 'admin';
       peticion = this.funcionariosService.crearFuncionario( this.funcionario );
     }
@@ -137,27 +145,76 @@ export class FuncionarioComponent implements OnInit {
             this.limpiar();
           }
         }
-
       });
     }, e => {
-          var mensaje = "";
-          if(e.status != 500){
-            mensaje = e.status +'. '+e.error.errors[0];
-          }else{
-            mensaje = e.status +'. '+ e.error.mensaje +'. '+ e.error.error;
-          }
-            Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: mensaje,
-            })
-          
+        Swal.fire({
+          icon: 'error',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })          
        }
     );
   }
 
   limpiar(){
     this.funcionario = new FuncionarioModelo();
-    this.persona = new PersonaModelo();
+    this.funcionarioForm.reset();
+    this.funcionarioForm.get('estado').setValue('A');
+  }
+
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+
+  get personaIdNoValido() {
+    return this.funcionarioForm.get('personas').get('personaId').invalid 
+      && this.funcionarioForm.get('personas').get('personaId').touched
+  }
+
+  get areaNoValido() {
+    return this.funcionarioForm.get('areaId').invalid && this.funcionarioForm.get('areaId').touched
+  }
+
+  crearFormulario() {
+    this.funcionarioForm = this.fb.group({
+      funcionarioId  : [null, [] ],
+      personas : this.fb.group({
+        personaId  : [null, [] ],
+        cedula  : [null, [ Validators.required, Validators.minLength(6) ]  ],
+        nombres  : [null, [ Validators.required, Validators.minLength(5) ]  ],
+        apellidos: [null, [Validators.required] ]       
+      }),
+      areaId  : [null, [ Validators.required] ],
+      estado  : [null, [] ],
+      fechaIngreso  : [null, [] ],
+      fechaEgreso  : [null, [] ],
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ],             
+    });
+
+    this.funcionarioForm.get('funcionarioId').disable();
+    this.funcionarioForm.get('personas').get('cedula').disable();
+    this.funcionarioForm.get('personas').get('nombres').disable();
+    this.funcionarioForm.get('personas').get('apellidos').disable();
+
+    this.funcionarioForm.get('fechaCreacion').disable();
+    this.funcionarioForm.get('fechaModificacion').disable();
+    this.funcionarioForm.get('usuarioCreacion').disable();
+    this.funcionarioForm.get('usuarioModificacion').disable();
   }
 }

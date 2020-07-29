@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { UsuarioModelo } from '../../../modelos/usuario.modelo';
+import { Usuario2Modelo } from '../../../modelos/usuario2.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 
 import { UsuariosService } from '../../../servicios/usuarios.service';
-import { ParametrosService } from '../../../servicios/parametros.service';
+import { FuncionariosService } from '../../../servicios/funcionarios.service';
 
 import Swal from 'sweetalert2';
 
@@ -19,88 +21,78 @@ import Swal from 'sweetalert2';
 })
 export class UsuarioComponent implements OnInit {
   crear = false;
-  usuario: UsuarioModelo = new UsuarioModelo();
+  usuario: Usuario2Modelo = new Usuario2Modelo();
   persona: PersonaModelo = new PersonaModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
-
-  modificar: boolean = false;
-
+  
+  usuarioForm: FormGroup;
 
   constructor( private usuariosService: UsuariosService,
-               private parametrosService: ParametrosService,
-               private route: ActivatedRoute ) { }
+               private funcionariosService: FuncionariosService,
+               private route: ActivatedRoute,
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  }              
 
   ngOnInit() {
 
     const id = this.route.snapshot.paramMap.get('id');
-    this.obtenerParametros();
 
     if ( id !== 'nuevo' ) {
       this.usuariosService.getUsuario( Number(id) )
-        .subscribe( (resp: UsuarioModelo) => {
-          this.usuario = resp;
-          this.persona = resp.personas;
+        .subscribe( (resp: Usuario2Modelo) => {
+          this.usuarioForm.patchValue(resp);
         });
     }else{
       this.crear = true;
     }
   }
 
-  obtenerParametros() {
-    var estadoCivilParam = new ParametroModelo();
-    estadoCivilParam.codigoParametro = "EST_CIVIL";
-    estadoCivilParam.estado = "A";
-    var orderBy = "descripcionValor";
-    var orderDir = "asc";
-
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaEstadoCivil = resp;
-    });
-
-    var sexoParam = new ParametroModelo();
-    sexoParam.codigoParametro = "SEXO";
-    sexoParam.estado = "A";
-
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaSexo = resp;
-    });
-
-    var nacionalidadParam = new ParametroModelo();
-    nacionalidadParam.codigoParametro = "NACIONALIDAD";
-    nacionalidadParam.estado = "A";
-
-    this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaNacionalidad = resp;
-    });
-    
-  }
-
-  obtenerPersona( id : number ){
-
-    this.usuariosService.getPersona( id )
-        .subscribe( (resp: PersonaModelo) => {
-          this.persona = resp;
+  obtenerFuncionario( ){
+    var id = this.usuarioForm.get('funcionarios').get('funcionarioId').value;
+    this.funcionariosService.getFuncionario( id )
+        .subscribe( (resp: FuncionarioModelo) => {
+          this.usuarioForm.get('funcionarios').patchValue(resp);
+          this.usuarioForm.get('personas').patchValue(resp.personas);
+          if(resp.funcionarioId){
+            this.usuarioForm.get('personas').get('personaId').disable();
+          }
         }, e => {
             Swal.fire({
               icon: 'info',
-              //title: 'Algo salio mal',
-              text: e.status +'. '+e.error.mensaje,
+              text: e.status +'. '+ this.obtenerError(e),
             })
           }
         );
+  }
 
+  obtenerPersona( ){
+    var id = this.usuarioForm.get('personas').get('personaId').value;
+    this.usuariosService.getPersona( id )
+      .subscribe( (resp: PersonaModelo) => {
+        this.usuarioForm.get('personas').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e),
+          })
+          this.usuarioForm.get('personas').get('personaId').setValue(null);
+        }
+      );
   }
   
-  guardar( form: NgForm ) {
+  guardar( ) {
 
-    if ( form.invalid ) {
-      console.log('Formulario no válido');
-      return;
+    if ( this.usuarioForm.invalid ){
+      return Object.values( this.usuarioForm.controls ).forEach( control => {
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
     }
 
     Swal.fire({
@@ -111,16 +103,14 @@ export class UsuarioComponent implements OnInit {
     });
     Swal.showLoading();
 
-    let peticion: Observable<any>;       
+    let peticion: Observable<any>; 
+    
+    this.usuario = this.usuarioForm.getRawValue();
 
     if ( this.usuario.usuarioId ) {
-      this.persona.usuarioModificacion = 'admin';
-      this.usuario.personas = this.persona;
       this.usuario.usuarioModificacion = 'admin';
       peticion = this.usuariosService.actualizarUsuario( this.usuario );
     } else {
-      this.persona.usuarioCreacion = 'admin';
-      this.usuario.personas = this.persona;
       this.usuario.usuarioCreacion = 'admin';
       peticion = this.usuariosService.crearUsuario( this.usuario );
     }
@@ -129,7 +119,7 @@ export class UsuarioComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.usuario.personas.nombres,
+                title: this.usuario.codigoUsuario,
                 text: resp.mensaje,
               }).then( resp => {
 
@@ -140,27 +130,95 @@ export class UsuarioComponent implements OnInit {
             this.limpiar();
           }
         }
-
       });
     }, e => {
-          var mensaje = "";
-          if(e.status != 500){
-            mensaje = e.status +'. '+e.error.errors[0];
-          }else{
-            mensaje = e.status +'. '+ e.error.mensaje +'. '+ e.error.error;
-          }
-            Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: mensaje,
-            })
-          
-       }
+        Swal.fire({
+          icon: 'error',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })          
+      }
     );
   }
 
   limpiar(){
-    this.usuario = new UsuarioModelo();
-    this.persona = new PersonaModelo();
+    this.usuarioForm.reset();
+    this.usuarioForm.get('personas').get('personaId').enable();
+    this.usuario = new Usuario2Modelo();
+    this.usuarioForm.get('estado').setValue('A');
+  }
+
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+
+  get personaIdNoValido() {
+    return this.usuarioForm.get('personas').get('personaId').invalid 
+      && this.usuarioForm.get('personas').get('personaId').touched
+  }
+
+  get usuarioNoValido() {
+    return this.usuarioForm.get('codigoUsuario').invalid 
+      && this.usuarioForm.get('codigoUsuario').touched
+  }
+
+  get passNoValido() {
+    return this.usuarioForm.get('password').invalid 
+      && this.usuarioForm.get('password').touched
+  }
+
+  get estadoNoValido() {
+    return this.usuarioForm.get('estado').invalid 
+      && this.usuarioForm.get('estado').touched
+  }
+
+  crearFormulario() {
+    this.usuarioForm = this.fb.group({
+      usuarioId  : [null, [] ],
+      funcionarios : this.fb.group({
+        funcionarioId  : [null, [] ],
+        areaId : [null, [] ],
+        estado : [null, [] ]
+      }),
+      personas : this.fb.group({
+        personaId : [null, [Validators.required] ],
+        cedula : [null, [] ],
+        nombres : [null, [] ],
+        apellidos : [null, [] ]
+      }),      
+      codigoUsuario : [null, [Validators.required] ],
+      password : [null, [Validators.required] ],
+      estado : [null, [Validators.required] ],
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ],             
+    });
+
+    this.usuarioForm.get('usuarioId').disable();
+    this.usuarioForm.get('funcionarios').get('areaId').disable();
+    this.usuarioForm.get('funcionarios').get('estado').disable();
+
+    this.usuarioForm.get('personas').get('cedula').disable();
+    this.usuarioForm.get('personas').get('nombres').disable();
+    this.usuarioForm.get('personas').get('apellidos').disable();
+
+    this.usuarioForm.get('fechaCreacion').disable();
+    this.usuarioForm.get('fechaModificacion').disable();
+    this.usuarioForm.get('usuarioCreacion').disable();
+    this.usuarioForm.get('usuarioModificacion').disable();
   }
 }

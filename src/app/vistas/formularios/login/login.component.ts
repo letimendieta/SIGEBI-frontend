@@ -57,10 +57,10 @@ export class LoginComponent implements OnInit {
 
       }, (err) => {
 
-        console.log(err.error.error.message);
+        console.log(err.message);
         Swal.fire({
           title: 'Error al autenticar',
-          text: err.error.error.message,
+          text: err.message,
           icon: 'error'
         });
       });

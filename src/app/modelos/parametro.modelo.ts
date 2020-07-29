@@ -7,8 +7,8 @@ export class ParametroModelo {
     valor: string;
     descripcionValor: string;
     estado: string;   
-    fechaCreacion: string;
-    fechaModificacion: string;
+    fechaCreacion: Date;
+    fechaModificacion: Date;
     usuarioCreacion: string;
     usuarioModificacion: string;
 

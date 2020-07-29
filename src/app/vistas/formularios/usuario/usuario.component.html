@@ -16,11 +16,11 @@
   <div class="col">
     <div class="card">
       <div class="card-header">
-              Datos del Usuario
+            Datos del Usuario
       </div>
       <div class="card-body">
 
-            <form (ngSubmit)="guardar( f )" #f="ngForm">
+            <form [formGroup]="usuarioForm" (ngSubmit)="guardar( )">
                   <!-- Usuario Id-->
                   <div class="row">
                         <div class="col-lg-5">
@@ -29,253 +29,150 @@
                                     <input type="number"
                                           class="form-control"
                                           placeholder="Usuario Id"
-                                          [(ngModel)]="usuario.usuarioId"
-                                          name="usuarioId" disabled="true">
+                                          formControlName="usuarioId"
+                                          name="usuarioId">
                                     <small class="form-text text-muted">Este campo es autogenerado</small>
                               </div>
                         </div>
                   </div>
 
-                  <!-- Datos Personales-->
                   <div class="row">
-                        <div class="col-lg-5">
+                        <!-- Datos del Funcionario-->
+                        <div formGroupName="funcionarios" class="col-lg-5">                              
+                              <div class="form group">
+                                    <label>Funcionario Id</label>                           
+                                    <div class="input-group">
+                                          <input type="text"
+                                                class="form-control"
+                                                placeholder="Funcionaros Id"
+                                                formControlName="funcionarioId"
+                                                name="funcionarioId">
+                                          <span class="input-group-btn">
+                                                <button class="btn btn-outline-info"
+                                                (click)="obtenerFuncionario( )">
+                                                      Buscar
+                                                </button>
+                                          </span>
+                                    </div>
+                              </div>
+                              <label>Area</label>
+                              <input type="number"
+                                    class="form-control"
+                                    placeholder="Area"
+                                    formControlName="areaId"
+                                    name="areaId">
+
+                              <label>Estado</label>
+                              <select ui-select2 class="form-control input-sm"
+                                    formControlName="estado" name = "estado"
+                                    uppercase>
+                                    <option value="A">Activo</option>
+                                    <option value="I">Inactivo</option>
+                              </select>
+                             
+                        </div>
+
+                        <div formGroupName="personas" class="col-lg-5">
                               <div class="form group">
                                     <label>Persona Id</label>
                                     <div class="input-group">
                                           <input type="text"
                                                 class="form-control"
                                                 placeholder="ID"
-                                                [(ngModel)]="persona.personaId"
-                                                name="id">
+                                                placeholder="Persona Id"
+                                                formControlName="personaId" name="id" 
+                                                [class.is-invalid]="personaIdNoValido">
                                           <span class="input-group-btn">
                                                 <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPersona( persona.personaId )">
+                                                      (click)="obtenerPersona( )">
                                                       Buscar
                                                 </button>
                                           </span>
+                                          <small *ngIf="personaIdNoValido" class="text-danger">
+                                                Ingrese persona Id
+                                          </small>
                                     </div>
                               </div>
-
                               <label>C.I</label>
                               <input type="text"
                                     class="form-control"
                                     placeholder="Cedula"
-                                    [(ngModel)]="persona.cedula"
-                                    name="cedula">
-                  
+                                    formControlName="cedula"
+                                    name="funcionarioPersona.cedula">
+
                               <label>Nombres</label>
                               <input type="text"
                                     class="form-control"
                                     placeholder="Nombres"
-                                    [(ngModel)]="persona.nombres"
-                                    name="nombres"  
-                                    required>
+                                    formControlName="nombres"
+                                    name="funcionarioPersona.nombres">
                         
                               <label>Apellidos</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="persona.apellidos"
-                                    name="apellidos"  
+                                    formControlName="apellidos"
+                                    name="funcionarioPersona.apellidos"  
                                     placeholder="Apellidos">
-                              
-                              <label>Fecha Nac.</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.fechaNacimiento"
-                                    name="fechadenacimiento"  
-                                    placeholder="Fecha Nacimiento">
-                              
-                              <label>Edad</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.edad"
-                                    name="edad"  
-                                    placeholder="Edad">
-
-                              <label>Direccion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.direccion"
-                                    name="direccion"  
-                                    placeholder="Direccion">
-
-                              <label>Email</label>
-                              <input type="email"
-                                    class="form-control"
-                                    [(ngModel)]="persona.email"
-                                    name="email"  
-                                    placeholder="Email">
-                                    
-                              <label>Sexo</label>
-                              <select ui-select2 class="form-control input-sm"
-                                    [(ngModel)]="persona.sexo" name = "sexo"
-                                    uppercase>
-                                    <option value="">----SELECCIONE----
-                                    </option>
-                                    <option *ngFor="let item of listaSexo; let i = index"
-                                    value="{{item.valor}}">
-                                    {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                        </div>
-
-                        <div class="col-lg-5">
-                              <label>Estado Civil</label>
-                              <select ui-select2 placeholder="Estado Civil" 
-                                    class="form-control input-sm"          
-                                    [(ngModel)]="persona.estadoCivil" name = "estadoCivil"
-                                    uppercase>
-                                    <option value="">----SELECCIONE----
-                                    </option>
-                                    <option *ngFor="let item of listaEstadoCivil; let i = index"
-                                    value="{{item.valor}}">
-                                    {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                        
-                              <label>Nacionalidad</label>                
-                              <select ui-select2 class="form-control input-sm"
-                                    [(ngModel)]="persona.nacionalidad" name = "nacionalidad"
-                                    uppercase>
-                                    <option value="">----SELECCIONE----
-                                    </option>
-                                    <option *ngFor="let item of listaNacionalidad; let i = index"
-                                    value="{{item.valor}}">
-                                          {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                              
-                              <label>Telefono</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.telefono"
-                                    name="telefono"  
-                                    placeholder="Telefono">
-                              
-                              <label>Celular</label>
-                              <input type="text"
-                              class="form-control"
-                              [(ngModel)]="persona.celular"
-                              name="celular"  
-                              placeholder="Celular">                  
-                              
-                              <label>Carrera</label>
-                              <input type="number"
-                                    class="form-control"
-                                    [(ngModel)]="persona.carreraId"
-                                    name="carreraId"  
-                                    placeholder="Carrera">
-                              
-                              <label>Departamento</label>
-                              <input type="number"
-                                    class="form-control"
-                                    [(ngModel)]="persona.departamentoId"
-                                    name="departamentoId"  
-                                    placeholder="Departamento">
-                              
-                              <label>Dependencia</label>
-                              <input type="number"
-                                    class="form-control"
-                                    [(ngModel)]="persona.dependenciaId"
-                                    name="dependenciaId"  
-                                    placeholder="Dependencia">
-                        
-                              <label>Estamento</label>
-                              <input type="number"
-                                    class="form-control"
-                                    [(ngModel)]="persona.estamentoId"
-                                    name="estamentoId"  
-                                    placeholder="Estamento">                  
-                        </div>
-                  </div>                 
-
-                  <div class="form-row" [hidden]="true">
-                        <div class="col-lg-5"> 
-                              <label>Fecha creacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.fechaCreacion"
-                                    name="persona.fechaCreacion"
-                                    placeholder="Fecha creacion">
-                        
-                              <label>Fecha modificacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.fechaModificacion"
-                                    name="persona.fechaModificacion"
-                                    placeholder="Fecha modificacion">
-                        
-                              <label>Usuario creacion</label>
-                              <input type="text"                  
-                                    class="form-control"
-                                    [(ngModel)]="persona.usuarioCreacion"
-                                    name="persona.usuarioCreacion"
-                                    placeholder="Usuario creacion">
-                        
-                              <label>Usuario modificacion</label>
-                              <input type="text"                  
-                                    class="form-control"
-                                    [(ngModel)]="persona.usuarioModificacion"
-                                    name="persona.usuarioModificacion"
-                                    placeholder="Usuario modificacion">
-                        </div>
+                                                           
+                        </div>                        
                   </div>
-
                   <hr>
                   <!-- Datos del Usuario-->
                   <div class="form-row">
-                        <div class="col-lg-5"> 
-                              <label>Funcionario Id</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Funcionario Id"
-                                    [(ngModel)]="usuario.funcionarioId"
-                                    name="funcionarioId"
-                                    >
-                        
-                              <label>Codigo Usuario</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Codigo Usuario"
-                                    [(ngModel)]="usuario.codigoUsuario"
-                                    name="codigoUsuario" 
-                                    required>
-
-                              <label>Password</label>
-                              <input type="password"
-                                    class="form-control"
-                                    placeholder="Password"
-                                    [(ngModel)]="usuario.password"
-                                    name="password" 
-                                    required>
-
-                              <label>Estado</label>
-                              <select ui-select2 class="form-control input-sm"
-                                    [(ngModel)]="usuario.estado" name = "estado"
-                                    uppercase>
-                                    <option value="">----SELECCIONE----</option>
-                                    <option value="A">Activo</option>
-                                    <option value="I">Inactivo</option>
-                              </select>
+                        <div class="col-lg-5">                              
+                              <div>
+                                    <label>Codigo Usuario</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="Codigo Usuario"
+                                          formControlName="codigoUsuario"
+                                          name="codigoUsuario" 
+                                          [class.is-invalid]="usuarioNoValido">
+                                    <small *ngIf="usuarioNoValido" class="text-danger">
+                                          Ingrese Codigo de Usuario
+                                    </small>
+                              </div>
+                              <div>
+                                    <label>Password</label>
+                                    <input type="password"
+                                          class="form-control"
+                                          placeholder="Password"
+                                          formControlName="password"
+                                          name="password" 
+                                          [class.is-invalid]="passNoValido">
+                                    <small *ngIf="passNoValido" class="text-danger">
+                                          Ingrese la contrasenha
+                                    </small>
+                              </div>
+                              <div>
+                                    <label>Estado</label>
+                                    <select class="custom-select"
+                                          formControlName="estado" name = "estado"
+                                          uppercase [class.is-invalid]="estadoNoValido">
+                                          <option value="A" [selected]="true">ACTIVO</option>
+                                          <option value="I">INACTIVO</option>
+                                    </select>                              
+                                    <small *ngIf="estadoNoValido" class="text-danger">
+                                          Seleccione el estado
+                                    </small>
+                              </div>
                         </div>
                   </div>
                   
                   <div class="form-row" [hidden]="crear">
                         <div class="col-lg-5"> 
                               <label>Fecha creacion</label>
-                              <input type="text"
+                              <input type="datetime-local"
                                     class="form-control"
-                                    [(ngModel)]="usuario.fechaCreacion"
+                                    formControlName="fechaCreacion"
                                     name="fechaCreacion"  
-                                    disabled="disabled"
                                     placeholder="Fecha creacion">
 
                               <label>Fecha modificacion</label>
-                              <input type="text"
+                              <input type="datetime-local"
                                     class="form-control"
-                                    [(ngModel)]="usuario.fechaModificacion"
+                                    formControlName="fechaModificacion"
                                     name="fechaModificacion"  
-                                    disabled="disabled"
                                     placeholder="Fecha modificacion">  
                         </div>
 
@@ -283,27 +180,28 @@
                               <label>Usuario creacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="usuario.usuarioCreacion"
+                                    formControlName="usuarioCreacion"
                                     name="usuarioCreacion"  
-                                    disabled="disabled"
                                     placeholder="Usuario creacion">
                         
                               <label>Usuario modificacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="usuario.usuarioModificacion"
+                                    formControlName="usuarioModificacion"
                                     name="usuarioModificacion"  
-                                    disabled="disabled"
                                     placeholder="Usuario modificacion">                                    
                         </div>                        
                   </div>
-
+                  <br>
+                  <hr>
+                  <br>
                   <div class="form-group text-center">
                         <button type="submit"
                               class="btn btn-primary ">
-                        <i class="fa fa-save"></i>
-                        Guardar
+                              <i class="fa fa-save"></i>
+                              Guardar
                         </button>
+                        <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
                   </div>
             </form>
       </div>

@@ -4,6 +4,7 @@ import { ProcedimientoModelo } from '../../../modelos/procedimiento.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { PacienteModelo } from '../../../modelos/paciente.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -21,11 +22,15 @@ export class ProcedimientosComponent implements OnInit {
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
+  buscadorForm: FormGroup;
   buscador: ProcedimientoModelo = new ProcedimientoModelo();
   cargando = false;
 
 
-  constructor( private procedimientosService: ProcedimientosService) { }
+  constructor( private procedimientosService: ProcedimientosService,
+              private fb: FormBuilder) { 
+    this.crearFormulario();
+  }
 
   ngOnInit() {
 
@@ -34,29 +39,71 @@ export class ProcedimientosComponent implements OnInit {
       .subscribe( resp => {
         this.procedimientos = resp;
         this.cargando = false;
+      }, e => {      
+        Swal.fire({
+          icon: 'info',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })
+        this.cargando = false;
       });
-
   }
 
-  buscadorProcedimientos() {
-    this.paciente.personas = this.pacientePersona;
+  buscadorProcedimientos() {   
+    this.paciente = new PacienteModelo();
+    this.funcionario = new FuncionarioModelo();
+    this.pacientePersona = new PersonaModelo();
+    this.funcionarioPersona = new PersonaModelo();
+
+    this.pacientePersona.cedula = this.buscadorForm.get('pacientes').get('pacienteCedula').value;
+    this.pacientePersona.nombres = this.buscadorForm.get('pacientes').get('pacienteNombres').value;
+    this.pacientePersona.apellidos = this.buscadorForm.get('pacientes').get('pacienteApellidos').value;
+    if(!this.pacientePersona.cedula && !this.pacientePersona.nombres && !this.pacientePersona.apellidos){
+      this.paciente.personas = null;
+    }else{
+      this.paciente.personas = this.pacientePersona;
+    }
+    this.paciente.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value; 
+    if(this.paciente.personas == null && !this.paciente.pacienteId){
+      this.paciente = null;
+    }      
+    
+    this.funcionarioPersona.cedula = this.buscadorForm.get('funcionarios').get('funcionarioCedula').value;
+    this.funcionarioPersona.nombres = this.buscadorForm.get('funcionarios').get('funcionarioNombres').value;
+    this.funcionarioPersona.apellidos = this.buscadorForm.get('funcionarios').get('funcionarioApellidos').value;
+
+    if(!this.funcionarioPersona.cedula && !this.funcionarioPersona.nombres && !this.funcionarioPersona.apellidos){
+      this.funcionario.personas = null;
+    }else{
+      this.funcionario.personas = this.funcionarioPersona;
+    }
+
+    this.funcionario.funcionarioId = this.buscadorForm.get('funcionarios').get('funcionarioId').value;
+    if(this.funcionario.personas == null && !this.funcionario.funcionarioId){
+      this.funcionario = null;
+    } 
+
     this.buscador.pacientes = this.paciente;
+    this.buscador.funcionarios = this.funcionario;
+
+    this.buscador.procedimientoId = this.buscadorForm.get('procedimientoId').value;
+    this.buscador.fecha =  this.buscadorForm.get('fecha').value;
     this.procedimientosService.buscarProcedimientosFiltros(this.buscador)
     .subscribe( resp => {
       this.procedimientos = resp;
       this.cargando = false;
-    }, e => {
+    }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.error.mensaje,
+        text: e.status +'. '+ this.obtenerError(e),
       })
     });
   }
 
   limpiar() {
-    this.buscador = new ProcedimientoModelo();
-    this.pacientePersona = new PersonaModelo();   
+    this.buscadorForm.reset();
+    this.buscador = new ProcedimientoModelo();  
     this.buscadorProcedimientos();
   }
 
@@ -84,16 +131,52 @@ export class ProcedimientosComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        }, e => {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Algo salio mal',
-                  text: e.status +'. '+e.error.errors[0],
-                })
-            }
+        }, e => {            
+            Swal.fire({
+              icon: 'error',
+              title: 'Algo salio mal',
+              text: e.status +'. '+ this.obtenerError(e),
+            })
+          }
         );
       }
+    });
+  }
 
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+
+  crearFormulario() {
+
+    this.buscadorForm = this.fb.group({
+      procedimientoId  : ['', [] ],
+      fecha : [null, [] ],
+      pacientes : this.fb.group({
+        pacienteId  : ['', [] ],
+        pacienteCedula  : ['', [] ],
+        pacienteNombres  : ['', [] ],
+        pacienteApellidos  : ['', [] ]        
+      }),
+      funcionarios : this.fb.group({
+        funcionarioId  : ['', [] ],
+        funcionarioCedula  : ['', [] ],
+        funcionarioNombres  : ['', [] ],
+        funcionarioApellidos  : ['', [] ]        
+      })      
     });
   }
 }

@@ -8,7 +8,7 @@ export class PersonaModelo {
     direccion: string;
     email: string;
     estadoCivil:string;
-    fechaNacimiento: string;
+    fechaNacimiento: Date;
     nacionalidad: string;
     sexo: string;
     telefono: string;
@@ -17,8 +17,8 @@ export class PersonaModelo {
     departamentoId: number;
     dependenciaId: number;
     estamentoId: number;
-    fechaCreacion: string;
-    fechaModificacion: string;
+    fechaCreacion: Date;
+    fechaModificacion: Date;
     usuarioCreacion: string;
     usuarioModificacion: string;
 

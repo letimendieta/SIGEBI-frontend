@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonasService } from '../../../servicios/personas.service';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -13,9 +14,13 @@ export class PersonasComponent implements OnInit {
 
   personas: PersonaModelo[] = [];
   buscador: PersonaModelo = new PersonaModelo();
+  buscadorForm: FormGroup;
   cargando = false;  
 
-  constructor( private personasService: PersonasService) { }
+  constructor( private personasService: PersonasService,
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  }
 
   ngOnInit() {    
     this.cargando = true;
@@ -23,11 +28,18 @@ export class PersonasComponent implements OnInit {
       .subscribe( resp => {
         this.personas = resp;
         this.cargando = false;
+      }, e => {      
+        Swal.fire({
+          icon: 'info',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })
+        this.cargando = false;
       });
-
   }
 
   buscadorPersonas() {
+    this.buscador = this.buscadorForm.getRawValue();
     this.personasService.buscarPersonasFiltros(this.buscador)
     .subscribe( resp => {
       this.personas = resp;
@@ -36,12 +48,13 @@ export class PersonasComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.error.mensaje,
+        text: e.status +'. '+ this.obtenerError(e),
       })
     });
   }
 
   limpiar() {
+    this.buscadorForm.reset();
     this.buscador = new PersonaModelo();
     this.buscadorPersonas();
   }
@@ -55,10 +68,8 @@ export class PersonasComponent implements OnInit {
       showConfirmButton: true,
       showCancelButton: true
     }).then( resp => {
-
       if ( resp.value ) {
         let peticion: Observable<any>;
-        //this.personas.splice(i, 1);
         peticion = this.personasService.borrarPersona( persona.personaId );
 
         peticion.subscribe( resp => {
@@ -71,16 +82,42 @@ export class PersonasComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        }, e => {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Algo salio mal',
-                  text: e.status +'. '+e.error.errors[0],
-                })
-            }
+        }, e => {           
+            Swal.fire({
+              icon: 'info',
+              title: 'Algo salio mal',
+              text: e.status +'. '+ this.obtenerError(e),
+            })
+          }
         );
       }
+    });
+  }
 
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+
+  crearFormulario() {
+
+    this.buscadorForm = this.fb.group({
+      personaId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
     });
   }
 }

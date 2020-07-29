@@ -20,7 +20,7 @@
       </div>
       <div class="card-body">
 
-        <form (ngSubmit)="guardar( f )" #f="ngForm">
+      <form [formGroup]="funcionarioForm" (ngSubmit)="guardar( )">
           <!-- Funcionario Id-->
           <div class="row">
             <div class="col-lg-5">
@@ -29,232 +29,102 @@
                         <input type="number"
                               class="form-control"
                               placeholder="Funcionario Id"
-                              [(ngModel)]="funcionario.funcionarioId"
-                              name="funcionarioId" disabled="true">
+                              formControlName="funcionarioId"
+                              name="funcionarioId">
                         <small class="form-text text-muted">Este campo es autogenerado</small>
                   </div> 
             </div>
           </div>       
 
           <!-- Datos Personales-->
-            <div class="row">
+          <div formGroupName="personas" class="row">
                   <div class="col-lg-5">
-                        <div class="form group">
-                              <div class="form group">                                       
-                                    <label>Persona Id</label>
-                                    <div class="input-group">
-                                          <input type="text"
-                                                class="form-control"
-                                                placeholder="ID"
-                                                [(ngModel)]="persona.personaId"
-                                                name="id">
-                                          <span class="input-group-btn">
-                                                <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPersona( persona.personaId )">
-                                                      Buscar
-                                                </button>
-                                          </span>
+                        <div class="input-group mb-3">
+                              <label>Persona Id</label>
+                              <div class="input-group">
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="ID"
+                                          placeholder="Persona Id"
+                                          formControlName="personaId"
+                                          [class.is-invalid]="personaIdNoValido" name="id">
+                                    <div class="input-group-append">
+                                          <button class="btn btn-outline-info" 
+                                                (click)="obtenerPersona( )">
+                                                Buscar
+                                          </button>
                                     </div>
-                              </div> 
-
-                              <label>C.I</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Cedula"
-                                    [(ngModel)]="persona.cedula"
-                                    name="cedula"  
-                                    required>
-                        
-                              <label>Nombres</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Nombres"
-                                    [(ngModel)]="persona.nombres"
-                                    name="nombres"  
-                                    required>
-                              
-                              <label>Apellidos</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.apellidos"
-                                    name="apellidos"  
-                                    placeholder="Apellidos">
-                              
-                              <label>Fecha Nac.</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.fechaNacimiento"
-                                    name="fechadenacimiento"  
-                                    placeholder="Fecha Nacimiento">
-
-                              <label>Edad</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.edad"
-                                    name="edad"  
-                                    placeholder="Edad">
-
-                              <label>Direccion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="persona.direccion"
-                                    name="direccion"  
-                                    placeholder="Direccion">
-
-                              <label>Email</label>
-                              <input type="email"
-                                    class="form-control"
-                                    [(ngModel)]="persona.email"
-                                    name="email"  
-                                    placeholder="Email">
-
-                              <label>Sexo</label>
-                              <select ui-select2 class="form-control input-sm"
-                                    [(ngModel)]="persona.sexo" name = "sexo"
-                                    uppercase>
-                                    <option value="">----SELECCIONE----
-                                    </option>
-                                    <option *ngFor="let item of listaSexo; let i = index"
-                                    value="{{item.valor}}">
-                                    {{item.descripcionValor}}
-                                    </option>
-                              </select>
+                                    <small *ngIf="personaIdNoValido" class="text-danger">
+                                          Ingrese personaId
+                                    </small>
+                              </div>
                         </div>
-                  </div>
-          
-                  <div class="col-lg-5">
-                        <label>Estado Civil</label>
-                        <select ui-select2 placeholder="Estado Civil" 
-                          class="form-control input-sm"          
-                          [(ngModel)]="persona.estadoCivil" name = "estadoCivil"
-                          uppercase>
-                          <option value="">----SELECCIONE----
-                          </option>
-                          <option *ngFor="let item of listaEstadoCivil; let i = index"
-                          value="{{item.valor}}">
-                            {{item.descripcionValor}}
-                          </option>
-                        </select>
-                        
-                        <label>Nacionalidad</label>                
-                        <select ui-select2 class="form-control input-sm"
-                        [(ngModel)]="persona.nacionalidad" name = "nacionalidad"
-                        uppercase>
-                        <option value="">----SELECCIONE----
-                        </option>
-                        <option *ngFor="let item of listaNacionalidad; let i = index"
-                        value="{{item.valor}}">
-                        {{item.descripcionValor}}
-                        </option>
-                        </select>
-                              
-                        <label>Telefono</label>
-                        <input type="text"
-                              class="form-control"
-                              [(ngModel)]="persona.telefono"
-                              name="telefono"  
-                              placeholder="Telefono">
-                  
-                        <label>Celular</label>
-                        <input type="text"
-                              class="form-control"
-                              [(ngModel)]="persona.celular"
-                              name="celular"  
-                              placeholder="Celular">
-                  
-                        <label>Carrera</label>
-                        <input type="number"
-                              class="form-control"
-                              [(ngModel)]="persona.carreraId"
-                              name="carreraId"  
-                              placeholder="Carrera">
-                        
-                        <label>Departamento</label>
-                        <input type="number"
-                              class="form-control"
-                              [(ngModel)]="persona.departamentoId"
-                              name="departamentoId"  
-                              placeholder="Departamento">
-                  
-                        <label>Dependencia</label>
-                        <input type="number"
-                              class="form-control"
-                              [(ngModel)]="persona.dependenciaId"
-                              name="dependenciaId"  
-                              placeholder="Dependencia">
-                  
-                        <label>Estamento</label>
-                        <input type="number"
-                              class="form-control"
-                              [(ngModel)]="persona.estamentoId"
-                              name="estamentoId"  
-                              placeholder="Estamento">                 
-                  </div>
-            </div>
 
-            <div class="form-row" [hidden]="true">
-                  <div class="col-lg-5"> 
-                        <label>Fecha creacion</label>
+                        <label>C.I</label>
                         <input type="text"
                               class="form-control"
-                              [(ngModel)]="persona.fechaCreacion"
-                              name="persona.fechaCreacion"
-                              placeholder="Fecha creacion">
-                  
-                        <label>Fecha modificacion</label>
+                              placeholder="Cedula"                      
+                              name="cedula"
+                              formControlName="cedula">
+                        
+            
+                        <label>Nombres</label>
                         <input type="text"
                               class="form-control"
-                              [(ngModel)]="persona.fechaModificacion"
-                              name="persona.fechaModificacion"
-                              placeholder="Fecha modificacion">
+                              placeholder="Nombres"
+                              formControlName="nombres"
+                              name="nombres">
+                       
                   
-                        <label>Usuario creacion</label>
-                        <input type="text"                  
+                        <label>Apellidos</label>
+                        <input type="text"
                               class="form-control"
-                              [(ngModel)]="persona.usuarioCreacion"
-                              name="persona.usuarioCreacion"
-                              placeholder="Usuario creacion">
-                  
-                        <label>Usuario modificacion</label>
-                        <input type="text"                  
-                              class="form-control"
-                              [(ngModel)]="persona.usuarioModificacion"
-                              name="persona.usuarioModificacion"
-                              placeholder="Usuario modificacion">
+                              formControlName="apellidos"
+                              name="apellidos"
+                              placeholder="Apellidos">
+                        
                   </div>
+                  
             </div>
 
             <hr>
             <!-- Datos del Funcionario-->
             <div class="form-row">
                   <div class="col-lg-5"> 
-                        <label>Area</label>
-                        <input type="number"
-                              class="form-control"
-                              placeholder="Area"
-                              [(ngModel)]="funcionario.areaId"
-                              name="areaId">
-                  
-                        <label>Estado</label>
-                        <input type="text"
-                              class="form-control"
-                              placeholder="Estado"
-                              [(ngModel)]="funcionario.estado"
-                              name="estado">
+                        <div>
+                              <label>Area</label>
+                              <input type="number"
+                                    class="form-control"
+                                    placeholder="Area"
+                                    formControlName="areaId"
+                                    name="areaId"
+                                    [class.is-invalid]="areaNoValido">
+                              <small *ngIf="areaNoValido" class="text-danger">
+                                    Ingrese el area correspondiente
+                              </small>
+                        </div>
+                        <div>
+                              <label>Estado</label>
+                              <select class="custom-select"
+                                    formControlName="estado" name = "estado">
+                                    <option value="A" [selected]="true">ACTIVO</option>
+                                    <option value="I">INACTIVO</option>
+                              </select>
+                        </div>
                   </div>
                   <div class="col-lg-5"> 
                         <label>Fecha ingreso</label>
-                        <input type="text"
+                        <input type="date"
                               class="form-control"
                               placeholder="Fecha Ingreso"
-                              [(ngModel)]="funcionario.fechaIngreso"
+                              formControlName="fechaIngreso"
                               name="fechaIngreso">
                  
                         <label>Fecha egreso</label>
-                        <input type="text"
+                        <input type="date"
                               class="form-control"
                               placeholder="Fecha Egreso"
-                              [(ngModel)]="funcionario.fechaEgreso"
+                              formControlName="fechaEgreso"
                               name="fechaEgreso">
                   </div>
             </div>
@@ -263,51 +133,51 @@
             <div class="form-row" [hidden]="crear">
                   <div class="col-lg-5"> 
                         <label>Fecha creacion</label>
-                        <input type="text"
+                        <input type="datetime-local"
                               class="form-control"
-                              [(ngModel)]="funcionario.fechaCreacion"
+                              formControlName="fechaCreacion"
                               name="fechaCreacion"  
-                              disabled="disabled"
                               placeholder="Fecha creacion">
                  
                         <label>Fecha modificacion</label>
-                        <input type="text"
+                        <input type="datetime-local"
                               class="form-control"
-                              [(ngModel)]="funcionario.fechaModificacion"
+                              formControlName="fechaModificacion"
                               name="fechaModificacion"  
-                              disabled="disabled"
                               placeholder="Fecha modificacion">
                   </div>
                   <div class="col-lg-5"> 
                         <label>Usuario creacion</label>
                         <input type="text"
                               class="form-control"
-                              [(ngModel)]="funcionario.usuarioCreacion"
+                              formControlName="usuarioCreacion"
                               name="usuarioCreacion"  
-                              disabled="disabled"
                               placeholder="Usuario creacion">
                   
                         <label>Usuario modificacion</label>
                         <input type="text"
                               class="form-control"
-                              [(ngModel)]="funcionario.usuarioModificacion"
+                              formControlName="usuarioModificacion"
                               name="usuarioModificacion"  
-                              disabled="disabled"
                               placeholder="Usuario modificacion">
                   </div>
-            </div>         
+            </div> 
+            <br>
+            <hr>
+            <br>
+            <div class="form-group text-center">
+                  <button type="submit"
+                        class="btn btn-primary ">
+                  <i class="fa fa-save"></i>
+                  Guardar
+                  </button>
+                  <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+            </div>       
         </form>
       </div>
     </div>
 
-    <hr>
-    <div class="form-group text-center">
-      <button type="submit"
-              class="btn btn-primary ">
-        <i class="fa fa-save"></i>
-        Guardar
-      </button>
-    </div>
+    
 
   </div>
 </div>

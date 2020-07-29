@@ -72,7 +72,7 @@ export class PacientesService {
       );
   }
 
-  getPersona( id: number ) {
+  getPersona( id ) {
 
     return this.http.get(`${ this.url }/personas/${ id }`);
 

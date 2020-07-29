@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { ProcedimientoModelo } from '../../../modelos/procedimiento.modelo';
-import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { ProcedimientosService } from '../../../servicios/procedimientos.service';
-import { ParametrosService } from '../../../servicios/parametros.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 
@@ -30,74 +28,72 @@ export class ProcedimientoComponent implements OnInit {
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
 
+  procedimientoForm: FormGroup;
+
   modificar: boolean = false;
 
 
   constructor( private procedimientosService: ProcedimientosService,
-               private parametrosService: ParametrosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
-               private route: ActivatedRoute ) { }
+               private route: ActivatedRoute,
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  }
 
   ngOnInit() {
 
     const id = this.route.snapshot.paramMap.get('id');
-    //this.obtenerParametros();
 
     if ( id !== 'nuevo' ) {
       this.procedimientosService.getProcedimiento( Number(id) )
-        .subscribe( (resp: ProcedimientoModelo) => {
-          this.procedimiento = resp;
-          this.paciente = resp.pacientes;
-          this.pacientePersona = resp.pacientes.personas;
-          this.funcionario = resp.funcionarios;
-          this.funcionarioPersona = resp.funcionarios.personas;
+        .subscribe( (resp: ProcedimientoModelo) => {         
+          this.procedimientoForm.patchValue(resp);
         });
     }else{
       this.crear = true;
     }
-  }
+  }  
 
-  
-
-  obtenerPaciente( id : number ){
-
+  obtenerPaciente( ){
+    var id = this.procedimientoForm.get('pacientes').get('pacienteId').value;
     this.pacientesService.getPaciente( id )
-        .subscribe( (resp: PacienteModelo) => {
-          this.paciente = resp;
-          this.pacientePersona = resp.personas;
+        .subscribe( (resp: PacienteModelo) => {         
+          this.procedimientoForm.get('pacientes').patchValue(resp);
         }, e => {
             Swal.fire({
               icon: 'info',
-              //title: 'Algo salio mal',
-              text: e.status +'. '+e.error.mensaje,
+              text: e.status +'. '+ this.obtenerError(e),
             })
           }
         );
 
   }
-  obtenerFuncionario( id : number ){
-
+  obtenerFuncionario( ){
+    var id = this.procedimientoForm.get('funcionarios').get('funcionarioId').value;
     this.funcionariosService.getFuncionario( id )
-        .subscribe( (resp: FuncionarioModelo) => {
-          this.funcionario = resp;
-          this.funcionarioPersona = resp.personas;
-        }, e => {
-            Swal.fire({
-              icon: 'info',
-              //title: 'Algo salio mal',
-              text: e.status +'. '+e.error.mensaje,
-            })
-          }
-        );
-
+      .subscribe( (resp: FuncionarioModelo) => {          
+        this.procedimientoForm.get('funcionarios').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            //title: 'Algo salio mal',
+            text: e.status +'. '+ this.obtenerError(e),
+          })
+        }
+      );
   }
   
-  guardar( form: NgForm ) {
+  guardar( ) {
 
-    if ( form.invalid ) {
-      console.log('Formulario no válido');
-      return;
+    if ( this.procedimientoForm.invalid ){
+      return Object.values( this.procedimientoForm.controls ).forEach( control => {
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
     }
 
     Swal.fire({
@@ -108,21 +104,15 @@ export class ProcedimientoComponent implements OnInit {
     });
     Swal.showLoading();
 
-    let peticion: Observable<any>;       
+    let peticion: Observable<any>;
+
+    this.procedimiento = this.procedimientoForm.getRawValue();
 
     if ( this.procedimiento.procedimientoId ) {
-
-      this.procedimiento.funcionarios = this.funcionario;
-      this.procedimiento.pacientes = this.paciente;
       this.procedimiento.usuarioModificacion = 'admin';
-
       peticion = this.procedimientosService.actualizarProcedimiento( this.procedimiento );
     } else {
-
-      this.procedimiento.funcionarios = this.funcionario;
-      this.procedimiento.pacientes = this.paciente;
       this.procedimiento.usuarioCreacion = 'admin';
-
       peticion = this.procedimientosService.crearProcedimiento( this.procedimiento );
     }
 
@@ -141,31 +131,85 @@ export class ProcedimientoComponent implements OnInit {
             this.limpiar();
           }
         }
-
       });
-    }, e => {
-          var mensaje = "";
-          if(e.status != 500){
-            mensaje = e.status +'. '+e.error.errors[0];
-          }else{
-            mensaje = e.status +'. '+ e.error.mensaje +'. '+ e.error.error;
-          }
-            Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: mensaje,
-            })
-          
-       }
+    }, e => {          
+        Swal.fire({
+          icon: 'error',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })          
+      }
     );
   }
 
   limpiar(){
+    this.procedimientoForm.reset();
     this.procedimiento = new ProcedimientoModelo();
-    this.pacientePersona = new PersonaModelo();  
-    this.funcionarioPersona = new PersonaModelo();
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
+  }
 
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+  
+  get notaNoValido() {
+    return this.procedimientoForm.get('notas').invalid && this.procedimientoForm.get('notas').touched
+  }
+
+  crearFormulario() {
+    this.procedimientoForm = this.fb.group({
+      procedimientoId  : [null, [] ],
+      pacientes : this.fb.group({
+        pacienteId  : [null, [] ],
+        personas : this.fb.group({
+          cedula  : [null, [] ],
+          nombres  : [null, [] ],
+          apellidos  : [null, [] ]
+        })
+      }),
+      funcionarios : this.fb.group({
+        funcionarioId  : [null, [] ],
+        personas : this.fb.group({
+          cedula  : [null, [] ],
+          nombres  : [null, [] ],
+          apellidos  : [null, [] ]
+        })
+      }),
+      insumoId  : [null, [] ],
+      fecha  : [null, [] ],
+      notas  : [null, [Validators.required] ],
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ],             
+    });
+
+    this.procedimientoForm.get('procedimientoId').disable();
+    this.procedimientoForm.get('pacientes').get('personas').get('cedula').disable();
+    this.procedimientoForm.get('pacientes').get('personas').get('nombres').disable();
+    this.procedimientoForm.get('pacientes').get('personas').get('apellidos').disable();
+
+    this.procedimientoForm.get('funcionarios').get('personas').get('cedula').disable();
+    this.procedimientoForm.get('funcionarios').get('personas').get('nombres').disable();
+    this.procedimientoForm.get('funcionarios').get('personas').get('apellidos').disable();
+
+    this.procedimientoForm.get('fechaCreacion').disable();
+    this.procedimientoForm.get('fechaModificacion').disable();
+    this.procedimientoForm.get('usuarioCreacion').disable();
+    this.procedimientoForm.get('usuarioModificacion').disable();
   }
 }

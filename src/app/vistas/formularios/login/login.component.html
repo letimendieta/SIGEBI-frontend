@@ -1,6 +1,8 @@
 <div fxLayoutAlign="center center" fxFlexFill class="main-div">
   <mat-card fxFlex="25">
+  <mat-toolbar color="primary">
 
+    SIGEBI-Login
 
   </mat-toolbar>
     <form fxLayoutAlign="stretch" fxLayout="column" class="login-form" (ngSubmit)="login( f )"
@@ -13,11 +15,11 @@
                            required
                            usuario>
       </mat-form-field>
-      <span *ngIf="f.submitted && f.controls['password'].errors"
+      <span *ngIf="f.submitted && f.controls['contrasenha'].errors"
                           class="text-danger animated fadeIn">Al menos 6 letras</span>
       <mat-form-field>
-        <input matInput type="password" placeholder="Contraseña"name="password"
-                           [(ngModel)]="usuario.password"
+        <input matInput type="password" placeholder="Contraseña"name="contrasenha"
+                           [(ngModel)]="usuario.contrasenha"
                            required
                            minlength="5">
       </mat-form-field>

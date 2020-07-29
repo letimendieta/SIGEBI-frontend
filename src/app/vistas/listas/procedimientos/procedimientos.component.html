@@ -1,46 +1,106 @@
 <h1>Listado de Procedimientos</h1>
 <hr>
 
-<div class="container">
-    <h1>Buscador</h1>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="procedimientoId">Procedimiento Id</label>
-        <input type="number" class="form-control" id="procedimientoId"
-        [(ngModel)]="buscador.procedimientoId" name="procedimientoId">
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">    
+    <form [formGroup]="buscadorForm">
+      <div class="form-row">
+        <div class="col-lg-5"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="procedimientoId" class="col-sm-7 col-form-label">Procedimiento Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="procedimientoId"
+              formControlName="procedimientoId" name="procedimientoId">
+            </div>
+          </div>               
+
+          <div formGroupName="pacientes">  
+            <div class="form group">
+              <div class="form-group form-inline col-md-5">
+                <label for="pacienteId" class="col-sm-7 col-form-label">Paciente Id</label>
+                <div class="col-sm-3">
+                  <input type="number" class="form-control"
+                  formControlName="pacienteId" name="pacienteId">
+                </div>
+              </div>
+              <div class="form-group form-inline col-md-5">
+                <label for="pacienteCedula" class="col-sm-7 col-form-label">Paciente Cedula</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" id="pacienteCedula"
+                  formControlName="pacienteCedula" name="pacienteCedula">
+                </div>
+              </div>
+              <div class="form-group form-inline col-md-5">
+                <label for="pacienteNombres" class="col-sm-7 col-form-label">Paciente Nombres</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" id="pacienteNombres"
+                  formControlName="pacienteNombres" name="pacienteNombres">
+                </div> 
+              </div>
+              <div class="form-group form-inline col-md-5">
+                <label for="pacienteApellidos" class="col-sm-7 col-form-label">Paciente Apellidos</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" id="pacienteApellidos"
+                  formControlName="pacienteApellidos" name="pacienteApellidos">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="form-group form-inline col-md-5">
+            <label for="fecha" class="col-sm-7 col-form-label">Fecha procedimiento</label>
+            <div class="col-sm-3">
+              <input type="datetime-local" class="form-control" id="fecha"
+              formControlName="fecha" name="fecha">
+            </div>
+          </div>
+          <div formGroupName="funcionarios">            
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioId" class="col-sm-7 col-form-label">Funcionario Id</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control"
+                formControlName="funcionarioId" name="funcionarioId">
+              </div>
+            </div>      
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioCedula" class="col-sm-7 col-form-label">Funcionario Cedula</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="funcionarioCedula"
+                formControlName="funcionarioCedula" name="funcionarioCedula">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioNombres" class="col-sm-7 col-form-label">Funcionario Nombres</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="funcionarioNombres"
+                formControlName="funcionarioNombres" name="funcionarioNombres">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioApellidos" class="col-sm-7 col-form-label">Funcionario Apellidos</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="funcionarioApellidos"
+                formControlName="funcionarioApellidos" name="funcionarioApellidos">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="cedula">Paciente Cedula</label>
-        <input type="text" class="form-control" id="cedula"
-        [(ngModel)]="pacientePersona.cedula" name="cedula">
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorProcedimientos()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="nombres">Paciente Nombres</label>
-        <input type="text" class="form-control" id="nombres"
-        [(ngModel)]="pacientePersona.nombres" name="nombres">
-      </div>
-
-      <div class="form-group">
-        <label for="apellidos">Paciente Apellidos</label>
-        <input type="text" class="form-control" id="apellidos"
-        [(ngModel)]="pacientePersona.apellidos" name="apellidos">
-      </div>
-    </div>
-
-    <div class="col-log-4">
-      <div class="form-horizontal">
-        <button type="submit"
-        (click)="buscadorProcedimientos()" class="btn btn-success">Buscar</button>
-        <button type="submit"
-        (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-      </div>
-    </div>
+    </form>
+  </div>
 </div>
-
+<br>
 <div class="row">
   <div class="col text-right">
     <button routerLink="/procedimiento/nuevo"
@@ -58,15 +118,16 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">id</th>
+      <th scope="col">Paciente Id</th>
       <th scope="col">Paciente Cedula</th>
       <th scope="col">Paciente Nombres</th>
       <th scope="col">Paciente Apellidos</th>
+      <th scope="col">Funcionario Id</th>
       <th scope="col">Funcionario Cedula</th>
       <th scope="col">Funcionario Nombres</th>
       <th scope="col">Funcionario Apellidos</th>
       <th scope="col">InsumoId</th>
       <th scope="col">Fecha</th>
-      <th scope="col">Hora</th>
       <th scope="col">Editar/Borrar</th>
     </tr>
   </thead>
@@ -74,16 +135,16 @@
     <tr *ngFor="let procedimiento of procedimientos; let i = index">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ procedimiento.procedimientoId }}</td>
+      <td>{{ procedimiento.pacientes.pacienteId }}</td>
       <td>{{ procedimiento.pacientes.personas.cedula }}</td>
       <td>{{ procedimiento.pacientes.personas.nombres }}</td>
       <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
+      <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
       <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
       <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
       <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
       <td>{{ procedimiento.insumoId }}</td>
-      <td>{{ procedimiento.fecha }}</td>
-      <td>{{ procedimiento.hora}}</td>
-
+      <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
       <td>
 
         <button class="btn btn-info"

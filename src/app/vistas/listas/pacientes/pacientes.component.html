@@ -1,46 +1,59 @@
 <h1>Listado de Pacientes</h1>
 <hr>
 
-<div class="container">
-    <h1>Buscador</h1>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="pacienteId">Paciente Id</label>
-        <input type="number" class="form-control" id="pacienteId"
-        [(ngModel)]="buscador.pacienteId" name="pacienteId">
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">
+    <form [formGroup]="buscadorForm">
+      <div class="form-row">
+        <div class="col-lg-5"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="pacienteId" class="col-sm-7 col-form-label">Paciente Id</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="pacienteId"
+              formControlName="pacienteId" name="pacienteId">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="cedula" class="col-sm-7 col-form-label">Cedula</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="cedula"
+              formControlName="cedula" name="cedula">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="form-group form-inline col-md-5">
+            <label for="nombres" class="col-sm-7 col-form-label">Nombre</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="nombres"
+              formControlName="nombres" name="nombres">
+            </div>
+          </div>
+  
+          <div class="form-group form-inline col-md-5">
+            <label for="apellidos" class="col-sm-7 col-form-label">Apellidos</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="apellidos"
+              formControlName="apellidos" name="apellidos">
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="cedula">Cedula</label>
-        <input type="text" class="form-control" id="cedula"
-        [(ngModel)]="persona.cedula" name="cedula">
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorPacientes()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="nombres">Nombre</label>
-        <input type="text" class="form-control" id="nombres"
-        [(ngModel)]="persona.nombres" name="nombres">
-      </div>
-
-      <div class="form-group">
-        <label for="apellidos">Apellidos</label>
-        <input type="text" class="form-control" id="apellidos"
-        [(ngModel)]="persona.apellidos" name="apellidos">
-      </div>
-    </div>
-
-    <div class="col-log-4">
-      <div class="form-horizontal">
-        <button type="submit"
-        (click)="buscadorPacientes()" class="btn btn-success">Buscar</button>
-        <button type="submit"
-        (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-      </div>
-    </div>
+    </form>
+  </div>
 </div>
-
+<br>
 <div class="row">
   <div class="col text-right">
     <button routerLink="/paciente/nuevo"
@@ -86,7 +99,7 @@
       <td>{{ paciente.personas.direccion }}</td>
       <td>{{ paciente.personas.email }}</td>
       <td>{{ paciente.personas.estadoCivil }}</td>
-      <td>{{ paciente.personas.fechaNacimiento }}</td>
+      <td>{{ paciente.personas.fechaNacimiento | date : 'dd-MM-yyyy' }}</td>
       <td>{{ paciente.personas.nacionalidad }}</td>
       <td>{{ paciente.personas.sexo }}</td>
       <td>{{ paciente.personas.telefono }}</td>

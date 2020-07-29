@@ -20,7 +20,7 @@
       </div>
       <div class="card-body">
 
-            <form #f="ngForm">
+            <form [formGroup]="procedimientoForm" (ngSubmit)="guardar( )">
                   <div class="row">
                         <div class="col-lg-5">
                               <!-- Procedimiento Id-->
@@ -29,133 +29,120 @@
                                     <input type="number"
                                           class="form-control"
                                           placeholder="Procedimiento Id"
-                                          [(ngModel)]="procedimiento.procedimientoId"
-                                          name="procedimientoId" disabled="true">
+                                          formControlName="procedimientoId"
+                                          name="procedimientoId">
                                     <small class="form-text text-muted">Este campo es autogenerado</small>
                               </div>
                         </div>
                   </div>
 
-                  <!-- Datos Paciente-->
+                  
                   <div class="row">
-                        <div class="col-lg-5">
+                        <!-- Datos Paciente-->
+                        <div formGroupName="pacientes" class="col-lg-5">                              
                               <div class="form group">
                                     <label>Paciente Id</label>
-                                    <div class="input-group">
-                                          <input type="text"
+                                    <div class="input-group mb-3">
+                                          <input type="number"
                                                 class="form-control"
                                                 placeholder="ID"
-                                                [(ngModel)]="paciente.pacienteId"
+                                                formControlName="pacienteId"
                                                 name="pacienteId">
-                                          <span class="input-group-btn">
+                                          <div class="input-group-append">
                                                 <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPaciente( paciente.pacienteId )">
+                                                      (click)="obtenerPaciente( )">
                                                       Buscar
                                                 </button>
-                                          </span>
+                                          </div>
                                     </div>
                               </div>
-
-                              <label>C.I</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Cedula"
-                                    [(ngModel)]="pacientePersona.cedula"
-                                    disabled="disabled"
-                                    name="pacientePersona.cedula">
-                  
-                              <label>Nombres</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Nombres"
-                                    [(ngModel)]="pacientePersona.nombres"
-                                    disabled="disabled"
-                                    name="pacientePersona.nombres">
+                              <div formGroupName="personas">
+                                    <label>C.I</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="Cedula"
+                                          formControlName="cedula"
+                                          name="pacientePersona.cedula">
                         
-                              <label>Apellidos</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="pacientePersona.apellidos"
-                                    name="pacientePersona.apellidos"  
-                                    disabled="disabled"
-                                    placeholder="Apellidos">                              
+                                    <label>Nombres</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="Nombres"
+                                          formControlName="nombres"
+                                          name="pacientePersona.nombres">
                               
+                                    <label>Apellidos</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          formControlName="apellidos"
+                                          name="pacientePersona.apellidos"  
+                                          placeholder="Apellidos">                              
+                              </div>                              
                         </div>
 
                         <!-- Datos del Funcionario-->
-                        <div class="col-lg-5">
+                        <div formGroupName="funcionarios" class="col-lg-5">                              
                               <div class="form group">
                                     <label>Funcionario Id</label>                           
-                                    <div class="input-group">
-                                          <input type="text"
+                                    <div class="input-group mb-3">
+                                          <input type="number"
                                                 class="form-control"
                                                 placeholder="Funcionaros Id"
-                                                [(ngModel)]="funcionario.funcionarioId"
+                                                formControlName="funcionarioId"
                                                 name="funcionarioId">
-                                          <span class="input-group-btn">
+                                          <div class="input-group-append">
                                                 <button class="btn btn-outline-info"
-                                                (click)="obtenerFuncionario( funcionario.funcionarioId )">
+                                                (click)="obtenerFuncionario( )">
                                                       Buscar
                                                 </button>
-                                          </span>
+                                          </div>
                                     </div>
                               </div>
+                              <div formGroupName="personas">
+                                    <label>C.I</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="Cedula"
+                                          formControlName="cedula"
+                                          name="funcionarioPersona.cedula">
                         
-                              <label>C.I</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Cedula"
-                                    [(ngModel)]="funcionarioPersona.cedula"
-                                    disabled="disabled"
-                                    name="funcionarioPersona.cedula">
-                  
-                              <label>Nombres</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Nombres"
-                                    [(ngModel)]="funcionarioPersona.nombres"
-                                    disabled="disabled"
-                                    name="funcionarioPersona.nombres">
-                        
-                              <label>Apellidos</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="funcionarioPersona.apellidos"
-                                    name="funcionarioPersona.apellidos"  
-                                    disabled="disabled"
-                                    placeholder="Apellidos"> 
+                                    <label>Nombres</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          placeholder="Nombres"
+                                          formControlName="nombres"
+                                          name="funcionarioPersona.nombres">
+                              
+                                    <label>Apellidos</label>
+                                    <input type="text"
+                                          class="form-control"
+                                          formControlName="apellidos"
+                                          name="funcionarioPersona.apellidos"  
+                                          placeholder="Apellidos">
+                              </div>                              
                         </div>
-                  </div>
+                  </div>          
 
-                  
-
-                  <hr>
-                  
+                  <hr>         
 
                   <div class="form-row">
                         <div class="col-lg-5">
                               <label>Insumo Id</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.insumoId"
+                                    formControlName="insumoId"
                                     name="insumoId"                                     
                                     placeholder="Insumo Id">
                         </div>
 
                         <div class="col-lg-5">
                               <label>Fecha</label>
-                              <input type="text"
+                              <input type="datetime-local"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.fecha"
+                                    formControlName="fecha"
                                     name="fecha"                                     
-                                    placeholder="Fecha">
-                        
-                              <label>Hora</label>
-                              <input type="text"
-                                    class="form-control"
-                                    [(ngModel)]="procedimiento.hora"
-                                    name="hora"                                     
-                                    placeholder="Hora">
+                                    placeholder="Fecha">                       
+                             
                         </div>                
                   </div>
 
@@ -164,30 +151,39 @@
                               <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Notas</label>
                                     <textarea class="form-control" 
-                                          [(ngModel)]="procedimiento.notas"
+                                    formControlName="notas"
                                           name = "notas"
-                                          maxlength="500" rows="5">
+                                          maxlength="500" rows="5"
+                                          [class.is-invalid]="notaNoValido">
                                     </textarea>
+                                    <small *ngIf="notaNoValido" class="text-danger">
+                                          Ingrese 6 letras
+                                    </small>
                               </div>
                         </div>
+                  </div>
+
+                  <div class="input-group mb-3">
+                        <div class="custom-file">
+                              <input type="file" class="custom-file-input" id="inputGroupFile02">
+                              <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
+                        </div>                        
                   </div>
                   
                   <div class="form-row" [hidden]="crear">
                         <div class="col-lg-5"> 
                               <label>Fecha creacion</label>
-                              <input type="text"
+                              <input type="datetime-local"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.fechaCreacion"
+                                    formControlName="fechaCreacion"
                                     name="fechaCreacion"  
-                                    disabled="disabled"
                                     placeholder="Fecha creacion">
 
                               <label>Fecha modificacion</label>
-                              <input type="text"
+                              <input type="datetime-local"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.fechaModificacion"
+                                    formControlName="fechaModificacion"
                                     name="fechaModificacion"  
-                                    disabled="disabled"
                                     placeholder="Fecha modificacion">  
                         </div>
 
@@ -195,28 +191,29 @@
                               <label>Usuario creacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.usuarioCreacion"
+                                    formControlName="usuarioCreacion"
                                     name="usuarioCreacion"  
-                                    disabled="disabled"
                                     placeholder="Usuario creacion">
                         
                               <label>Usuario modificacion</label>
                               <input type="text"
                                     class="form-control"
-                                    [(ngModel)]="procedimiento.usuarioModificacion"
+                                    formControlName="usuarioModificacion"
                                     name="usuarioModificacion"  
-                                    disabled="disabled"
                                     placeholder="Usuario modificacion">                                    
                         </div>                        
                   </div>
-
+                  <br>
+                  <hr>
+                  <br>
                   <div class="form-group text-center">
                         <button type="submit" 
                               class="btn btn-primary"
-                              (click)="guardar( f )">
+                              (click)="guardar( )">
                         <i class="fa fa-save"></i>
                         Guardar
                         </button>
+                        <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
                   </div>
 
             </form>

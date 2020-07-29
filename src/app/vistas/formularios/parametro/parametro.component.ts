@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
@@ -15,11 +15,14 @@ import Swal from 'sweetalert2';
 })
 export class ParametroComponent implements OnInit {
   crear = false;
+  parametroForm: FormGroup;
   parametro: ParametroModelo = new ParametroModelo();
 
   constructor( private parametrosService: ParametrosService,
-               private route: ActivatedRoute 
-               ) { }
+               private route: ActivatedRoute, 
+               private fb: FormBuilder ) { 
+    this.crearFormulario();
+  }              
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -28,19 +31,24 @@ export class ParametroComponent implements OnInit {
       
       this.parametrosService.getParametro( Number(id) )
         .subscribe( (resp: ParametroModelo) => {
-          this.parametro = resp;
+          this.parametroForm.patchValue(resp);
         });
     }else{
       this.crear = true;
     }
-
   }
   
-  guardar( form: NgForm ) {
+  guardar(  ) {
 
-    if ( form.invalid ) {
-      console.log('Formulario no válido');
-      return;
+    if ( this.parametroForm.invalid ) {
+      return Object.values( this.parametroForm.controls ).forEach( control => {
+
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
     }
 
     Swal.fire({
@@ -51,8 +59,9 @@ export class ParametroComponent implements OnInit {
     });
     Swal.showLoading();
 
-
     let peticion: Observable<any>;
+
+    this.parametro = this.parametroForm.getRawValue();
 
     if ( this.parametro.parametroId ) {
       //Modificar
@@ -79,12 +88,11 @@ export class ParametroComponent implements OnInit {
             this.limpiar();
           }
         }
-
       });
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+e.error.errors[0],
+              text: e.status +'. '+ this.obtenerError(e),
             })
        }
     );
@@ -92,5 +100,47 @@ export class ParametroComponent implements OnInit {
 
   limpiar(){
     this.parametro = new ParametroModelo();
+    this.parametroForm.reset();
+    this.parametroForm.get('estado').setValue('A');
+  }
+
+  obtenerError(e : any){
+    var mensaje = "Error indefinido ";
+      if(e.error.mensaje){
+        mensaje = e.error.mensaje;
+      }
+      if(e.error.message){
+        mensaje = e.error.message;
+      }
+      if(e.error.errors){
+        mensaje = mensaje + ' ' + e.error.errors[0];
+      }
+      if(e.error.error){
+        mensaje = mensaje + ' ' + e.error.error;
+      }
+    return mensaje;  
+  }
+
+  crearFormulario() {
+
+    this.parametroForm = this.fb.group({
+      parametroId  : [null, [] ],
+      codigoParametro  : [null, [ Validators.required]  ],
+      descripcion  : [null, [] ],
+      nombre: [null, [] ],
+      valor: [null, [] ],
+      descripcionValor: [null, [] ],
+      estado: [null, [] ],      
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ]
+    });
+
+    this.parametroForm.get('parametroId').disable();
+    this.parametroForm.get('fechaCreacion').disable();
+    this.parametroForm.get('fechaModificacion').disable();
+    this.parametroForm.get('usuarioCreacion').disable();
+    this.parametroForm.get('usuarioModificacion').disable();
   }
 }

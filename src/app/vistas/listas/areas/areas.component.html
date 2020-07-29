@@ -1,0 +1,137 @@
+<h1>Listado de areas</h1>
+<hr>
+
+<div class="card">
+  <div class="card-header">
+    Buscador
+  </div>  
+  <div class="card-body">
+    <form [formGroup]="buscadorForm">      
+      <div class="form-row" >
+        <div class="col-lg-5"> 
+          <div class="form-group form-inline col-md-5">
+            <label for="areaId" class="col-sm-7 col-form-label">Area Id </label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="areaId"
+                formControlName="areaId" name="areaId">
+            </div>
+          </div>
+
+          <div class="form-group form-inline col-md-5">
+            <label for="codigo" class="col-sm-7 col-form-label">Codigo</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="codigo"
+                formControlName="codigo" name="codigo">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="form-group form-inline col-md-5">
+            <label for="descripcion" class="col-sm-7 col-form-label">Descripcion</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="descripcion"
+                formControlName="descripcion" name="descripcion">
+            </div>
+          </div>
+  
+          <div class="form-group form-inline col-md-5">
+            <label for="estado" class="col-sm-7 col-form-label">Estado</label>
+            <div class="col-sm-3">
+              <select class="custom-select"
+                  formControlName="estado" name = "estado">
+                <option value=null [selected]="true">TODOS</option>
+                <option value="A">ACTIVO</option>
+                <option value="I">INACTIVO</option>
+              </select>
+            </div>
+          </div>
+        </div>
+             
+      </div> 
+      
+      <div class="col-log-4" class="text-center">
+        <div class="form-horizontal">
+          <button type="submit" (click)="buscadorAreas()" class="btn btn-success">Buscar</button>
+          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        </div>
+      </div>  
+          
+    </form>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col text-right">
+    <button routerLink="/area/nuevo"
+            class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Agregar
+    </button>
+  </div>
+</div>
+
+
+<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && areas.length > 0"
+       class="table mt-3 animated fadeIn faster animated fadeIn faster">
+  <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">id</th>
+      <th scope="col">codigo</th>
+      <th scope="col">descripcion</th>
+      <th scope="col">estado</th>
+      <th scope="col">fechaCreacion</th>
+      <th scope="col">usuarioCreacion</th>
+      <th scope="col">fechaModificacion</th>
+      <th scope="col">usuarioModificacion</th>     
+      <th scope="col">Editar/Borrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let area of areas; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ area.areaId }}</td>
+      <td>{{ area.codigo }}</td>
+      <td>{{ area.descripcion }}</td>
+      <td>{{ area.estado }}</td>
+      <td>{{ area.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+      <td>{{ area.usuarioCreacion }}</td>
+      <td>{{ area.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+      <td>{{ area.usuarioModificacion }}</td>     
+
+      <td>
+
+        <button class="btn btn-info"
+                [routerLink]="['/area', area.areaId ]">
+        <i class="fa fa-edit"></i>
+        </button>
+
+        <button class="btn btn-danger"
+                (click)="borrarArea( area ) ">
+          <i class="fa fa-trash"></i>
+        </button>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!cargando && areas.length === 0"
+     class="alert alert-warning text-center mt-3 animated fadeIn faster">
+    <h4 class="alert-heading">No hay registros</h4>
+    <p>
+      <i class="fa fa-exclamation fa-2x"></i>
+    </p>
+</div>
+
+<div *ngIf="cargando"
+     class="alert alert-info text-center mt-3 animated fadeIn faster">
+  <h4 class="alert-heading">Cargando</h4>
+  <p>
+    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+  </p>
+  <p class="mb-0">
+    Espere por favor
+  </p>
+</div>
