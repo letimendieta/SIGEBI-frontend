@@ -12,7 +12,7 @@ export class PersonasService {
 
   //private url = 'https://sigebi-app.firebaseio.com/';
 
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/auth';
 
   constructor( private http: HttpClient ) { }
 
@@ -67,7 +67,7 @@ export class PersonasService {
   buscarPersonasFiltros( persona: PersonaModelo ) {
     let params = new HttpParams();
     var filtros = persona == null ? new PersonaModelo() : persona;
-    
+
     params = params.append('filtros', JSON.stringify(filtros));
     return this.http.get(`${ this.url }/personas/buscar/`,{params:params})
       .pipe(

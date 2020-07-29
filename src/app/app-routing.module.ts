@@ -9,20 +9,22 @@ import { PacientesComponent } from './vistas/listas/pacientes/pacientes.componen
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
-import { AuthGuard } from './guards/auth.guard';
+
+import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
+
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   {
   path: '',
-  component: DefaultComponent,canActivate: [ AuthGuard ],
+  component: DefaultComponent,
   children: [
   {
-    path: 'personas',
+    path: 'personas',canActivate: [guard], data: { expectedRol: ['admin', 'user'] },
     component: PersonasComponent
   },{
-    path: 'persona/:id',
+    path: 'persona/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: PersonaComponent
   },
   {

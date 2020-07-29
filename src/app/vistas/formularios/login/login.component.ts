@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/servicios/auth.service';
 import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
-
 import { UsuarioModelo } from 'src/app/modelos/usuario.modelo';
-import { LoginService } from 'src/app/servicios/login.service';
-
-import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
+import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -13,58 +12,66 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  
 
-  usuario: UsuarioModelo = new UsuarioModelo();
-  recordarme = false;
+  forma: FormGroup;
+  isLogged = false;
+    isLoginFail = false;
+    loginUsuario: UsuarioModelo;
+    nombreUsuario: string;
+    password: string;
+    roles: string[] = [];
+    errMsj: string;
 
-  constructor( private auth: LoginService,
-               private router: Router ) { }
+    constructor(private frmbuilder: FormBuilder,
+      private tokenService: TokenService,
+      private authService: AuthService,
+      private router: Router,
+      private toastr: ToastrService
+    ) { }
 
-  ngOnInit() {
+    ngOnInit() {
+      this.forma = this.frmbuilder.group({
+        nombreUsuario: [''],
+        password: ['']
 
-    if ( localStorage.getItem('usuario') ) {
-      this.usuario.usuario = localStorage.getItem('usuario');
-      this.recordarme = true;
+    })
+      if (this.tokenService.getToken()) {
+        this.isLogged = true;
+        this.isLoginFail = false;
+        this.roles = this.tokenService.getAuthorities();
+      }
     }
 
-  }
+    onLogin(): void {
+      console.log(" prueba")
+      console.log(this.forma.get('nombreUsuario').value)
+      this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
+      this.authService.login(this.loginUsuario).subscribe(
+        data => {
+          
+          this.isLogged = true;
 
-
-  login( form: NgForm ) {
-
-    if (  form.invalid ) { return; }
-
-    Swal.fire({
-      allowOutsideClick: false,
-      icon: 'info',
-      text: 'Espere por favor...'
-    });
-    Swal.showLoading();
-
-
-    this.auth.login( this.usuario )
-      .subscribe( resp => {
-
-        console.log(resp);
-        Swal.close();
-
-        if ( this.recordarme ) {
-          localStorage.setItem('usuario', this.usuario.usuario);
+          this.tokenService.setToken(data.token);
+          this.tokenService.setUserName(data.nombreUsuario);
+          this.tokenService.setAuthorities(data.authorities);
+          this.roles = data.authorities;
+          this.toastr.success('Bienvenido ' + data.nombreUsuario, 'OK', {
+            timeOut: 3000, positionClass: 'toast-top-center'
+          });
+          this.router.navigate(['/']);
+        },
+        err => {
+          this.isLogged = false;
+          this.errMsj = err.error.message;
+          this.toastr.error(this.errMsj, 'Fail', {
+            timeOut: 3000,  positionClass: 'toast-top-center',
+          });
+           console.log(err.error.message);
         }
+      );
+    }
 
 
-        this.router.navigateByUrl('/');
-
-      }, (err) => {
-
-        console.log(err.error.error.message);
-        Swal.fire({
-          title: 'Error al autenticar',
-          text: err.error.error.message,
-          icon: 'error'
-        });
-      });
-
-  }
 
 }

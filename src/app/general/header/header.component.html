@@ -14,22 +14,16 @@
                     </button>
                 </li>
                 <li>
-                    <button mat-icon-button>
-                        <mat-icon>help_outline</mat-icon>
+                    <button mat-icon-button *ngIf="!isLogged" (click)="onLogOut()">
+                        <mat-icon>account_box</mat-icon>
                     </button>
                 </li>
                 <li>
-                    <button mat-button [matMenuTriggerFor]="menu">
-                        <mat-icon>person_outline</mat-icon>
+                    <button mat-icon-button *ngIf="isLogged" (click)="onLogOut()">
+                        <mat-icon>exit_to_app</mat-icon>
                     </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item>
-                            <mat-icon>exit_to_app</mat-icon>
-                            Salir
-                        </button>
-                    </mat-menu>
-
                 </li>
+                
             </ul>
         </div>
     </mat-toolbar-row>
