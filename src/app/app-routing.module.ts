@@ -9,7 +9,6 @@ import { PacientesComponent } from './vistas/listas/pacientes/pacientes.componen
 import { PacienteComponent } from './vistas/formularios/paciente/paciente.component';
 import { FuncionariosComponent } from './vistas/listas/funcionarios/funcionarios.component';
 import { FuncionarioComponent } from './vistas/formularios/funcionario/funcionario.component';
-import { AuthGuard } from './guards/auth.guard';
 import { ParametrosComponent } from './vistas/listas/parametros/parametros.component';
 import { ParametroComponent } from './vistas/formularios/parametro/parametro.component';
 import { ProcedimientosComponent } from './vistas/listas/procedimientos/procedimientos.component';
@@ -38,6 +37,9 @@ import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesC
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { UploadFilesComponent } from 'src/app/vistas/upload-files/upload-files.component';
 
+import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
+
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
@@ -46,10 +48,10 @@ const routes: Routes = [
   component: DefaultComponent,
   children: [
   {
-    path: 'personas',
+    path: 'personas',canActivate: [guard], data: { expectedRol: ['admin', 'user'] },
     component: PersonasComponent
   },{
-    path: 'persona/:id',
+    path: 'persona/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: PersonaComponent
   },
   {

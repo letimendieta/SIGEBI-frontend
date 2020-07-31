@@ -1,7 +1,14 @@
 export class UsuarioModelo {
+  nombreUsuario:string;
+  password:string;
 
-  usuario:string;
-  contrasenha:string;
+
+
+  constructor(nombreUsuario: string, password: string) {
+          this.nombreUsuario = nombreUsuario;
+          this.password = password;
+      }
+
 
 
 }

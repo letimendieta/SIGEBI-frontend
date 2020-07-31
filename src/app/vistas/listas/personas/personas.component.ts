@@ -82,13 +82,13 @@ export class PersonasComponent implements OnInit {
               this.ngOnInit();
             }
           });
-        }, e => {           
-            Swal.fire({
-              icon: 'info',
-              title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
-            })
-          }
+        }, e => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Algo salio mal',
+                  text: e.status +'. ',
+                })
+            }
         );
       }
     });
