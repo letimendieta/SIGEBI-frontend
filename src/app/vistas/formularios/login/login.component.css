@@ -41,6 +41,11 @@ html {
 .form_container {
   margin-top: 100px;
 }
+.container {
+  background-image: url(src/assets/images/politecnica.png);
+  background-position: center;
+  background-position-x: 0px;
+}
 .login_btn {
   width: 100%;
   background: #60a3bc !important;
