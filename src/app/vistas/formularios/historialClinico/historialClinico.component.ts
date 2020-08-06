@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { HistorialClinicoModelo } from '../../../modelos/historialClinico.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -42,6 +42,7 @@ export class HistorialClinicoComponent implements OnInit {
                private funcionariosService: FuncionariosService,
                private areasService: AreasService,
                private route: ActivatedRoute,
+               private router: Router,
                private uploadService: UploadFileService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -169,7 +170,7 @@ export class HistorialClinicoComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.historialClinico.historialClinicoId ) {
-            //volver a la lista de historialClinicos
+            this.router.navigate(['/historialesClinicos']);
           }else{
             this.limpiar();
           }

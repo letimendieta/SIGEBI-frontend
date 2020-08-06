@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class InsumoComponent implements OnInit {
   insumo: InsumoModelo = new InsumoModelo();
 
   constructor( private insumosService: InsumosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -86,7 +87,7 @@ export class InsumoComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.insumo.insumoId ) {
-            //volver a la lista de insumos
+            this.router.navigate(['/insumos']);
           }else{
             this.limpiar();
           }

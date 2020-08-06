@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class AreaComponent implements OnInit {
   area: AreaModelo = new AreaModelo();
 
   constructor( private areasService: AreasService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -87,7 +88,7 @@ export class AreaComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.area.areaId ) {
-            //volver a la lista de areas
+            this.router.navigate(['/areas']);
           }else{
             this.limpiar();
           }

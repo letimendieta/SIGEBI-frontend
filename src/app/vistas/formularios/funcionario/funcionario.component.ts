@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
@@ -29,6 +29,7 @@ export class FuncionarioComponent implements OnInit {
   constructor( private funcionariosService: FuncionariosService,
                private parametrosService: ParametrosService,
                private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   } 
@@ -140,7 +141,7 @@ export class FuncionarioComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.funcionario.funcionarioId ) {
-            //volver a la lista de funcionarios
+            this.router.navigate(['/funcionarios']);
           }else{
             this.limpiar();
           }

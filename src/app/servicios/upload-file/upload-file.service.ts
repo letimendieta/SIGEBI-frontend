@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UploadFileService {
 
-  private baseUrl = 'http://localhost:8080/archivos';
+  private baseUrl = 'http://localhost:8080/auth/archivos';
 
   constructor(private http: HttpClient) { }
 

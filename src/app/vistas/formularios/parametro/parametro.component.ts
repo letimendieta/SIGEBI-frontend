@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { ParametrosService } from '../../../servicios/parametros.service';
 
@@ -19,7 +19,8 @@ export class ParametroComponent implements OnInit {
   parametro: ParametroModelo = new ParametroModelo();
 
   constructor( private parametrosService: ParametrosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -83,7 +84,7 @@ export class ParametroComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.parametro.parametroId ) {
-            //volver a la lista de parametros
+            this.router.navigate(['/parametros']);
           }else{
             this.limpiar();
           }

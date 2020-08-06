@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { StockModelo } from '../../../modelos/stock.modelo';
 import { StocksService } from '../../../servicios/stocks.service';
@@ -25,7 +26,8 @@ export class StockComponent implements OnInit {
   constructor( private stocksService: StocksService,
                private parametrosService: ParametrosService,
                private insumosService: InsumosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -119,7 +121,7 @@ export class StockComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.stock.stockId ) {
-            //volver a la lista de stocks
+            this.router.navigate(['/stocks']);
           }else{
             this.limpiar();
           }

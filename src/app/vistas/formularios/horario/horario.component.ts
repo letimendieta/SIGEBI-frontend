@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
@@ -23,7 +23,8 @@ export class HorarioComponent implements OnInit {
 
   constructor( private horariosService: HorariosService,
                private funcionariosService: FuncionariosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -104,7 +105,7 @@ export class HorarioComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.horario.horarioDisponibleId ) {
-            //volver a la lista de horarios
+            this.router.navigate(['/horarios']);
           }else{
             this.limpiar();
           }

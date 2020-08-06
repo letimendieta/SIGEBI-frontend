@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class DependenciaComponent implements OnInit {
   dependencia: DependenciaModelo = new DependenciaModelo();
 
   constructor( private dependenciasService: DependenciasService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -87,7 +88,7 @@ export class DependenciaComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.dependencia.dependenciaId ) {
-            //volver a la lista de dependencias
+            this.router.navigate(['/dependencias']);
           }else{
             this.limpiar();
           }

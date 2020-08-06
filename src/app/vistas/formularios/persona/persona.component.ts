@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -17,6 +17,7 @@ import { CarrerasService } from '../../../servicios/carreras.service';
 import { DepartamentosService } from '../../../servicios/departamentos.service';
 import { DependenciasService } from '../../../servicios/dependencias.service';
 import { EstamentosService } from '../../../servicios/estamentos.service';
+import { UploadFileService } from 'src/app/servicios/upload-file/upload-file.service';
 
 import Swal from 'sweetalert2';
 
@@ -38,12 +39,20 @@ export class PersonaComponent implements OnInit {
   listaDependencias: DependenciaModelo;
   listaEstamentos: EstamentoModelo;
 
+  selectedFiles: FileList;
+  currentFile: File;
+  progress = 0;
+  message = '';  
+  fileInfos: Observable<any>;
+
   constructor( private personasService: PersonasService,
                private parametrosService: ParametrosService,
                private carrerasService: CarrerasService,
                private departamentosService: DepartamentosService,
                private dependenciasService: DependenciasService,
                private estamentosService: EstamentosService,
+               private uploadService: UploadFileService,
+               private router: Router,
                private route: ActivatedRoute, 
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -62,10 +71,17 @@ export class PersonaComponent implements OnInit {
       this.personasService.getPersona( Number(id) )
         .subscribe( (resp: PersonaModelo) => {
           this.personaForm.patchValue(resp);
+          var cedula = this.personaForm.get('cedula').value;
+          this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
         });
     }else{
       this.crear = true;
     }
+  }
+
+  selectFile(event) {
+    this.progress = 0;
+    this.selectedFiles = event.target.files;
   }
 
   obtenerParametros() {
@@ -177,6 +193,25 @@ export class PersonaComponent implements OnInit {
 
     peticion.subscribe( resp => {
 
+      var mensajeUpload = '';
+      if(this.selectedFiles){
+        var cedula = resp.persona.cedula;
+        this.currentFile = this.selectedFiles.item(0);
+        var filename = cedula + '_'
+                      + this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
+        var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
+
+        this.uploadService.upload2(renameFile, "I").subscribe(
+          event => {
+            mensajeUpload
+          },
+          err => {
+            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.obtenerError(err);
+        });
+
+        this.selectedFiles = undefined;
+      }
+
       Swal.fire({
                 icon: 'success',
                 title: this.persona.nombres,
@@ -185,7 +220,7 @@ export class PersonaComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.persona.personaId ) {
-            //volver a la lista de personas
+            this.router.navigate(['/personas']);
           }else{
             this.limpiar();
           }
@@ -194,7 +229,7 @@ export class PersonaComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. ',
+              text: e.status +'. '+ this.obtenerError(e)
             })
        }
     );
@@ -207,17 +242,22 @@ export class PersonaComponent implements OnInit {
 
   obtenerError(e : any){
     var mensaje = "Error indefinido ";
-      if(e.error.mensaje){
-        mensaje = e.error.mensaje;
+      if(e.error){
+        if(e.error.mensaje){
+          mensaje = e.error.mensaje;
+        }
+        if(e.error.message){
+          mensaje = e.error.message;
+        }
+        if(e.error.errors){
+          mensaje = mensaje + ' ' + e.error.errors[0];
+        }
+        if(e.error.error){
+          mensaje = mensaje + ' ' + e.error.error;
+        }
       }
-      if(e.error.message){
-        mensaje = e.error.message;
-      }
-      if(e.error.errors){
-        mensaje = mensaje + ' ' + e.error.errors[0];
-      }
-      if(e.error.error){
-        mensaje = mensaje + ' ' + e.error.error;
+      if(e.message){
+        mensaje = mensaje + ' ' + e.message;
       }
     return mensaje;  
   }
@@ -242,8 +282,8 @@ export class PersonaComponent implements OnInit {
 
     this.personaForm = this.fb.group({
       personaId  : [null, [] ],
-      cedula  : [null, [ Validators.required, Validators.minLength(6) ]  ],
-      nombres  : [null, [ Validators.required, Validators.minLength(5) ]  ],
+      cedula  : [null, [ Validators.required]  ],
+      nombres  : [null, [ Validators.required]  ],
       apellidos: [null, [Validators.required] ],
       fechaNacimiento: [null, [] ],
       edad: [null, [] ],

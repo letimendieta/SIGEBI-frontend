@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { ProcedimientoModelo } from '../../../modelos/procedimiento.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -36,6 +36,7 @@ export class ProcedimientoComponent implements OnInit {
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
+               private router: Router,
                private route: ActivatedRoute,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -126,7 +127,7 @@ export class ProcedimientoComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.procedimiento.procedimientoId ) {
-            //volver a la lista de procedimientos
+            this.router.navigate(['/procedimientos']);
           }else{
             this.limpiar();
           }

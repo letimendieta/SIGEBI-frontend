@@ -13,7 +13,7 @@ export class UsuariosService {
 
   //private url = 'https://sigebi-app.firebaseio.com/';
 
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/auth';
 
   constructor( private http: HttpClient ) { }
 

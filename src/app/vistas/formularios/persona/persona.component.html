@@ -207,7 +207,30 @@
               </select>
             </div>
           </div>
-
+          <br>
+          <div>
+                <div class="input-group mb-3">    
+                      <div class="form-group">
+                            <label for="inputGroupFile02">Adjuntar Fotografia</label>
+                            <input type="file" class="form-control-file" 
+                                  (change)="selectFile($event)" id="inputGroupFile02" >                                    
+                      </div>                                                                     
+                </div>
+                
+                <div class="alert alert-light" role="alert">{{ message }}</div>
+                
+                <div class="card" [hidden]="crear">
+                      <div class="card-header">Lista de archivos</div>
+                      <ul class="list-group list-group-flush"
+                            *ngFor="let file of fileInfos | async">
+                            <li class="list-group-item">
+                                  <a href="{{ file.url }}">{{ file.name }}</a>
+                            </li>
+                      </ul>
+                </div>                       
+          </div>
+          <br>
+          <!--Personas Fechas-->
           <div class="form-row" [hidden]="crear">
             <div class="col-lg-5"> 
               <label>Fecha creacion</label>

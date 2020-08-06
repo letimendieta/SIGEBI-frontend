@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class DepartamentoComponent implements OnInit {
   departamento: DepartamentoModelo = new DepartamentoModelo();
 
   constructor( private departamentosService: DepartamentosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -87,7 +88,7 @@ export class DepartamentoComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.departamento.departamentoId ) {
-            //volver a la lista de departamentos
+            this.router.navigate(['/departamentos']);
           }else{
             this.limpiar();
           }

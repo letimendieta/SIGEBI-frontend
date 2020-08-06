@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { CitaModelo } from '../../../modelos/cita.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -39,6 +39,7 @@ export class CitaComponent implements OnInit {
                private funcionariosService: FuncionariosService,
                private areasService: AreasService,
                private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }
@@ -138,7 +139,7 @@ export class CitaComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.cita.citaId ) {
-            //volver a la lista de citas
+            this.router.navigate(['/citas']);
           }else{
             this.limpiar();
           }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { PacienteModelo } from '../../../modelos/paciente.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -50,6 +50,7 @@ export class PacienteComponent implements OnInit {
                private dependenciasService: DependenciasService,
                private estamentosService: EstamentosService,
                private uploadService: UploadFileService,
+               private router: Router,
                private route: ActivatedRoute,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -70,8 +71,7 @@ export class PacienteComponent implements OnInit {
         .subscribe( (resp: PacienteModelo) => {  
           this.pacienteForm.patchValue(resp);
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
-          var areaId = this.pacienteForm.get('areaId').value;
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "I");
+          this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
         });
     }else{
       this.crear = true;
@@ -206,12 +206,12 @@ export class PacienteComponent implements OnInit {
     }
 
     peticion.subscribe( resp => {
+      
       var mensajeUpload = '';
       if(this.selectedFiles){
         var cedula = resp.paciente.personas.cedula;
-        var areaId = resp.areaId;
         this.currentFile = this.selectedFiles.item(0);
-        var filename = cedula + '_' + areaId + '_' 
+        var filename = cedula + '_'
                       + this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
         var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
 
@@ -234,7 +234,7 @@ export class PacienteComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.paciente.pacienteId ) {
-            //volver a la lista de pacientes
+            this.router.navigate(['/pacientes']);
           }else{
             this.limpiar();
           }

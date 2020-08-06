@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
     password: string;
     roles: string[] = [];
     errMsj: string;
+    alert:boolean=false;
 
     constructor(private frmbuilder: FormBuilder,
       private tokenService: TokenService,
@@ -67,7 +68,8 @@ export class LoginComponent implements OnInit {
           this.toastr.error(this.errMsj, 'Fail', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
-           console.log(err.error.message);
+          this.alert=true;
+          console.log(err.error.message);
         }
       );
     }

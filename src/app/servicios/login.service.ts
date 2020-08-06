@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class LoginService {
 
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/auth';
   private apikey = '';
 
   userToken: string;

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { Usuario2Modelo } from '../../../modelos/usuario2.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -32,6 +31,7 @@ export class UsuarioComponent implements OnInit {
   constructor( private usuariosService: UsuariosService,
                private funcionariosService: FuncionariosService,
                private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -125,7 +125,7 @@ export class UsuarioComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.usuario.usuarioId ) {
-            //volver a la lista de usuarios
+            this.router.navigate(['/usuarios']);
           }else{
             this.limpiar();
           }

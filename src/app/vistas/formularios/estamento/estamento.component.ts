@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class EstamentoComponent implements OnInit {
   estamento: EstamentoModelo = new EstamentoModelo();
 
   constructor( private estamentosService: EstamentosService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -87,7 +88,7 @@ export class EstamentoComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.estamento.estamentoId ) {
-            //volver a la lista de estamentos
+            this.router.navigate(['/estamentos']);
           }else{
             this.limpiar();
           }

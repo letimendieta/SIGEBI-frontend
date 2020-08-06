@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class CarreraComponent implements OnInit {
   carrera: CarreraModelo = new CarreraModelo();
 
   constructor( private carrerasService: CarrerasService,
-               private route: ActivatedRoute, 
+               private route: ActivatedRoute,
+               private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -87,7 +88,7 @@ export class CarreraComponent implements OnInit {
 
         if ( resp.value ) {
           if ( this.carrera.carreraId ) {
-            //volver a la lista de carreras
+            this.router.navigate(['/carreras']);
           }else{
             this.limpiar();
           }

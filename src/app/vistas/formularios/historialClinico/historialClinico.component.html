@@ -168,7 +168,7 @@
                         <i class="fa fa-save"></i>
                         Guardar
                         </button>
-                        <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+                        <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
                   </div>
 
             </form>
