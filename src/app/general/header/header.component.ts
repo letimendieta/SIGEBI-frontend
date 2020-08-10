@@ -12,13 +12,18 @@ export class HeaderComponent implements OnInit {
   toggleSideBarForMe: EventEmitter<any>= new EventEmitter();
 
   constructor(private tokenService: TokenService,private router:Router) { }
-
+  nombreUsuario = '';
   ngOnInit() {
     if (this.tokenService.getToken()) {
           this.isLogged = true;
+          this.nombreUsuario = this.tokenService.getUserName();
         } else {
           this.isLogged = false;
+          this.nombreUsuario = '';
         }
+
+       
+       
   }
 
   onLogOut(): void {

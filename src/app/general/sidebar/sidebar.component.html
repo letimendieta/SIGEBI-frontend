@@ -1,4 +1,4 @@
-<mat-nav-list>
+<!--<mat-nav-list>
     <div class="profile-card">
 
         <img src="../assets/images/Logo_bienestar.jpg" alt="Politecnica">
@@ -42,3 +42,122 @@
     </a>
 
 </mat-nav-list>
+-->
+
+ <!-- A vertical navbar  <nav class="navbar bg-light">-->
+
+
+      
+
+    
+    <!-- Links -->
+   <!--<ul class="navbar-nav md-1">
+        <li class="nav-item">
+            <img src="../assets/images/Logo_bienestar.jpg" alt="Politecnica">
+          </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-home"></i> Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="list-item-active"  *ngIf="isLogged" routerLink="/personas">Personas</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Pacientes
+        </a>
+        <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdown">
+          <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/pacientes">Pacientes</a>
+          <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/historialesClinicos">Historiales Clinicos</a>
+          
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/usuarios">Usuarios</a>
+      </li>
+    </ul>
+  
+  </nav> -->
+   	<nav id="sidebar">
+   		<div class="sidebar-header">
+        <img src="../assets/images/Logo_bienestar.jpg" alt="Politecnica">
+      </div>
+   		
+   		
+   		<ul class="list-unstyled components">
+         <p>SIGEBI</p>
+         <li>
+          <a routerLinkActive="list-item-active" routerLink="/" >Inicio</a>
+        </li>
+   			<li class="active">
+   				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pacientes</a>
+   				<ul class="collapse list-unstyled" id="pacienteSubmenu">
+   					<li>
+              <a routerLinkActive="list-item-active"  routerLink="/pacientes">Listado de Pacientes</a>
+              
+   					</li>
+   					<li>
+                <a routerLinkActive="list-item-active"  routerLink="/historialesClinicos">Historiales Clinicos</a>
+   					</li>
+   				</ul> 
+   			</li>
+        <li class="active">
+          <a href="#consultasSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Consultas</a>
+          <ul class="collapse list-unstyled" id="consultasSubmenu">
+            <li>
+             <a routerLinkActive="list-item-active"  routerLink="/citas">Citas</a>
+            </li>
+            <li>
+             <a routerLinkActive="list-item-active"  routerLink="/horarios">Horarios</a>
+            </li>
+          </ul> 
+        </li>
+        <li class="active">
+          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Varios</a>
+          <ul class="collapse list-unstyled" id="variosSubmenu">
+            <li>
+             <a routerLinkActive="list-item-active"  routerLink="/areas">Areas</a>
+             
+            </li>
+            <li>
+               <a routerLinkActive="list-item-active"  routerLink="/carreras">Carreras</a>
+            </li>
+            <li>
+              <a routerLinkActive="list-item-active"  routerLink="/departamentos">Departamentos</a>
+              
+             </li>
+             <li>
+                <a routerLinkActive="list-item-active"  routerLink="/estamentos">Estamentos</a>
+             </li>
+             <li>
+              <a routerLinkActive="list-item-active"  routerLink="/dependencias">Dependencias</a>
+           </li>
+          </ul> 
+        </li>
+   			<li class="active">
+   				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Stock</a>
+   				<ul class="collapse list-unstyled" id="stockSubmenu">
+   					<li>
+              <a routerLinkActive="list-item-active"  routerLink="/stocks">Stock</a>
+   					</li>
+   					<li>
+              <a routerLinkActive="list-item-active"  routerLink="/insumos">Insumos</a>
+   					</li>
+   				</ul> 
+         </li>
+        <li>
+          <a routerLinkActive="list-item-active"  routerLink="/funcionarios">Funcionarios</a>
+        </li>
+   			<li>
+   				<a routerLinkActive="list-item-active"  routerLink="/usuarios">Usuarios</a>
+   			</li>
+   			
+   		</ul>
+   		
+   		<ul class="list-unstyled CTAs">
+   			<li>
+   				<a routerLinkActive="list-item-active"  routerLink="/upload-files" class="download">Subir archivos</a>
+   			</li>
+   		
+   		</ul>
+     </nav>
+    

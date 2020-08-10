@@ -5,7 +5,10 @@
         </button>
 
         <span> SIGEBI </span>
-
+        <div class="container text-center">
+            <div *ngIf="isLogged; else loggedOut"><h1>Bienvenido {{nombreUsuario}}</h1></div>
+            <ng-template #loggedOut><h2>No has iniciado sesión</h2></ng-template>
+        </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
                 <li>
@@ -15,7 +18,7 @@
                 </li>
                 <li>
                     <button mat-icon-button *ngIf="!isLogged" (click)="onLogOut()">
-                        <mat-icon>account_box</mat-icon>
+                        <mat-icon>account_box</mat-icon> 
                     </button>
                 </li>
                 <li>
