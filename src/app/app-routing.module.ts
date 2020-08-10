@@ -55,111 +55,111 @@ const routes: Routes = [
     component: PersonaComponent
   },
   {
-    path: 'pacientes',
+    path: 'pacientes',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: PacientesComponent
   },{
-    path: 'paciente/:id',
+    path: 'paciente/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: PacienteComponent
   },
   {
-    path: 'funcionarios',
+    path: 'funcionarios',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: FuncionariosComponent
   },{
-    path: 'funcionario/:id',
+    path: 'funcionario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: FuncionarioComponent
   },
   {
-    path: 'parametros',
+    path: 'parametros',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: ParametrosComponent
   },{
-    path: 'parametro/:id',
+    path: 'parametro/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: ParametroComponent
   },
   {
-    path: 'procedimientos',
+    path: 'procedimientos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: ProcedimientosComponent
   },{
-    path: 'procedimiento/:id',
+    path: 'procedimiento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: ProcedimientoComponent
   },
   {
-    path: 'usuarios',
+    path: 'usuarios',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: UsuariosComponent
   },{
-    path: 'usuario/:id',
+    path: 'usuario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: UsuarioComponent
   },
   {
-    path: 'areas',
+    path: 'areas',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: AreasComponent
   },{
-    path: 'area/:id',
+    path: 'area/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: AreaComponent
   },
   {
-    path: 'carreras',
+    path: 'carreras',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: CarrerasComponent
   },{
-    path: 'carrera/:id',
+    path: 'carrera/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: CarreraComponent
   },
   {
-    path: 'departamentos',
+    path: 'departamentos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: DepartamentosComponent
   },{
-    path: 'departamento/:id',
+    path: 'departamento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: DepartamentoComponent
   },
   {
-    path: 'dependencias',
+    path: 'dependencias',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: DependenciasComponent
   },{
-    path: 'dependencia/:id',
+    path: 'dependencia/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: DependenciaComponent
   },
   {
-    path: 'estamentos',
+    path: 'estamentos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: EstamentosComponent
   },{
-    path: 'estamento/:id',
+    path: 'estamento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: EstamentoComponent
   },
   {
-    path: 'citas',
+    path: 'citas',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: CitasComponent
   },{
-    path: 'cita/:id',
+    path: 'cita/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: CitaComponent
   },
   {
-    path: 'horarios',
+    path: 'horarios',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HorariosComponent
   },{
-    path: 'horario/:id',
+    path: 'horario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HorarioComponent
   },
   {
-    path: 'stocks',
+    path: 'stocks',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: StocksComponent
   },{
-    path: 'stock/:id',
+    path: 'stock/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: StockComponent
   },
   {
-    path: 'insumos',
+    path: 'insumos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: InsumosComponent
   },{
-    path: 'insumo/:id',
+    path: 'insumo/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: InsumoComponent
   },
   {
-    path: 'historialesClinicos',
+    path: 'historialesClinicos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HistorialesClinicosComponent
   },{
-    path: 'historialClinico/:id',
+    path: 'historialClinico/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HistorialClinicoComponent
   },{
-    path: 'upload-files',
+    path: 'upload-files',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: UploadFilesComponent
   }
   ]
