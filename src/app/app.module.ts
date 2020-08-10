@@ -12,10 +12,15 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultModule } from 'src/app/general/layouts/default/default.module';
 import { LoginModule } from './vistas/formularios/login/login.module';
+import { DataTableComponent } from './data-table/data-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DataTableComponent
   ],
   imports: [
     BrowserModule,
@@ -27,6 +32,9 @@ import { LoginModule } from './vistas/formularios/login/login.module';
     HttpClientModule,
     ReactiveFormsModule,
     ToastrModule.forRoot(),
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]
