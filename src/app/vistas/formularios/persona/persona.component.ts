@@ -17,7 +17,7 @@ import { CarrerasService } from '../../../servicios/carreras.service';
 import { DepartamentosService } from '../../../servicios/departamentos.service';
 import { DependenciasService } from '../../../servicios/dependencias.service';
 import { EstamentosService } from '../../../servicios/estamentos.service';
-import { UploadFileService } from 'src/app/servicios/upload-file/upload-file.service';
+import { UploadFileService } from 'src/app/servicios/upload-file.service';
 
 import Swal from 'sweetalert2';
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import { UploadFileService } from 'src/app/servicios/upload-file/upload-file.service';
+import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';

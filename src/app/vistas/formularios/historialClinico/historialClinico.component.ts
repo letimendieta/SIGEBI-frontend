@@ -12,7 +12,7 @@ import { HistorialesClinicosService } from '../../../servicios/historialesClinic
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { AreasService } from '../../../servicios/areas.service';
-import { UploadFileService } from 'src/app/servicios/upload-file/upload-file.service';
+import { UploadFileService } from 'src/app/servicios/upload-file.service';
 
 import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';

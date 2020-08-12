@@ -86,7 +86,7 @@ export class PersonasComponent implements OnInit {
                 Swal.fire({
                   icon: 'error',
                   title: 'Algo salio mal',
-                  text: e.status +'. ',
+                  text: e.status +'. '+ this.obtenerError(e),
                 })
             }
         );
