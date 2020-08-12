@@ -88,31 +88,26 @@
          <li>
           <a routerLinkActive="list-item-active" routerLink="/" >Inicio</a>
         </li>
+        <li>
+          <a routerLinkActive="list-item-active"  routerLink="/personas">Personas</a>
+        </li>
    			<li class="active">
    				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pacientes</a>
    				<ul class="collapse list-unstyled" id="pacienteSubmenu">
    					<li>
-              <a routerLinkActive="list-item-active"  routerLink="/pacientes">Listado de Pacientes</a>
+              <a routerLinkActive="list-item-active"  routerLink="/pacientes">Pacientes</a>
               
    					</li>
    					<li>
                 <a routerLinkActive="list-item-active"  routerLink="/historialesClinicos">Historiales Clinicos</a>
-   					</li>
+             </li>
+             <li>
+              <a routerLinkActive="list-item-active"  routerLink="/citas">Citas</a>
+             </li>
    				</ul> 
    			</li>
         <li class="active">
-          <a href="#consultasSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Consultas</a>
-          <ul class="collapse list-unstyled" id="consultasSubmenu">
-            <li>
-             <a routerLinkActive="list-item-active"  routerLink="/citas">Citas</a>
-            </li>
-            <li>
-             <a routerLinkActive="list-item-active"  routerLink="/horarios">Horarios</a>
-            </li>
-          </ul> 
-        </li>
-        <li class="active">
-          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Varios</a>
+          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Parametros</a>
           <ul class="collapse list-unstyled" id="variosSubmenu">
             <li>
              <a routerLinkActive="list-item-active"  routerLink="/areas">Areas</a>
@@ -131,9 +126,27 @@
              <li>
               <a routerLinkActive="list-item-active"  routerLink="/dependencias">Dependencias</a>
            </li>
+           <li>
+            <a routerLinkActive="list-item-active"  routerLink="/parametros">Parametros</a>
+         </li>
           </ul> 
         </li>
-   			<li class="active">
+         <li class="active">
+          <a href="#funcionariosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Funcionarios</a>
+          <ul class="collapse list-unstyled" id="funcionariosSubmenu">
+            <li>
+             <a routerLinkActive="list-item-active"  routerLink="/funcionarios">Funcionarios</a>
+            </li>
+            <li>
+             <a routerLinkActive="list-item-active"  routerLink="/horarios">Horarios</a>
+            </li>
+            
+          </ul> 
+        </li>
+        <li>
+          <a routerLinkActive="list-item-active"  routerLink="/procedimientos">Procedimientos</a>
+        </li>
+        <li class="active">
    				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Stock</a>
    				<ul class="collapse list-unstyled" id="stockSubmenu">
    					<li>
@@ -144,9 +157,6 @@
    					</li>
    				</ul> 
          </li>
-        <li>
-          <a routerLinkActive="list-item-active"  routerLink="/funcionarios">Funcionarios</a>
-        </li>
    			<li>
    				<a routerLinkActive="list-item-active"  routerLink="/usuarios">Usuarios</a>
    			</li>
