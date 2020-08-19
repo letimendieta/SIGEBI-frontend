@@ -102,7 +102,7 @@ export class StocksComponent implements OnInit {
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: stock.stockId,
+                    title: stock.stockId.toString(),
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

@@ -142,7 +142,7 @@ export class CitasComponent implements OnInit {
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: cita.citaId,
+                    title: cita.citaId.toString(),
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

@@ -164,7 +164,7 @@ export class HistorialClinicoComponent implements OnInit {
       }
       Swal.fire({
                 icon: 'success',
-                title: this.historialClinico.historialClinicoId,
+                title: this.historialClinico.historialClinicoId.toString(),
                 text: resp.mensaje + '. '+ mensajeUpload
               }).then( resp => {
 
