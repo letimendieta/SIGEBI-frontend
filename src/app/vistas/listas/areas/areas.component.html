@@ -1,4 +1,4 @@
-<h1>Listado de areas</h1>
+<h1>Listado de Areas</h1>
 <hr>
 
 <div class="card">
@@ -18,7 +18,7 @@
           </div>
 
           <div class="form-group form-inline col-md-5">
-            <label for="codigo" class="col-sm-7 col-form-label">Codigo</label>
+            <label for="codigo" class="col-sm-7 col-form-label">C&oacute;digo</label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="codigo"
                 formControlName="codigo" name="codigo">
@@ -28,7 +28,7 @@
 
         <div class="col-lg-5">
           <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-7 col-form-label">Descripcion</label>
+            <label for="descripcion" class="col-sm-7 col-form-label">Descripci&oacute;n</label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="descripcion"
                 formControlName="descripcion" name="descripcion">
@@ -71,60 +71,6 @@
   </div>
 </div>
 
-
-<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && areas.length > 0"
-       class="table mt-3 animated fadeIn faster animated fadeIn faster">
-  <thead class="table-info">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">id</th>
-      <th scope="col">codigo</th>
-      <th scope="col">descripcion</th>
-      <th scope="col">estado</th>
-      <th scope="col">fechaCreacion</th>
-      <th scope="col">usuarioCreacion</th>
-      <th scope="col">fechaModificacion</th>
-      <th scope="col">usuarioModificacion</th>     
-      <th scope="col">Editar/Borrar</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let area of areas; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ area.areaId }}</td>
-      <td>{{ area.codigo }}</td>
-      <td>{{ area.descripcion }}</td>
-      <td>{{ area.estado }}</td>
-      <td>{{ area.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-      <td>{{ area.usuarioCreacion }}</td>
-      <td>{{ area.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-      <td>{{ area.usuarioModificacion }}</td>     
-
-      <td>
-
-        <button class="btn btn-info"
-                [routerLink]="['/area', area.areaId ]">
-        <i class="fa fa-edit"></i>
-        </button>
-
-        <button class="btn btn-danger"
-                (click)="borrarArea( area ) ">
-          <i class="fa fa-trash"></i>
-        </button>
-
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div *ngIf="!cargando && areas.length === 0"
-     class="alert alert-warning text-center mt-3 animated fadeIn faster">
-    <h4 class="alert-heading">No hay registros</h4>
-    <p>
-      <i class="fa fa-exclamation fa-2x"></i>
-    </p>
-</div>
-
 <div *ngIf="cargando"
      class="alert alert-info text-center mt-3 animated fadeIn faster">
   <h4 class="alert-heading">Cargando</h4>
@@ -134,4 +80,59 @@
   <p class="mb-0">
     Espere por favor
   </p>
+</div>
+
+<div class="table-responsive">
+  <table datatable [dtOptions]="dtOptions" 
+    class="table table-hover table-responsive table-condensed table-bordered" 
+    *ngIf="!cargando && areas.length > 0"
+    class="table mt-3 animated fadeIn faster animated fadeIn faster">
+    <thead class="table-info">
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">C&oacute;digo</th>
+        <th scope="col">Descripci&oacute;n</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Fecha Creaci&oacute;n</th>
+        <th scope="col">Usuario Creaci&oacute;n</th>
+        <th scope="col">Fecha Modificaci&oacute;n</th>
+        <th scope="col">Usuario Modificaci&oacute;n</th>     
+        <th scope="col">Editar/Borrar</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let area of areas; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ area.areaId }}</td>
+        <td>{{ area.codigo }}</td>
+        <td>{{ area.descripcion }}</td>
+        <td>{{ area.estado }}</td>
+        <td>{{ area.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td>{{ area.usuarioCreacion }}</td>
+        <td>{{ area.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td>{{ area.usuarioModificacion }}</td>     
+
+        <td>
+          <button class="btn btn-info"
+                  [routerLink]="['/area', area.areaId ]">
+            <i class="fa fa-edit"></i>
+          </button>
+
+          <button class="btn btn-danger"
+                  (click)="borrarArea( area ) ">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!cargando && areas.length === 0"
+      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+      <h4 class="alert-heading">Cargando</h4>
+      <p>
+        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+      </p>
+      <p class="mb-0">
+        Espere por favor
+      </p>
+    </tbody>
+  </table>
 </div>

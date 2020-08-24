@@ -4,6 +4,20 @@ import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+
+class Person {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+
+class DataTablesResponse {
+  data: any[];
+  draw: number;
+  recordsFiltered: number;
+  recordsTotal: number;
+}
 
 @Component({
   selector: 'app-areas',
@@ -12,22 +26,51 @@ import Swal from 'sweetalert2';
 })
 export class AreasComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+  dtOptions2: DataTables.Settings = {};
+  persons: Person[];
+  
   areas: AreaModelo[] = [];
   buscador: AreaModelo = new AreaModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
   constructor( private areasService: AreasService,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private http: HttpClient ) { 
     this.crearFormulario();
   }
 
   ngOnInit() {    
+    const that = this;
+
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'id'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'}, {data:'usuarioModificacion'},
+        {data:'Editar/Borrar'},
+      ]
+    };
+  }
+
+  buscadorAreas() {
     this.cargando = true;
-    this.areasService.buscarAreasFiltrosTabla(null)
-      .subscribe( resp => {
+    this.buscador = this.buscadorForm.getRawValue();
+ 
+    this.areasService.buscarAreasFiltrosTabla(this.buscador)
+    .subscribe( resp => {
         this.areas = resp;
-        this.cargando = false;
+        this.cargando = false;        
+        
       }, e => {      
         Swal.fire({
           icon: 'info',
@@ -38,25 +81,10 @@ export class AreasComponent implements OnInit {
       });
   }
 
-  buscadorAreas() {
-    this.buscador = this.buscadorForm.getRawValue();
-    this.areasService.buscarAreasFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.areas = resp;
-      this.cargando = false;
-    }, e => {
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
-      })
-    });
-  }
-
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new AreaModelo();
-    this.buscadorAreas();
+    this.areas = [];
   }
 
   borrarArea( area: AreaModelo ) {
@@ -97,17 +125,22 @@ export class AreasComponent implements OnInit {
 
   obtenerError(e : any){
     var mensaje = "Error indefinido ";
-      if(e.error.mensaje){
-        mensaje = e.error.mensaje;
+      if(e.error){
+        if(e.error.mensaje){
+          mensaje = e.error.mensaje;
+        }
+        if(e.error.message){
+          mensaje = e.error.message;
+        }
+        if(e.error.errors){
+          mensaje = mensaje + ' ' + e.error.errors[0];
+        }
+        if(e.error.error){
+          mensaje = mensaje + ' ' + e.error.error;
+        }
       }
-      if(e.error.message){
-        mensaje = e.error.message;
-      }
-      if(e.error.errors){
-        mensaje = mensaje + ' ' + e.error.errors[0];
-      }
-      if(e.error.error){
-        mensaje = mensaje + ' ' + e.error.error;
+      if(e.message){
+        mensaje = mensaje + ' ' + e.message;
       }
     return mensaje;  
   }

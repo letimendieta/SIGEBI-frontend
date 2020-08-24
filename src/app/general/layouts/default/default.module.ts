@@ -42,7 +42,8 @@ import { SharedModule } from 'src/app/general/shared.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardService } from 'src/app/vistas/dashboard.service';
-import {ReactiveFormsModule} from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms';
+import { DataTablesModule } from 'angular-datatables';
 
 
 
@@ -92,7 +93,8 @@ import {ReactiveFormsModule} from '@angular/forms'
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DataTablesModule
   ],
   providers: [
     DashboardService
