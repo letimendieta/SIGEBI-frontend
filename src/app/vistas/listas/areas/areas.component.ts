@@ -39,11 +39,27 @@ export class AreasComponent implements OnInit {
                private fb: FormBuilder,
                private http: HttpClient ) { 
     this.crearFormulario();
+    this.crearTabla();
+    
   }
 
   ngOnInit() {    
-    const that = this;
-
+    this.cargando = true;
+    this.areasService.buscarAreasFiltrosTabla(null)
+      .subscribe( resp => {
+        this.areas = resp;
+        this.cargando = false;
+      }, e => {      
+        Swal.fire({
+          icon: 'info',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.obtenerError(e),
+        })
+        this.cargando = false;
+      });
+   
+  }
+   crearTabla(){
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -57,12 +73,13 @@ export class AreasComponent implements OnInit {
         {data:'id'}, {data:'codigo'}, {data:'descripcion'},
         {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
-        {data:'Editar/Borrar'},
+        {data:'Editar'},
+        {data:'Borrar'},
       ]
     };
-  }
-
-  buscadorAreas() {
+   }
+   buscadorAreas(event) {
+     event.preventDefault();
     this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
  
@@ -87,7 +104,7 @@ export class AreasComponent implements OnInit {
     this.areas = [];
   }
 
-  borrarArea( area: AreaModelo ) {
+  borrarArea(event,area: AreaModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

@@ -52,7 +52,7 @@
       
       <div class="col-log-4" class="text-center">
         <div class="form-horizontal">
-          <button type="submit" (click)="buscadorAreas()" class="btn btn-success">Buscar</button>
+          <button type="submit" (click)="buscadorAreas($event)" class="btn btn-success">Buscar</button>
           <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
         </div>
       </div>  
@@ -97,7 +97,8 @@
         <th scope="col">Usuario Creaci&oacute;n</th>
         <th scope="col">Fecha Modificaci&oacute;n</th>
         <th scope="col">Usuario Modificaci&oacute;n</th>     
-        <th scope="col">Editar/Borrar</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Borrar</th>
     </thead>
     <tbody>
       <tr *ngFor="let area of areas; let i = index">
@@ -112,16 +113,17 @@
         <td>{{ area.usuarioModificacion }}</td>     
 
         <td>
-          <button class="btn btn-info"
+          <a class="btn btn-info"
                   [routerLink]="['/area', area.areaId ]">
             <i class="fa fa-edit"></i>
-          </button>
-
-          <button class="btn btn-danger"
-                  (click)="borrarArea( area ) ">
-            <i class="fa fa-trash"></i>
-          </button>
+        </a>
         </td>
+        <td>
+  
+          <button class="btn btn-danger"
+          (click)="borrarArea($event, area) ">
+        <i class="fa fa-trash"></i></button>
+  </td>
       </tr>
     </tbody>
     <tbody *ngIf="!cargando && areas.length === 0"
