@@ -71,7 +71,8 @@ export class HistorialClinicoComponent implements OnInit {
     this.selectedFiles = event.target.files;
   }
 
-  obtenerPaciente( ){
+  obtenerPaciente(event){
+    event.preventDefault();
     var id = this.historialClinicoForm.get('pacientes').get('pacienteId').value;
     this.pacientesService.getPaciente( id )
       .subscribe( (resp: PacienteModelo) => {         

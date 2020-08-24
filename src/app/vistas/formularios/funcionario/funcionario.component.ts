@@ -81,7 +81,8 @@ export class FuncionarioComponent implements OnInit {
     
   }
 
-  obtenerPersona( ){
+  obtenerPersona(event){
+    event.preventDefault();
     var id = this.funcionarioForm.get('personas').get('personaId').value;
     this.funcionariosService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {

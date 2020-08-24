@@ -114,7 +114,8 @@ export class PacienteComponent implements OnInit {
     });    
   }
 
-  obtenerPersona( ){
+  obtenerPersona(event){
+    event.preventDefault();
     var id = this.pacienteForm.get('personas').get('personaId').value;
     this.pacientesService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {

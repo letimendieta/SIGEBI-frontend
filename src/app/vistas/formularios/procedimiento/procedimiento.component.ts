@@ -56,7 +56,8 @@ export class ProcedimientoComponent implements OnInit {
     }
   }  
 
-  obtenerPaciente( ){
+  obtenerPaciente(event ){
+    event.preventDefault();
     var id = this.procedimientoForm.get('pacientes').get('pacienteId').value;
     this.pacientesService.getPaciente( id )
         .subscribe( (resp: PacienteModelo) => {         
@@ -70,7 +71,9 @@ export class ProcedimientoComponent implements OnInit {
         );
 
   }
-  obtenerFuncionario( ){
+  obtenerFuncionario(event ){
+    event.preventDefault();
+
     var id = this.procedimientoForm.get('funcionarios').get('funcionarioId').value;
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
