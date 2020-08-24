@@ -124,7 +124,7 @@ export class ProcedimientosComponent implements OnInit {
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: procedimiento.procedimientoId,
+                    title: procedimiento.procedimientoId.toString(),
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

@@ -99,7 +99,7 @@ export class HorariosComponent implements OnInit {
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: horario.horarioDisponibleId,
+                    title: horario.horarioDisponibleId.toString(),
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

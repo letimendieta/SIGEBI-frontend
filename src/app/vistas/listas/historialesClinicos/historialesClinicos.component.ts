@@ -117,7 +117,7 @@ export class HistorialesClinicosComponent implements OnInit {
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: historialClinico.historialClinicoId,
+                    title: historialClinico.historialClinicoId.toString(),
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

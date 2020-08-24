@@ -135,7 +135,7 @@ export class CitaComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.cita.citaId,
+                title: this.cita.citaId.toString(),
                 text: resp.mensaje,
               }).then( resp => {
 

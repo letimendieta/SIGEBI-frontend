@@ -124,7 +124,7 @@ export class ProcedimientoComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.procedimiento.procedimientoId,
+                title: this.procedimiento.procedimientoId.toString(),
                 text: resp.mensaje,
               }).then( resp => {
 
