@@ -1,23 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AreasService } from '../../../servicios/areas.service';
 import { AreaModelo } from '../../../modelos/area.modelo';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-
-class Person {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
-
-class DataTablesResponse {
-  data: any[];
-  draw: number;
-  recordsFiltered: number;
-  recordsTotal: number;
-}
 
 @Component({
   selector: 'app-areas',
@@ -27,8 +13,6 @@ class DataTablesResponse {
 export class AreasComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
-  dtOptions2: DataTables.Settings = {};
-  persons: Person[];
   
   areas: AreaModelo[] = [];
   buscador: AreaModelo = new AreaModelo();
@@ -36,11 +20,9 @@ export class AreasComponent implements OnInit {
   cargando = false;  
 
   constructor( private areasService: AreasService,
-               private fb: FormBuilder,
-               private http: HttpClient ) { 
+               private fb: FormBuilder) { 
     this.crearFormulario();
-    this.crearTabla();
-    
+    this.crearTabla();    
   }
 
   ngOnInit() {    
@@ -56,10 +38,10 @@ export class AreasComponent implements OnInit {
           text: e.status +'. '+ this.obtenerError(e),
         })
         this.cargando = false;
-      });
-   
+      });   
   }
-   crearTabla(){
+
+  crearTabla(){
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -70,24 +52,24 @@ export class AreasComponent implements OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'id'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'areaId'}, {data:'codigo'}, {data:'descripcion'},
         {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
         {data:'Editar'},
-        {data:'Borrar'},
+        {data:'Borrar'}
       ]
     };
-   }
+  }
+
    buscadorAreas(event) {
-     event.preventDefault();
+    event.preventDefault();
     this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
  
     this.areasService.buscarAreasFiltrosTabla(this.buscador)
     .subscribe( resp => {
         this.areas = resp;
-        this.cargando = false;        
-        
+        this.cargando = false;
       }, e => {      
         Swal.fire({
           icon: 'info',

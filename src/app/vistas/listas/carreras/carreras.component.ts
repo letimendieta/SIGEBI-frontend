@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class CarrerasComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   carreras: CarreraModelo[] = [];
   buscador: CarreraModelo = new CarreraModelo();
   buscadorForm: FormGroup;
@@ -20,6 +22,7 @@ export class CarrerasComponent implements OnInit {
   constructor( private carrerasService: CarrerasService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {    
@@ -38,8 +41,31 @@ export class CarrerasComponent implements OnInit {
       });
   }
 
-  buscadorCarreras() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'carreraId'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'}, {data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+    }
+
+  buscadorCarreras(event) {
+    event.preventDefault();
+    this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
+
     this.carrerasService.buscarCarrerasFiltrosTabla(this.buscador)
     .subscribe( resp => {
       this.carreras = resp;
@@ -50,16 +76,17 @@ export class CarrerasComponent implements OnInit {
         title: 'Algo salio mal',
         text: e.status +'. '+ this.obtenerError(e),
       })
+      this.cargando = false;
     });
   }
 
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new CarreraModelo();
-    this.buscadorCarreras();
+    this.carreras = [];
   }
 
-  borrarCarrera( carrera: CarreraModelo ) {
+  borrarCarrera(event, carrera: CarreraModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

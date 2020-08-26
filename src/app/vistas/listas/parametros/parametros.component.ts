@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class ParametrosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   parametros: ParametroModelo[] = [];
   buscador: ParametroModelo = new ParametroModelo();
   buscadorForm: FormGroup;
@@ -19,7 +21,8 @@ export class ParametrosComponent implements OnInit {
 
   constructor( private parametrosService: ParametrosService,
     private fb: FormBuilder ) { 
-  this.crearFormulario();
+    this.crearFormulario();
+    this.crearTabla(); 
   }
 
   ngOnInit() {    
@@ -39,7 +42,8 @@ export class ParametrosComponent implements OnInit {
 
   }
 
-  buscadorParametros() {
+  buscadorParametros(event) {
+    event.preventDefault();
     this.buscador = this.buscadorForm.getRawValue();
     this.parametrosService.buscarParametrosFiltrosTabla(this.buscador)
     .subscribe( resp => {
@@ -54,13 +58,33 @@ export class ParametrosComponent implements OnInit {
     });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'parametroId'}, {data:'codigoParametro'}, {data:'descripcion'},
+        {data:'nombre'}, {data:'valor'}, {data:'descripcionValor'},
+        {data:'estado'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new ParametroModelo();
-    this.buscadorParametros();
+    this.parametros = [];
   }
 
-  borrarParametro( parametro: ParametroModelo ) {
+  borrarParametro(event, parametro: ParametroModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

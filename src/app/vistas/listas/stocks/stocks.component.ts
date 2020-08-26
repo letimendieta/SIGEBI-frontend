@@ -6,6 +6,7 @@ import { ParametrosService } from '../../../servicios/parametros.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 
 @Component({
   selector: 'app-stocks',
@@ -13,6 +14,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./stocks.component.css']
 })
 export class StocksComponent implements OnInit {
+
+  dtOptions: DataTables.Settings = {};
 
   stocks: StockModelo[] = [];
   buscador: StockModelo = new StockModelo();
@@ -24,6 +27,7 @@ export class StocksComponent implements OnInit {
                private parametrosService: ParametrosService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() { 
@@ -43,6 +47,27 @@ export class StocksComponent implements OnInit {
       });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'stockId'}, {data:'insumos.insumoId'}, {data:'insumos.codigo'},
+        {data:'insumos.descripcion'}, {data:'cantidad'}, {data:'unidadMedida'},
+        {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'},{data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'}
+      ]
+    };
+  }
+
   obtenerParametros() {
     var estadoCivilParam = new ParametroModelo();
     estadoCivilParam.codigoParametro = "UNI_MEDIDA";
@@ -56,11 +81,15 @@ export class StocksComponent implements OnInit {
     });
   }
 
-  buscadorStocks() {
+  buscadorStocks(event) {
+    event.preventDefault();
+    var insumos = new InsumoModelo();
     this.buscador.stockId = this.buscadorForm.get('stockId').value;
-    this.buscador.insumos.insumoId = this.buscadorForm.get('insumoId').value;
-    this.buscador.insumos.codigo = this.buscadorForm.get('codigo').value;
-    this.buscador.insumos.descripcion = this.buscadorForm.get('descripcion').value;
+    insumos.insumoId = this.buscadorForm.get('insumoId').value;
+    insumos.codigo = this.buscadorForm.get('codigo').value;
+    insumos.descripcion = this.buscadorForm.get('descripcion').value;
+
+    this.buscador.insumos = insumos;
 
     if(!this.buscador.insumos.insumoId && !this.buscador.insumos.codigo 
       && !this.buscador.insumos.descripcion){
@@ -82,10 +111,10 @@ export class StocksComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new StockModelo();
-    this.buscadorStocks();
+    this.stocks = [];
   }
 
-  borrarStock( stock: StockModelo ) {
+  borrarStock(event, stock: StockModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

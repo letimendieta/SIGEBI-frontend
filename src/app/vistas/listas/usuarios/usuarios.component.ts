@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Usuario2Modelo } from '../../../modelos/usuario2.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 })
 export class UsuariosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   usuarios: Usuario2Modelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
   buscador: Usuario2Modelo = new Usuario2Modelo();
@@ -22,7 +24,8 @@ export class UsuariosComponent implements OnInit {
 
   constructor( private usuariosService: UsuariosService,
     private fb: FormBuilder ) { 
-  this.crearFormulario();
+    this.crearFormulario();
+    this.crearTabla();
   }
   ngOnInit() {
 
@@ -41,7 +44,28 @@ export class UsuariosComponent implements OnInit {
       });
   }
 
-  buscadorUsuarios() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'usuarioId'}, {data:'codigoUsuario'}, {data:'personas.personaId'},
+        {data:'funcionarios.funcionarioId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
+        {data:'personas.apellido'}, {data:'estado'},
+        {data:'Editar'},
+        {data:'Borrar'}
+      ]
+    };
+  }
+
+  buscadorUsuarios(event) {
+    event.preventDefault();
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -65,10 +89,10 @@ export class UsuariosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new Usuario2Modelo();
     this.persona = new PersonaModelo();   
-    this.buscadorUsuarios();
+    this.usuarios = [];
   }
 
-  borrarUsuario( usuario: Usuario2Modelo ) {
+  borrarUsuario(event, usuario: Usuario2Modelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

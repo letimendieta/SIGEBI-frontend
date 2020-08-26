@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
 })
 export class CitasComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   citas: CitaModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -33,6 +35,7 @@ export class CitasComponent implements OnInit {
               private areasService: AreasService,
               private fb: FormBuilder) { 
     this.crearFormulario();
+    this.crearTabla();  
   }
 
   ngOnInit() {
@@ -63,7 +66,8 @@ export class CitasComponent implements OnInit {
     });
   }
 
-  buscadorCitas() {   
+  buscadorCitas(event) { 
+    event.preventDefault(); 
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -119,13 +123,37 @@ export class CitasComponent implements OnInit {
     });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'citaId'}, {data:'pacientes.pacienteId'}, {data:'pacientes.personas.cedula'},
+        {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
+        {data:'funcionarios.funcionarioId'},
+        {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
+        {data: 'funcionarios.personas.apellidos'}, {data: 'areas.codigo'},
+        {data: 'fecha'}, {data: 'hora'},
+        {data: 'estado'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new CitaModelo();    
-    this.buscadorCitas();
+    this.citas = [];
   }
 
-  borrarCita( cita: CitaModelo ) {
+  borrarCita(event, cita: CitaModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

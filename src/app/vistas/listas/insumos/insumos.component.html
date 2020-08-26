@@ -2,15 +2,13 @@
 <hr>
 
 <div class="card">
-  <div class="card-header">
-    Buscador
-  </div>  
+  <h3 class="card-header">Buscador</h3>  
   <div class="card-body">
     <form [formGroup]="buscadorForm">      
       <div class="form-row" >
         <div class="col-lg-5">
           <div class="form-group form-inline col-md-5">
-            <label for="insumoId" class="col-sm-7 col-form-label">Insumo Id </label>
+            <label for="insumoId" class="col-sm-7 col-form-label"><b>Insumo Id</b></label>
             <div class="col-sm-3">
               <input type="number" class="form-control" id="insumoId"
                 formControlName="insumoId" name="insumoId">
@@ -18,7 +16,7 @@
           </div>
 
           <div class="form-group form-inline col-md-5">
-            <label for="codigo" class="col-sm-7 col-form-label">Codigo</label>
+            <label for="codigo" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="codigo"
                 formControlName="codigo" name="codigo">
@@ -28,7 +26,7 @@
 
         <div class="col-lg-5">
           <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-7 col-form-label">Descripcion</label>
+            <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="descripcion"
                 formControlName="descripcion" name="descripcion">
@@ -36,7 +34,7 @@
           </div>
   
           <div class="form-group form-inline col-md-5">
-            <label for="estado" class="col-sm-7 col-form-label">Fecha Vencimiento</label>
+            <label for="estado" class="col-sm-7 col-form-label"><b>Fecha Vencimiento</b></label>
             <div class="col-sm-3">
               <input type="date" class="form-control" id="fechaVencimiento"
                 formControlName="fechaVencimiento" name="fechaVencimiento">
@@ -47,7 +45,7 @@
       
       <div class="col-log-4" class="text-center">
         <div class="form-horizontal">
-          <button type="submit" (click)="buscadorInsumos()" class="btn btn-success">Buscar</button>
+          <button type="submit" (click)="buscadorInsumos($event)" class="btn btn-success">Buscar</button>
           <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
         </div>
       </div>      
@@ -65,67 +63,58 @@
   </div>
 </div>
 
+<div class="table-responsive">
+  <table datatable [dtOptions]="dtOptions" 
+    class="table table-hover table-responsive table-condensed table-bordered" 
+    *ngIf="!cargando && insumos.length > 0"
+    class="table mt-3 animated fadeIn faster animated fadeIn faster">
+    <thead class="table-info">
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">C&oacute;digo</th>
+        <th scope="col">Descripci&oacute;n</th>
+        <th scope="col">Fecha Vencimiento</th>
+        <th scope="col">Fecha Creaci&oacute;n</th>
+        <th scope="col">Usuario Creaci&oacute;n</th>
+        <th scope="col">Fecha Modificaci&oacute;n</th>
+        <th scope="col">Usuario Modificaci&oacute;n</th>  
+        <th scope="col">Editar</th>
+        <th scope="col">Borrar</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let insumo of insumos; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ insumo.insumoId }}</td>
+        <td>{{ insumo.codigo }}</td>
+        <td>{{ insumo.descripcion }}</td>
+        <td>{{ insumo.fechaVencimiento }}</td>
+        <td>{{ insumo.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td>{{ insumo.usuarioCreacion }}</td>
+        <td>{{ insumo.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+        <td>{{ insumo.usuarioModificacion }}</td>     
 
-<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && insumos.length > 0"
-       class="table mt-3 animated fadeIn faster animated fadeIn faster">
-  <thead class="table-info">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">id</th>
-      <th scope="col">codigo</th>
-      <th scope="col">descripcion</th>
-      <th scope="col">Fecha Vencimiento</th>
-      <th scope="col">fechaCreacion</th>
-      <th scope="col">usuarioCreacion</th>
-      <th scope="col">fechaModificacion</th>
-      <th scope="col">usuarioModificacion</th>     
-      <th scope="col">Editar/Borrar</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let insumo of insumos; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ insumo.insumoId }}</td>
-      <td>{{ insumo.codigo }}</td>
-      <td>{{ insumo.descripcion }}</td>
-      <td>{{ insumo.fechaVencimiento }}</td>
-      <td>{{ insumo.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-      <td>{{ insumo.usuarioCreacion }}</td>
-      <td>{{ insumo.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-      <td>{{ insumo.usuarioModificacion }}</td>     
-
-      <td>
-
-        <button class="btn btn-info"
-                [routerLink]="['/insumo', insumo.insumoId ]">
-        <i class="fa fa-edit"></i>
-        </button>
-
-        <button class="btn btn-danger"
-                (click)="borrarInsumo( insumo ) ">
-          <i class="fa fa-trash"></i>
-        </button>
-
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div *ngIf="!cargando && insumos.length === 0"
-     class="alert alert-warning text-center mt-3 animated fadeIn faster">
-    <h4 class="alert-heading">No hay registros</h4>
-    <p>
-      <i class="fa fa-exclamation fa-2x"></i>
-    </p>
-</div>
-
-<div *ngIf="cargando"
-     class="alert alert-info text-center mt-3 animated fadeIn faster">
-  <h4 class="alert-heading">Cargando</h4>
-  <p>
-    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-  </p>
-  <p class="mb-0">
-    Espere por favor
-  </p>
+        <td>
+          <a class="btn btn-info"
+                  [routerLink]="['/insumo', insumo.insumoId ]">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
+        <td>  
+          <button class="btn btn-danger"
+          (click)="borrarInsumo($event, insumo) ">
+          <i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!cargando && insumos.length === 0"
+      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+      <h4 class="alert-heading">Cargando</h4>
+      <p>
+        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+      </p>
+      <p class="mb-0">
+        Espere por favor
+      </p>
+    </tbody>
+  </table>
 </div>

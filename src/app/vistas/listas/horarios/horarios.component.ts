@@ -3,7 +3,7 @@ import { HorariosService } from '../../../servicios/horarios.service';
 import { HorarioModelo } from '../../../modelos/horario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./horarios.component.css']
 })
 export class HorariosComponent implements OnInit {
+
+  dtOptions: DataTables.Settings = {};
 
   horarios: HorarioModelo[] = [];
   buscador: HorarioModelo = new HorarioModelo();
@@ -24,6 +26,7 @@ export class HorariosComponent implements OnInit {
   constructor( private horariosService: HorariosService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {    
@@ -42,7 +45,33 @@ export class HorariosComponent implements OnInit {
       });
   }
 
-  buscadorHorarios() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'horarioDisponibleId'}, {data:'fecha'}, {data:'horaInicio'},
+        {data:'horaFin'}, {data:'funcionarios.funcionarioId'}, 
+        {data:'funcionarios.personas.cedula'},
+        {data:'funcionarios.personas.nombres'}, 
+        {data:'funcionarios.personas.apellidos'},
+        {data:'estado'},{data:'fechaCreacion'},
+        {data:'usuarioCreacion'},{data:'fechaModificacion'},
+        {data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
+  buscadorHorarios(event) {
+    event.preventDefault();
     this.funcionario = new FuncionarioModelo();
     this.funcionarioPersona = new PersonaModelo();
 
@@ -79,10 +108,10 @@ export class HorariosComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new HorarioModelo();
-    this.buscadorHorarios();
+    this.horarios = [];
   }
 
-  borrarHorario( horario: HorarioModelo ) {
+  borrarHorario(event, horario: HorarioModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

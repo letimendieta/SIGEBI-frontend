@@ -16,6 +16,8 @@ import Swal from 'sweetalert2';
 })
 export class HistorialesClinicosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   historialClinicos: HistorialClinicoModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -30,6 +32,7 @@ export class HistorialesClinicosComponent implements OnInit {
               private areasService: AreasService,
               private fb: FormBuilder) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {
@@ -50,6 +53,27 @@ export class HistorialesClinicosComponent implements OnInit {
       });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'historialClinicoId'}, {data:'pacientes.pacienteId'}, 
+        {data:'pacientes.personas.cedula'},
+        {data:'pacientes.personas.nombres'}, 
+        {data:'pacientes.personas.apellido'}, {data:'areaId'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
   listarAreas() {
     var orderBy = "descripcion";
     var orderDir = "asc";
@@ -60,7 +84,8 @@ export class HistorialesClinicosComponent implements OnInit {
     });
   }
 
-  buscadorHistorialClinicos() {   
+  buscadorHistorialClinicos(event) {   
+    event.preventDefault();
     this.paciente = new PacienteModelo();
     this.pacientePersona = new PersonaModelo();
 
@@ -97,10 +122,10 @@ export class HistorialesClinicosComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new HistorialClinicoModelo();    
-    this.buscadorHistorialClinicos();
+    this.historialClinicos = [];
   }
 
-  borrarHistorialClinico( historialClinico: HistorialClinicoModelo ) {
+  borrarHistorialClinico(event, historialClinico: HistorialClinicoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

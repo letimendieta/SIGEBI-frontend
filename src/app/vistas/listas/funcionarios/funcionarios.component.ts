@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 })
 export class FuncionariosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   funcionarios: FuncionarioModelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
   buscador: FuncionarioModelo = new FuncionarioModelo();
@@ -23,6 +25,7 @@ export class FuncionariosComponent implements OnInit {
   constructor( private funcionariosService: FuncionariosService,
               private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {
@@ -43,8 +46,31 @@ export class FuncionariosComponent implements OnInit {
 
   }
 
-  buscadorFuncionarios() {
-    
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'funcionarioId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
+        {data:'personas.apellidos'}, {data:'areaId'}, {data:'estado'},
+        {data:'personas.edad'}, {data:'personas.direccion'},
+        {data:'personas.email'},{data:'personas.estadoCivil'},{data:'personas.fechaNacimiento'},
+        {data:'personas.nacionalidad'},{data:'personas.sexo'},{data:'personas.telefono'},
+        {data:'personas.celular'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
+  buscadorFuncionarios(event) {
+    event.preventDefault();
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -67,10 +93,10 @@ export class FuncionariosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new FuncionarioModelo();
     this.persona = new PersonaModelo();
-    this.buscadorFuncionarios();
+    this.funcionarios = [];
   }
 
-  borrarFuncionario( funcionario: FuncionarioModelo ) {
+  borrarFuncionario(event, funcionario: FuncionarioModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

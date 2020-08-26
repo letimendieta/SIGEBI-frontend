@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 })
 export class PacientesComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   pacientes: PacienteModelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
   buscador: PacienteModelo = new PacienteModelo();
@@ -22,7 +24,8 @@ export class PacientesComponent implements OnInit {
 
   constructor( private pacientesService: PacientesService,
     private fb: FormBuilder ) { 
-  this.crearFormulario();
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {
@@ -43,7 +46,30 @@ export class PacientesComponent implements OnInit {
 
   }
 
-  buscadorPacientes() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'pacienteId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
+        {data:'personas.apellidos'}, {data:'grupoSanguineo'}, {data:'personas.edad'},
+        {data:'personas.direccion'}, {data:'personas.email'},
+        {data:'personas.estadoCivil'},{data:'personas.fechaNacimiento'},{data:'personas.nacionalidad'},
+        {data:'personas.sexo'},{data:'personas.telefono'},{data:'personas.celular'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
+  buscadorPacientes(event) {
+    event.preventDefault();
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -66,10 +92,10 @@ export class PacientesComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new PacienteModelo();
     this.persona = new PersonaModelo();
-    this.buscadorPacientes();
+    this.pacientes = [];
   }
 
-  borrarPaciente( paciente: PacienteModelo ) {
+  borrarPaciente(event, paciente: PacienteModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

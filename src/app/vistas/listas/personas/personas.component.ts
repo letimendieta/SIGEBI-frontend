@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class PersonasComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   personas: PersonaModelo[] = [];
   buscador: PersonaModelo = new PersonaModelo();
   buscadorForm: FormGroup;
@@ -20,6 +22,7 @@ export class PersonasComponent implements OnInit {
   constructor( private personasService: PersonasService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {    
@@ -38,7 +41,30 @@ export class PersonasComponent implements OnInit {
       });
   }
 
-  buscadorPersonas() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'personaId'}, {data:'cedula'}, {data:'nombres'},
+        {data:'apellidos'}, {data:'edad'}, {data:'direccion'},
+        {data:'email'}, {data:'estadoCivil'},
+        {data:'fechaNacimiento'},{data:'nacionalidad'},{data:'sexo'},
+        {data:'telefono'},{data:'celular'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
+  buscadorPersonas(event) {
+    event.preventDefault();
     this.buscador = this.buscadorForm.getRawValue();
     this.personasService.buscarPersonasFiltros(this.buscador)
     .subscribe( resp => {
@@ -56,10 +82,10 @@ export class PersonasComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new PersonaModelo();
-    this.buscadorPersonas();
+    this.personas = [];
   }
 
-  borrarPersona( persona: PersonaModelo ) {
+  borrarPersona(event, persona: PersonaModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

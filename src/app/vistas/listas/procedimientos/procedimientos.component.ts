@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 })
 export class ProcedimientosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   procedimientos: ProcedimientoModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -30,6 +32,7 @@ export class ProcedimientosComponent implements OnInit {
   constructor( private procedimientosService: ProcedimientosService,
               private fb: FormBuilder) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {
@@ -49,7 +52,31 @@ export class ProcedimientosComponent implements OnInit {
       });
   }
 
-  buscadorProcedimientos() {   
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'procedimientoId'}, {data:'pacientes.pacienteId'}, 
+        {data:'pacientes.personas.cedula'},
+        {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
+        {data:'funcionarios.funcionarioId'},
+        {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
+        {data:'funcionarios.personas.apellidos'},{data:'insumoId'},{data:'fecha'},
+        {data:'Editar'},
+        {data:'Borrar'}
+      ]
+    };
+  }
+
+  buscadorProcedimientos(event) {   
+    event.preventDefault();
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -104,10 +131,10 @@ export class ProcedimientosComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new ProcedimientoModelo();  
-    this.buscadorProcedimientos();
+    this.procedimientos = [];
   }
 
-  borrarProcedimiento( procedimiento: ProcedimientoModelo ) {
+  borrarProcedimiento(event, procedimiento: ProcedimientoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

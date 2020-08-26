@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class DepartamentosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   departamentos: DepartamentoModelo[] = [];
   buscador: DepartamentoModelo = new DepartamentoModelo();
   buscadorForm: FormGroup;
@@ -20,6 +22,7 @@ export class DepartamentosComponent implements OnInit {
   constructor( private departamentosService: DepartamentosService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla(); 
   }
 
   ngOnInit() {    
@@ -38,7 +41,7 @@ export class DepartamentosComponent implements OnInit {
       });
   }
 
-  buscadorDepartamentos() {
+  buscadorDepartamentos(event) {
     this.buscador = this.buscadorForm.getRawValue();
     this.departamentosService.buscarDepartamentosFiltrosTabla(this.buscador)
     .subscribe( resp => {
@@ -53,13 +56,33 @@ export class DepartamentosComponent implements OnInit {
     });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'departamentoId'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'}, {data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new DepartamentoModelo();
-    this.buscadorDepartamentos();
+    this.departamentos = [];
   }
 
-  borrarDepartamento( departamento: DepartamentoModelo ) {
+  borrarDepartamento(event, departamento: DepartamentoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

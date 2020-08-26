@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class InsumosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   insumos: InsumoModelo[] = [];
   buscador: InsumoModelo = new InsumoModelo();
   buscadorForm: FormGroup;
@@ -20,6 +22,7 @@ export class InsumosComponent implements OnInit {
   constructor( private insumosService: InsumosService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();
   }
 
   ngOnInit() {    
@@ -38,7 +41,28 @@ export class InsumosComponent implements OnInit {
       });
   }
 
-  buscadorInsumos() {
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'areaId'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'}, {data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
+  buscadorInsumos(event) {
+    event.preventDefault();
     this.buscador = this.buscadorForm.getRawValue();
     this.insumosService.buscarInsumosFiltrosTabla(this.buscador)
     .subscribe( resp => {
@@ -56,10 +80,10 @@ export class InsumosComponent implements OnInit {
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new InsumoModelo();
-    this.buscadorInsumos();
+    this.insumos = [];
   }
 
-  borrarInsumo( insumo: InsumoModelo ) {
+  borrarInsumo(event, insumo: InsumoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',

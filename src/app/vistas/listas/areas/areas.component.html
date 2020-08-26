@@ -1,16 +1,14 @@
-<h1>Listado de Areas</h1>
+<h1>Listado de &Aacute;reas</h1>
 <hr>
 
 <div class="card">
-  <div class="card-header">
-    Buscador
-  </div>  
+  <h3 class="card-header">Buscador</h3>
   <div class="card-body">
     <form [formGroup]="buscadorForm">      
       <div class="form-row" >
         <div class="col-lg-5"> 
           <div class="form-group form-inline col-md-5">
-            <label for="areaId" class="col-sm-7 col-form-label">Area Id </label>
+            <label for="areaId" class="col-sm-7 col-form-label"><b>Area Id</b></label>
             <div class="col-sm-3">
               <input type="number" class="form-control" id="areaId"
                 formControlName="areaId" name="areaId">
@@ -18,7 +16,7 @@
           </div>
 
           <div class="form-group form-inline col-md-5">
-            <label for="codigo" class="col-sm-7 col-form-label">C&oacute;digo</label>
+            <label for="codigo" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="codigo"
                 formControlName="codigo" name="codigo">
@@ -28,7 +26,7 @@
 
         <div class="col-lg-5">
           <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-7 col-form-label">Descripci&oacute;n</label>
+            <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="descripcion"
                 formControlName="descripcion" name="descripcion">
@@ -36,7 +34,7 @@
           </div>
   
           <div class="form-group form-inline col-md-5">
-            <label for="estado" class="col-sm-7 col-form-label">Estado</label>
+            <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
             <div class="col-sm-3">
               <select class="custom-select"
                   formControlName="estado" name = "estado">
@@ -69,17 +67,6 @@
       Agregar
     </button>
   </div>
-</div>
-
-<div *ngIf="cargando"
-     class="alert alert-info text-center mt-3 animated fadeIn faster">
-  <h4 class="alert-heading">Cargando</h4>
-  <p>
-    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-  </p>
-  <p class="mb-0">
-    Espere por favor
-  </p>
 </div>
 
 <div class="table-responsive">
@@ -116,14 +103,13 @@
           <a class="btn btn-info"
                   [routerLink]="['/area', area.areaId ]">
             <i class="fa fa-edit"></i>
-        </a>
+          </a>
         </td>
-        <td>
-  
+        <td>  
           <button class="btn btn-danger"
           (click)="borrarArea($event, area) ">
-        <i class="fa fa-trash"></i></button>
-  </td>
+          <i class="fa fa-trash"></i></button>
+        </td>
       </tr>
     </tbody>
     <tbody *ngIf="!cargando && areas.length === 0"

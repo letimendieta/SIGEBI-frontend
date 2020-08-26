@@ -1,19 +1,15 @@
-<h1>Listado de Historiales Clinicos</h1>
+<h1>Listado de Historiales Cl&iacute;nicos</h1>
 <hr>
 
 <div class="card">
-  <div class="card-header">
-    Buscador
-  </div>  
-  <div class="card-body">
-
-    
+  <h3 class="card-header">Buscador</h3> 
+  <div class="card-body">    
     <form [formGroup]="buscadorForm">
       <div class="form-row">
         <div class="col-lg-5">
           <div class="form group">
             <div class="form-group form-inline col-md-5">
-              <label for="historialClinicoId" class="col-sm-7 col-form-label">Historial Clinico Id</label>
+              <label for="historialClinicoId" class="col-sm-7 col-form-label"><b>Historial Cl&iacute;nico Id</b></label>
               <div class="col-sm-3">
                 <input type="number" class="form-control" id="historialClinicoId"
                 formControlName="historialClinicoId" name="historialClinicoId">
@@ -21,7 +17,7 @@
             </div>
 
             <div class="form-group form-inline col-md-5">
-              <label for="areaId" class="col-sm-7 col-form-label">Area Id</label>
+              <label for="areaId" class="col-sm-7 col-form-label"><b>&Aacute;rea Id</b></label>
               <div class="col-sm-3">
                 <select class="form-control input-sm" name="areaId"
                     formControlName="areaId">
@@ -39,28 +35,28 @@
         <div formGroupName="pacientes" class="col-lg-5">  
           <div class="form group">
             <div class="form-group form-inline col-md-5">
-              <label for="pacienteId" class="col-sm-7 col-form-label">Paciente Id</label>
+              <label for="pacienteId" class="col-sm-7 col-form-label"><b>Paciente Id</b></label>
               <div class="col-sm-3">
                 <input type="number" class="form-control"
                 formControlName="pacienteId" name="pacienteId">
               </div>
             </div>
             <div class="form-group form-inline col-md-5">
-              <label for="pacienteCedula" class="col-sm-7 col-form-label">Paciente Cedula</label>
+              <label for="pacienteCedula" class="col-sm-7 col-form-label"><b>Paciente C&eacute;dula</b></label>
               <div class="col-sm-3">
                 <input type="text" class="form-control" id="pacienteCedula"
                 formControlName="pacienteCedula" name="pacienteCedula">
               </div>
             </div>
             <div class="form-group form-inline col-md-5">
-              <label for="pacienteNombres" class="col-sm-7 col-form-label">Paciente Nombres</label>
+              <label for="pacienteNombres" class="col-sm-7 col-form-label"><b>Paciente Nombres</b></label>
               <div class="col-sm-3">
                 <input type="text" class="form-control" id="pacienteNombres"
                 formControlName="pacienteNombres" name="pacienteNombres">
               </div>
             </div>
             <div class="form-group form-inline col-md-5">
-              <label for="pacienteApellidos" class="col-sm-7 col-form-label">Paciente Apellidos</label>
+              <label for="pacienteApellidos" class="col-sm-7 col-form-label"><b>Paciente Apellidos</b></label>
               <div class="col-sm-3">
                 <input type="text" class="form-control" id="pacienteApellidos"
                 formControlName="pacienteApellidos" name="pacienteApellidos">
@@ -72,7 +68,7 @@
 
       <div class="col-log-4" class="text-center">
         <div class="form-horizontal">
-          <button type="submit" (click)="buscadorHistorialClinicos()" class="btn btn-success">Buscar</button>
+          <button type="submit" (click)="buscadorHistorialClinicos($event)" class="btn btn-success">Buscar</button>
           <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
         </div>
       </div>
@@ -90,62 +86,54 @@
   </div>
 </div>
 
+<div class="table-responsive">
+  <table datatable [dtOptions]="dtOptions" 
+    class="table table-hover table-responsive table-condensed table-bordered" 
+    *ngIf="!cargando && historialClinicos.length > 0"
+    class="table mt-3 animated fadeIn faster animated fadeIn faster">
+    <thead class="table-info">
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">Paciente Id</th>
+        <th scope="col">Paciente C&eacute;dula</th>
+        <th scope="col">Paciente Nombres</th>
+        <th scope="col">Paciente Apellidos</th>
+        <th scope="col">&Aacute;rea Id</th>   
+        <th scope="col">Editar</th>
+        <th scope="col">Borrar</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let historialClinico of historialClinicos; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ historialClinico.historialClinicoId }}</td>
+        <td>{{ historialClinico.pacientes.pacienteId }}</td>
+        <td>{{ historialClinico.pacientes.personas.cedula }}</td>
+        <td>{{ historialClinico.pacientes.personas.nombres }}</td>
+        <td>{{ historialClinico.pacientes.personas.apellidos }}</td>
+        <td>{{ historialClinico.areaId }}</td>     
 
-<table class="table table-hover  table-responsive table-condensed" *ngIf="!cargando && historialClinicos.length > 0"
-       class="table mt-3 animated fadeIn faster animated fadeIn faster">
-  <thead class="table-info">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">id</th>
-      <th scope="col">Paciente Id</th>
-      <th scope="col">Paciente Cedula</th>
-      <th scope="col">Paciente Nombres</th>
-      <th scope="col">Paciente Apellidos</th>
-      <th scope="col">AreaId</th>
-      <th scope="col">Editar/Borrar</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let historialClinico of historialClinicos; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ historialClinico.historialClinicoId }}</td>
-      <td>{{ historialClinico.pacientes.pacienteId }}</td>
-      <td>{{ historialClinico.pacientes.personas.cedula }}</td>
-      <td>{{ historialClinico.pacientes.personas.nombres }}</td>
-      <td>{{ historialClinico.pacientes.personas.apellidos }}</td>
-      <td>{{ historialClinico.areaId }}</td> 
-      <td>
-
-        <button class="btn btn-info"
-                [routerLink]="['/historialClinico', historialClinico.historialClinicoId ]">
-        <i class="fa fa-edit"></i>
-        </button>
-
-        <button class="btn btn-danger"
-                (click)="borrarHistorialClinico( historialClinico ) ">
-          <i class="fa fa-trash"></i>
-        </button>
-
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div *ngIf="!cargando && historialClinicos.length === 0"
-     class="alert alert-warning text-center mt-3 animated fadeIn faster">
-    <h4 class="alert-heading">No hay registros</h4>
-    <p>
-      <i class="fa fa-exclamation fa-2x"></i>
-    </p>
-</div>
-
-<div *ngIf="cargando"
-     class="alert alert-info text-center mt-3 animated fadeIn faster">
-  <h4 class="alert-heading">Cargando</h4>
-  <p>
-    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-  </p>
-  <p class="mb-0">
-    Espere por favor
-  </p>
+        <td>
+          <a class="btn btn-info"
+                  [routerLink]="['/historialClinico', historialClinico.historialClinicoId ]">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
+        <td>  
+          <button class="btn btn-danger"
+          (click)="borrarHistorialClinico($event, historialClinico) ">
+          <i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!cargando && historialClinicos.length === 0"
+      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+      <h4 class="alert-heading">Cargando</h4>
+      <p>
+        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+      </p>
+      <p class="mb-0">
+        Espere por favor
+      </p>
+    </tbody>
+  </table>
 </div>

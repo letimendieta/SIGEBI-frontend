@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class EstamentosComponent implements OnInit {
 
+  dtOptions: DataTables.Settings = {};
+
   estamentos: EstamentoModelo[] = [];
   buscador: EstamentoModelo = new EstamentoModelo();
   buscadorForm: FormGroup;
@@ -20,6 +22,7 @@ export class EstamentosComponent implements OnInit {
   constructor( private estamentosService: EstamentosService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.crearTabla();    
   }
 
   ngOnInit() {    
@@ -38,7 +41,8 @@ export class EstamentosComponent implements OnInit {
       });
   }
 
-  buscadorEstamentos() {
+  buscadorEstamentos(event) {
+    event.preventDefault();
     this.buscador = this.buscadorForm.getRawValue();
     this.estamentosService.buscarEstamentosFiltrosTabla(this.buscador)
     .subscribe( resp => {
@@ -53,13 +57,33 @@ export class EstamentosComponent implements OnInit {
     });
   }
 
+  crearTabla(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      searching: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'areaId'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaModificacion'}, {data:'usuarioModificacion'},
+        {data:'Editar'},
+        {data:'Borrar'},
+      ]
+    };
+  }
+
   limpiar() {
     this.buscadorForm.reset();
     this.buscador = new EstamentoModelo();
-    this.buscadorEstamentos();
+    this.estamentos = [];
   }
 
-  borrarEstamento( estamento: EstamentoModelo ) {
+  borrarEstamento(event, estamento: EstamentoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',
