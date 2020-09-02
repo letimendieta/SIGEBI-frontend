@@ -1,149 +1,155 @@
-<h1>Listado de Funcionarios</h1>
-<hr>
+<head>
+  <link rel="stylesheet" href="funcionarios.component.css">
+</head>
 
-<div class="card">
-  <h3 class="card-header">Buscador</h3>
-  <div class="card-body">
-    <form [formGroup]="buscadorForm">
-      <div class="form-row">
-        <div class="col-lg-4">
-          <div class="form-group form-inline col-md-5">
-            <label for="funcionarioId" class="col-sm-7 col-form-label"><b>Funcionario Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="funcionarioId"
-              formControlName="funcionarioId" name="funcionarioId">
+<body>
+  <h1>Listado de Funcionarios</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header">Buscador</h3>
+    <div class="card-body">
+      <form [formGroup]="buscadorForm">
+        <div class="form-row justify-content-center">
+          <div class="col-lg-4">
+            <div class="form-group form-inline col-md-5">
+              <label for="funcionarioId" class="col-sm-7 col-form-label"><b>Funcionario id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="funcionarioId"
+                formControlName="funcionarioId" name="funcionarioId">
+              </div>
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="cedula" class="col-sm-7 col-form-label"><b>C&eacute;dula</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="cedula"
+                formControlName="cedula" name="cedula">
+              </div>
             </div>
           </div>
 
-          <div class="form-group form-inline col-md-5">
-            <label for="cedula" class="col-sm-7 col-form-label"><b>C&eacute;dula</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="cedula"
-              formControlName="cedula" name="cedula">
+          <div class="col-lg-4">
+            <div class="form-group form-inline col-md-5">
+              <label for="nombres" class="col-sm-7 col-form-label"><b>Nombres</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="nombres"
+                formControlName="nombres" name="nombres">
+              </div>
             </div>
+    
+            <div class="form-group form-inline col-md-5">
+              <label for="apellidos" class="col-sm-7 col-form-label"><b>Apellidos</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="apellidos"
+                formControlName="apellidos" name="apellidos">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="form-group form-inline col-md-5">
+              <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
+              <div class="col-sm-3">
+                <select class="custom-select"
+                    formControlName="estado" name = "estado">
+                  <option value=null [selected]="true">TODOS</option>
+                  <option value="A">ACTIVO</option>
+                  <option value="I">INACTIVO</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    
+        <div class="col-log-4" class="text-center">
+          <div class="form-horizontal">
+            <button type="submit" (click)="buscadorFuncionarios($event)" class="btn btn-success">Buscar</button>
+            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
           </div>
         </div>
-
-        <div class="col-lg-4">
-          <div class="form-group form-inline col-md-5">
-            <label for="nombres" class="col-sm-7 col-form-label"><b>Nombre</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="nombres"
-              formControlName="nombres" name="nombres">
-            </div>
-          </div>
-  
-          <div class="form-group form-inline col-md-5">
-            <label for="apellidos" class="col-sm-7 col-form-label"><b>Apellidos</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="apellidos"
-              formControlName="apellidos" name="apellidos">
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="form-group form-inline col-md-5">
-            <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
-            <div class="col-sm-3">
-              <select class="custom-select"
-                  formControlName="estado" name = "estado">
-                <option value=null [selected]="true">TODOS</option>
-                <option value="A">ACTIVO</option>
-                <option value="I">INACTIVO</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-      </div>
-  
-      <div class="col-log-4" class="text-center">
-        <div class="form-horizontal">
-          <button type="submit" (click)="buscadorFuncionarios($event)" class="btn btn-success">Buscar</button>
-          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-<br>
-<div class="row">
-  <div class="col text-right">
-    <button routerLink="/funcionario/nuevo"
-            class="btn btn-primary">
-      <i class="fa fa-plus"></i>
-      Agregar
-    </button>
+  <br>
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/funcionario/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" 
-    class="table table-hover table-responsive table-condensed table-bordered" 
-    *ngIf="!cargando && funcionarios.length > 0"
-    class="table mt-3 animated fadeIn faster animated fadeIn faster">
-    <thead class="table-info">
-        <th scope="col">#</th>
-        <th scope="col">Id</th>
-        <th scope="col">C&eacute;dula</th>
-        <th scope="col">Nombres</th>
-        <th scope="col">Apellidos</th>
-        <th scope="col">&Aacute;rea</th>
-        <th scope="col">Estado</th>
-        <th scope="col">Edad</th>
-        <th scope="col">Direcci&oacute;n</th>
-        <th scope="col">Email</th>
-        <th scope="col">Estado Civil</th>
-        <th scope="col">Fecha Nac.</th>
-        <th scope="col">Nacionalidad</th>
-        <th scope="col">Sexo</th>
-        <th scope="col">Tel&eacute;fono</th>
-        <th scope="col">Celular</th>   
-        <th scope="col">Editar</th>
-        <th scope="col">Borrar</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let funcionario of funcionarios; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ funcionario.funcionarioId }}</td>
-        <td>{{ funcionario.personas.cedula }}</td>
-        <td>{{ funcionario.personas.nombres }}</td>
-        <td>{{ funcionario.personas.apellidos }}</td>
-        <td>{{ funcionario.areaId }}</td>
-        <td>{{ funcionario.estado }}</td>
-        <td>{{ funcionario.personas.edad }}</td>
-        <td>{{ funcionario.personas.direccion }}</td>
-        <td>{{ funcionario.personas.email }}</td>
-        <td>{{ funcionario.personas.estadoCivil }}</td>
-        <td>{{ funcionario.personas.fechaNacimiento }}</td>
-        <td>{{ funcionario.personas.nacionalidad }}</td>
-        <td>{{ funcionario.personas.sexo }}</td>
-        <td>{{ funcionario.personas.telefono }}</td>
-        <td>{{ funcionario.personas.celular}}</td>
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" 
+      class="table table-hover table-responsive table-condensed table-bordered" 
+      *ngIf="!cargando && funcionarios.length > 0"
+      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+      <thead class="table-info">
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">C&eacute;dula</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">&Aacute;rea</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Edad</th>
+          <th scope="col">Direcci&oacute;n</th>
+          <th scope="col">Email</th>
+          <th scope="col">Estado civil</th>
+          <th scope="col">Fecha nacimiento</th>
+          <th scope="col">Nacionalidad</th>
+          <th scope="col">Sexo</th>
+          <th scope="col">Tel&eacute;fono</th>
+          <th scope="col">Celular</th>   
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let funcionario of funcionarios; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ funcionario.funcionarioId }}</td>
+          <td>{{ funcionario.personas.cedula }}</td>
+          <td>{{ funcionario.personas.nombres }}</td>
+          <td>{{ funcionario.personas.apellidos }}</td>
+          <td>{{ funcionario.areaId }}</td>
+          <td>{{ funcionario.estado }}</td>
+          <td>{{ funcionario.personas.edad }}</td>
+          <td>{{ funcionario.personas.direccion }}</td>
+          <td>{{ funcionario.personas.email }}</td>
+          <td>{{ funcionario.personas.estadoCivil }}</td>
+          <td>{{ funcionario.personas.fechaNacimiento }}</td>
+          <td>{{ funcionario.personas.nacionalidad }}</td>
+          <td>{{ funcionario.personas.sexo }}</td>
+          <td>{{ funcionario.personas.telefono }}</td>
+          <td>{{ funcionario.personas.celular}}</td>
 
-        <td>
-          <a class="btn btn-info"
-                  [routerLink]="['/funcionario', funcionario.funcionarioId ]">
-            <i class="fa fa-edit"></i>
-          </a>
-        </td>
-        <td>  
-          <button class="btn btn-danger"
-          (click)="borrarFuncionario($event, funcionario) ">
-          <i class="fa fa-trash"></i></button>
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!cargando && funcionarios.length === 0"
-      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-      <h4 class="alert-heading">Cargando</h4>
-      <p>
-        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-      </p>
-      <p class="mb-0">
-        Espere por favor
-      </p>
-    </tbody>
-  </table>
-</div>
+          <td>
+            <a class="btn btn-info"
+                    [routerLink]="['/funcionario', funcionario.funcionarioId ]">
+              <i class="fa fa-edit"></i>
+            </a>
+          </td>
+          <td>  
+            <button class="btn btn-danger"
+            (click)="borrarFuncionario($event, funcionario) ">
+            <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!cargando && funcionarios.length === 0"
+        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+        <h4 class="alert-heading">Cargando</h4>
+        <p>
+          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+        </p>
+        <p class="mb-0">
+          Espere por favor
+        </p>
+      </tbody>
+    </table>
+  </div>
+</body>

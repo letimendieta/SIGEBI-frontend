@@ -70,6 +70,7 @@ export class AreasService {
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
 
     params = params.append('filtros', JSON.stringify(filtros));
     return this.http.get(`${ this.url }/areas/buscar/`,{params:params});

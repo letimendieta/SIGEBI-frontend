@@ -1,122 +1,128 @@
-<h1>Listado de stock</h1>
-<hr>
+<head>
+  <link rel="stylesheet" href="stocks.component.css">
+</head>
 
-<div class="card">
-  <h3 class="card-header">Buscador</h3>
-  <div class="card-body">
-    <form [formGroup]="buscadorForm">
-      <div class="form-row" >
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="stockId" class="col-sm-6 col-form-label"><b>Stock Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="stockId"
-                formControlName="stockId" name="stockId">
+<body>
+  <h1>Listado de stock</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header">Buscador</h3>
+    <div class="card-body">
+      <form [formGroup]="buscadorForm">
+        <div class="form-row justify-content-center" >
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="stockId" class="col-sm-6 col-form-label"><b>Stock id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="stockId"
+                  formControlName="stockId" name="stockId">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="insumoId" class="col-sm-6 col-form-label"><b>Insumo id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="insumoId"
+                  formControlName="insumoId" name="insumoId">
+              </div>
             </div>
           </div>
-          <div class="form-group form-inline col-md-5">
-            <label for="insumoId" class="col-sm-6 col-form-label"><b>Insumo Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="insumoId"
-                formControlName="insumoId" name="insumoId">
+
+          <div class="col-lg-5">          
+            <div class="form-group form-inline col-md-5">
+              <label for="codigo" class="col-sm-6 col-form-label"><b>C&oacute;digo</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="codigo"
+                  formControlName="codigo" name="codigo">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="descripcion" class="col-sm-6 col-form-label"><b>Descripci&oacute;n</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="descripcion"
+                  formControlName="descripcion" name="descripcion">
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-5">          
-          <div class="form-group form-inline col-md-5">
-            <label for="codigo" class="col-sm-6 col-form-label"><b>C&oacute;digo</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="codigo"
-                formControlName="codigo" name="codigo">
-            </div>
+        <div class="col-log-4" class="text-center">
+          <div class="form-horizontal">
+            <button type="submit" (click)="buscadorStocks($event)" class="btn btn-success">Buscar</button>
+            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
           </div>
-          <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-6 col-form-label"><b>Descripci&oacute;n</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="descripcion"
-                formControlName="descripcion" name="descripcion">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-log-4" class="text-center">
-        <div class="form-horizontal">
-          <button type="submit" (click)="buscadorStocks($event)" class="btn btn-success">Buscar</button>
-          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-        </div>
-      </div>      
-    </form>
+        </div>      
+      </form>
+    </div>
   </div>
-</div>
-<br>
-<div class="row">
-  <div class="col text-right">
-    <button routerLink="/stock/nuevo"
-            class="btn btn-primary">
-      <i class="fa fa-plus"></i>
-      Agregar
-    </button>
+  <br>
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/stock/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" 
-    class="table table-hover table-responsive table-condensed table-bordered" 
-    *ngIf="!cargando && stocks.length > 0"
-    class="table mt-3 animated fadeIn faster animated fadeIn faster">
-    <thead class="table-info">
-      <th scope="col">#</th>
-      <th scope="col">Id</th>
-      <th scope="col">Insumo Id</th>
-      <th scope="col">C&oacute;digo</th>
-      <th scope="col">Descripci&oacute;n</th>
-      <th scope="col">Cantidad</th>
-      <th scope="col">Unidad Medida</th>
-      <th scope="col">Fecha Creaci&oacute;n</th>
-      <th scope="col">Usuario Creaci&oacute;n</th>
-      <th scope="col">Fecha Modificaci&oacute;n</th>
-      <th scope="col">Usuario Modificaci&oacute;n</th>     
-      <th scope="col">Editar</th>
-      <th scope="col">Borrar</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stocks; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ stock.stockId }}</td>
-        <td>{{ stock.insumos.insumoId }}</td>
-        <td>{{ stock.insumos.codigo }}</td>
-        <td>{{ stock.insumos.descripcion }}</td>
-        <td>{{ stock.cantidad }}</td>
-        <td>{{ stock.unidadMedida }}</td>
-        <td>{{ stock.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-        <td>{{ stock.usuarioCreacion }}</td>
-        <td>{{ stock.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-        <td>{{ stock.usuarioModificacion }}</td>     
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" 
+      class="table table-hover table-responsive table-condensed table-bordered" 
+      *ngIf="!cargando && stocks.length > 0"
+      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+      <thead class="table-info">
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">Insumo id</th>
+        <th scope="col">C&oacute;digo</th>
+        <th scope="col">Descripci&oacute;n</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Unidad medida</th>
+        <th scope="col">Fecha creaci&oacute;n</th>
+        <th scope="col">Usuario creaci&oacute;n</th>
+        <th scope="col">Fecha modificaci&oacute;n</th>
+        <th scope="col">Usuario modificaci&oacute;n</th>     
+        <th scope="col">Editar</th>
+        <th scope="col">Borrar</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stocks; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ stock.stockId }}</td>
+          <td>{{ stock.insumos.insumoId }}</td>
+          <td>{{ stock.insumos.codigo }}</td>
+          <td>{{ stock.insumos.descripcion }}</td>
+          <td>{{ stock.cantidad }}</td>
+          <td>{{ stock.unidadMedida }}</td>
+          <td>{{ stock.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+          <td>{{ stock.usuarioCreacion }}</td>
+          <td>{{ stock.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+          <td>{{ stock.usuarioModificacion }}</td>     
 
-        <td>
-          <a class="btn btn-info"
-                  [routerLink]="['/stock', stock.stockId ]">
-            <i class="fa fa-edit"></i>
-          </a>
-        </td>
-        <td>  
-          <button class="btn btn-danger"
-          (click)="borrarStock($event, stock) ">
-          <i class="fa fa-trash"></i></button>
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!cargando && stocks.length === 0"
-      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-      <h4 class="alert-heading">Cargando</h4>
-      <p>
-        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-      </p>
-      <p class="mb-0">
-        Espere por favor
-      </p>
-    </tbody>
-  </table>
-</div>
+          <td>
+            <a class="btn btn-info"
+                    [routerLink]="['/stock', stock.stockId ]">
+              <i class="fa fa-edit"></i>
+            </a>
+          </td>
+          <td>  
+            <button class="btn btn-danger"
+            (click)="borrarStock($event, stock) ">
+            <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!cargando && stocks.length === 0"
+        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+        <h4 class="alert-heading">Cargando</h4>
+        <p>
+          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+        </p>
+        <p class="mb-0">
+          Espere por favor
+        </p>
+      </tbody>
+    </table>
+  </div>
+</body>

@@ -76,8 +76,10 @@ export class CitaComponent implements OnInit {
   listarAreas() {
     var orderBy = "descripcion";
     var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(null, orderBy, orderDir )
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });

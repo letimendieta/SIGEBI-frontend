@@ -1,183 +1,218 @@
+<head>
+      <link rel="stylesheet" href="funcionario.component.css">
+</head>
 
-<h1>Funcionario </h1>
-<hr>
+<body>
+      <h1>Funcionario </h1>
+      <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/funcionarios">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
-  </div>
-</div>
-
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-              Datos del Funcionario
-      </div>
-      <div class="card-body">
-
-      <form [formGroup]="funcionarioForm" (ngSubmit)="guardar( )">
-          <!-- Funcionario Id-->
-          <div class="row">
-            <div class="col-lg-5">
-                  <div class="form-group" [hidden]="crear">
-                        <label>Funcionario Id</label>
-                        <input type="number"
-                              class="form-control"
-                              placeholder="Funcionario Id"
-                              formControlName="funcionarioId"
-                              name="funcionarioId">
-                        <small class="form-text text-muted">Este campo es autogenerado</small>
-                  </div> 
-            </div>
-          </div>       
-
-          <!-- Datos Personales-->
-          <div formGroupName="personas" class="row">
-                  <div class="col-lg-5">
-                        <div class="input-group mb-3">
-                              <label>Persona Id</label>
-                              <div class="input-group">
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="ID"
-                                          placeholder="Persona Id"
-                                          formControlName="personaId"
-                                          [class.is-invalid]="personaIdNoValido" name="id">
-                                    <div class="input-group-append">
-                                          <button class="btn btn-outline-info" 
-                                                (click)="obtenerPersona($event)">
-                                                Buscar
-                                          </button>
-                                    </div>
-                                    <small *ngIf="personaIdNoValido" class="text-danger">
-                                          Ingrese personaId
-                                    </small>
-                              </div>
-                        </div>
-
-                        <label>C.I</label>
-                        <input type="text"
-                              class="form-control"
-                              placeholder="Cedula"                      
-                              name="cedula"
-                              formControlName="cedula">
-                        
-            
-                        <label>Nombres</label>
-                        <input type="text"
-                              class="form-control"
-                              placeholder="Nombres"
-                              formControlName="nombres"
-                              name="nombres">
-                       
-                  
-                        <label>Apellidos</label>
-                        <input type="text"
-                              class="form-control"
-                              formControlName="apellidos"
-                              name="apellidos"
-                              placeholder="Apellidos">
-                        
-                  </div>
-                  
-            </div>
-
-            <hr>
-            <!-- Datos del Funcionario-->
-            <div class="form-row">
-                  <div class="col-lg-5"> 
-                        <div>
-                              <label>Area</label>
-                              <input type="number"
-                                    class="form-control"
-                                    placeholder="Area"
-                                    formControlName="areaId"
-                                    name="areaId"
-                                    [class.is-invalid]="areaNoValido">
-                              <small *ngIf="areaNoValido" class="text-danger">
-                                    Ingrese el area correspondiente
-                              </small>
-                        </div>
-                        <div>
-                              <label>Estado</label>
-                              <select class="custom-select"
-                                    formControlName="estado" name = "estado">
-                                    <option value="A" [selected]="true">ACTIVO</option>
-                                    <option value="I">INACTIVO</option>
-                              </select>
-                        </div>
-                  </div>
-                  <div class="col-lg-5"> 
-                        <label>Fecha ingreso</label>
-                        <input type="date"
-                              class="form-control"
-                              placeholder="Fecha Ingreso"
-                              formControlName="fechaIngreso"
-                              name="fechaIngreso">
-                 
-                        <label>Fecha egreso</label>
-                        <input type="date"
-                              class="form-control"
-                              placeholder="Fecha Egreso"
-                              formControlName="fechaEgreso"
-                              name="fechaEgreso">
-                  </div>
-            </div>
-
-            
-            <div class="form-row" [hidden]="crear">
-                  <div class="col-lg-5"> 
-                        <label>Fecha creacion</label>
-                        <input type="datetime-local"
-                              class="form-control"
-                              formControlName="fechaCreacion"
-                              name="fechaCreacion"  
-                              placeholder="Fecha creacion">
-                 
-                        <label>Fecha modificacion</label>
-                        <input type="datetime-local"
-                              class="form-control"
-                              formControlName="fechaModificacion"
-                              name="fechaModificacion"  
-                              placeholder="Fecha modificacion">
-                  </div>
-                  <div class="col-lg-5"> 
-                        <label>Usuario creacion</label>
-                        <input type="text"
-                              class="form-control"
-                              formControlName="usuarioCreacion"
-                              name="usuarioCreacion"  
-                              placeholder="Usuario creacion">
-                  
-                        <label>Usuario modificacion</label>
-                        <input type="text"
-                              class="form-control"
-                              formControlName="usuarioModificacion"
-                              name="usuarioModificacion"  
-                              placeholder="Usuario modificacion">
-                  </div>
-            </div> 
-            <br>
-            <hr>
-            <br>
-            <div class="form-group text-center">
-                  <button type="submit"
-                        class="btn btn-primary ">
-                  <i class="fa fa-save"></i>
-                  Guardar
+      <div class="row text-right">
+            <div class="col">
+                  <button class="btn btn-danger"
+                              routerLink="/funcionarios">
+                        <i class="fa fa-arrow-left"></i>
+                        Regresar
                   </button>
-                  <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-            </div>       
-        </form>
+            </div>
       </div>
-    </div>
 
-    
+      <div class="row animated fadeIn faster">
+            <div class="col">
+                  <div class="card">
+                        <div class="card-header">
+                              Datos del Funcionario
+                        </div>
+                        <div class="card-body">
 
-  </div>
-</div>
+                        <form [formGroup]="funcionarioForm" (ngSubmit)="guardar( )">
+                              <!-- Funcionario Id-->
+                              <div class="row justify-content-center">
+                                    <div class="col-lg-5">
+                                          <div class="form-group" [hidden]="crear">
+                                                <label><b>Funcionario id</b></label>
+                                                <input type="number"
+                                                      class="form-control"
+                                                      placeholder="Funcionario Id"
+                                                      formControlName="funcionarioId"
+                                                      name="funcionarioId">
+                                                <small class="form-text text-muted">Este campo es autogenerado</small>
+                                          </div> 
+                                    </div>
+                              </div>       
+
+                              <!-- Datos Personales-->
+                              <div formGroupName="personas" class="row justify-content-center">
+                                    <div class="col-lg-5">
+                                          <div class="form-group">
+                                                <label><b>Persona id</b></label>
+                                                <div class="input-group mb-3">
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="Id"
+                                                            placeholder="Persona Id"
+                                                            formControlName="personaId"
+                                                            [class.is-invalid]="personaIdNoValido" name="id">
+                                                      <div class="input-group-append">
+                                                            <button class="btn btn-outline-info" 
+                                                                  (click)="obtenerPersona($event)">
+                                                                  Buscar
+                                                            </button>
+                                                      </div>
+                                                      <small *ngIf="personaIdNoValido" class="text-danger">
+                                                            Ingrese persona id
+                                                      </small>
+                                                </div>
+                                                
+                                          </div>
+                                          <div class="form-group">
+                                                <label><b>C.I</b></label>
+                                                <input type="text"
+                                                      class="form-control"
+                                                      placeholder="Cedula"                      
+                                                      name="cedula"
+                                                      formControlName="cedula">
+                                          </div>
+                                          
+                                          <div class="form-group">
+                                                <label><b>Nombres</b></label>
+                                                <input type="text"
+                                                      class="form-control"
+                                                      placeholder="Nombres"
+                                                      formControlName="nombres"
+                                                      name="nombres">
+                                          </div>
+                                    
+                                          <div class="form-group">
+                                                <label><b>Apellidos</b></label>
+                                                <input type="text"
+                                                      class="form-control"
+                                                      formControlName="apellidos"
+                                                      name="apellidos"
+                                                      placeholder="Apellidos">
+                                          </div>                                          
+                                    </div>                                    
+                              </div>
+                              <hr>
+                              <!-- Datos del Funcionario-->
+                              <div class="form-row justify-content-center">
+                                    <div class="col-lg-5"> 
+                                          <div>
+                                                <!--div class="form-group">
+                                                      <label><b>&Aacute;rea</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="&Aacute;rea"
+                                                            formControlName="areaId"
+                                                            name="areaId"
+                                                            [class.is-invalid]="areaNoValido">
+                                                      <small *ngIf="areaNoValido" class="text-danger">
+                                                            Seleccione el &aacute;rea correspondiente
+                                                      </small>
+                                                </div-->
+
+
+                                                <div class="form-group">
+                                                      <label><b>&Aacute;rea</b></label>
+                                                      <select class="form-control input-sm" name="areaId"
+                                                            formControlName="areaId" [class.is-invalid]="areaNoValido">
+                                                            <option value=null >Seleccionar</option>
+                                                            <option *ngFor="let item of listaAreas; let i = index"
+                                                                  value="{{item.areaId}}">
+                                                                  {{item.codigo}} - {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                      <small *ngIf="areaNoValido" class="text-danger">
+                                                            Seleccione el &aacute;rea correspondiente
+                                                      </small>
+                                                </div> 
+
+                                          </div>
+                                          <div>
+                                                <div class="form-group">
+                                                      <label><b>Estado</b></label>
+                                                      <select class="custom-select"
+                                                            formControlName="estado" name = "estado">
+                                                            <option value="A" [selected]="true">ACTIVO</option>
+                                                            <option value="I">INACTIVO</option>
+                                                      </select>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-5"> 
+                                          <div class="form-group">
+                                                <label><b>Fecha ingreso</b></label>
+                                                <input type="date"
+                                                      class="form-control"
+                                                      placeholder="Fecha Ingreso"
+                                                      formControlName="fechaIngreso"
+                                                      name="fechaIngreso">
+                                          </div>
+                                          <div class="form-group">
+                                                <label><b>Fecha egreso</b></label>
+                                                <input type="date"
+                                                      class="form-control"
+                                                      placeholder="Fecha Egreso"
+                                                      formControlName="fechaEgreso"
+                                                      name="fechaEgreso">
+                                          </div>
+                                    </div>
+                              </div>
+
+                              
+                              <div class="form-row justify-content-center" [hidden]="crear">
+                                    <div class="col-lg-5">
+                                          <div class="form-group">
+                                                <label><b>Fecha creaci&oacute;n</b></label>
+                                                <input type="datetime-local"
+                                                      class="form-control"
+                                                      formControlName="fechaCreacion"
+                                                      name="fechaCreacion"  
+                                                      placeholder="Fecha creaci&oacute;n">
+                                          </div>
+                                          <div class="form-group">
+                                                <label><b>Fecha modificaci&oacute;n</b></label>
+                                                <input type="datetime-local"
+                                                      class="form-control"
+                                                      formControlName="fechaModificacion"
+                                                      name="fechaModificacion"  
+                                                      placeholder="Fecha modificaci&oacute;n">
+                                          </div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                          <div class="form-group">
+                                                <label><b>Usuario creaci&oacute;n</b></label>
+                                                <input type="text"
+                                                      class="form-control"
+                                                      formControlName="usuarioCreacion"
+                                                      name="usuarioCreacion"  
+                                                      placeholder="Usuario creaci&oacute;n">
+                                          </div>
+                                          <div class="form-group">
+                                                <label><b>Usuario modificaci&oacute;n</b></label>
+                                                <input type="text"
+                                                      class="form-control"
+                                                      formControlName="usuarioModificacion"
+                                                      name="usuarioModificacion"  
+                                                      placeholder="Usuario modificaci&oacute;n">
+                                          </div>
+                                    </div>
+                              </div> 
+                              <hr>
+                              <br>
+                              <div class="form-group text-center">
+                                    <button type="submit"
+                                          class="btn btn-primary ">
+                                    <i class="fa fa-save"></i>
+                                    Guardar
+                                    </button>
+                                    <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+                              </div>       
+                        </form>
+                        </div>
+                  </div>
+
+            
+
+            </div>
+      </div>
+</body>

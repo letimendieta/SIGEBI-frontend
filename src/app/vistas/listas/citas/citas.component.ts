@@ -59,8 +59,10 @@ export class CitasComponent implements OnInit {
   listarAreas() {
     var orderBy = "descripcion";
     var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(null, orderBy, orderDir )
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -126,7 +128,8 @@ export class CitasComponent implements OnInit {
   crearTabla(){
     this.dtOptions = {
       pagingType: 'full_numbers',
-      pageLength: 10,
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
       searching: false,
       language: {
         url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"

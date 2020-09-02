@@ -4,14 +4,18 @@ th{
 
 /*
    server-side-angular-way.component.css
-*/
+
 .no-data-available {
   text-align: center;
-}
+}*/
 
 /*
    src/styles.css (i.e. your global style)
-*/
+
 .dataTables_empty {
   display: none;
+}*/
+
+body {
+  font:400 16px/1.8 sans-serif;
 }

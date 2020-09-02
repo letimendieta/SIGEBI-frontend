@@ -1,124 +1,130 @@
-<h1>Listado de estamentos</h1>
-<hr>
+<head>
+  <link rel="stylesheet" href="estamentos.component.css">
+</head>
 
-<div class="card">
-  <h3 class="card-header">Buscador</h3>
-  <div class="card-body">
-    <form [formGroup]="buscadorForm">
-      <div class="form-row">
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="estamentoId" class="col-sm-7 col-form-label"><b>Estamento Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="estamentoId"
-                  formControlName="estamentoId" name="estamentoId">
+<body>
+  <h1>Listado de estamentos</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header">Buscador</h3>
+    <div class="card-body">
+      <form [formGroup]="buscadorForm">
+        <div class="form-row justify-content-center">
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="estamentoId" class="col-sm-7 col-form-label"><b>Estamento id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="estamentoId"
+                    formControlName="estamentoId" name="estamentoId">
+              </div>
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="codigo" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="codigo"
+                  formControlName="codigo" name="codigo">
+              </div>
+            </div>
+          </div> 
+
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="descripcion"
+                  formControlName="descripcion" name="descripcion">
+              </div>  
+            </div>
+
+            <div class="form-group form-inline col-md-5">
+              <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
+              <div class="col-sm-3">
+                <select class="custom-select"
+                    formControlName="estado" name = "estado">
+                  <option value=null [selected]="true">TODOS</option>
+                  <option value="A">ACTIVO</option>
+                  <option value="I">INACTIVO</option>
+                </select>
+              </div>
             </div>
           </div>
-
-          <div class="form-group form-inline col-md-5">
-            <label for="codigo" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="codigo"
-                formControlName="codigo" name="codigo">
-            </div>
+        </div>  
+        
+        <div class="col-log-4" class="text-center">
+          <div class="form-horizontal">
+            <button type="submit" (click)="buscadorEstamentos($event)" class="btn btn-success">Buscar</button>
+            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
           </div>
-        </div> 
-
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="descripcion"
-                formControlName="descripcion" name="descripcion">
-            </div>  
-          </div>
-
-          <div class="form-group form-inline col-md-5">
-            <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
-            <div class="col-sm-3">
-              <select class="custom-select"
-                  formControlName="estado" name = "estado">
-                <option value=null [selected]="true">TODOS</option>
-                <option value="A">ACTIVO</option>
-                <option value="I">INACTIVO</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>  
-      
-      <div class="col-log-4" class="text-center">
-        <div class="form-horizontal">
-          <button type="submit" (click)="buscadorEstamentos($event)" class="btn btn-success">Buscar</button>
-          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-        </div>
-      </div>      
-    </form>
+        </div>      
+      </form>
+    </div>
   </div>
-</div>
-<br>
-<div class="row">
-  <div class="col text-right">
-    <button routerLink="/estamento/nuevo"
-            class="btn btn-primary">
-      <i class="fa fa-plus"></i>
-      Agregar
-    </button>
+  <br>
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/estamento/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" 
-    class="table table-hover table-responsive table-condensed table-bordered" 
-    *ngIf="!cargando && estamentos.length > 0"
-    class="table mt-3 animated fadeIn faster animated fadeIn faster">
-    <thead class="table-info">
-        <th scope="col">#</th>
-        <th scope="col">Id</th>
-        <th scope="col">C&oacute;digo</th>
-        <th scope="col">Descripci&oacute;n</th>
-        <th scope="col">Estado</th>
-        <th scope="col">Fecha Creaci&oacute;n</th>
-        <th scope="col">Usuario Creaci&oacute;n</th>
-        <th scope="col">Fecha Modificaci&oacute;n</th>
-        <th scope="col">Usuario Modificaci&oacute;n</th>     
-        <th scope="col">Editar</th>
-        <th scope="col">Borrar</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let estamento of estamentos; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ estamento.estamentoId }}</td>
-        <td>{{ estamento.codigo }}</td>
-        <td>{{ estamento.descripcion }}</td>
-        <td>{{ estamento.estado }}</td>
-        <td>{{ estamento.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-        <td>{{ estamento.usuarioCreacion }}</td>
-        <td>{{ estamento.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-        <td>{{ estamento.usuarioModificacion }}</td>      
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" 
+      class="table table-hover table-responsive table-condensed table-bordered" 
+      *ngIf="!cargando && estamentos.length > 0"
+      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+      <thead class="table-info">
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">C&oacute;digo</th>
+          <th scope="col">Descripci&oacute;n</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Fecha creaci&oacute;n</th>
+          <th scope="col">Usuario creaci&oacute;n</th>
+          <th scope="col">Fecha modificaci&oacute;n</th>
+          <th scope="col">Usuario modificaci&oacute;n</th>     
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let estamento of estamentos; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ estamento.estamentoId }}</td>
+          <td>{{ estamento.codigo }}</td>
+          <td>{{ estamento.descripcion }}</td>
+          <td>{{ estamento.estado }}</td>
+          <td>{{ estamento.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+          <td>{{ estamento.usuarioCreacion }}</td>
+          <td>{{ estamento.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+          <td>{{ estamento.usuarioModificacion }}</td>      
 
-        <td>
-          <a class="btn btn-info"
-                  [routerLink]="['/estamento', estamento.estamentoId ]">
-            <i class="fa fa-edit"></i>
-          </a>
-        </td>
-        <td>  
-          <button class="btn btn-danger"
-          (click)="borrarEstamento($event, estamento) ">
-          <i class="fa fa-trash"></i></button>
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!cargando && estamentos.length === 0"
-      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-      <h4 class="alert-heading">Cargando</h4>
-      <p>
-        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-      </p>
-      <p class="mb-0">
-        Espere por favor
-      </p>
-    </tbody>
-  </table>
-</div>
+          <td>
+            <a class="btn btn-info"
+                    [routerLink]="['/estamento', estamento.estamentoId ]">
+              <i class="fa fa-edit"></i>
+            </a>
+          </td>
+          <td>  
+            <button class="btn btn-danger"
+            (click)="borrarEstamento($event, estamento) ">
+            <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!cargando && estamentos.length === 0"
+        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+        <h4 class="alert-heading">Cargando</h4>
+        <p>
+          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+        </p>
+        <p class="mb-0">
+          Espere por favor
+        </p>
+      </tbody>
+    </table>
+  </div>
+</body>

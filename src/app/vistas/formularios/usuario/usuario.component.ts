@@ -7,7 +7,8 @@ import { Usuario2Modelo } from '../../../modelos/usuario2.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
-
+import { AreaModelo } from '../../../modelos/area.modelo';
+import { AreasService } from '../../../servicios/areas.service';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 
@@ -25,11 +26,12 @@ export class UsuarioComponent implements OnInit {
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
-  
+  listaAreas: AreaModelo;
   usuarioForm: FormGroup;
 
   constructor( private usuariosService: UsuariosService,
                private funcionariosService: FuncionariosService,
+               private areasService: AreasService,
                private route: ActivatedRoute,
                private router: Router,
                private fb: FormBuilder ) { 
@@ -37,7 +39,7 @@ export class UsuarioComponent implements OnInit {
   }              
 
   ngOnInit() {
-
+    this.listarAreas();
     const id = this.route.snapshot.paramMap.get('id');
 
     if ( id !== 'nuevo' ) {
@@ -48,6 +50,18 @@ export class UsuarioComponent implements OnInit {
     }else{
       this.crear = true;
     }
+  }
+
+  listarAreas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
+
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+      .subscribe( (resp: AreaModelo) => {
+        this.listaAreas = resp;
+    });
   }
 
   obtenerFuncionario( ){

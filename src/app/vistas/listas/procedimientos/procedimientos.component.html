@@ -1,172 +1,178 @@
-<h1>Listado de Procedimientos</h1>
-<hr>
+<head>
+  <link rel="stylesheet" href="procedimientos.component.css">
+</head>
 
-<div class="card">
-  <h3 class="card-header">Buscador</h3> 
-  <div class="card-body">    
-    <form [formGroup]="buscadorForm">
-      <div class="form-row">
-        <div class="col-lg-5"> 
-          <div class="form-group form-inline col-md-5">
-            <label for="procedimientoId" class="col-sm-7 col-form-label"><b>Procedimiento Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="procedimientoId"
-              formControlName="procedimientoId" name="procedimientoId">
+<body>
+  <h1>Listado de Procedimientos</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header">Buscador</h3> 
+    <div class="card-body">    
+      <form [formGroup]="buscadorForm">
+        <div class="form-row justify-content-center">
+          <div class="col-lg-5"> 
+            <div class="form-group form-inline col-md-5">
+              <label for="procedimientoId" class="col-sm-7 col-form-label"><b>Procedimiento id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="procedimientoId"
+                formControlName="procedimientoId" name="procedimientoId">
+              </div>
+            </div>               
+
+            <div formGroupName="pacientes">  
+              <div class="form group">
+                <div class="form-group form-inline col-md-5">
+                  <label for="pacienteId" class="col-sm-7 col-form-label"><b>Paciente id</b></label>
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control"
+                    formControlName="pacienteId" name="pacienteId">
+                  </div>
+                </div>
+                <div class="form-group form-inline col-md-5">
+                  <label for="pacienteCedula" class="col-sm-7 col-form-label"><b>Paciente c&eacute;dula</b></label>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" id="pacienteCedula"
+                    formControlName="pacienteCedula" name="pacienteCedula">
+                  </div>
+                </div>
+                <div class="form-group form-inline col-md-5">
+                  <label for="pacienteNombres" class="col-sm-7 col-form-label"><b>Paciente nombres</b></label>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" id="pacienteNombres"
+                    formControlName="pacienteNombres" name="pacienteNombres">
+                  </div> 
+                </div>
+                <div class="form-group form-inline col-md-5">
+                  <label for="pacienteApellidos" class="col-sm-7 col-form-label"><b>Paciente apellidos</b></label>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" id="pacienteApellidos"
+                    formControlName="pacienteApellidos" name="pacienteApellidos">
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>               
-
-          <div formGroupName="pacientes">  
-            <div class="form group">
+          </div>
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="fecha" class="col-sm-7 col-form-label"><b>Fecha procedimiento</b></label>
+              <div class="col-sm-3">
+                <input type="datetime-local" class="form-control" id="fecha"
+                formControlName="fecha" name="fecha">
+              </div>
+            </div>
+            <div formGroupName="funcionarios">            
               <div class="form-group form-inline col-md-5">
-                <label for="pacienteId" class="col-sm-7 col-form-label"><b>Paciente Id</b></label>
+                <label for="funcionarioId" class="col-sm-7 col-form-label"><b>Funcionario id</b></label>
                 <div class="col-sm-3">
                   <input type="number" class="form-control"
-                  formControlName="pacienteId" name="pacienteId">
+                  formControlName="funcionarioId" name="funcionarioId">
+                </div>
+              </div>      
+              <div class="form-group form-inline col-md-5">
+                <label for="funcionarioCedula" class="col-sm-7 col-form-label"><b>Funcionario c&eacute;dula</b></label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" id="funcionarioCedula"
+                  formControlName="funcionarioCedula" name="funcionarioCedula">
                 </div>
               </div>
               <div class="form-group form-inline col-md-5">
-                <label for="pacienteCedula" class="col-sm-7 col-form-label"><b>Paciente C&eacute;dula</b></label>
+                <label for="funcionarioNombres" class="col-sm-7 col-form-label"><b>Funcionario nombres</b></label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="pacienteCedula"
-                  formControlName="pacienteCedula" name="pacienteCedula">
+                  <input type="text" class="form-control" id="funcionarioNombres"
+                  formControlName="funcionarioNombres" name="funcionarioNombres">
                 </div>
               </div>
               <div class="form-group form-inline col-md-5">
-                <label for="pacienteNombres" class="col-sm-7 col-form-label"><b>Paciente Nombres</b></label>
+                <label for="funcionarioApellidos" class="col-sm-7 col-form-label"><b>Funcionario apellidos</b></label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="pacienteNombres"
-                  formControlName="pacienteNombres" name="pacienteNombres">
-                </div> 
-              </div>
-              <div class="form-group form-inline col-md-5">
-                <label for="pacienteApellidos" class="col-sm-7 col-form-label"><b>Paciente Apellidos</b></label>
-                <div class="col-sm-3">
-                  <input type="text" class="form-control" id="pacienteApellidos"
-                  formControlName="pacienteApellidos" name="pacienteApellidos">
+                  <input type="text" class="form-control" id="funcionarioApellidos"
+                  formControlName="funcionarioApellidos" name="funcionarioApellidos">
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="fecha" class="col-sm-7 col-form-label"><b>Fecha Procedimiento</b></label>
-            <div class="col-sm-3">
-              <input type="datetime-local" class="form-control" id="fecha"
-              formControlName="fecha" name="fecha">
-            </div>
-          </div>
-          <div formGroupName="funcionarios">            
-            <div class="form-group form-inline col-md-5">
-              <label for="funcionarioId" class="col-sm-7 col-form-label"><b>Funcionario Id</b></label>
-              <div class="col-sm-3">
-                <input type="number" class="form-control"
-                formControlName="funcionarioId" name="funcionarioId">
-              </div>
-            </div>      
-            <div class="form-group form-inline col-md-5">
-              <label for="funcionarioCedula" class="col-sm-7 col-form-label"><b>Funcionario C&eacute;dula</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="funcionarioCedula"
-                formControlName="funcionarioCedula" name="funcionarioCedula">
-              </div>
-            </div>
-            <div class="form-group form-inline col-md-5">
-              <label for="funcionarioNombres" class="col-sm-7 col-form-label"><b>Funcionario Nombres</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="funcionarioNombres"
-                formControlName="funcionarioNombres" name="funcionarioNombres">
-              </div>
-            </div>
-            <div class="form-group form-inline col-md-5">
-              <label for="funcionarioApellidos" class="col-sm-7 col-form-label"><b>Funcionario Apellidos</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="funcionarioApellidos"
-                formControlName="funcionarioApellidos" name="funcionarioApellidos">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-log-4" class="text-center">
-        <div class="form-horizontal">
-          <button type="submit" (click)="buscadorProcedimientos($event)" class="btn btn-success">Buscar</button>
-          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+        <div class="col-log-4" class="text-center">
+          <div class="form-horizontal">
+            <button type="submit" (click)="buscadorProcedimientos($event)" class="btn btn-success">Buscar</button>
+            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-<br>
-<div class="row">
-  <div class="col text-right">
-    <button routerLink="/procedimiento/nuevo"
-            class="btn btn-primary">
-      <i class="fa fa-plus"></i>
-      Agregar
-    </button>
+  <br>
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/procedimiento/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" 
-    class="table table-hover table-responsive table-condensed table-bordered" 
-    *ngIf="!cargando && procedimientos.length > 0"
-    class="table mt-3 animated fadeIn faster animated fadeIn faster">
-    <thead class="table-info">
-        <th scope="col">#</th>
-        <th scope="col">Id</th>
-        <th scope="col">Paciente Id</th>
-        <th scope="col">Paciente C&eacute;dula</th>
-        <th scope="col">Paciente Nombres</th>
-        <th scope="col">Paciente Apellidos</th>
-        <th scope="col">Funcionario Id</th>
-        <th scope="col">Funcionario C&eacute;dula</th>
-        <th scope="col">Funcionario Nombres</th>
-        <th scope="col">Funcionario Apellidos</th>
-        <th scope="col">InsumoId</th>
-        <th scope="col">Fecha Procedimiento</th>  
-        <th scope="col">Editar</th>
-        <th scope="col">Borrar</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let procedimiento of procedimientos; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ procedimiento.procedimientoId }}</td>
-        <td>{{ procedimiento.pacientes.pacienteId }}</td>
-        <td>{{ procedimiento.pacientes.personas.cedula }}</td>
-        <td>{{ procedimiento.pacientes.personas.nombres }}</td>
-        <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
-        <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
-        <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
-        <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
-        <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
-        <td>{{ procedimiento.insumoId }}</td>
-        <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" 
+      class="table table-hover table-responsive table-condensed table-bordered" 
+      *ngIf="!cargando && procedimientos.length > 0"
+      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+      <thead class="table-info">
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">Paciente id</th>
+          <th scope="col">Paciente c&eacute;dula</th>
+          <th scope="col">Paciente nombres</th>
+          <th scope="col">Paciente apellidos</th>
+          <th scope="col">Funcionario id</th>
+          <th scope="col">Funcionario c&eacute;dula</th>
+          <th scope="col">Funcionario nombres</th>
+          <th scope="col">Funcionario apellidos</th>
+          <th scope="col">InsumoId</th>
+          <th scope="col">Fecha procedimiento</th>  
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let procedimiento of procedimientos; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ procedimiento.procedimientoId }}</td>
+          <td>{{ procedimiento.pacientes.pacienteId }}</td>
+          <td>{{ procedimiento.pacientes.personas.cedula }}</td>
+          <td>{{ procedimiento.pacientes.personas.nombres }}</td>
+          <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
+          <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
+          <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
+          <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
+          <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
+          <td>{{ procedimiento.insumoId }}</td>
+          <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
 
-        <td>
-          <a class="btn btn-info"
-                  [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
-            <i class="fa fa-edit"></i>
-          </a>
-        </td>
-        <td>  
-          <button class="btn btn-danger"
-          (click)="borrarProcedimiento($event, procedimiento) ">
-          <i class="fa fa-trash"></i></button>
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!cargando && procedimientos.length === 0"
-      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-      <h4 class="alert-heading">Cargando</h4>
-      <p>
-        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-      </p>
-      <p class="mb-0">
-        Espere por favor
-      </p>
-    </tbody>
-  </table>
-</div>
+          <td>
+            <a class="btn btn-info"
+                    [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
+              <i class="fa fa-edit"></i>
+            </a>
+          </td>
+          <td>  
+            <button class="btn btn-danger"
+            (click)="borrarProcedimiento($event, procedimiento) ">
+            <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!cargando && procedimientos.length === 0"
+        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+        <h4 class="alert-heading">Cargando</h4>
+        <p>
+          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+        </p>
+        <p class="mb-0">
+          Espere por favor
+        </p>
+      </tbody>
+    </table>
+  </div>
+</body>

@@ -214,7 +214,7 @@ export class PersonaComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.persona.nombres,
+                title: this.persona.nombres +' '+this.persona.apellidos,
                 text: resp.mensaje,
               }).then( resp => {
 

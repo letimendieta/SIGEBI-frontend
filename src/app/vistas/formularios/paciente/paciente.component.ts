@@ -229,7 +229,7 @@ export class PacienteComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.paciente.personas.nombres,
+                title: this.paciente.personas.nombres +' '+this.paciente.personas.apellidos,
                 text: resp.mensaje + '. '+ mensajeUpload
               }).then( resp => {
 

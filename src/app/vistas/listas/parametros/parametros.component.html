@@ -1,136 +1,142 @@
-<h1>Listado de Par&aacute;metros</h1>
-<hr>
+<head>
+  <link rel="stylesheet" href="parametros.component.css">
+</head>
 
-<div class="card">
-  <h3 class="card-header">Buscador</h3>
-  <div class="card-body">
-    <form [formGroup]="buscadorForm">
-      <div class="form-row">
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="parametroId" class="col-sm-7 col-form-label"><b>Parametro Id</b></label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="parametroId"
-              formControlName="parametroId" 
-              name="parametroId">
+<body>
+  <h1>Listado de Par&aacute;metros</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header">Buscador</h3>
+    <div class="card-body">
+      <form [formGroup]="buscadorForm">
+        <div class="form-row justify-content-center">
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="parametroId" class="col-sm-7 col-form-label"><b>Par&aacute;metro id</b></label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" id="parametroId"
+                formControlName="parametroId" 
+                name="parametroId">
+              </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="codigoParametro" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="codigoParametro"
+                formControlName="codigoParametro" name="codigoParametro">
+            </div>
+            </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="descripcion"
+                formControlName="descripcion" name="descripcion">
+              </div>
             </div>
           </div>
-          <div class="form-group form-inline col-md-5">
-            <label for="codigoParametro" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="codigoParametro"
-              formControlName="codigoParametro" name="codigoParametro">
-           </div>
-          </div>
-          <div class="form-group form-inline col-md-5">
-            <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="descripcion"
-              formControlName="descripcion" name="descripcion">
+
+          <div class="col-lg-5">
+            <div class="form-group form-inline col-md-5">
+              <label for="valor" class="col-sm-7 col-form-label"><b>Valor</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="valor"
+                formControlName="valor" name="valor">
+              </div>
             </div>
-          </div>
+            <div class="form-group form-inline col-md-5">
+              <label for="descripcionValor" class="col-sm-7 col-form-label"><b>Descripci&oacute;n valor</b></label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="descripcionValor"
+                formControlName="descripcionValor" name="descripcionValor">
+              </div>
+            </div>
+    
+            <div class="form-group form-inline col-md-5">
+              <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
+              <div class="col-sm-3">
+                <select class="custom-select"
+                    formControlName="estado" name = "estado">
+                  <option value=null [selected]="true">TODOS</option>
+                  <option value="A">ACTIVO</option>
+                  <option value="I">INACTIVO</option>
+                </select>
+              </div>
+            </div>
+          </div>   
         </div>
 
-        <div class="col-lg-5">
-          <div class="form-group form-inline col-md-5">
-            <label for="valor" class="col-sm-7 col-form-label"><b>Valor</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="valor"
-              formControlName="valor" name="valor">
-            </div>
+        <div class="col-log-4" class="text-center">
+          <div class="form-horizontal">
+            <button type="submit" (click)="buscadorParametros($event)" class="btn btn-success">Buscar</button>
+            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
           </div>
-          <div class="form-group form-inline col-md-5">
-            <label for="descripcionValor" class="col-sm-7 col-form-label"><b>Descripci&oacute;n Valor</b></label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" id="descripcionValor"
-              formControlName="descripcionValor" name="descripcionValor">
-            </div>
-          </div>
-  
-          <div class="form-group form-inline col-md-5">
-            <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
-            <div class="col-sm-3">
-              <select class="custom-select"
-                  formControlName="estado" name = "estado">
-                <option value=null [selected]="true">TODOS</option>
-                <option value="A">ACTIVO</option>
-                <option value="I">INACTIVO</option>
-              </select>
-            </div>
-          </div>
-        </div>   
-      </div>
-
-      <div class="col-log-4" class="text-center">
-        <div class="form-horizontal">
-          <button type="submit" (click)="buscadorParametros($event)" class="btn btn-success">Buscar</button>
-          <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-<br>
-<div class="row">
-  <div class="col text-right">
-    <button routerLink="/parametro/nuevo"
-            class="btn btn-primary">
-      <i class="fa fa-plus"></i>
-      Agregar
-    </button>
+  <br>
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/parametro/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" 
-    class="table table-hover table-responsive table-condensed table-bordered" 
-    *ngIf="!cargando && parametros.length > 0"
-    class="table mt-3 animated fadeIn faster animated fadeIn faster">
-    <thead class="table-info">      
-        <th scope="col">#</th>
-        <th scope="col">Id</th>
-        <th scope="col">C&oacute;digo</th>
-        <th scope="col">Descripci&oacute;n</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Valor</th>
-        <th scope="col">Descripci&oacute;n Valor</th>
-        <th scope="col">Estado</th>     
-        <th scope="col">Editar</th>
-        <th scope="col">Borrar</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let parametro of parametros; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ parametro.parametroId }}</td>
-        <td>{{ parametro.codigoParametro }}</td>
-        <td>{{ parametro.descripcion }}</td>
-        <td>{{ parametro.nombre }}</td>
-        <td>{{ parametro.valor }}</td>
-        <td>{{ parametro.descripcionValor }}</td>
-        <td>{{ parametro.estado }}</td>    
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" 
+      class="table table-hover table-responsive table-condensed table-bordered" 
+      *ngIf="!cargando && parametros.length > 0"
+      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+      <thead class="table-info">      
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">C&oacute;digo</th>
+          <th scope="col">Descripci&oacute;n</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Descripci&oacute;n valor</th>
+          <th scope="col">Estado</th>     
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let parametro of parametros; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ parametro.parametroId }}</td>
+          <td>{{ parametro.codigoParametro }}</td>
+          <td>{{ parametro.descripcion }}</td>
+          <td>{{ parametro.nombre }}</td>
+          <td>{{ parametro.valor }}</td>
+          <td>{{ parametro.descripcionValor }}</td>
+          <td>{{ parametro.estado }}</td>    
 
-        <td>
-          <a class="btn btn-info"
-                  [routerLink]="['/parametro', parametro.parametroId ]">
-            <i class="fa fa-edit"></i>
-          </a>
-        </td>
-        <td>  
-          <button class="btn btn-danger"
-          (click)="borrarParametro($event, parametro) ">
-          <i class="fa fa-trash"></i></button>
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!cargando && parametros.length === 0"
-      class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-      <h4 class="alert-heading">Cargando</h4>
-      <p>
-        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-      </p>
-      <p class="mb-0">
-        Espere por favor
-      </p>
-    </tbody>
-  </table>
-</div>
+          <td>
+            <a class="btn btn-info"
+                    [routerLink]="['/parametro', parametro.parametroId ]">
+              <i class="fa fa-edit"></i>
+            </a>
+          </td>
+          <td>  
+            <button class="btn btn-danger"
+            (click)="borrarParametro($event, parametro) ">
+            <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!cargando && parametros.length === 0"
+        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
+        <h4 class="alert-heading">Cargando</h4>
+        <p>
+          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+        </p>
+        <p class="mb-0">
+          Espere por favor
+        </p>
+      </tbody>
+    </table>
+  </div>
+</body>

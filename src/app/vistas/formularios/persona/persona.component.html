@@ -1,282 +1,285 @@
+<head>
+  <link rel="stylesheet" href="persona.component.css">
+</head>
 
-<h1>Persona </h1>
-<hr>
+<body>
+  <h1>Persona </h1>
+  <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/personas">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
+  <div class="row text-right">
+    <div class="col">
+      <button class="btn btn-danger"
+              routerLink="/personas">
+        <i class="fa fa-arrow-left"></i>
+        Regresar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-              Datos Personales
-      </div>
-      <div class="card-body">
+  <div class="row animated fadeIn faster">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+                Datos Personales
+        </div>
+        <div class="card-body">
 
-        <form [formGroup]="personaForm" (ngSubmit)="guardar( )">
-          
-          <!-- Datos Personales-->
-          <div class="row">
-            <div class="col-lg-5">
-              <div class="form-group" [hidden]="crear">
-                <label>ID</label>
-                <input type="text"
-                      class="form-control"
-                      placeholder="ID"
-                      placeholder="personaId"
-                      formControlName="personaId" 
-                      name="id">
-                <small class="form-text text-muted">Este campo es autogenerado</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-5">
-              <div>
-                <label>C.I</label>
+          <form [formGroup]="personaForm" (ngSubmit)="guardar( )">
+            
+            <!-- Datos Personales-->
+            <div class="row justify-content-center">
+              <div class="col-lg-5">
+                <div class="form-group" [hidden]="crear">
+                  <label><b>Id</b></label>
                   <input type="text"
                         class="form-control"
-                        placeholder="Cedula"                      
-                        name="cedula"
-                        formControlName="cedula"
-                        [class.is-invalid]="cedulaNoValido">
-                    <small *ngIf="cedulaNoValido" class="text-danger">
-                      Ingrese cedula
+                        placeholder="Persona Id"
+                        formControlName="personaId" 
+                        name="id">
+                  <small class="form-text text-muted">Este campo es autogenerado</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="col-lg-5">
+                <div>
+                  <label><b>C&eacute;dula</b></label>
+                    <input type="text"
+                          class="form-control"
+                          placeholder="C&eacute;dula"                      
+                          name="cedula"
+                          formControlName="cedula"
+                          [class.is-invalid]="cedulaNoValido">
+                      <small *ngIf="cedulaNoValido" class="text-danger">
+                        Ingrese c&eacute;dula
+                      </small>
+                </div>
+
+                <div>
+                  <label><b>Nombres</b></label>
+                  <input type="text"
+                        class="form-control"
+                        placeholder="Nombres"
+                        formControlName="nombres"
+                        name="nombres"
+                        [class.is-invalid]="nombreNoValido">
+                    <small *ngIf="nombreNoValido" class="text-danger">
+                      Ingrese nombres
                     </small>
-              </div>
+                </div>
 
-              <div>
-                <label>Nombres</label>
-                <input type="text"
-                      class="form-control"
-                      placeholder="Nombres"
-                      formControlName="nombres"
-                      name="nombres"
-                      [class.is-invalid]="nombreNoValido">
-                  <small *ngIf="nombreNoValido" class="text-danger">
-                    Ingrese nombres
+                <div>
+                  <label><b>Apellidos</b></label>
+                  <input type="text"
+                        class="form-control"
+                        formControlName="apellidos"
+                        name="apellidos"
+                        placeholder="Apellidos"
+                        [class.is-invalid]="apellidoNoValido">
+                  <small *ngIf="apellidoNoValido" class="text-danger">
+                    Ingrese apellidos
                   </small>
-              </div>
+                </div>
 
-              <div>
-                <label>Apellidos</label>
+                <label><b>Fecha nacimiento</b></label>
+                <input type="date"
+                      class="form-control"
+                      formControlName="fechaNacimiento"
+                      name="fechaNacimiento"
+                      placeholder="Fecha nacimiento">
+            
+                <label><b>Edad</b></label>
+                <input type="number"
+                      class="form-control"
+                      formControlName="edad"
+                      name="edad"
+                      placeholder="Edad">
+                    
+                <label><b>Direcci&oacute;n</b></label>
                 <input type="text"
-                      class="form-control"
-                      formControlName="apellidos"
-                      name="apellidos"
-                      placeholder="Apellidos"
-                      [class.is-invalid]="apellidoNoValido">
-                <small *ngIf="apellidoNoValido" class="text-danger">
-                  Ingrese apellidos
-                </small>
-              </div>
+                        class="form-control"
+                        formControlName="direccion"
+                        name="direccion"
+                        placeholder="Direcci&oacute;n">
 
-              <label>Fecha Nac.</label>
-              <input type="date"
+                <div>
+                  <label><b>Email</b></label>
+                  <input type="email"
                     class="form-control"
-                    formControlName="fechaNacimiento"
-                    name="fechaNacimiento"
-                    placeholder="Fecha Nacimiento">
-          
-              <label>Edad</label>
-              <input type="number"
-                    class="form-control"
-                    formControlName="edad"
-                    name="edad"
-                    placeholder="Edad">
+                    formControlName="email"
+                    name="email"
+                    placeholder="Email"
+                  [class.is-invalid]="correoNoValido">
+                  <small *ngIf="correoNoValido" class="text-danger">
+                    Ingrese el correo
+                  </small>
+                </div>
+
+                <label><b>Sexo</b></label>
+                <select ui-select2 class="form-control input-sm"
+                    formControlName="sexo"
+                    uppercase>
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaSexo; let i = index"
+                      value="{{item.valor}}">
+                        {{item.descripcionValor}}
+                    </option>
+                </select>
                   
-              <label>Direccion</label>
-              <input type="text"
-                      class="form-control"
-                      formControlName="direccion"
-                      name="direccion"
-                      placeholder="Direccion">
-
-              <div>
-                <label>Email</label>
-                <input type="email"
-                  class="form-control"
-                  formControlName="email"
-                  name="email"
-                  placeholder="Email"
-                [class.is-invalid]="correoNoValido">
-                <small *ngIf="correoNoValido" class="text-danger">
-                  Ingrese el correo
-                </small>
               </div>
 
-              <label>Sexo</label>
-              <select ui-select2 class="form-control input-sm"
-                  formControlName="sexo"
+              <div class="col-lg-5">
+                <label><b>Estado Civil</b></label>
+                <select ui-seldivect2 placeholder="Estado Civil" 
+                  class="form-control input-sm"          
+                  name = "estadoCivil"
+                  formControlName="estadoCivil"
                   uppercase>
-                  <option value=null>----SELECCIONE----</option>
-                  <option *ngFor="let item of listaSexo; let i = index"
+                  <option value=null>Seleccione</option>
+                  <option *ngFor="let item of listaEstadoCivil; let i = index"
                     value="{{item.valor}}">
                       {{item.descripcionValor}}
                   </option>
-              </select>
+                </select>
                 
-            </div>
-
-            <div class="col-lg-5">
-              <label>Estado Civil</label>
-              <select ui-seldivect2 placeholder="Estado Civil" 
-                class="form-control input-sm"          
-                 name = "estadoCivil"
-                 formControlName="estadoCivil"
-                uppercase>
-                <option value=null>----SELECCIONE----</option>
-                <option *ngFor="let item of listaEstadoCivil; let i = index"
-                  value="{{item.valor}}">
-                    {{item.descripcionValor}}
-                </option>
-              </select>
-              
-              <label>Nacionalidad</label>                
-              <select ui-select2 class="form-control input-sm"
-                 name = "nacionalidad"
-                 formControlName="nacionalidad"
-                uppercase>
-                <option value=null>----SELECCIONE----</option>
-                <option *ngFor="let item of listaNacionalidad; let i = index"
-                  value="{{item.valor}}">
-                    {{item.descripcionValor}}
-                </option>
-              </select>
-                                              
-              <label>Telefono</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="telefono"
-                    name="telefono"
-                    placeholder="Telefono">
-          
-              <label>Celular</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="celular"
-                    name="celular"
-                    placeholder="Celular">
+                <label><b>Nacionalidad</b></label>                
+                <select ui-select2 class="form-control input-sm"
+                  name = "nacionalidad"
+                  formControlName="nacionalidad"
+                  uppercase>
+                  <option value=null>Seleccione</option>
+                  <option *ngFor="let item of listaNacionalidad; let i = index"
+                    value="{{item.valor}}">
+                      {{item.descripcionValor}}
+                  </option>
+                </select>
+                                                
+                <label><b>Tel&eacute;fono</b></label>
+                <input type="text"
+                      class="form-control"
+                      formControlName="telefono"
+                      name="telefono"
+                      placeholder="Tel&eacute;fono">
             
-              <label>Carrera</label> 
-              <select class="form-control input-sm" name="carreraId"
-                  formControlName="carreraId">
-                  <option value=null>----SELECCIONE----</option>
-                  <option *ngFor="let item of listaCarreras; let i = index"
-                    value="{{item.carreraId}}">
-                      {{item.descripcion}}
-                  </option>
-              </select>
-          
-              <label>Departamento</label>
-              <select class="form-control input-sm" name = "departamentoId"
-                  formControlName="departamentoId">
-                  <option value=null>----SELECCIONE----</option>
-                  <option *ngFor="let item of listaDepartamentos; let i = index"
-                    value="{{item.departamentoId}}">
-                      {{item.descripcion}}
-                  </option>
-              </select>
-          
-              <label>Dependencia</label>
-              <select class="form-control input-sm" name = "dependenciaId"
-                  formControlName="dependenciaId">
-                  <option value=null>----SELECCIONE----</option>
-                  <option *ngFor="let item of listaDependencias; let i = index"
-                    value="{{item.dependenciaId}}">
-                      {{item.descripcion}}
-                  </option>
-              </select>
-          
-              <label>Estamento</label>
-              <select class="form-control input-sm" name = "estamentoId"
-                  formControlName="estamentoId">
-                  <option value=null>----SELECCIONE----</option>
-                  <option *ngFor="let item of listaEstamentos; let i = index"
-                    value="{{item.estamentoId}}">
-                      {{item.descripcion}}
-                  </option>
-              </select>
+                <label><b>Celular</b></label>
+                <input type="text"
+                      class="form-control"
+                      formControlName="celular"
+                      name="celular"
+                      placeholder="Celular">
+              
+                <label><b>Carrera</b></label> 
+                <select class="form-control input-sm" name="carreraId"
+                    formControlName="carreraId">
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaCarreras; let i = index"
+                      value="{{item.carreraId}}">
+                        {{item.descripcion}}
+                    </option>
+                </select>
+            
+                <label><b>Departamento</b></label>
+                <select class="form-control input-sm" name = "departamentoId"
+                    formControlName="departamentoId">
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaDepartamentos; let i = index"
+                      value="{{item.departamentoId}}">
+                        {{item.descripcion}}
+                    </option>
+                </select>
+            
+                <label><b>Dependencia</b></label>
+                <select class="form-control input-sm" name = "dependenciaId"
+                    formControlName="dependenciaId">
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaDependencias; let i = index"
+                      value="{{item.dependenciaId}}">
+                        {{item.descripcion}}
+                    </option>
+                </select>
+            
+                <label><b>Estamento</b></label>
+                <select class="form-control input-sm" name = "estamentoId"
+                    formControlName="estamentoId">
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaEstamentos; let i = index"
+                      value="{{item.estamentoId}}">
+                        {{item.descripcion}}
+                    </option>
+                </select>
+              </div>
             </div>
-          </div>
-          <br>
-          <div>
-                <div class="input-group mb-3">    
-                      <div class="form-group">
-                            <label for="inputGroupFile02">Adjuntar Fotografia</label>
-                            <input type="file" class="form-control-file" 
-                                  (change)="selectFile($event)" id="inputGroupFile02" >                                    
-                      </div>                                                                     
-                </div>
-                
-                <div class="alert alert-light" role="alert">{{ message }}</div>
-                
-                <div class="card" [hidden]="crear">
-                      <div class="card-header">Lista de archivos</div>
-                      <ul class="list-group list-group-flush"
-                            *ngFor="let file of fileInfos | async">
-                            <li class="list-group-item">
-                                  <a href="{{ file.url }}">{{ file.name }}</a>
-                            </li>
-                      </ul>
-                </div>                       
-          </div>
-          <br>
-          <!--Personas Fechas-->
-          <div class="form-row" [hidden]="crear">
-            <div class="col-lg-5"> 
-              <label>Fecha creacion</label>
-              <input type="datetime-local"
-                    class="form-control"
-                    formControlName="fechaCreacion"
-                    name="fechaCreacion"
-                    placeholder="Fecha creacion">
-
-              <label>Fecha modificacion</label>
-              <input type="datetime-local"
-                    class="form-control"
-                    formControlName="fechaModificacion"
-                    name="fechaModificacion"
-                    placeholder="Fecha modificacion">
+            <br>
+            <div>
+                  <div class="input-group mb-3">    
+                        <div class="form-group">
+                              <label for="inputGroupFile02">Adjuntar Fotograf&iacute;a</label>
+                              <input type="file" class="form-control-file" 
+                                    (change)="selectFile($event)" id="inputGroupFile02" >                                    
+                        </div>                                                                     
+                  </div>
+                  
+                  <div class="alert alert-light" role="alert">{{ message }}</div>
+                  
+                  <div class="card" [hidden]="crear">
+                        <div class="card-header">Lista de archivos</div>
+                        <ul class="list-group list-group-flush"
+                              *ngFor="let file of fileInfos | async">
+                              <li class="list-group-item">
+                                    <a href="{{ file.url }}">{{ file.name }}</a>
+                              </li>
+                        </ul>
+                  </div>                       
             </div>
-            <div class="col-lg-5"> 
-              <label>Usuario creacion</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="usuarioCreacion"
-                    name="usuarioCreacion"
-                    placeholder="Usuario creacion">
+            <br>
+            <!--Personas Fechas-->
+            <div class="form-row justify-content-center" [hidden]="crear">
+              <div class="col-lg-5"> 
+                <label><b>Fecha creaci&oacute;n</b></label>
+                <input type="datetime-local"
+                      class="form-control"
+                      formControlName="fechaCreacion"
+                      name="fechaCreacion"
+                      placeholder="Fecha creaci&oacute;n">
 
-              <label>Usuario modificacion</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="usuarioModificacion"
-                    name="usuarioModificacion"
-                    placeholder="Usuario modificacion">
-            </div> 
-          </div>
-          <br>
-          <hr>
-          <br>
-          <div class="form-group text-center">
-            <button type="submit"
-                    class="btn btn-primary ">
-              <i class="fa fa-save"></i>
-              Guardar
-            </button>
-            <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-          </div>
+                <label><b>Fecha modificaci&oacute;n</b></label>
+                <input type="datetime-local"
+                      class="form-control"
+                      formControlName="fechaModificacion"
+                      name="fechaModificacion"
+                      placeholder="Fecha modificaci&oacute;n">
+              </div>
+              <div class="col-lg-5"> 
+                <label><b>Usuario creaci&oacute;n</b></label>
+                <input type="text"
+                      class="form-control"
+                      formControlName="usuarioCreacion"
+                      name="usuarioCreacion"
+                      placeholder="Usuario creaci&oacute;n">
 
-        </form>
+                <label><b>Usuario modificaci&oacute;n</b></label>
+                <input type="text"
+                      class="form-control"
+                      formControlName="usuarioModificacion"
+                      name="usuarioModificacion"
+                      placeholder="Usuario modificaci&oacute;n">
+              </div> 
+            </div>
+            <hr>
+            <br>
+            <div class="form-group text-center">
+              <button type="submit"
+                      class="btn btn-primary ">
+                <i class="fa fa-save"></i>
+                Guardar
+              </button>
+              <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+            </div>
+
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</body>

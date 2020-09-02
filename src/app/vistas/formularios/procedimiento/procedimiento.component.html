@@ -1,227 +1,246 @@
+<head>
+      <link rel="stylesheet" href="procedimiento.component.css">
+</head>
 
-<h1>Procedimiento </h1>
-<hr>
+      <body>
+      <h1>Procedimiento </h1>
+      <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/procedimientos">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
-  </div>
-</div>
-
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-              Datos del Procedimiento
+      <div class="row text-right">
+            <div class="col">
+                  <button class="btn btn-danger"
+                              routerLink="/procedimientos">
+                        <i class="fa fa-arrow-left"></i>
+                        Regresar
+                  </button>
+            </div>
       </div>
-      <div class="card-body">
 
-            <form [formGroup]="procedimientoForm" (ngSubmit)="guardar( )">
-                  <div class="row">
-                        <div class="col-lg-5">
-                              <!-- Procedimiento Id-->
-                              <div class="form-group" [hidden]="crear">
-                                    <label>Procedimiento Id</label>
-                                    <input type="number"
-                                          class="form-control"
-                                          placeholder="Procedimiento Id"
-                                          formControlName="procedimientoId"
-                                          name="procedimientoId">
-                                    <small class="form-text text-muted">Este campo es autogenerado</small>
-                              </div>
+      <div class="row animated fadeIn faster">
+            <div class="col">
+                  <div class="card">
+                        <div class="card-header">
+                              Datos del Procedimiento
                         </div>
-                  </div>
+                        <div class="card-body">
 
-                  
-                  <div class="row">
-                        <!-- Datos Paciente-->
-                        <div formGroupName="pacientes" class="col-lg-5">                              
-                              <div class="form group">
-                                    <label>Paciente Id</label>
-                                    <div class="input-group mb-3">
-                                          <input type="number"
-                                                class="form-control"
-                                                placeholder="ID"
-                                                formControlName="pacienteId"
-                                                name="pacienteId">
-                                          <div class="input-group-append">
-                                                <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPaciente($event)">
-                                                      Buscar
-                                                </button>
+                              <form [formGroup]="procedimientoForm" (ngSubmit)="guardar( )">
+                                    <div class="row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <!-- Procedimiento Id-->
+                                                <div class="form-group" [hidden]="crear">
+                                                      <label><b>Procedimiento id</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="Procedimiento id"
+                                                            formControlName="procedimientoId"
+                                                            name="procedimientoId">
+                                                      <small class="form-text text-muted">Este campo es autogenerado</small>
+                                                </div>
                                           </div>
                                     </div>
-                              </div>
-                              <div formGroupName="personas">
-                                    <label>C.I</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Cedula"
-                                          formControlName="cedula"
-                                          name="pacientePersona.cedula">
-                        
-                                    <label>Nombres</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Nombres"
-                                          formControlName="nombres"
-                                          name="pacientePersona.nombres">
-                              
-                                    <label>Apellidos</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          formControlName="apellidos"
-                                          name="pacientePersona.apellidos"  
-                                          placeholder="Apellidos">                              
-                              </div>                              
-                        </div>
 
-                        <!-- Datos del Funcionario-->
-                        <div formGroupName="funcionarios" class="col-lg-5">                              
-                              <div class="form group">
-                                    <label>Funcionario Id</label>                           
-                                    <div class="input-group mb-3">
-                                          <input type="number"
-                                                class="form-control"
-                                                placeholder="Funcionaros Id"
-                                                formControlName="funcionarioId"
-                                                name="funcionarioId">
-                                          <div class="input-group-append">
-                                                <button class="btn btn-outline-info"
-                                                (click)="obtenerFuncionario($event)">
-                                                      Buscar
-                                                </button>
+                                    
+                                    <div class="row justify-content-center">
+                                          <!-- Datos Paciente-->
+                                          <div formGroupName="pacientes" class="col-lg-5">                              
+                                                <div class="form group">
+                                                      <label><b>Paciente id</b></label>
+                                                      <div class="input-group mb-3">
+                                                            <input type="number"
+                                                                  class="form-control"
+                                                                  placeholder="Paciente id"
+                                                                  formControlName="pacienteId"
+                                                                  name="pacienteId">
+                                                            <div class="input-group-append">
+                                                                  <button class="btn btn-outline-info" 
+                                                                        (click)="obtenerPaciente($event)">
+                                                                        Buscar
+                                                                  </button>
+                                                            </div>
+                                                      </div>
+                                                </div>
+                                                <div formGroupName="personas">
+                                                      <div class="form-group">
+                                                            <label><b>C&eacute;dula</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="C&eacute;dula"
+                                                                  formControlName="cedula"
+                                                                  name="pacientePersona.cedula">
+                                                      </div>
+                                                      <div class="form-group">
+                                                            <label><b>Nombres</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="Nombres"
+                                                                  formControlName="nombres"
+                                                                  name="pacientePersona.nombres">
+                                                      </div>
+                                                      <div class="form-group">
+                                                            <label><b>Apellidos</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  formControlName="apellidos"
+                                                                  name="pacientePersona.apellidos"  
+                                                                  placeholder="Apellidos">    
+                                                      </div>                          
+                                                </div>                              
+                                          </div>
+
+                                          <!-- Datos del Funcionario-->
+                                          <div formGroupName="funcionarios" class="col-lg-5">                              
+                                                <div class="form group">
+                                                      <label><b>Funcionario id</b></label>                           
+                                                      <div class="input-group mb-3">
+                                                            <input type="number"
+                                                                  class="form-control"
+                                                                  placeholder="Funcionario id"
+                                                                  formControlName="funcionarioId"
+                                                                  name="funcionarioId">
+                                                            <div class="input-group-append">
+                                                                  <button class="btn btn-outline-info"
+                                                                  (click)="obtenerFuncionario($event)">
+                                                                        Buscar
+                                                                  </button>
+                                                            </div>
+                                                      </div>
+                                                </div>
+                                                <div formGroupName="personas">
+                                                      <div class="form-group">
+                                                            <label><b>C&eacute;dula</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="C&eacute;dula"
+                                                                  formControlName="cedula"
+                                                                  name="funcionarioPersona.cedula">
+                                                      </div>
+                                                      <div class="form-group">
+                                                            <label><b>Nombres</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="Nombres"
+                                                                  formControlName="nombres"
+                                                                  name="funcionarioPersona.nombres">
+                                                      </div>
+                                                      <div class="form-group">
+                                                            <label><b>Apellidos</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  formControlName="apellidos"
+                                                                  name="funcionarioPersona.apellidos"  
+                                                                  placeholder="Apellidos">
+                                                      </div>
+                                                </div>                              
+                                          </div>
+                                    </div>          
+
+                                    <hr>         
+
+                                    <div class="form-row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Insumo id</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="insumoId"
+                                                            name="insumoId"                                     
+                                                            placeholder="Insumo id">
+                                                </div>
+                                          </div>
+
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Fecha</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fecha"
+                                                            name="fecha"                                     
+                                                            placeholder="Fecha">   
+                                                </div>                    
+                                          
+                                          </div>                
+                                    </div>
+
+                                    <div class="form-row justify-content-center">
+                                          <div class="col-lg-10">
+                                                <div class="form-group">
+                                                      <label for="exampleFormControlTextarea1">Notas</label>
+                                                      <textarea class="form-control" 
+                                                      formControlName="notas"
+                                                            name = "notas"
+                                                            maxlength="500" rows="5"
+                                                            [class.is-invalid]="notaNoValido">
+                                                      </textarea>
+                                                      <small *ngIf="notaNoValido" class="text-danger">
+                                                            Ingrese una nota
+                                                      </small>
+                                                </div>
                                           </div>
                                     </div>
-                              </div>
-                              <div formGroupName="personas">
-                                    <label>C.I</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Cedula"
-                                          formControlName="cedula"
-                                          name="funcionarioPersona.cedula">
-                        
-                                    <label>Nombres</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Nombres"
-                                          formControlName="nombres"
-                                          name="funcionarioPersona.nombres">
-                              
-                                    <label>Apellidos</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          formControlName="apellidos"
-                                          name="funcionarioPersona.apellidos"  
-                                          placeholder="Apellidos">
-                              </div>                              
-                        </div>
-                  </div>          
 
-                  <hr>         
+                                    <div class="input-group mb-3">
+                                          <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile02">
+                                                <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
+                                          </div>                        
+                                    </div>
+                                    
+                                    <div class="form-row justify-content-center" [hidden]="crear">
+                                          <div class="col-lg-5"> 
+                                                <div class="form-group">
+                                                      <label><b>Fecha creaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaCreacion"
+                                                            name="fechaCreacion"  
+                                                            placeholder="Fecha creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Fecha modificaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaModificacion"
+                                                            name="fechaModificacion"  
+                                                            placeholder="Fecha modificaci&oacute;n"> 
+                                                </div> 
+                                          </div>
 
-                  <div class="form-row">
-                        <div class="col-lg-5">
-                              <label>Insumo Id</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="insumoId"
-                                    name="insumoId"                                     
-                                    placeholder="Insumo Id">
-                        </div>
+                                          <div class="col-lg-5">  
+                                                <div class="form-group">
+                                                      <label><b>Usuario creaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioCreacion"
+                                                            name="usuarioCreacion"  
+                                                            placeholder="Usuario creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Usuario modificaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioModificacion"
+                                                            name="usuarioModificacion"  
+                                                            placeholder="Usuario modificaci&oacute;n">
+                                                </div>                                    
+                                          </div>                        
+                                    </div>
+                                    <hr>
+                                    <br>
+                                    <div class="form-group text-center">
+                                          <button type="submit" 
+                                                class="btn btn-primary"
+                                                (click)="guardar( )">
+                                          <i class="fa fa-save"></i>
+                                          Guardar
+                                          </button>
+                                          <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+                                    </div>
 
-                        <div class="col-lg-5">
-                              <label>Fecha</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fecha"
-                                    name="fecha"                                     
-                                    placeholder="Fecha">                       
-                             
-                        </div>                
-                  </div>
-
-                  <div class="form-row">
-                        <div class="col-lg-10">
-                              <div class="form-group">
-                                    <label for="exampleFormControlTextarea1">Notas</label>
-                                    <textarea class="form-control" 
-                                    formControlName="notas"
-                                          name = "notas"
-                                          maxlength="500" rows="5"
-                                          [class.is-invalid]="notaNoValido">
-                                    </textarea>
-                                    <small *ngIf="notaNoValido" class="text-danger">
-                                          Ingrese 6 letras
-                                    </small>
-                              </div>
+                              </form>
                         </div>
                   </div>
 
-                  <div class="input-group mb-3">
-                        <div class="custom-file">
-                              <input type="file" class="custom-file-input" id="inputGroupFile02">
-                              <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
-                        </div>                        
-                  </div>
-                  
-                  <div class="form-row" [hidden]="crear">
-                        <div class="col-lg-5"> 
-                              <label>Fecha creacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaCreacion"
-                                    name="fechaCreacion"  
-                                    placeholder="Fecha creacion">
-
-                              <label>Fecha modificacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaModificacion"
-                                    name="fechaModificacion"  
-                                    placeholder="Fecha modificacion">  
-                        </div>
-
-                        <div class="col-lg-5">                                                 
-                              <label>Usuario creacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioCreacion"
-                                    name="usuarioCreacion"  
-                                    placeholder="Usuario creacion">
-                        
-                              <label>Usuario modificacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioModificacion"
-                                    name="usuarioModificacion"  
-                                    placeholder="Usuario modificacion">                                    
-                        </div>                        
-                  </div>
-                  <br>
-                  <hr>
-                  <br>
-                  <div class="form-group text-center">
-                        <button type="submit" 
-                              class="btn btn-primary"
-                              (click)="guardar( )">
-                        <i class="fa fa-save"></i>
-                        Guardar
-                        </button>
-                        <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-                  </div>
-
-            </form>
+            </div>
       </div>
-    </div>
-
-    
-      
-
-  </div>
-</div>
+</body>

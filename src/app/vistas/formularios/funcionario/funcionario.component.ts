@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
-
+import { AreaModelo } from '../../../modelos/area.modelo';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
-import { ParametrosService } from '../../../servicios/parametros.service';
+import { AreasService } from '../../../servicios/areas.service';
 
 import Swal from 'sweetalert2';
 
@@ -20,14 +20,11 @@ import Swal from 'sweetalert2';
 export class FuncionarioComponent implements OnInit {
   crear = false;
   funcionario: FuncionarioModelo = new FuncionarioModelo();
-  listaEstadoCivil: ParametroModelo;
-  listaSexo: ParametroModelo;
-  listaNacionalidad: ParametroModelo;
-
+  listaAreas: AreaModelo;
   funcionarioForm: FormGroup;
 
   constructor( private funcionariosService: FuncionariosService,
-               private parametrosService: ParametrosService,
+               private areasService: AreasService,
                private route: ActivatedRoute,
                private router: Router,
                private fb: FormBuilder ) { 
@@ -35,11 +32,10 @@ export class FuncionarioComponent implements OnInit {
   } 
 
   ngOnInit() {
-
-    const id = this.route.snapshot.paramMap.get('id');
-    this.obtenerParametros();
-
-    if ( id !== 'nuevo' ) {
+    this.listarAreas();
+    const id = this.route.snapshot.paramMap.get('id');    
+    
+    if ( id !== 'nuevo' ) {      
       this.funcionariosService.getFuncionario( Number(id) )
         .subscribe( (resp: FuncionarioModelo) => {
           this.funcionarioForm.patchValue(resp);
@@ -49,36 +45,16 @@ export class FuncionarioComponent implements OnInit {
     }
   }
 
-  obtenerParametros() {
-    var estadoCivilParam = new ParametroModelo();
-    estadoCivilParam.codigoParametro = "EST_CIVIL";
-    estadoCivilParam.estado = "A";
-    var orderBy = "descripcionValor";
+  listarAreas() {
+    var orderBy = "descripcion";
     var orderDir = "asc";
-
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaEstadoCivil = resp;
-    });
-
-    var sexoParam = new ParametroModelo();
-    sexoParam.codigoParametro = "SEXO";
-    sexoParam.estado = "A";
-
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaSexo = resp;
-    });
-
-    var nacionalidadParam = new ParametroModelo();
-    nacionalidadParam.codigoParametro = "NACIONALIDAD";
-    nacionalidadParam.estado = "A";
-
-    this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaNacionalidad = resp;
-    });
+    var area = new AreaModelo();
+    area.estado = "A";
     
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+      .subscribe( (resp: AreaModelo) => {
+        this.listaAreas = resp;
+    });
   }
 
   obtenerPersona(event){

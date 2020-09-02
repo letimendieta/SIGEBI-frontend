@@ -1,174 +1,194 @@
+<head>
+  <link rel="stylesheet" href="horario.component.css">
+</head>
 
-<h1>Horario </h1>
-<hr>
+<body>
+  <h1>Horario </h1>
+  <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/horarios">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
+  <div class="row text-right">
+    <div class="col">
+      <button class="btn btn-danger"
+              routerLink="/horarios">
+        <i class="fa fa-arrow-left"></i>
+        Regresar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-              Datos Horarios
-      </div>
-      <div class="card-body">
+  <div class="row animated fadeIn faster">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+                Datos Horario
+        </div>
+        <div class="card-body">
 
-        <form [formGroup]="horarioForm" (ngSubmit)="guardar( )">          
-          <!-- Datos Horario-->
-          <div class="form-row" >
-            <div class="col-lg-5">
-              <div class="form-group" [hidden]="crear">
-                <label>ID</label>
-                <input type="text"
-                      class="form-control"
-                      placeholder="ID"
-                      placeholder="horarioDisponibleId"
-                      formControlName="horarioDisponibleId" name="id">
-                <small class="form-text text-muted">Este campo es autogenerado</small>
-              </div>
-              <!-- Datos del Funcionario-->
-              <div formGroupName="funcionarios"> 
-                <div class="form group">                          
-                  <div class="form group">
-                    <label>Funcionario Id</label>                           
-                    <div class="input-group mb-3">
-                        <input type="number"
-                              class="form-control"
-                              placeholder="Funcionaros Id"
-                              formControlName="funcionarioId"
-                              name="funcionarioId"
-                              [class.is-invalid]="funcionarioIdNoValido">
-                              <small *ngIf="funcionarioIdNoValido" class="text-danger">
-                                Ingrese el funcionario Id
-                              </small>
-                        <div class="input-group-append">
-                              <button class="btn btn-outline-info"
-                              (click)="obtenerFuncionario( )">
-                                    Buscar
-                              </button>
-                        </div>
+          <form [formGroup]="horarioForm" (ngSubmit)="guardar( )">
+            
+            <div class="row justify-content-center">
+              <div class="col-lg-5">
+                    <!-- Cita Id-->
+                    <div class="form-group" [hidden]="crear">
+                      <label><b>Horario id</b></label>
+                      <input type="text"
+                            class="form-control"
+                            placeholder="Id"
+                            placeholder="Horario disponible id"
+                            formControlName="horarioDisponibleId" name="id">
+                      <small class="form-text text-muted">Este campo es autogenerado</small>
                     </div>
-                  </div>
-                  <div formGroupName="personas">
-                    <label>C.I</label>
-                    <input type="text"
-                          class="form-control"
-                          placeholder="Cedula"
-                          formControlName="cedula"
-                          name="funcionarioPersona.cedula">
-        
-                    <label>Nombres</label>
-                    <input type="text"
-                          class="form-control"
-                          placeholder="Nombres"
-                          formControlName="nombres"
-                          name="funcionarioPersona.nombres">
-              
-                    <label>Apellidos</label>
-                    <input type="text"
-                          class="form-control"
-                          formControlName="apellidos"
-                          name="funcionarioPersona.apellidos"  
-                          placeholder="Apellidos">
-                  </div> 
-                </div>                          
-              </div> 
+              </div>
             </div>
-
-            <div class="col-lg-5">
-              <div class="form-group col-md-10">
-                <label for="fecha">Fecha</label>
-                <input type="date" class="form-control" id="fecha"
-                formControlName="fecha" name="fecha"
-                [class.is-invalid]="fechaNoValido">
-                <small *ngIf="fechaNoValido" class="text-danger">
-                  Ingrese la fecha
-                </small>
+          
+            <div class="form-row justify-content-center" >
+              <div class="col-lg-5">                
+                <!-- Datos del Funcionario-->
+                <div formGroupName="funcionarios"> 
+                  <div class="form group">                          
+                    <div class="form group">
+                      <label><b>Funcionario id</b></label>                           
+                      <div class="input-group mb-3">
+                          <input type="number"
+                                class="form-control"
+                                placeholder="Funcionaros Id"
+                                formControlName="funcionarioId"
+                                name="funcionarioId"
+                                [class.is-invalid]="funcionarioIdNoValido">
+                                <small *ngIf="funcionarioIdNoValido" class="text-danger">
+                                  Ingrese el funcionario id
+                                </small>
+                          <div class="input-group-append">
+                                <button class="btn btn-outline-info"
+                                (click)="obtenerFuncionario( )">
+                                      Buscar
+                                </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div formGroupName="personas">
+                      <div class="form-group">
+                        <label><b>C&eacute;dula</b></label>
+                        <input type="text"
+                              class="form-control"
+                              placeholder="C&eacute;dula"
+                              formControlName="cedula"
+                              name="funcionarioPersona.cedula">
+                      </div>
+                      <div class="form-group">
+                        <label><b>Nombres</b></label>
+                        <input type="text"
+                              class="form-control"
+                              placeholder="Nombres"
+                              formControlName="nombres"
+                              name="funcionarioPersona.nombres">
+                      </div>
+                      <div class="form-group">
+                        <label><b>Apellidos</b></label>
+                        <input type="text"
+                              class="form-control"
+                              formControlName="apellidos"
+                              name="funcionarioPersona.apellidos"  
+                              placeholder="Apellidos">
+                      </div>
+                    </div> 
+                  </div>                          
+                </div> 
               </div>
 
-              <div class="form-group col-md-10">
-                <label for="horaInicio">Hora Inicio</label>
-                <input type="time" class="form-control" id="horaInicio"
-                formControlName="horaInicio" name="horaInicio"
-                [class.is-invalid]="horaInicioNoValido">
-                <small *ngIf="horaInicioNoValido" class="text-danger">
-                  Ingrese la hora inicio
-                </small>
-              </div> 
+              <div class="col-lg-5">
+                <div class="form-group col-md-10">
+                  <label for="fecha"><b>Fecha</b></label>
+                  <input type="date" class="form-control" id="fecha"
+                  formControlName="fecha" name="fecha"
+                  [class.is-invalid]="fechaNoValido">
+                  <small *ngIf="fechaNoValido" class="text-danger">
+                    Ingrese la fecha
+                  </small>
+                </div>
 
-              <div class="form-group col-md-10">
-                <label for="horaFin">Hora Fin</label>
-                <input type="time" class="form-control" id="horaFin"
-                formControlName="horaFin" name="horaFin"
-                [class.is-invalid]="horaFinNoValido">
-                <small *ngIf="horaFinNoValido" class="text-danger">
-                  Ingrese la hora fin
-                </small>
-              </div>  
+                <div class="form-group col-md-10">
+                  <label for="horaInicio"><b>Hora inicio</b></label>
+                  <input type="time" class="form-control" id="horaInicio"
+                  formControlName="horaInicio" name="horaInicio"
+                  [class.is-invalid]="horaInicioNoValido">
+                  <small *ngIf="horaInicioNoValido" class="text-danger">
+                    Ingrese la hora inicio
+                  </small>
+                </div> 
 
-              <div class="form-group col-md-10">
-                <label>Estado</label>
-                <select class="custom-select"
-                      formControlName="estado" name = "estado">
-                  <option value="A" [selected]="true">ACTIVO</option>
-                  <option value="I">INACTIVO</option>
-                </select>
-              </div>
-            </div>                                        
-          </div>
-          <div class="form-row" [hidden]="crear">
-            <div class="col-lg-5"> 
-              <label>Fecha creacion</label>
-              <input type="datetime-local"
-                    class="form-control"
-                    formControlName="fechaCreacion"
-                    name="fechaCreacion"
-                    placeholder="Fecha creacion">
+                <div class="form-group col-md-10">
+                  <label for="horaFin"><b>Hora fin</b></label>
+                  <input type="time" class="form-control" id="horaFin"
+                  formControlName="horaFin" name="horaFin"
+                  [class.is-invalid]="horaFinNoValido">
+                  <small *ngIf="horaFinNoValido" class="text-danger">
+                    Ingrese la hora fin
+                  </small>
+                </div>  
 
-              <label>Fecha modificacion</label>
-              <input type="datetime-local"
-                    class="form-control"
-                    formControlName="fechaModificacion"
-                    name="fechaModificacion"
-                    placeholder="Fecha modificacion">
+                <div class="form-group col-md-10">
+                  <label><b>Estado</b></label>
+                  <select class="custom-select"
+                        formControlName="estado" name = "estado">
+                    <option value="A" [selected]="true">ACTIVO</option>
+                    <option value="I">INACTIVO</option>
+                  </select>
+                </div>
+              </div>                                        
             </div>
-            <div class="col-lg-5"> 
-              <label>Usuario creacion</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="usuarioCreacion"
-                    name="usuarioCreacion"
-                    placeholder="Usuario creacion">
+            <div class="form-row justify-content-center" [hidden]="crear">
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label><b>Fecha creaci&oacute;n</b></label>
+                  <input type="datetime-local"
+                        class="form-control"
+                        formControlName="fechaCreacion"
+                        name="fechaCreacion"
+                        placeholder="Fecha creaci&oacute;n">
+                </div>
+                <div class="form-group">
+                  <label><b>Fecha modificaci&oacute;n</b></label>
+                  <input type="datetime-local"
+                        class="form-control"
+                        formControlName="fechaModificacion"
+                        name="fechaModificacion"
+                        placeholder="Fecha modificaci&oacute;n">
+                </div>
+              </div>
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label><b>Usuario creaci&oacute;n</b></label>
+                  <input type="text"
+                        class="form-control"
+                        formControlName="usuarioCreacion"
+                        name="usuarioCreacion"
+                        placeholder="Usuario creaci&oacute;n">
+                </div>
+                <div class="form-group">
+                  <label><b>Usuario modificaci&oacute;n</b></label>
+                  <input type="text"
+                        class="form-control"
+                        formControlName="usuarioModificacion"
+                        name="usuarioModificacion"
+                        placeholder="Usuario modificaci&oacute;n">
+                </div>
+              </div> 
+            </div>
+            <hr>
+            <br>
+            <div class="form-group text-center">
+              <button type="submit"
+                      class="btn btn-primary ">
+                <i class="fa fa-save"></i>
+                Guardar
+              </button>
+              <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+            </div>
 
-              <label>Usuario modificacion</label>
-              <input type="text"
-                    class="form-control"
-                    formControlName="usuarioModificacion"
-                    name="usuarioModificacion"
-                    placeholder="Usuario modificacion">
-            </div> 
-          </div>
-          <br>
-          <hr>
-          <br>
-          <div class="form-group text-center">
-            <button type="submit"
-                    class="btn btn-primary ">
-              <i class="fa fa-save"></i>
-              Guardar
-            </button>
-            <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-          </div>
-
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</body>

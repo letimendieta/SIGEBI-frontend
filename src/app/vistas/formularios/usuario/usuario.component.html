@@ -1,210 +1,236 @@
+<head>
+      <link rel="stylesheet" href="usuario.component.css">
+</head>
 
-<h1>Usuario </h1>
-<hr>
+<body>
+      <h1>Usuario </h1>
+      <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/usuarios">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
-  </div>
-</div>
-
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-            Datos del Usuario
+      <div class="row text-right">
+            <div class="col">
+                  <button class="btn btn-danger"
+                              routerLink="/usuarios">
+                        <i class="fa fa-arrow-left"></i>
+                        Regresar
+                  </button>
+            </div>
       </div>
-      <div class="card-body">
 
-            <form [formGroup]="usuarioForm" (ngSubmit)="guardar( )">
-                  <!-- Usuario Id-->
-                  <div class="row">
-                        <div class="col-lg-5">
-                              <div class="form-group" [hidden]="crear">
-                                    <label>Usuario Id</label>
-                                    <input type="number"
-                                          class="form-control"
-                                          placeholder="Usuario Id"
-                                          formControlName="usuarioId"
-                                          name="usuarioId">
-                                    <small class="form-text text-muted">Este campo es autogenerado</small>
-                              </div>
+      <div class="row animated fadeIn faster">
+            <div class="col">
+                  <div class="card">
+                        <div class="card-header">
+                              Datos del Usuario
                         </div>
-                  </div>
+                        <div class="card-body">
 
-                  <div class="row">
-                        <!-- Datos del Funcionario-->
-                        <div formGroupName="funcionarios" class="col-lg-5">                              
-                              <div class="form group">
-                                    <label>Funcionario Id</label>                           
-                                    <div class="input-group">
-                                          <input type="text"
-                                                class="form-control"
-                                                placeholder="Funcionaros Id"
-                                                formControlName="funcionarioId"
-                                                name="funcionarioId">
-                                          <span class="input-group-btn">
-                                                <button class="btn btn-outline-info"
-                                                (click)="obtenerFuncionario( )">
-                                                      Buscar
-                                                </button>
-                                          </span>
+                              <form [formGroup]="usuarioForm" (ngSubmit)="guardar( )">
+                                    <!-- Usuario Id-->
+                                    <div class="row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div class="form-group" [hidden]="crear">
+                                                      <label><b>Usuario id</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="Usuario id"
+                                                            formControlName="usuarioId"
+                                                            name="usuarioId">
+                                                      <small class="form-text text-muted">Este campo es autogenerado</small>
+                                                </div>
+                                          </div>
                                     </div>
-                              </div>
-                              <label>Area</label>
-                              <input type="number"
-                                    class="form-control"
-                                    placeholder="Area"
-                                    formControlName="areaId"
-                                    name="areaId">
 
-                              <label>Estado</label>
-                              <select ui-select2 class="form-control input-sm"
-                                    formControlName="estado" name = "estado"
-                                    uppercase>
-                                    <option value="A">Activo</option>
-                                    <option value="I">Inactivo</option>
-                              </select>
-                             
-                        </div>
+                                    <div class="row justify-content-center">
+                                          <!-- Datos del Funcionario-->
+                                          <div formGroupName="funcionarios" class="col-lg-5">                              
+                                                <div class="form-group">
+                                                      <label><b>Funcionario id</b></label>                           
+                                                      <div class="input-group">
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="Funcionario id"
+                                                                  formControlName="funcionarioId"
+                                                                  name="funcionarioId">
+                                                            <span class="input-group-btn">
+                                                                  <button class="btn btn-outline-info"
+                                                                  (click)="obtenerFuncionario( )">
+                                                                        Buscar
+                                                                  </button>
+                                                            </span>
+                                                      </div>
+                                                </div>
+                                                <!--div class="form-group">
+                                                      <label><b>&Aacute;rea</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="&Aacute;rea"
+                                                            formControlName="areaId"
+                                                            name="areaId">
+                                                </div-->
+                                                <div class="form-group">
+                                                      <label><b>&Aacute;rea</b></label>
+                                                      <select class="form-control input-sm" name="areaId"
+                                                            formControlName="areaId">
+                                                            <option value=null>Seleccionar</option>
+                                                            <option *ngFor="let item of listaAreas; let i = index"
+                                                                  value="{{item.areaId}}">
+                                                                  {{item.codigo}} - {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                </div> 
 
-                        <div formGroupName="personas" class="col-lg-5">
-                              <div class="form group">
-                                    <label>Persona Id</label>
-                                    <div class="input-group">
-                                          <input type="text"
-                                                class="form-control"
-                                                placeholder="ID"
-                                                placeholder="Persona Id"
-                                                formControlName="personaId" name="id" 
-                                                [class.is-invalid]="personaIdNoValido">
-                                          <span class="input-group-btn">
-                                                <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPersona( )">
-                                                      Buscar
-                                                </button>
-                                          </span>
-                                          <small *ngIf="personaIdNoValido" class="text-danger">
-                                                Ingrese persona Id
-                                          </small>
+                                                <div class="form-group">
+                                                      <label><b>Estado</b></label>
+                                                      <select ui-select2 class="form-control input-sm"
+                                                            formControlName="estado" name = "estado"
+                                                            uppercase>
+                                                            <option value="A">Activo</option>
+                                                            <option value="I">Inactivo</option>
+                                                      </select>
+                                                </div>
+                                          </div>
+
+                                          <div formGroupName="personas" class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Persona id</b></label>
+                                                      <div class="input-group">
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="Persona id"
+                                                                  formControlName="personaId" name="id" 
+                                                                  [class.is-invalid]="personaIdNoValido">
+                                                            <span class="input-group-btn">
+                                                                  <button class="btn btn-outline-info" 
+                                                                        (click)="obtenerPersona( )">
+                                                                        Buscar
+                                                                  </button>
+                                                            </span>
+                                                            <small *ngIf="personaIdNoValido" class="text-danger">
+                                                                  Ingrese persona id
+                                                            </small>
+                                                      </div>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>C&eacute;dula</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            placeholder="C&eacute;dula"
+                                                            formControlName="cedula"
+                                                            name="funcionarioPersona.cedula">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Nombres</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            placeholder="Nombres"
+                                                            formControlName="nombres"
+                                                            name="funcionarioPersona.nombres">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Apellidos</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="apellidos"
+                                                            name="funcionarioPersona.apellidos"  
+                                                            placeholder="Apellidos">
+                                                </div>         
+                                          </div>                        
                                     </div>
-                              </div>
-                              <label>C.I</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Cedula"
-                                    formControlName="cedula"
-                                    name="funcionarioPersona.cedula">
+                                    <hr>
+                                    <!-- Datos del Usuario-->
+                                    <div class="form-row justify-content-center">
+                                          <div class="col-lg-5">                              
+                                                <div class="form-group">
+                                                      <label><b>C&oacute;digo Usuario</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            placeholder="C&oacute;digo Usuario"
+                                                            formControlName="codigoUsuario"
+                                                            name="codigoUsuario" 
+                                                            [class.is-invalid]="usuarioNoValido">
+                                                      <small *ngIf="usuarioNoValido" class="text-danger">
+                                                            Ingrese C&oacute;digo de Usuario
+                                                      </small>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Contrase&ntilde;a</b></label>
+                                                      <input type="password"
+                                                            class="form-control"
+                                                            placeholder="Password"
+                                                            formControlName="password"
+                                                            name="password" 
+                                                            [class.is-invalid]="passNoValido">
+                                                      <small *ngIf="passNoValido" class="text-danger">
+                                                            Ingrese la contrase&ntilde;a
+                                                      </small>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Estado</b></label>
+                                                      <select class="custom-select"
+                                                            formControlName="estado" name = "estado"
+                                                            uppercase [class.is-invalid]="estadoNoValido">
+                                                            <option value="A" [selected]="true">ACTIVO</option>
+                                                            <option value="I">INACTIVO</option>
+                                                      </select>                              
+                                                      <small *ngIf="estadoNoValido" class="text-danger">
+                                                            Seleccione el estado
+                                                      </small>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    
+                                    <div class="form-row  justify-content-center" [hidden]="crear">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Fecha creaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaCreacion"
+                                                            name="fechaCreacion"  
+                                                            placeholder="Fecha creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Fecha modificaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaModificacion"
+                                                            name="fechaModificacion"  
+                                                            placeholder="Fecha modificaci&oacute;n">
+                                                </div>  
+                                          </div>
 
-                              <label>Nombres</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Nombres"
-                                    formControlName="nombres"
-                                    name="funcionarioPersona.nombres">
-                        
-                              <label>Apellidos</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="apellidos"
-                                    name="funcionarioPersona.apellidos"  
-                                    placeholder="Apellidos">
-                                                           
-                        </div>                        
-                  </div>
-                  <hr>
-                  <!-- Datos del Usuario-->
-                  <div class="form-row">
-                        <div class="col-lg-5">                              
-                              <div>
-                                    <label>Codigo Usuario</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Codigo Usuario"
-                                          formControlName="codigoUsuario"
-                                          name="codigoUsuario" 
-                                          [class.is-invalid]="usuarioNoValido">
-                                    <small *ngIf="usuarioNoValido" class="text-danger">
-                                          Ingrese Codigo de Usuario
-                                    </small>
-                              </div>
-                              <div>
-                                    <label>Password</label>
-                                    <input type="password"
-                                          class="form-control"
-                                          placeholder="Password"
-                                          formControlName="password"
-                                          name="password" 
-                                          [class.is-invalid]="passNoValido">
-                                    <small *ngIf="passNoValido" class="text-danger">
-                                          Ingrese la contrasenha
-                                    </small>
-                              </div>
-                              <div>
-                                    <label>Estado</label>
-                                    <select class="custom-select"
-                                          formControlName="estado" name = "estado"
-                                          uppercase [class.is-invalid]="estadoNoValido">
-                                          <option value="A" [selected]="true">ACTIVO</option>
-                                          <option value="I">INACTIVO</option>
-                                    </select>                              
-                                    <small *ngIf="estadoNoValido" class="text-danger">
-                                          Seleccione el estado
-                                    </small>
-                              </div>
+                                          <div class="col-lg-5">   
+                                                <div class="form-group">                                           
+                                                      <label><b>Usuario creaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioCreacion"
+                                                            name="usuarioCreacion"  
+                                                            placeholder="Usuario creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Usuario modificaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioModificacion"
+                                                            name="usuarioModificacion"  
+                                                            placeholder="Usuario modificaci&oacute;n"> 
+                                                </div>                                   
+                                          </div>                        
+                                    </div>
+                                    <hr>
+                                    <br>
+                                    <div class="form-group text-center">
+                                          <button type="submit"
+                                                class="btn btn-primary ">
+                                                <i class="fa fa-save"></i>
+                                                Guardar
+                                          </button>
+                                          <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+                                    </div>
+                              </form>
                         </div>
                   </div>
-                  
-                  <div class="form-row" [hidden]="crear">
-                        <div class="col-lg-5"> 
-                              <label>Fecha creacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaCreacion"
-                                    name="fechaCreacion"  
-                                    placeholder="Fecha creacion">
-
-                              <label>Fecha modificacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaModificacion"
-                                    name="fechaModificacion"  
-                                    placeholder="Fecha modificacion">  
-                        </div>
-
-                        <div class="col-lg-5">                                                 
-                              <label>Usuario creacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioCreacion"
-                                    name="usuarioCreacion"  
-                                    placeholder="Usuario creacion">
-                        
-                              <label>Usuario modificacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioModificacion"
-                                    name="usuarioModificacion"  
-                                    placeholder="Usuario modificacion">                                    
-                        </div>                        
-                  </div>
-                  <br>
-                  <hr>
-                  <br>
-                  <div class="form-group text-center">
-                        <button type="submit"
-                              class="btn btn-primary ">
-                              <i class="fa fa-save"></i>
-                              Guardar
-                        </button>
-                        <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-                  </div>
-            </form>
+            </div>
       </div>
-    </div>
-  </div>
-</div>
+</body>

@@ -1,356 +1,394 @@
+<head>
+      <link rel="stylesheet" href="paciente.component.css">
+</head>
 
-<h1>Paciente </h1>
-<hr>
+<body>
+      <h1>Paciente </h1>
+      <hr>
 
-<div class="row text-right">
-  <div class="col">
-    <button class="btn btn-danger"
-            routerLink="/pacientes">
-      <i class="fa fa-arrow-left"></i>
-      Regresar
-    </button>
-  </div>
-</div>
-
-<div class="row animated fadeIn faster">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-              Datos del Paciente
+      <div class="row text-right">
+            <div class="col">
+                  <button class="btn btn-danger"
+                              routerLink="/pacientes">
+                        <i class="fa fa-arrow-left"></i>
+                        Regresar
+                  </button>
+            </div>
       </div>
-      <div class="card-body">
 
-            <form [formGroup]="pacienteForm" (ngSubmit)="guardar( )">
-                  <div class="row">
-                        <div class="col-lg-5">
-                              <!-- Paciente Id-->
-                              <div class="form-group" [hidden]="crear">
-                                    <label>Paciente Id</label>
-                                    <input type="number"
-                                          class="form-control"
-                                          placeholder="Paciente Id"
-                                          formControlName="pacienteId"
-                                          name="pacienteId">
-                                    <small class="form-text text-muted">Este campo es autogenerado</small>
-                              </div>
+      <div class="row animated fadeIn faster">
+            <div class="col">
+                  <div class="card">
+                        <div class="card-header">
+                              Datos del Paciente
                         </div>
-                  </div>
+                        <div class="card-body">
 
-                  <!-- Datos Personales-->
-                  <div formGroupName="personas" class="row">
-                        <div class="col-lg-5">
-                              <div class="form group">
-                                    <label>Persona Id</label>
-                                    <div class="input-group mb-3">
-                                          <input type="number"
-                                                class="form-control"
-                                                placeholder="ID"
-                                                placeholder="personaId"
-                                                formControlName="personaId"
-                                                name="id" [class.is-invalid]="personaIdNoValido">
-                                          <div class="input-group-append">
-                                                <button class="btn btn-outline-info" 
-                                                      (click)="obtenerPersona($event )">
-                                                      Buscar
-                                                </button>
+                              <form [formGroup]="pacienteForm" (ngSubmit)="guardar( )">
+                                    <div class="row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <!-- Paciente Id-->
+                                                <div class="form-group" [hidden]="crear">
+                                                      <label><b>Paciente id</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="Paciente id"
+                                                            formControlName="pacienteId"
+                                                            name="pacienteId">
+                                                      <small class="form-text text-muted">Este campo es autogenerado</small>
+                                                </div>
                                           </div>
-                                          <small *ngIf="personaIdNoValido" class="text-danger">
-                                                Ingrese persona Id
-                                          </small>
                                     </div>
-                              </div>
-                              <div>
-                                    <label>C.I</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Cedula"                      
-                                          name="cedula"
-                                          formControlName="cedula"
-                                          [class.is-invalid]="cedulaNoValido">
-                                    <small *ngIf="cedulaNoValido" class="text-danger">
-                                          Ingrese la cedula
-                                    </small>
-                              </div>
 
-                              <div>
-                                    <label>Nombres</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          placeholder="Nombres"
-                                          formControlName="nombres"
-                                          name="nombres"
-                                          [class.is-invalid]="nombreNoValido">
-                                    <small *ngIf="nombreNoValido" class="text-danger">
-                                          Ingrese el nombre
-                                    </small>
-                               </div>
+                                    <!-- Datos Personales-->
+                                    <div formGroupName="personas" class="row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div class="form group">
+                                                      <label><b>Persona id</b></label>
+                                                      <div class="input-group mb-3">
+                                                            <input type="number"
+                                                                  class="form-control"
+                                                                  placeholder="Persona id"
+                                                                  placeholder="personaId"
+                                                                  formControlName="personaId"
+                                                                  name="id" [class.is-invalid]="personaIdNoValido">
+                                                            <div class="input-group-append">
+                                                                  <button class="btn btn-outline-info" 
+                                                                        (click)="obtenerPersona($event )">
+                                                                        Buscar
+                                                                  </button>
+                                                            </div>
+                                                            <small *ngIf="personaIdNoValido" class="text-danger">
+                                                                  Ingrese persona id
+                                                            </small>
+                                                      </div>
+                                                </div>
+                                                <div>
+                                                      <div class="form-group">
+                                                            <label><b>C&eacute;dula</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="C&eacute;dula"                      
+                                                                  name="cedula"
+                                                                  formControlName="cedula"
+                                                                  [class.is-invalid]="cedulaNoValido">
+                                                            <small *ngIf="cedulaNoValido" class="text-danger">
+                                                                  Ingrese la c&eacute;dula
+                                                            </small>
+                                                      </div>
+                                                </div>
 
-                               <div>
-                                    <label>Apellidos</label>
-                                    <input type="text"
-                                          class="form-control"
-                                          formControlName="apellidos"
-                                          name="apellidos"
-                                          placeholder="Apellidos"
-                                          [class.is-invalid]="apellidoNoValido">
-                                    <small *ngIf="apellidoNoValido" class="text-danger">
-                                          Ingrese el apellido
-                                    </small>
-                              </div>
+                                                <div>
+                                                      <div class="form-group">
+                                                            <label><b>Nombres</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  placeholder="Nombres"
+                                                                  formControlName="nombres"
+                                                                  name="nombres"
+                                                                  [class.is-invalid]="nombreNoValido">
+                                                            <small *ngIf="nombreNoValido" class="text-danger">
+                                                                  Ingrese el nombre
+                                                            </small>
+                                                      </div>
+                                                </div>
 
-                              <label>Fecha Nac.</label>
-                              <input type="date"
-                                    class="form-control"
-                                    formControlName="fechaNacimiento"
-                                    name="fechaNacimiento"
-                                    placeholder="Fecha Nacimiento">
-                              
-                              <label>Edad</label>
-                              <input type="number"
-                                    class="form-control"
-                                    formControlName="edad"
-                                    name="edad"
-                                    placeholder="Edad">
+                                                <div>
+                                                      <div class="form-group">
+                                                            <label><b>Apellidos</b></label>
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  formControlName="apellidos"
+                                                                  name="apellidos"
+                                                                  placeholder="Apellidos"
+                                                                  [class.is-invalid]="apellidoNoValido">
+                                                            <small *ngIf="apellidoNoValido" class="text-danger">
+                                                                  Ingrese el apellido
+                                                            </small>
+                                                      </div>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Fecha Nacimiento</b></label>
+                                                      <input type="date"
+                                                            class="form-control"
+                                                            formControlName="fechaNacimiento"
+                                                            name="fechaNacimiento"
+                                                            placeholder="Fecha Nacimiento">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Edad</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            formControlName="edad"
+                                                            name="edad"
+                                                            placeholder="Edad">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Direcci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="direccion"
+                                                            name="direccion"
+                                                            placeholder="Direcci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Email</b></label>
+                                                      <input type="email"
+                                                            class="form-control"
+                                                            formControlName="email"
+                                                            name="email"
+                                                            placeholder="Email"
+                                                            [class.is-invalid]="correoNoValido">
+                                                      <small *ngIf="correoNoValido" class="text-danger">
+                                                            Ingrese el correo
+                                                      </small>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Sexo</b></label>
+                                                      <select ui-select2 class="form-control input-sm"
+                                                            formControlName="sexo"
+                                                            uppercase>
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaSexo; let i = index"
+                                                                  value="{{item.valor}}">
+                                                                  {{item.descripcionValor}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                          </div>
 
-                              <label>Direccion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="direccion"
-                                    name="direccion"
-                                    placeholder="Direccion">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Estado Civil</b></label>
+                                                      <select ui-seldivect2 placeholder="Estado Civil" 
+                                                            class="form-control input-sm"          
+                                                            name = "estadoCivil"
+                                                            formControlName="estadoCivil"
+                                                            uppercase>
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaEstadoCivil; let i = index"
+                                                                  value="{{item.valor}}">
+                                                                        {{item.descripcionValor}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Nacionalidad</b></label>                
+                                                      <select ui-select2 class="form-control input-sm"
+                                                            formControlName="nacionalidad" 
+                                                            name = "nacionalidad"
+                                                            uppercase>
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaNacionalidad; let i = index"
+                                                            value="{{item.valor}}">
+                                                                  {{item.descripcionValor}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Tel&eacute;fono</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="telefono"
+                                                            name="telefono"
+                                                            placeholder="Tel&eacute;fono">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Celular</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="celular"
+                                                            name="celular"
+                                                            placeholder="Celular">                  
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Carrera</b></label> 
+                                                      <select class="form-control input-sm" name="carreraId"
+                                                            formControlName="carreraId">
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaCarreras; let i = index"
+                                                            value="{{item.carreraId}}">
+                                                                  {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Departamento</b></label>
+                                                      <select class="form-control input-sm" name = "departamentoId"
+                                                            formControlName="departamentoId">
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaDepartamentos; let i = index"
+                                                            value="{{item.departamentoId}}">
+                                                                  {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Dependencia</b></label>
+                                                      <select class="form-control input-sm" name = "dependenciaId"
+                                                            formControlName="dependenciaId">
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaDependencias; let i = index"
+                                                            value="{{item.dependenciaId}}">
+                                                                  {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Estamento</b></label>
+                                                      <select class="form-control input-sm" name = "estamentoId"
+                                                            formControlName="estamentoId">
+                                                            <option value=null>Seleccione</option>
+                                                            <option *ngFor="let item of listaEstamentos; let i = index"
+                                                            value="{{item.estamentoId}}">
+                                                                  {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                </div>              
+                                          </div>
+                                          <div class="col-lg-5" [hidden]="true">
+                                                <div class="form-group">
+                                                      <label><b>Fecha creaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaCreacion"
+                                                            name="fechaCreacion"
+                                                            placeholder="Fecha creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Fecha modificaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaModificacion"
+                                                            name="fechaModificacion"
+                                                            placeholder="Fecha modificaci&oacute;n">
+                                                </div>
+                                          </div>
+                                          <div class="col-lg-5" [hidden]="true">
+                                                <div class="form-group">
+                                                      <label><b>Usuario creaci&oacute;n</b></label>
+                                                      <input type="text"                  
+                                                            class="form-control"
+                                                            formControlName="usuarioCreacion"
+                                                            name="usuarioCreacion"
+                                                            placeholder="Usuario creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Usuario modificaci&oacute;n</b></label>
+                                                      <input type="text"                  
+                                                            class="form-control"
+                                                            formControlName="usuarioModificacion"
+                                                            name="usuarioModificacion"
+                                                            placeholder="Usuario modificaci&oacute;n">
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <hr>
+                                    <!-- Datos del Paciente-->
+                                    <div class="form-row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Grupo Sangu&iacute;neo</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            placeholder="Grupo Sangu&iacute;neo"
+                                                            formControlName="grupoSanguineo"
+                                                            name="grupoSanguineo"
+                                                            [class.is-invalid]="grupoSanguineoNoValido">
+                                                      <small *ngIf="grupoSanguineoNoValido" class="text-danger">
+                                                            Ingrese el grupo sangu&iacute;neo
+                                                      </small>
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Seguro M&eacute;dico</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            placeholder="Seguro M&eacute;dico"
+                                                            formControlName="seguroMedico"
+                                                            name="seguroMedico">
+                                                </div>
+                                          </div>
+                                    </div>
 
-                              <div>
-                                    <label>Email</label>
-                                    <input type="email"
-                                          class="form-control"
-                                          formControlName="email"
-                                          name="email"
-                                          placeholder="Email"
-                                          [class.is-invalid]="correoNoValido">
-                                    <small *ngIf="correoNoValido" class="text-danger">
-                                          Ingrese el correo
-                                    </small>
-                              </div>
+                                    <br>
+                                    <div class="justify-content-center">
+                                          <div class="input-group mb-3">    
+                                                <div class="form-group">
+                                                      <label for="inputGroupFile02">Adjuntar Fotograf&iacute;a</label>
+                                                      <input type="file" class="form-control-file" 
+                                                            (change)="selectFile($event)" id="inputGroupFile02" >                                    
+                                                </div>                                                                     
+                                          </div>
+                                          
+                                          <div class="alert alert-light" role="alert">{{ message }}</div>
+                                          
+                                          <div class="card" [hidden]="crear">
+                                                <div class="card-header">Lista de archivos</div>
+                                                <ul class="list-group list-group-flush"
+                                                      *ngFor="let file of fileInfos | async">
+                                                      <li class="list-group-item">
+                                                            <a href="{{ file.url }}">{{ file.name }}</a>
+                                                      </li>
+                                                </ul>
+                                          </div>                       
+                                    </div>
+                                    <br>
+                                    <!--Paciente Fechas-->
+                                    <div class="form-row justify-content-center" [hidden]="crear">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Fecha creaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaCreacion"
+                                                            name="fechaCreacion"  
+                                                            placeholder="Fecha creaci&oacute;n">
+                                                </div>
+                                                <div class="form-group">
+                                                      <label><b>Fecha modificaci&oacute;n</b></label>
+                                                      <input type="datetime-local"
+                                                            class="form-control"
+                                                            formControlName="fechaModificacion"
+                                                            name="fechaModificacion"  
+                                                            placeholder="Fecha modificaci&oacute;n">  
+                                                </div>
+                                          </div>
 
-                              <label>Sexo</label>
-                              <select ui-select2 class="form-control input-sm"
-                                    formControlName="sexo"
-                                    uppercase>
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaSexo; let i = index"
-                                          value="{{item.valor}}">
-                                          {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                        </div>
-
-                        <div class="col-lg-5">
-                              <label>Estado Civil</label>
-                              <select ui-seldivect2 placeholder="Estado Civil" 
-                                    class="form-control input-sm"          
-                                    name = "estadoCivil"
-                                    formControlName="estadoCivil"
-                                    uppercase>
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaEstadoCivil; let i = index"
-                                          value="{{item.valor}}">
-                                                {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                        
-                              <label>Nacionalidad</label>                
-                              <select ui-select2 class="form-control input-sm"
-                                    formControlName="nacionalidad" 
-                                    name = "nacionalidad"
-                                    uppercase>
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaNacionalidad; let i = index"
-                                    value="{{item.valor}}">
-                                          {{item.descripcionValor}}
-                                    </option>
-                              </select>
-                              
-                              <label>Telefono</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="telefono"
-                                    name="telefono"
-                                    placeholder="Telefono">
-                              
-                              <label>Celular</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="celular"
-                                    name="celular"
-                                    placeholder="Celular">                  
-                              
-                              <label>Carrera</label> 
-                              <select class="form-control input-sm" name="carreraId"
-                                    formControlName="carreraId">
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaCarreras; let i = index"
-                                    value="{{item.carreraId}}">
-                                          {{item.descripcion}}
-                                    </option>
-                              </select>
-                              
-                              <label>Departamento</label>
-                              <select class="form-control input-sm" name = "departamentoId"
-                                    formControlName="departamentoId">
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaDepartamentos; let i = index"
-                                    value="{{item.departamentoId}}">
-                                          {{item.descripcion}}
-                                    </option>
-                              </select>
-                              
-                              <label>Dependencia</label>
-                              <select class="form-control input-sm" name = "dependenciaId"
-                                    formControlName="dependenciaId">
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaDependencias; let i = index"
-                                    value="{{item.dependenciaId}}">
-                                          {{item.descripcion}}
-                                    </option>
-                              </select>
-                              
-                              <label>Estamento</label>
-                              <select class="form-control input-sm" name = "estamentoId"
-                                    formControlName="estamentoId">
-                                    <option value=null>----SELECCIONE----</option>
-                                    <option *ngFor="let item of listaEstamentos; let i = index"
-                                    value="{{item.estamentoId}}">
-                                          {{item.descripcion}}
-                                    </option>
-                              </select>               
-                        </div>
-                        <div class="col-lg-5" [hidden]="true">
-                              <label>Fecha creacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaCreacion"
-                                    name="fechaCreacion"
-                                    placeholder="Fecha creacion">
-                        
-                              <label>Fecha modificacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaModificacion"
-                                    name="fechaModificacion"
-                                    placeholder="Fecha modificacion">
-                        </div>
-                        <div class="col-lg-5" [hidden]="true">
-                              <label>Usuario creacion</label>
-                              <input type="text"                  
-                                    class="form-control"
-                                    formControlName="usuarioCreacion"
-                                    name="usuarioCreacion"
-                                    placeholder="Usuario creacion">
-                        
-                              <label>Usuario modificacion</label>
-                              <input type="text"                  
-                                    class="form-control"
-                                    formControlName="usuarioModificacion"
-                                    name="usuarioModificacion"
-                                    placeholder="Usuario modificacion">
+                                          <div class="col-lg-5">   
+                                                <div class="form-group">                                            
+                                                      <label><b>Usuario creaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioCreacion"
+                                                            name="usuarioCreacion"  
+                                                            placeholder="Usuario creaci&oacute;n">
+                                                </div> 
+                                                <div class="form-group"> 
+                                                      <label><b>Usuario modificaci&oacute;n</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="usuarioModificacion"
+                                                            name="usuarioModificacion"  
+                                                            placeholder="Usuario modificaci&oacute;n">
+                                                </div>                                   
+                                          </div>                        
+                                    </div>
+                                    <hr>
+                                    <br>
+                                    <div class="form-group text-center">
+                                          <button type="submit"
+                                                class="btn btn-primary ">
+                                          <i class="fa fa-save"></i>
+                                          Guardar
+                                          </button>
+                                          <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+                                    </div>
+                              </form>
                         </div>
                   </div>
-                  <hr>
-                  <!-- Datos del Paciente-->
-                  <div class="form-row">
-                        <div class="col-lg-5"> 
-                              <label>Grupo Sanguineo</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Grupo Sanguineo"
-                                    formControlName="grupoSanguineo"
-                                    name="grupoSanguineo"
-                                    [class.is-invalid]="grupoSanguineoNoValido">
-                              <small *ngIf="grupoSanguineoNoValido" class="text-danger">
-                                    Ingrese el grupo sanguineo
-                              </small>
-                              <label>Seguro Medico</label>
-                              <input type="text"
-                                    class="form-control"
-                                    placeholder="Seguro Medico"
-                                    formControlName="seguroMedico"
-                                    name="seguroMedico">
-                        </div>
-                  </div>
+            
 
-                  <br>
-                  <div>
-                        <div class="input-group mb-3">    
-                              <div class="form-group">
-                                    <label for="inputGroupFile02">Adjuntar Fotografia</label>
-                                    <input type="file" class="form-control-file" 
-                                          (change)="selectFile($event)" id="inputGroupFile02" >                                    
-                              </div>                                                                     
-                        </div>
-                        
-                        <div class="alert alert-light" role="alert">{{ message }}</div>
-                        
-                        <div class="card" [hidden]="crear">
-                              <div class="card-header">Lista de archivos</div>
-                              <ul class="list-group list-group-flush"
-                                    *ngFor="let file of fileInfos | async">
-                                    <li class="list-group-item">
-                                          <a href="{{ file.url }}">{{ file.name }}</a>
-                                    </li>
-                              </ul>
-                        </div>                       
-                  </div>
-                  <br>
-                  <!--Paciente Fechas-->
-                  <div class="form-row" [hidden]="crear">
-                        <div class="col-lg-5"> 
-                              <label>Fecha creacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaCreacion"
-                                    name="fechaCreacion"  
-                                    placeholder="Fecha creacion">
 
-                              <label>Fecha modificacion</label>
-                              <input type="datetime-local"
-                                    class="form-control"
-                                    formControlName="fechaModificacion"
-                                    name="fechaModificacion"  
-                                    placeholder="Fecha modificacion">  
-                        </div>
-
-                        <div class="col-lg-5">                                                 
-                              <label>Usuario creacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioCreacion"
-                                    name="usuarioCreacion"  
-                                    placeholder="Usuario creacion">
-                        
-                              <label>Usuario modificacion</label>
-                              <input type="text"
-                                    class="form-control"
-                                    formControlName="usuarioModificacion"
-                                    name="usuarioModificacion"  
-                                    placeholder="Usuario modificacion">                                    
-                        </div>                        
-                  </div>
-                  <br>
-                  <hr>
-                  <br>
-                  <div class="form-group text-center">
-                        <button type="submit"
-                              class="btn btn-primary ">
-                        <i class="fa fa-save"></i>
-                        Guardar
-                        </button>
-                        <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
-                  </div>
-            </form>
+            </div>
       </div>
-    </div>
-    
-
-
-  </div>
-</div>
+</body>
