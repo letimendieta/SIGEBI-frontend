@@ -9,6 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 
 import { HeaderComponent } from '../general/header/header.component';
@@ -31,7 +33,8 @@ import { SidebarComponent } from '../general/sidebar/sidebar.component';
     MatMenuModule,
     FlexLayoutModule,
     MatListModule,
-    RouterModule
+    RouterModule,
+    MatTooltipModule
 
 
   ],

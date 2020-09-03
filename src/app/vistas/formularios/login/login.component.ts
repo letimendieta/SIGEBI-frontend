@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
     }
 
     onLogin(): void {
-      console.log(" prueba")
+      
       console.log(this.forma.get('nombreUsuario').value)
       this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
       this.authService.login(this.loginUsuario).subscribe(

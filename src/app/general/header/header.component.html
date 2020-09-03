@@ -1,28 +1,26 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="header">
     <mat-toolbar-row>
         <button mat-icon-button (click)="toggleSideBar()">
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span> SIGEBI </span>
-        <div class="container text-center">
-            <div *ngIf="isLogged; else loggedOut"><h1>Bienvenido {{nombreUsuario}}</h1></div>
-            <ng-template #loggedOut><h2>No has iniciado sesión</h2></ng-template>
+      
+        <div class="container text-right">
+            <div *ngIf="isLogged; else loggedOut"><p>Bienvenido {{nombreUsuario}}</p></div>
+            <ng-template #loggedOut><p>No has iniciado sesión</p></ng-template>
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
+
                 <li>
-                    <button mat-icon-button>
-                        <mat-icon>settings</mat-icon>
-                    </button>
-                </li>
-                <li>
-                    <button mat-icon-button *ngIf="!isLogged" (click)="onLogOut()">
+                    <button mat-icon-button *ngIf="!isLogged" (click)="onLogOut()" matTooltipPosition="right"
+                    matTooltip="Iniciar Sesion">
                         <mat-icon>account_box</mat-icon> 
                     </button>
                 </li>
                 <li>
-                    <button mat-icon-button *ngIf="isLogged" (click)="onLogOut()">
+                    <button mat-icon-button *ngIf="isLogged" (click)="onLogOut()" matTooltipPosition="right"
+                    matTooltip="Cerrar Sesion">
                         <mat-icon>exit_to_app</mat-icon>
                     </button>
                 </li>

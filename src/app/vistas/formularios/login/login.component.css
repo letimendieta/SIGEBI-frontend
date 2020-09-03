@@ -33,10 +33,22 @@ html {
   text-align: center;
 }
 .brand_logo {
+  align-content: center;
   height: 150px;
   width: 150px;
   border-radius: 50%;
+  background-color:antiquewhite;
   border: 2px solid white;
+}
+.brand_img {
+  align-content: center;
+  height: 80px;
+  width: 80px;
+  background-color:antiquewhite;
+  
+  bottom: 45px;
+  left: 45px;
+  position: absolute;
 }
 .form_container {
   margin-top: 100px;

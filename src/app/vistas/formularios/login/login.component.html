@@ -3,37 +3,15 @@
 </div>
 
 <ng-template #loggedOut>
-    <!--<div class="container d-flex justify-content-center">
-        <div class="card">
-            <div class="card-header">
-                <h1>SIGEBI-FPUNA</h1>
-            </div>
-            <div class="card-body">
-                <form [formGroup]="forma" (ngSubmit)="onLogin()" novalidate>
-                    <div class="form-group">
-                        <label for="nombreUsuario">Nombre de Usuario</label>
-                        <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control"
-                        formControlName="nombreUsuario" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control"
-                        formControlName="password" required>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-outline-success btn-block"  [disabled]="!forma.valid" >
-                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>-->
     <div class="container h-100">
         <div class="d-flex justify-content-center h-100">
             <div class="user_card">
                 <div class="d-flex justify-content-center">
                     <div class="brand_logo_container">
-                        <img src="../assets/images/Logo_bienestar.jpg" class="brand_logo" alt="Logo">
+                        <div class="brand_logo">
+                            <img src="../assets/images/login.png" class="brand_img" alt="Logo">
+                        </div>
+                        
                     </div>
                 </div>                
                 <div class="d-flex justify-content-center form_container">                    
@@ -49,14 +27,14 @@
 								<span class="input-group-text"><i class="fas fa-user"></i></span>
 							</div>
                             <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control"
-                            formControlName="nombreUsuario" required>
+                            formControlName="nombreUsuario" placeholder="Usuario" required>
                         </div>
                         <div class="form-group input-group mb-2">
                             <div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-key"></i></span>
 							</div>
                             <input type="password" name="password" id="password" class="form-control"
-                            formControlName="password" required>
+                            formControlName="password" placeholder="Contraseña" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-outline-success btn-block"  [disabled]="!forma.valid" >

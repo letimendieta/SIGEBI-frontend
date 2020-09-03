@@ -1,3 +1,13 @@
 ul li {
   list-style: none;
 }
+
+*{
+  background-color:rgb(191, 227, 243);
+  color: black;
+
+}
+
+.header{
+  border-bottom: 1px solid #fff;
+}
