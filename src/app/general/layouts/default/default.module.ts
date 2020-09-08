@@ -44,7 +44,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardService } from 'src/app/vistas/dashboard.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -94,7 +95,9 @@ import { DataTablesModule } from 'angular-datatables';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    DataTablesModule
+    DataTablesModule,
+    MatFormFieldModule, 
+    MatInputModule
   ],
   providers: [
     DashboardService

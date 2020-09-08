@@ -21,24 +21,12 @@ export class PersonasComponent implements OnInit {
 
   constructor( private personasService: PersonasService,
                private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+    
   }
 
-  ngOnInit() {    
-    this.cargando = true;
-    this.personasService.buscarPersonasFiltros(null)
-      .subscribe( resp => {
-        this.personas = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+  ngOnInit() {
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -66,6 +54,7 @@ export class PersonasComponent implements OnInit {
 
   buscadorPersonas(event) {
     event.preventDefault();
+    this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
     this.personasService.buscarPersonasFiltros(this.buscador)
     .subscribe( resp => {
@@ -75,12 +64,14 @@ export class PersonasComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new PersonaModelo();
     this.personas = [];

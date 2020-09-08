@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -16,7 +16,10 @@ import { CarrerasService } from '../../../servicios/carreras.service';
 import { DepartamentosService } from '../../../servicios/departamentos.service';
 import { DependenciasService } from '../../../servicios/dependencias.service';
 import { EstamentosService } from '../../../servicios/estamentos.service';
+import { PersonasService } from '../../../servicios/personas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
@@ -27,6 +30,7 @@ import Swal from 'sweetalert2';
 })
 export class PacienteComponent implements OnInit {
   crear = false;
+  personas: PersonaModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
@@ -35,13 +39,17 @@ export class PacienteComponent implements OnInit {
   listaDepartamentos: DepartamentoModelo;
   listaDependencias: DependenciaModelo;
   listaEstamentos: EstamentoModelo;
-
+  buscadorForm: FormGroup;
   pacienteForm: FormGroup;
   selectedFiles: FileList;
   currentFile: File;
   progress = 0;
   message = '';  
   fileInfos: Observable<any>;
+  desdeModal = true;
+  cargando = false;
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
 
   constructor( private pacientesService: PacientesService,
                private parametrosService: ParametrosService,
@@ -49,10 +57,13 @@ export class PacienteComponent implements OnInit {
                private departamentosService: DepartamentosService,
                private dependenciasService: DependenciasService,
                private estamentosService: EstamentosService,
+               private personasService: PersonasService,
                private uploadService: UploadFileService,
                private router: Router,
                private route: ActivatedRoute,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal) { 
     this.crearFormulario();
   }              
 
@@ -76,6 +87,8 @@ export class PacienteComponent implements OnInit {
     }else{
       this.crear = true;
     }
+
+    this.crearTablaModel();
   }
 
   selectFile(event) {
@@ -116,7 +129,11 @@ export class PacienteComponent implements OnInit {
 
   obtenerPersona(event){
     event.preventDefault();
-    var id = this.pacienteForm.get('personas').get('personaId').value;
+    var id = this.pacienteForm.get('personas').get('personaId').value;    
+    
+    if(!id){
+      return null;
+    }
     this.pacientesService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
         this.pacienteForm.get('personas').patchValue(resp);
@@ -341,6 +358,13 @@ export class PacienteComponent implements OnInit {
       usuarioCreacion: [null, [] ],
       usuarioModificacion: [null, [] ]            
     });
+    
+    this.buscadorForm = this.fb2.group({
+      personaId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
 
     this.pacienteForm.get('pacienteId').disable();
     this.pacienteForm.get('personas').get('fechaCreacion').disable();
@@ -353,4 +377,98 @@ export class PacienteComponent implements OnInit {
     this.pacienteForm.get('usuarioCreacion').disable();
     this.pacienteForm.get('usuarioModificacion').disable();
   }
+
+  buscadorPersonas(event) {
+    event.preventDefault();
+    
+    var buscador = new PersonaModelo();
+    buscador.personaId = this.buscadorForm.get('personaId').value;
+    buscador.cedula = this.buscadorForm.get('cedula').value;
+    buscador.nombres = this.buscadorForm.get('nombres').value;
+    buscador.apellidos = this.buscadorForm.get('apellidos').value;
+    
+    if(!buscador.personaId && !buscador.cedula && !buscador.nombres
+      && !buscador.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.personasService.buscarPersonasFiltros(buscador)
+    .subscribe( resp => {
+      this.personas = resp;
+      this.cargando = false;
+      //this.dtTrigger.next();
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModal(event) {
+    event.preventDefault();
+    this.buscadorForm.reset();
+    this.personas = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModel(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'personaId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModal(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorForm.patchValue({
+      personaId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.personas = [];
+    this.alert=false;
+   }
+
+  selectPersona(event, persona: PersonaModelo){
+    this.modalService.dismissAll();
+    if(persona.personaId){
+      this.pacienteForm.get('personas').get('personaId').setValue(persona.personaId);
+    }
+    this.pacientesService.getPersona( persona.personaId )
+      .subscribe( (resp: PersonaModelo) => {
+        this.pacienteForm.get('personas').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e),
+          })
+          this.pacienteForm.get('personas').get('personaId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }
