@@ -94,7 +94,7 @@ export class PersonasComponent implements OnInit {
           Swal.fire({
                     icon: 'success',
                     title: persona.nombres,
-                    text: resp.mensaje,
+                    text: resp.mensaje
                   }).then( resp => {
             if ( resp.value ) {
               this.ngOnInit();
@@ -104,7 +104,7 @@ export class PersonasComponent implements OnInit {
                 Swal.fire({
                   icon: 'error',
                   title: 'Algo salio mal',
-                  text: e.status +'. '+ this.obtenerError(e),
+                  text: e.status +'. '+ this.obtenerError(e)
                 })
             }
         );

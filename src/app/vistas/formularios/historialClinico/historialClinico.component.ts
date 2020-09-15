@@ -7,14 +7,13 @@ import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import Swal from 'sweetalert2';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { AreasService } from '../../../servicios/areas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
-
-import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 
 @Component({
@@ -24,11 +23,13 @@ import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 })
 export class HistorialClinicoComponent implements OnInit {
   crear = false;
+  pacientes: PacienteModelo[] = [];
   historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();  
   paciente: PacienteModelo = new PacienteModelo();  
   listaAreas: AreaModelo;
   historialClinicoForm: FormGroup;
+  buscadorForm: FormGroup;
   modificar: boolean = false;
   hcid = 0;
   selectedFiles: FileList;
@@ -36,6 +37,9 @@ export class HistorialClinicoComponent implements OnInit {
   progress = 0;
   message = '';  
   fileInfos: Observable<any>;
+  cargando = false;
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private pacientesService: PacientesService,
@@ -44,7 +48,9 @@ export class HistorialClinicoComponent implements OnInit {
                private route: ActivatedRoute,
                private router: Router,
                private uploadService: UploadFileService,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal) { 
     this.crearFormulario();
   }
 
@@ -74,6 +80,9 @@ export class HistorialClinicoComponent implements OnInit {
   obtenerPaciente(event){
     event.preventDefault();
     var id = this.historialClinicoForm.get('pacientes').get('pacienteId').value;
+    if(!id){
+      return null;
+    }
     this.pacientesService.getPaciente( id )
       .subscribe( (resp: PacienteModelo) => {         
         this.historialClinicoForm.get('pacientes').patchValue(resp);
@@ -82,6 +91,7 @@ export class HistorialClinicoComponent implements OnInit {
             icon: 'info',
             text: e.status +'. '+ this.obtenerError(e)
           })
+          this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(null);
         }
       );
   }
@@ -240,6 +250,13 @@ export class HistorialClinicoComponent implements OnInit {
       usuarioModificacion: [null, [] ],             
     });
 
+    this.buscadorForm = this.fb2.group({
+      pacienteId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
     this.historialClinicoForm.get('historialClinicoId').disable();
     this.historialClinicoForm.get('pacientes').get('personas').get('cedula').disable();
     this.historialClinicoForm.get('pacientes').get('personas').get('nombres').disable();
@@ -250,4 +267,99 @@ export class HistorialClinicoComponent implements OnInit {
     this.historialClinicoForm.get('usuarioCreacion').disable();
     this.historialClinicoForm.get('usuarioModificacion').disable();
   }
+
+  buscadorPacientes(event) {
+    event.preventDefault();
+    
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscadorPaciente: PacienteModelo = new PacienteModelo();
+
+    persona.cedula = this.buscadorForm.get('cedula').value;
+    persona.nombres = this.buscadorForm.get('nombres').value;
+    persona.apellidos = this.buscadorForm.get('apellidos').value;
+    buscadorPaciente.personas = persona;
+
+    if(!buscadorPaciente.personas.cedula 
+      && !buscadorPaciente.personas.nombres && !buscadorPaciente.personas.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    .subscribe( resp => {
+      this.pacientes = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModal(event) {
+    event.preventDefault();
+    this.buscadorForm.reset();
+    this.pacientes = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModel(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'pacienteId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModal(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorForm.patchValue({
+      pacienteId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.pacientes = [];
+    this.alert=false;
+  }
+
+  selectPaciente(event, paciente: PacienteModelo){
+    this.modalService.dismissAll();
+    if(paciente.pacienteId){
+      this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
+    }
+    this.pacientesService.getPaciente( paciente.pacienteId )
+      .subscribe( (resp: PacienteModelo) => {         
+        this.historialClinicoForm.get('pacientes').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

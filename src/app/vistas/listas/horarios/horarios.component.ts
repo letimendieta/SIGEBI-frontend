@@ -24,25 +24,12 @@ export class HorariosComponent implements OnInit {
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
   constructor( private horariosService: HorariosService,
-               private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+               private fb: FormBuilder ) {    
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.horariosService.buscarHorariosFiltrosTabla(null)
-      .subscribe( resp => {
-        this.horarios = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -106,7 +93,8 @@ export class HorariosComponent implements OnInit {
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new HorarioModelo();
     this.horarios = [];

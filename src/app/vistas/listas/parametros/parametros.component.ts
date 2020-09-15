@@ -20,26 +20,12 @@ export class ParametrosComponent implements OnInit {
   cargando = false;  
 
   constructor( private parametrosService: ParametrosService,
-    private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla(); 
+    private fb: FormBuilder ) {     
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.parametrosService.buscarParametrosFiltrosTabla(null)
-      .subscribe( resp => {
-        this.parametros = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
-
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   buscadorParametros(event) {
@@ -79,7 +65,8 @@ export class ParametrosComponent implements OnInit {
     };
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new ParametroModelo();
     this.parametros = [];

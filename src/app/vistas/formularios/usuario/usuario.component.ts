@@ -11,7 +11,8 @@ import { AreaModelo } from '../../../modelos/area.modelo';
 import { AreasService } from '../../../servicios/areas.service';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
-
+import { PersonasService } from '../../../servicios/personas.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -23,18 +24,29 @@ export class UsuarioComponent implements OnInit {
   crear = false;
   usuario: Usuario2Modelo = new Usuario2Modelo();
   persona: PersonaModelo = new PersonaModelo();
+  personas: PersonaModelo[] = [];
+  funcionarios: FuncionarioModelo[] = [];
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
   listaAreas: AreaModelo;
   usuarioForm: FormGroup;
+  buscadorPersonasForm: FormGroup;
+  buscadorFuncionariosForm: FormGroup;
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
+  cargando = false;
 
   constructor( private usuariosService: UsuariosService,
                private funcionariosService: FuncionariosService,
+               private personasService: PersonasService,
                private areasService: AreasService,
                private route: ActivatedRoute,
                private router: Router,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private fb3: FormBuilder,
+               private modalService: NgbModal  ) { 
     this.crearFormulario();
   }              
 
@@ -64,7 +76,8 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  obtenerFuncionario( ){
+  obtenerFuncionario( event ){
+    event.preventDefault();
     var id = this.usuarioForm.get('funcionarios').get('funcionarioId').value;
     this.funcionariosService.getFuncionario( id )
         .subscribe( (resp: FuncionarioModelo) => {
@@ -82,7 +95,8 @@ export class UsuarioComponent implements OnInit {
         );
   }
 
-  obtenerPersona( ){
+  obtenerPersona( event ){
+    event.preventDefault();
     var id = this.usuarioForm.get('personas').get('personaId').value;
     this.usuariosService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
@@ -133,7 +147,7 @@ export class UsuarioComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.usuario.codigoUsuario,
+                title: this.usuario.codigoUsuario ? this.usuario.codigoUsuario.toString() : '',
                 text: resp.mensaje,
               }).then( resp => {
 
@@ -222,6 +236,20 @@ export class UsuarioComponent implements OnInit {
       usuarioModificacion: [null, [] ],             
     });
 
+    this.buscadorPersonasForm = this.fb2.group({
+      personaId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
+    this.buscadorFuncionariosForm = this.fb3.group({
+      funcionarioId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
     this.usuarioForm.get('usuarioId').disable();
     this.usuarioForm.get('funcionarios').get('areaId').disable();
     this.usuarioForm.get('funcionarios').get('estado').disable();
@@ -235,4 +263,179 @@ export class UsuarioComponent implements OnInit {
     this.usuarioForm.get('usuarioCreacion').disable();
     this.usuarioForm.get('usuarioModificacion').disable();
   }
+
+
+
+  buscadorPersonas(event) {
+    event.preventDefault();
+    
+    var persona: PersonaModelo = new PersonaModelo();
+
+    persona.cedula = this.buscadorPersonasForm.get('cedula').value;
+    persona.nombres = this.buscadorPersonasForm.get('nombres').value;
+    persona.apellidos = this.buscadorPersonasForm.get('apellidos').value;
+
+    if(!persona.cedula 
+      && !persona.nombres && !persona.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.personasService.buscarPersonasFiltros(persona)
+    .subscribe( resp => {
+      this.personas = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  buscadorFuncionarios(event) {
+    event.preventDefault();
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscador: FuncionarioModelo = new FuncionarioModelo();
+
+    persona.cedula = this.buscadorFuncionariosForm.get('cedula').value;
+    persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
+    persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
+    buscador.personas = persona;
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    .subscribe( resp => {
+      this.funcionarios = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModalPersonas(event) {
+    event.preventDefault();
+    this.buscadorPersonasForm.reset();
+    this.personas = [];
+  }
+
+  limpiarModalFuncionarios(event) {
+    event.preventDefault();
+    this.buscadorFuncionariosForm.reset();
+    this.funcionarios = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModelpersonas(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'personaId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  crearTablaModelFuncionarios(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'funcionarioId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModalPersonas(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorPersonasForm.patchValue({
+      personaId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.personas = [];
+    this.alert=false;
+  }
+
+  openModalFuncionarios(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorFuncionariosForm.patchValue({
+      funcionarioId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.funcionarios = [];
+    this.alert=false;
+  }
+
+  selectPersona(event, persona: PersonaModelo){
+    this.modalService.dismissAll();
+    if(persona.personaId){
+      this.usuarioForm.get('personas').get('personaId').setValue(persona.personaId);
+    }
+    this.personasService.getPersona( persona.personaId )
+      .subscribe( (resp: PersonaModelo) => {         
+        this.usuarioForm.get('personas').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.usuarioForm.get('personas').get('personaId').setValue(null);
+        }
+      );
+  }
+
+  selectFuncionario(event, funcionario: FuncionarioModelo){
+    this.modalService.dismissAll();
+    if(funcionario.funcionarioId){
+      this.usuarioForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
+    }
+    this.funcionariosService.getFuncionario( funcionario.funcionarioId )
+      .subscribe( (resp: FuncionarioModelo) => {         
+        this.usuarioForm.get('funcionarios').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.usuarioForm.get('funcionarios').get('funcionarioId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

@@ -22,28 +22,14 @@ export class PacientesComponent implements OnInit {
   cargando = false;
 
 
+
   constructor( private pacientesService: PacientesService,
-    private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+    private fb: FormBuilder ) {    
   }
 
   ngOnInit() {
-
-    this.cargando = true;
-    this.pacientesService.buscarPacientesFiltros(null)
-      .subscribe( resp => {
-        this.pacientes = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
-
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -84,12 +70,14 @@ export class PacientesComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new PacienteModelo();
     this.persona = new PersonaModelo();
@@ -114,7 +102,7 @@ export class PacientesComponent implements OnInit {
           Swal.fire({
                     icon: 'success',
                     title: paciente.personas.nombres,
-                    text: resp.mensaje,
+                    text: resp.mensaje
                   }).then( resp => {
             if ( resp.value ) {
               this.ngOnInit();

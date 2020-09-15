@@ -20,29 +20,19 @@ export class DepartamentosComponent implements OnInit {
   cargando = false;  
 
   constructor( private departamentosService: DepartamentosService,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder ) {    
+  }
+
+  ngOnInit() {    
     this.crearFormulario();
     this.crearTabla(); 
   }
 
-  ngOnInit() {    
-    this.cargando = true;
-    this.departamentosService.buscarDepartamentosFiltrosTabla(null)
-      .subscribe( resp => {
-        this.departamentos = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
-  }
-
   buscadorDepartamentos(event) {
+    event.preventDefault();
+    this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
+
     this.departamentosService.buscarDepartamentosFiltrosTabla(this.buscador)
     .subscribe( resp => {
       this.departamentos = resp;
@@ -51,8 +41,9 @@ export class DepartamentosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
@@ -77,7 +68,8 @@ export class DepartamentosComponent implements OnInit {
     };
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new DepartamentoModelo();
     this.departamentos = [];

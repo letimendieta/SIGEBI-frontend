@@ -25,26 +25,12 @@ export class StocksComponent implements OnInit {
 
   constructor( private stocksService: StocksService,
                private parametrosService: ParametrosService,
-               private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+               private fb: FormBuilder ) {    
   }
 
   ngOnInit() { 
-    this.obtenerParametros();  
-    this.cargando = true;
-    this.stocksService.buscarStocksFiltrosTabla(null)
-      .subscribe( resp => {
-        this.stocks = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -109,7 +95,8 @@ export class StocksComponent implements OnInit {
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new StockModelo();
     this.stocks = [];
@@ -143,8 +130,9 @@ export class StocksComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.obtenerError(e)
             })
+            this.cargando = false;
           }
         );
       }

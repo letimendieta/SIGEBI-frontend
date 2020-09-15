@@ -5,7 +5,7 @@ import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { PacienteModelo } from '../../../modelos/paciente.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { AreasService } from '../../../servicios/areas.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -30,27 +30,14 @@ export class HistorialesClinicosComponent implements OnInit {
 
   constructor( private historialClinicosService: HistorialesClinicosService,
               private areasService: AreasService,
-              private fb: FormBuilder) { 
-    this.crearFormulario();
-    this.crearTabla();
+              private fb: FormBuilder) {    
   }
 
   ngOnInit() {
 
-    this.cargando = true;
+    this.crearFormulario();
+    this.crearTabla();
     this.listarAreas();
-    this.historialClinicosService.buscarHistorialClinicosFiltros(null)
-      .subscribe( resp => {
-        this.historialClinicos = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
   }
 
   crearTabla(){
@@ -117,12 +104,13 @@ export class HistorialesClinicosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
-  limpiar() {
+  limpiar(event) {
     this.buscadorForm.reset();
     this.buscador = new HistorialClinicoModelo();    
     this.historialClinicos = [];

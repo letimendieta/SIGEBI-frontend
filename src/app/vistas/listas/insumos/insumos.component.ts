@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InsumosService } from '../../../servicios/insumos.service';
 import { InsumoModelo } from '../../../modelos/insumo.modelo';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -20,25 +20,12 @@ export class InsumosComponent implements OnInit {
   cargando = false;  
 
   constructor( private insumosService: InsumosService,
-               private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+               private fb: FormBuilder ) {    
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.insumosService.buscarInsumosFiltrosTabla(null)
-      .subscribe( resp => {
-        this.insumos = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -53,7 +40,7 @@ export class InsumosComponent implements OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'areaId'}, {data:'codigo'}, {data:'descripcion'},
+        {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
         {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
         {data:'Editar'},
@@ -78,7 +65,8 @@ export class InsumosComponent implements OnInit {
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new InsumoModelo();
     this.insumos = [];

@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
+import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { HorarioModelo } from '../../../modelos/horario.modelo';
 import { HorariosService } from '../../../servicios/horarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import Swal from 'sweetalert2';
 
@@ -18,14 +20,20 @@ import Swal from 'sweetalert2';
 export class HorarioComponent implements OnInit {
   crear = false;
   horarioForm: FormGroup;
-
+  funcionarios: FuncionarioModelo[] = [];
+  buscadorFuncionariosForm: FormGroup;
   horario: HorarioModelo = new HorarioModelo();
+  cargando = false;
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
 
   constructor( private horariosService: HorariosService,
                private funcionariosService: FuncionariosService,
                private route: ActivatedRoute,
                private router: Router,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal ) { 
     this.crearFormulario();
   }              
 
@@ -181,6 +189,13 @@ export class HorarioComponent implements OnInit {
       usuarioModificacion: [null, [] ]     
     });
 
+    this.buscadorFuncionariosForm = this.fb2.group({
+      funcionarioId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
     this.horarioForm.get('horarioDisponibleId').disable();
     this.horarioForm.get('funcionarios').get('personas').get('cedula').disable();
     this.horarioForm.get('funcionarios').get('personas').get('nombres').disable();
@@ -192,4 +207,91 @@ export class HorarioComponent implements OnInit {
     this.horarioForm.get('usuarioModificacion').disable();
   }
 
+  buscadorFuncionarios(event) {
+    event.preventDefault();
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscador: FuncionarioModelo = new FuncionarioModelo();
+
+    persona.cedula = this.buscadorFuncionariosForm.get('cedula').value;
+    persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
+    persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
+    buscador.personas = persona;
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    .subscribe( resp => {
+      this.funcionarios = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModalFuncionarios(event) {
+    event.preventDefault();
+    this.buscadorFuncionariosForm.reset();
+    this.funcionarios = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModelFuncionarios(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'funcionarioId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModalFuncionarios(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorFuncionariosForm.patchValue({
+      funcionarioId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.funcionarios = [];
+    this.alert=false;
+  }
+
+  selectFuncionario(event, funcionario: FuncionarioModelo){
+    this.modalService.dismissAll();
+    if(funcionario.funcionarioId){
+      this.horarioForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
+    }
+    this.funcionariosService.getFuncionario( funcionario.funcionarioId )
+      .subscribe( (resp: FuncionarioModelo) => {         
+        this.horarioForm.get('funcionarios').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.horarioForm.get('funcionarios').get('funcionarioId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

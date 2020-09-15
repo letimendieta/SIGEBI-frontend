@@ -23,27 +23,12 @@ export class FuncionariosComponent implements OnInit {
 
 
   constructor( private funcionariosService: FuncionariosService,
-              private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+              private fb: FormBuilder ) {    
   }
 
   ngOnInit() {
-
-    this.cargando = true;
-    this.funcionariosService.buscarFuncionariosFiltros(null)
-      .subscribe( resp => {
-        this.funcionarios = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
-
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -85,12 +70,14 @@ export class FuncionariosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new FuncionarioModelo();
     this.persona = new PersonaModelo();

@@ -7,12 +7,12 @@
   <hr>
 
   <div class="card">
-    <h3 class="card-header">Buscador</h3> 
-    <div class="card-body">
+    <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
+        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3> 
+    <div class="card-body collapse show" id="collapseBuscador">
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center">
           <div>
-
             <p>
               <mat-form-field appearance="fill">
                 <mat-label>Persona id</mat-label>
@@ -49,9 +49,9 @@
           </div>
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
-              <button type="submit" (click)="buscadorPersonas($event)" class="btn btn-success">Buscar</button>
+              <button type="submit" (click)="buscadorPersonas($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
               &nbsp;
-              <button (click)="limpiar($event)" class="btn btn-warning">Limpiar</button>
+              <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
           </div>
         </div>        
       </form>
@@ -176,4 +176,5 @@
       </tbody>
     </table>
   </div>
+  <br><br>
 </body>

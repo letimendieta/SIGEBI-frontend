@@ -20,25 +20,12 @@ export class AreasComponent implements OnInit {
   cargando = false;  
 
   constructor( private areasService: AreasService,
-               private fb: FormBuilder) { 
-    this.crearFormulario();
-    this.crearTabla();    
+               private fb: FormBuilder) {      
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.areasService.buscarAreasFiltrosTabla(null)
-      .subscribe( resp => {
-        this.areas = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });   
+    this.crearFormulario();
+    this.crearTabla();  
   }
 
   crearTabla(){
@@ -75,13 +62,14 @@ export class AreasComponent implements OnInit {
         Swal.fire({
           icon: 'info',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
+          text: e.status +'. '+ this.obtenerError(e)
         })
         this.cargando = false;
       });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new AreaModelo();
     this.areas = [];
@@ -115,7 +103,7 @@ export class AreasComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.obtenerError(e)
             })
           }
         );

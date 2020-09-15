@@ -23,25 +23,11 @@ export class UsuariosComponent implements OnInit {
 
 
   constructor( private usuariosService: UsuariosService,
-    private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();
+    private fb: FormBuilder ) {    
   }
   ngOnInit() {
-
-    this.cargando = true;
-    this.usuariosService.buscarUsuariosFiltros(null)
-      .subscribe( resp => {
-        this.usuarios = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();
   }
 
   crearTabla(){
@@ -81,12 +67,14 @@ export class UsuariosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new Usuario2Modelo();
     this.persona = new PersonaModelo();   
@@ -121,7 +109,7 @@ export class UsuariosComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.obtenerError(e)
             })
           }
         );

@@ -20,30 +20,19 @@ export class EstamentosComponent implements OnInit {
   cargando = false;  
 
   constructor( private estamentosService: EstamentosService,
-               private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();    
+               private fb: FormBuilder ) {      
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.estamentosService.buscarEstamentosFiltrosTabla(null)
-      .subscribe( resp => {
-        this.estamentos = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();  
   }
 
   buscadorEstamentos(event) {
     event.preventDefault();
+    this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
+
     this.estamentosService.buscarEstamentosFiltrosTabla(this.buscador)
     .subscribe( resp => {
       this.estamentos = resp;
@@ -52,8 +41,9 @@ export class EstamentosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
@@ -78,7 +68,8 @@ export class EstamentosComponent implements OnInit {
     };
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new EstamentoModelo();
     this.estamentos = [];

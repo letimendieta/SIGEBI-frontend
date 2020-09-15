@@ -45,28 +45,120 @@
                                           <div formGroupName="funcionarios" class="col-lg-5">                              
                                                 <div class="form-group">
                                                       <label><b>Funcionario id</b></label>                           
-                                                      <div class="input-group">
-                                                            <input type="text"
+                                                      <div class="input-group mb-3">
+                                                            <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Funcionario id"
                                                                   formControlName="funcionarioId"
                                                                   name="funcionarioId">
-                                                            <span class="input-group-btn">
+                                                            <div class="input-group-append">
                                                                   <button class="btn btn-outline-info"
-                                                                  (click)="obtenerFuncionario( )">
+                                                                  (click)="obtenerFuncionario($event)">
                                                                         Buscar
                                                                   </button>
-                                                            </span>
+                                                            </div>
+                                                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                            <button type="button" class="btn btn-primary" 
+                                                                  (click)="openModalFuncionarios(modalFuncionarios)"><i class="fas fa-search"></i></button>
                                                       </div>
-                                                </div>
-                                                <!--div class="form-group">
-                                                      <label><b>&Aacute;rea</b></label>
-                                                      <input type="number"
-                                                            class="form-control"
-                                                            placeholder="&Aacute;rea"
-                                                            formControlName="areaId"
-                                                            name="areaId">
-                                                </div-->
+                                                      <!--Modal buscador de funcionarios-->
+                                                      <ng-template #modalFuncionarios let-modal>
+                                                            <div class="modal-header">
+                                                            <h3 class="modal-title" id="modalFuncionariosLabel">Buscador Funcionarios</h3>
+                                                            <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span> 
+                                                            </button>
+                                                            </div>
+                                                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                  Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                  <form [formGroup]="buscadorFuncionariosForm" (ngSubmit)="buscadorFuncionarios($event)">
+                                                                        <div class="form-row justify-content-center">
+                                                                              <div>                                                                                                                                                          
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>C&eacute;dula</mat-label>
+                                                                                          <input matInput type="text" placeholder="C&eacute;dula" 
+                                                                                                formControlName="cedula" id="cedula">
+                                                                                    </mat-form-field>                                                                                                                                                         
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Nombres</mat-label>
+                                                                                          <input matInput type="text" placeholder="Nombres" 
+                                                                                                formControlName="nombres" id="nombres">
+                                                                                    </mat-form-field>
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Apellidos</mat-label>
+                                                                                          <input matInput type="text" placeholder="Apellidos" 
+                                                                                                formControlName="apellidos" id="apellidos">
+                                                                                    </mat-form-field>
+                                                                              </div>
+                                                                              &nbsp;                                                                            
+                                                                              <div class="align-self-center">
+                                                                                    <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                                                                    <button (click)="limpiarModalFuncionarios($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                                                              </div>
+                                                                        </div>
+                                                                  </form>
+                                                                  <br>
+
+                                                                  <!--Tabla vacia-->
+                                                                  <div class="table-responsive">
+                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        *ngIf="!cargando && funcionarios.length === 0">
+                                                                              <thead>
+                                                                                    <tr class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&eacute;dula</th>
+                                                                                          <th>Nombres</th>
+                                                                                          <th>Apellidos</th>
+                                                                                    </tr>
+                                                                              </thead>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="table-responsive">
+                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                              *ngIf="funcionarios.length > 0">
+                                                                              <thead>
+                                                                                    <tr  class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&eacute;dula</th>
+                                                                                          <th>Nombres</th>
+                                                                                          <th>Apellidos</th>
+                                                                                    </tr>
+                                                                              </thead>
+                                                                              <tbody *ngIf="funcionarios?.length != 0">
+                                                                                    <tr *ngFor="let funcionario of funcionarios" 
+                                                                                          (click)="selectFuncionario($event, funcionario)">                                                                                                
+                                                                                          <td>{{ funcionario.funcionarioId }}</td>
+                                                                                          <td>{{ funcionario.personas.cedula }}</td>
+                                                                                          <td>{{ funcionario.personas.nombres }}</td>
+                                                                                          <td>{{ funcionario.personas.apellidos }}</td>
+                                                                                    </tr>
+                                                                              </tbody>
+                                                                              <tbody *ngIf="cargando">
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                                                          <p>
+                                                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                          </p>
+                                                                                          <p class="mb-0">
+                                                                                                Espere por favor
+                                                                                          </p>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                              </tbody>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                                                  </div>
+                                                            </div>
+                                                      </ng-template>
+                                                </div>                                               
                                                 <div class="form-group">
                                                       <label><b>&Aacute;rea</b></label>
                                                       <select class="form-control input-sm" name="areaId"
@@ -93,22 +185,122 @@
                                           <div formGroupName="personas" class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Persona id</b></label>
-                                                      <div class="input-group">
-                                                            <input type="text"
+                                                      <div class="input-group mb-3">                                                            
+                                                            <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Persona id"
-                                                                  formControlName="personaId" name="id" 
-                                                                  [class.is-invalid]="personaIdNoValido">
-                                                            <span class="input-group-btn">
+                                                                  formControlName="personaId"
+                                                                  name="personaId" [class.is-invalid]="personaIdNoValido">
+                                                            <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" 
-                                                                        (click)="obtenerPersona( )">
+                                                                        (click)="obtenerPersona($event)">
                                                                         Buscar
                                                                   </button>
-                                                            </span>
+                                                            </div>
+                                                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                            <button type="button" class="btn btn-primary" 
+                                                                  (click)="openModalPersonas(modalPersonas)"><i class="fas fa-search"></i></button>
                                                             <small *ngIf="personaIdNoValido" class="text-danger">
                                                                   Ingrese persona id
                                                             </small>
                                                       </div>
+                                                      <!--Modal buscador de personas-->
+                                                      <ng-template #modalPersonas let-modal>
+                                                            <div class="modal-header">
+                                                            <h3 class="modal-title" id="modalPersonasLabel">Buscador Personas</h3>
+                                                            <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span> 
+                                                            </button>
+                                                            </div>
+                                                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                  Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                  <form [formGroup]="buscadorPersonasForm" (ngSubmit)="buscadorPersonas($event)">
+                                                                        <div class="form-row justify-content-center">
+                                                                              <div>                                                                                                                                                          
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>C&eacute;dula</mat-label>
+                                                                                          <input matInput type="text" placeholder="C&eacute;dula" 
+                                                                                                formControlName="cedula" id="cedula">
+                                                                                    </mat-form-field>                                                                                                                                                         
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Nombres</mat-label>
+                                                                                          <input matInput type="text" placeholder="Nombres" 
+                                                                                                formControlName="nombres" id="nombres">
+                                                                                    </mat-form-field>
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Apellidos</mat-label>
+                                                                                          <input matInput type="text" placeholder="Apellidos" 
+                                                                                                formControlName="apellidos" id="apellidos">
+                                                                                    </mat-form-field>
+                                                                              </div>
+                                                                              &nbsp;                                                                            
+                                                                              <div class="align-self-center">
+                                                                                    <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                                                                    <button (click)="limpiarModalPersonas($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                                                              </div>
+                                                                        </div>
+                                                                  </form>
+                                                                  <br>
+
+                                                                  <!--Tabla vacia-->
+                                                                  <div class="table-responsive">
+                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        *ngIf="!cargando && personas.length === 0">
+                                                                              <thead>
+                                                                                    <tr class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&eacute;dula</th>
+                                                                                          <th>Nombres</th>
+                                                                                          <th>Apellidos</th>
+                                                                                    </tr>
+                                                                              </thead>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="table-responsive">
+                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                              *ngIf="personas.length > 0">
+                                                                              <thead>
+                                                                                    <tr  class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&eacute;dula</th>
+                                                                                          <th>Nombres</th>
+                                                                                          <th>Apellidos</th>
+                                                                                    </tr>
+                                                                              </thead>
+                                                                              <tbody *ngIf="personas?.length != 0">
+                                                                                    <tr *ngFor="let persona of personas" 
+                                                                                          (click)="selectPersona($event, persona)">                                                                                                
+                                                                                          <td>{{ persona.personaId }}</td>
+                                                                                          <td>{{ persona.cedula }}</td>
+                                                                                          <td>{{ persona.nombres }}</td>
+                                                                                          <td>{{ persona.apellidos }}</td>
+                                                                                    </tr>
+                                                                              </tbody>
+                                                                              <tbody *ngIf="cargando">
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                                                          <p>
+                                                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                          </p>
+                                                                                          <p class="mb-0">
+                                                                                                Espere por favor
+                                                                                          </p>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                              </tbody>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                                                  </div>
+                                                            </div>
+                                                      </ng-template>
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>C&eacute;dula</b></label>
@@ -226,7 +418,9 @@
                                                 <i class="fa fa-save"></i>
                                                 Guardar
                                           </button>
-                                          <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning">Limpiar</button>
+                                          &nbsp;&nbsp;
+                                          <button (click)="limpiar()" [hidden]="!crear" 
+                                                class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
                                     </div>
                               </form>
                         </div>

@@ -19,7 +19,6 @@ import { EstamentosService } from '../../../servicios/estamentos.service';
 import { PersonasService } from '../../../servicios/personas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
@@ -130,7 +129,6 @@ export class PacienteComponent implements OnInit {
   obtenerPersona(event){
     event.preventDefault();
     var id = this.pacienteForm.get('personas').get('personaId').value;    
-    
     if(!id){
       return null;
     }
@@ -140,7 +138,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.obtenerError(e)
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }
@@ -360,7 +358,6 @@ export class PacienteComponent implements OnInit {
     });
     
     this.buscadorForm = this.fb2.group({
-      personaId  : ['', [] ],
       cedula  : ['', [] ],
       nombres  : ['', [] ],
       apellidos: ['', [] ]   
@@ -382,12 +379,11 @@ export class PacienteComponent implements OnInit {
     event.preventDefault();
     
     var buscador = new PersonaModelo();
-    buscador.personaId = this.buscadorForm.get('personaId').value;
     buscador.cedula = this.buscadorForm.get('cedula').value;
     buscador.nombres = this.buscadorForm.get('nombres').value;
     buscador.apellidos = this.buscadorForm.get('apellidos').value;
     
-    if(!buscador.personaId && !buscador.cedula && !buscador.nombres
+    if(!buscador.cedula && !buscador.nombres
       && !buscador.apellidos){
       this.alert=true;
       return;
@@ -397,7 +393,6 @@ export class PacienteComponent implements OnInit {
     .subscribe( resp => {
       this.personas = resp;
       this.cargando = false;
-      //this.dtTrigger.next();
     }, e => {
       Swal.fire({
         icon: 'info',
@@ -441,14 +436,13 @@ export class PacienteComponent implements OnInit {
     });
    
     this.buscadorForm.patchValue({
-      personaId: '',
       cedula: '',
       nombres: '',
       apellidos: ''
     });
     this.personas = [];
     this.alert=false;
-   }
+  }
 
   selectPersona(event, persona: PersonaModelo){
     this.modalService.dismissAll();

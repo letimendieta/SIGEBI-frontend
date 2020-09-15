@@ -10,7 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProcedimientosService } from '../../../servicios/procedimientos.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 
@@ -24,21 +24,27 @@ export class ProcedimientoComponent implements OnInit {
   procedimiento: ProcedimientoModelo = new ProcedimientoModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();  
   funcionarioPersona: PersonaModelo = new PersonaModelo();
-
+  pacientes: PacienteModelo[] = [];
+  funcionarios: FuncionarioModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
-
+  buscadorPacientesForm: FormGroup;
+  buscadorFuncionariosForm: FormGroup;
   procedimientoForm: FormGroup;
-
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
   modificar: boolean = false;
-
+  cargando = false;
 
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
                private router: Router,
                private route: ActivatedRoute,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private fb3: FormBuilder,
+               private modalService: NgbModal ) { 
     this.crearFormulario();
   }
 
@@ -124,7 +130,7 @@ export class ProcedimientoComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.procedimiento.procedimientoId.toString(),
+                title: this.procedimiento.procedimientoId ? this.procedimiento.procedimientoId.toString() : '',
                 text: resp.mensaje,
               }).then( resp => {
 
@@ -202,6 +208,20 @@ export class ProcedimientoComponent implements OnInit {
       usuarioModificacion: [null, [] ],             
     });
 
+    this.buscadorPacientesForm = this.fb2.group({
+      pacienteId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
+    this.buscadorFuncionariosForm = this.fb3.group({
+      funcionarioId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
+
     this.procedimientoForm.get('procedimientoId').disable();
     this.procedimientoForm.get('pacientes').get('personas').get('cedula').disable();
     this.procedimientoForm.get('pacientes').get('personas').get('nombres').disable();
@@ -216,4 +236,179 @@ export class ProcedimientoComponent implements OnInit {
     this.procedimientoForm.get('usuarioCreacion').disable();
     this.procedimientoForm.get('usuarioModificacion').disable();
   }
+
+  buscadorPacientes(event) {
+    event.preventDefault();
+    
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscadorPaciente: PacienteModelo = new PacienteModelo();
+
+    persona.cedula = this.buscadorPacientesForm.get('cedula').value;
+    persona.nombres = this.buscadorPacientesForm.get('nombres').value;
+    persona.apellidos = this.buscadorPacientesForm.get('apellidos').value;
+    buscadorPaciente.personas = persona;
+
+    if(!buscadorPaciente.personas.cedula 
+      && !buscadorPaciente.personas.nombres && !buscadorPaciente.personas.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    .subscribe( resp => {
+      this.pacientes = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  buscadorFuncionarios(event) {
+    event.preventDefault();
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscador: FuncionarioModelo = new FuncionarioModelo();
+
+    persona.cedula = this.buscadorFuncionariosForm.get('cedula').value;
+    persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
+    persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
+    buscador.personas = persona;
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    .subscribe( resp => {
+      this.funcionarios = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModalPacientes(event) {
+    event.preventDefault();
+    this.buscadorPacientesForm.reset();
+    this.pacientes = [];
+  }
+
+  limpiarModalFuncionarios(event) {
+    event.preventDefault();
+    this.buscadorFuncionariosForm.reset();
+    this.funcionarios = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModelPacientes(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'pacienteId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  crearTablaModelFuncionarios(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'funcionarioId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModalPacientes(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorPacientesForm.patchValue({
+      pacienteId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.pacientes = [];
+    this.alert=false;
+  }
+
+  openModalFuncionarios(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorFuncionariosForm.patchValue({
+      funcionarioId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.funcionarios = [];
+    this.alert=false;
+  }
+
+  selectPaciente(event, paciente: PacienteModelo){
+    this.modalService.dismissAll();
+    if(paciente.pacienteId){
+      this.procedimientoForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
+    }
+    this.pacientesService.getPaciente( paciente.pacienteId )
+      .subscribe( (resp: PacienteModelo) => {         
+        this.procedimientoForm.get('pacientes').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.procedimientoForm.get('pacientes').get('pacienteId').setValue(null);
+        }
+      );
+  }
+
+  selectFuncionario(event, funcionario: FuncionarioModelo){
+    this.modalService.dismissAll();
+    if(funcionario.funcionarioId){
+      this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
+    }
+    this.funcionariosService.getFuncionario( funcionario.funcionarioId )
+      .subscribe( (resp: FuncionarioModelo) => {         
+        this.procedimientoForm.get('funcionarios').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

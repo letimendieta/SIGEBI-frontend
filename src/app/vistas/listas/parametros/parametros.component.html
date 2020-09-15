@@ -7,70 +7,71 @@
   <hr>
 
   <div class="card">
-    <h3 class="card-header">Buscador</h3>
-    <div class="card-body">
+    <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
+        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+    <div class="card-body collapse show" id="collapseBuscador">
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center">
-          <div class="col-lg-5">
-            <div class="form-group form-inline col-md-5">
-              <label for="parametroId" class="col-sm-7 col-form-label"><b>Par&aacute;metro id</b></label>
-              <div class="col-sm-3">
-                <input type="number" class="form-control" id="parametroId"
-                formControlName="parametroId" 
-                name="parametroId">
-              </div>
-            </div>
-            <div class="form-group form-inline col-md-5">
-              <label for="codigoParametro" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="codigoParametro"
-                formControlName="codigoParametro" name="codigoParametro">
-            </div>
-            </div>
-            <div class="form-group form-inline col-md-5">
-              <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="descripcion"
-                formControlName="descripcion" name="descripcion">
-              </div>
-            </div>
-          </div>
+          <div>            
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Par&aacute;metro id</mat-label>
+                <input matInput matInput type="number" placeholder="Par&aacute;metro id" 
+                  formControlName="parametroId" name="parametroId" id="parametroId">
+              </mat-form-field>
+            </p>
 
-          <div class="col-lg-5">
-            <div class="form-group form-inline col-md-5">
-              <label for="valor" class="col-sm-7 col-form-label"><b>Valor</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="valor"
-                formControlName="valor" name="valor">
-              </div>
-            </div>
-            <div class="form-group form-inline col-md-5">
-              <label for="descripcionValor" class="col-sm-7 col-form-label"><b>Descripci&oacute;n valor</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="descripcionValor"
-                formControlName="descripcionValor" name="descripcionValor">
-              </div>
-            </div>
-    
-            <div class="form-group form-inline col-md-5">
-              <label for="estado" class="col-sm-7 col-form-label"><b>Estado</b></label>
-              <div class="col-sm-3">
-                <select class="custom-select"
-                    formControlName="estado" name = "estado">
-                  <option value=null [selected]="true">TODOS</option>
-                  <option value="A">ACTIVO</option>
-                  <option value="I">INACTIVO</option>
-                </select>
-              </div>
-            </div>
-          </div>   
-        </div>
-
-        <div class="col-log-4" class="text-center">
-          <div class="form-horizontal">
-            <button type="submit" (click)="buscadorParametros($event)" class="btn btn-success">Buscar</button>
-            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="estado" name = "estado">
+                  <mat-option value="null">TODOS</mat-option>
+                  <mat-option value="A">ACTIVO</mat-option>
+                  <mat-option value="I">INACTIVO</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </p>            
           </div>
+          &nbsp; &nbsp; &nbsp;
+          <div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>C&oacute;digo</mat-label>
+                <input matInput matInput type="text" placeholder="C&oacute;digo" 
+                  formControlName="codigoParametro" name="codigoParametro" id="codigoParametro">
+              </mat-form-field>
+            </p>  
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Valor</mat-label>
+                <input matInput matInput type="text" placeholder="Valor" 
+                  formControlName="valor" name="valor" id="valor">
+              </mat-form-field>
+            </p>
+          </div>
+          &nbsp; &nbsp; &nbsp;
+          <div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Descripci&oacute;n</mat-label>
+                <input matInput matInput type="text" placeholder="Nombres" 
+                  formControlName="descripcion" name="descripcion" id="descripcion">
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Descripci&oacute;n valor</mat-label>
+                <input matInput matInput type="text" placeholder="Descripci&oacute;n valor" 
+                  formControlName="descripcionValor" name="descripcionValor" id="descripcionValor">
+              </mat-form-field>
+            </p>            
+          </div> 
+          &nbsp; &nbsp; &nbsp;
+          <div class="align-self-center">
+              <button type="submit" (click)="buscadorParametros($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+              &nbsp;
+              <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
+          </div>     
         </div>
       </form>
     </div>
@@ -86,11 +87,30 @@
     </div>
   </div>
 
+  <!--Tabla vacia-->
   <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" 
-      class="table table-hover table-responsive table-condensed table-bordered" 
-      *ngIf="!cargando && parametros.length > 0"
-      class="table mt-3 animated fadeIn faster animated fadeIn faster">
+    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+      *ngIf="parametros.length === 0">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">C&oacute;digo</th>
+          <th scope="col">Descripci&oacute;n</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Descripci&oacute;n valor</th>
+          <th scope="col">Estado</th>     
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+        </tr>
+      </thead>    
+    </table>
+  </div>
+
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+      *ngIf="parametros.length > 0">
       <thead class="table-info">      
           <th scope="col">#</th>
           <th scope="col">Id</th>
@@ -127,16 +147,27 @@
           </td>
         </tr>
       </tbody>
-      <tbody *ngIf="!cargando && parametros.length === 0"
-        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-        <h4 class="alert-heading">Cargando</h4>
-        <p>
-          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-        </p>
-        <p class="mb-0">
-          Espere por favor
-        </p>
+      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>       
+        <td>
+          <h4 class="alert-heading">Cargando</h4>
+          <p>
+            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+          </p>
+          <p class="mb-0">
+            Espere por favor
+          </p>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tbody>
     </table>
   </div>
+  <br><br>
 </body>

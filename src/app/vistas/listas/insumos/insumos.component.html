@@ -7,57 +7,56 @@
   <hr>
 
   <div class="card">
-    <h3 class="card-header">Buscador</h3>  
-    <div class="card-body">
+    <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
+        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+    <div class="card-body collapse show" id="collapseBuscador">
       <form [formGroup]="buscadorForm">      
         <div class="form-row justify-content-center" >
-          <div class="col-lg-5">
-            <div class="form-group form-inline col-md-5">
-              <label for="insumoId" class="col-sm-7 col-form-label"><b>Insumo id</b></label>
-              <div class="col-sm-3">
-                <input type="number" class="form-control" id="insumoId"
-                  formControlName="insumoId" name="insumoId">
-              </div>
-            </div>
+          <div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Insumo id</mat-label>
+                <input matInput matInput type="number" placeholder="Insumo id" 
+                  formControlName="insumoId" name="insumoId" id="insumoId">
+              </mat-form-field>
+            </p>
 
-            <div class="form-group form-inline col-md-5">
-              <label for="codigo" class="col-sm-7 col-form-label"><b>C&oacute;digo</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="codigo"
-                  formControlName="codigo" name="codigo">
-              </div>
-            </div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>C&oacute;digo</mat-label>
+                <input matInput matInput type="text" placeholder="C&oacute;digo" 
+                  formControlName="codigo" name="codigo" id="codigo">
+              </mat-form-field>
+            </p> 
           </div>
+          &nbsp; &nbsp; &nbsp;
+          <div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Descripci&oacute;n</mat-label>
+                <input matInput matInput type="text" placeholder="Nombres" 
+                  formControlName="descripcion" name="descripcion" id="descripcion">
+              </mat-form-field>
+            </p>    
 
-          <div class="col-lg-5">
-            <div class="form-group form-inline col-md-5">
-              <label for="descripcion" class="col-sm-7 col-form-label"><b>Descripci&oacute;n</b></label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="descripcion"
-                  formControlName="descripcion" name="descripcion">
-              </div>
-            </div>
-    
-            <div class="form-group form-inline col-md-5">
-              <label for="estado" class="col-sm-7 col-form-label"><b>Fecha vencimiento</b></label>
-              <div class="col-sm-3">
-                <input type="date" class="form-control" id="fechaVencimiento"
-                  formControlName="fechaVencimiento" name="fechaVencimiento">
-              </div>
-            </div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Fecha vencimiento</mat-label>
+                <input matInput matInput type="date" placeholder="Fecha vencimiento" 
+                  formControlName="fechaVencimiento" name="fechaVencimiento" id="fechaVencimiento">
+              </mat-form-field>
+            </p>
+          </div>
+          &nbsp; &nbsp; &nbsp;
+          <div class="align-self-center">
+            <button type="submit" (click)="buscadorInsumos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+            &nbsp;
+            <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
           </div>       
         </div>
-        
-        <div class="col-log-4" class="text-center">
-          <div class="form-horizontal">
-            <button type="submit" (click)="buscadorInsumos($event)" class="btn btn-success">Buscar</button>
-            <button (click)="limpiar()" class="btn btn-warning">Limpiar</button>
-          </div>
-        </div>      
       </form>
     </div>
   </div>
-  <br>
   <div class="row">
     <div class="col text-right">
       <button routerLink="/insumo/nuevo"
@@ -68,12 +67,12 @@
     </div>
   </div>
 
+  <!--Tabla vacia-->
   <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" 
-      class="table table-hover table-responsive table-condensed table-bordered" 
-      *ngIf="!cargando && insumos.length > 0"
-      class="table mt-3 animated fadeIn faster animated fadeIn faster">
-      <thead class="table-info">
+    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+      *ngIf="insumos.length === 0">
+      <thead>
+        <tr class="table-primary">
           <th scope="col">#</th>
           <th scope="col">Id</th>
           <th scope="col">C&oacute;digo</th>
@@ -85,6 +84,28 @@
           <th scope="col">Usuario modificaci&oacute;n</th>  
           <th scope="col">Editar</th>
           <th scope="col">Borrar</th>
+        </tr>
+      </thead>    
+    </table>
+  </div>
+
+  <div class="table-responsive">
+    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+      *ngIf="insumos.length > 0">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col">#</th>
+          <th scope="col">Id</th>
+          <th scope="col">C&oacute;digo</th>
+          <th scope="col">Descripci&oacute;n</th>
+          <th scope="col">Fecha vencimiento</th>
+          <th scope="col">Fecha creaci&oacute;n</th>
+          <th scope="col">Usuario creaci&oacute;n</th>
+          <th scope="col">Fecha modificaci&oacute;n</th>
+          <th scope="col">Usuario modificaci&oacute;n</th>  
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
+        </tr>
       </thead>
       <tbody>
         <tr *ngFor="let insumo of insumos; let i = index">
@@ -111,16 +132,28 @@
           </td>
         </tr>
       </tbody>
-      <tbody *ngIf="!cargando && insumos.length === 0"
-        class="alert alert-warning text-center mt-3 animated fadeIn faster">    
-        <h4 class="alert-heading">Cargando</h4>
-        <p>
-          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-        </p>
-        <p class="mb-0">
-          Espere por favor
-        </p>
+      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>       
+        <td>
+          <h4 class="alert-heading">Cargando</h4>
+          <p>
+            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+          </p>
+          <p class="mb-0">
+            Espere por favor
+          </p>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>        
       </tbody>
     </table>
   </div>
+  <br><br>
 </body>

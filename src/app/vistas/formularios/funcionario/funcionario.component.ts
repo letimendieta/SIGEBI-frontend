@@ -5,11 +5,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
-import { ParametroModelo } from '../../../modelos/parametro.modelo';
+import { PersonasService } from '../../../servicios/personas.service';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { AreasService } from '../../../servicios/areas.service';
-
+import { PacientesService } from '../../../servicios/pacientes.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,15 +20,24 @@ import Swal from 'sweetalert2';
 })
 export class FuncionarioComponent implements OnInit {
   crear = false;
+  personas: PersonaModelo[] = [];
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   listaAreas: AreaModelo;
   funcionarioForm: FormGroup;
+  buscadorForm: FormGroup;
+  alert:boolean=false;
+  cargando = false;
+  dtOptions: DataTables.Settings = {};
 
   constructor( private funcionariosService: FuncionariosService,
                private areasService: AreasService,
+               private personasService: PersonasService,
+               private pacientesService: PacientesService,
                private route: ActivatedRoute,
                private router: Router,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal ) { 
     this.crearFormulario();
   } 
 
@@ -43,6 +53,7 @@ export class FuncionarioComponent implements OnInit {
     }else{
       this.crear = true;
     }
+    this.crearTablaModel();
   }
 
   listarAreas() {
@@ -194,5 +205,102 @@ export class FuncionarioComponent implements OnInit {
     this.funcionarioForm.get('fechaModificacion').disable();
     this.funcionarioForm.get('usuarioCreacion').disable();
     this.funcionarioForm.get('usuarioModificacion').disable();
+
+    this.buscadorForm = this.fb2.group({
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
   }
+
+  buscadorPersonas(event) {
+    event.preventDefault();
+    
+    var buscador = new PersonaModelo();
+    buscador.cedula = this.buscadorForm.get('cedula').value;
+    buscador.nombres = this.buscadorForm.get('nombres').value;
+    buscador.apellidos = this.buscadorForm.get('apellidos').value;
+    
+    if(!buscador.cedula && !buscador.nombres
+      && !buscador.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.personasService.buscarPersonasFiltros(buscador)
+    .subscribe( resp => {
+      this.personas = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModal(event) {
+    event.preventDefault();
+    this.buscadorForm.reset();
+    this.personas = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModel(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'personaId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModal(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorForm.patchValue({
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.personas = [];
+    this.alert=false;
+  }
+
+  selectPersona(event, persona: PersonaModelo){
+    this.modalService.dismissAll();
+    if(persona.personaId){
+      this.funcionarioForm.get('personas').get('personaId').setValue(persona.personaId);
+    }
+    this.pacientesService.getPersona( persona.personaId )
+      .subscribe( (resp: PersonaModelo) => {
+        this.funcionarioForm.get('personas').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e),
+          })
+          this.funcionarioForm.get('personas').get('personaId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

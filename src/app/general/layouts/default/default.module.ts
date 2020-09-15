@@ -46,6 +46,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -97,7 +98,8 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     DataTablesModule,
     MatFormFieldModule, 
-    MatInputModule
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [
     DashboardService

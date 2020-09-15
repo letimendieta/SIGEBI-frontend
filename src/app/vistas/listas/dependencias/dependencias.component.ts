@@ -20,30 +20,19 @@ export class DependenciasComponent implements OnInit {
   cargando = false;  
 
   constructor( private dependenciasService: DependenciasService,
-               private fb: FormBuilder ) { 
-    this.crearFormulario();
-    this.crearTabla();    
+               private fb: FormBuilder ) {       
   }
 
   ngOnInit() {    
-    this.cargando = true;
-    this.dependenciasService.buscarDependenciasFiltrosTabla(null)
-      .subscribe( resp => {
-        this.dependencias = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla(); 
   }
 
   buscadorDependencias(event) {
     event.preventDefault();
+    this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
+
     this.dependenciasService.buscarDependenciasFiltrosTabla(this.buscador)
     .subscribe( resp => {
       this.dependencias = resp;
@@ -52,9 +41,10 @@ export class DependenciasComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
     });
+    this.cargando = false;
   }
 
   crearTabla(){
@@ -78,7 +68,8 @@ export class DependenciasComponent implements OnInit {
     };
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new DependenciaModelo();
     this.dependencias = [];
@@ -112,7 +103,7 @@ export class DependenciasComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.obtenerError(e)
             })
           }
         );

@@ -33,27 +33,12 @@ export class CitasComponent implements OnInit {
 
   constructor( private citasService: CitasService,
               private areasService: AreasService,
-              private fb: FormBuilder) { 
-    this.crearFormulario();
-    this.crearTabla();  
+              private fb: FormBuilder) {     
   }
 
   ngOnInit() {
-
-    this.cargando = true;
-    this.listarAreas();
-    this.citasService.buscarCitasFiltros(null)
-      .subscribe( resp => {
-        this.citas = resp;
-        this.cargando = false;
-      }, e => {      
-        Swal.fire({
-          icon: 'info',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
-        })
-        this.cargando = false;
-      });
+    this.crearFormulario();
+    this.crearTabla();  
   }
 
   listarAreas() {
@@ -120,8 +105,9 @@ export class CitasComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 
@@ -150,7 +136,8 @@ export class CitasComponent implements OnInit {
     };
   }
 
-  limpiar() {
+  limpiar(event) {
+    event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new CitaModelo();    
     this.citas = [];
@@ -184,7 +171,7 @@ export class CitasComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.obtenerError(e)
             })
           }
         );
