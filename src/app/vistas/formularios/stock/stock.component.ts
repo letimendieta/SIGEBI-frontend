@@ -8,8 +8,9 @@ import { StockModelo } from '../../../modelos/stock.modelo';
 import { StocksService } from '../../../servicios/stocks.service';
 import { ParametrosService } from '../../../servicios/parametros.service';
 import { InsumosService } from '../../../servicios/insumos.service';
-import Swal from 'sweetalert2';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
+import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-stock',
@@ -18,9 +19,13 @@ import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 })
 export class StockComponent implements OnInit {
   crear = false;
+  insumos: InsumoModelo[] = [];
   stockForm: FormGroup;
   listaUnidadMedida: ParametroModelo;
-
+  cargando = false;
+  alert:boolean=false;
+  dtOptions: DataTables.Settings = {};
+  buscadorForm: FormGroup;
   stock: StockModelo = new StockModelo();
 
   constructor( private stocksService: StocksService,
@@ -28,7 +33,9 @@ export class StockComponent implements OnInit {
                private insumosService: InsumosService,
                private route: ActivatedRoute,
                private router: Router,
-               private fb: FormBuilder ) { 
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal ) { 
     this.crearFormulario();
   }              
 
@@ -187,6 +194,13 @@ export class StockComponent implements OnInit {
       usuarioModificacion: [null, [] ]  
     });
 
+    this.buscadorForm = this.fb2.group({
+      insumoId  : [null, [] ],
+      codigo  : [null, [] ],
+      descripcion  : [null, [] ],
+      fechaVencimiento: [null, [] ]
+    });
+
     this.stockForm.get('stockId').disable();
     this.stockForm.get('insumos').get('codigo').disable();
     this.stockForm.get('insumos').get('descripcion').disable();
@@ -194,6 +208,93 @@ export class StockComponent implements OnInit {
     this.stockForm.get('fechaModificacion').disable();
     this.stockForm.get('usuarioCreacion').disable();
     this.stockForm.get('usuarioModificacion').disable();
+  }
+ 
+
+  buscadorInsumos(event) {
+    event.preventDefault();
+    var buscador = new InsumoModelo();
+    buscador = this.buscadorForm.getRawValue();
+
+    if(!buscador.insumoId && !buscador.codigo
+      && !buscador.descripcion && !buscador.fechaVencimiento){
+      this.alert=true;
+      return;
+    }
+    this.insumosService.buscarInsumosFiltrosTabla(buscador)
+    .subscribe( resp => {
+      this.insumos = resp;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.obtenerError(e)
+      })
+    });
+  }
+
+  limpiarModal(event) {
+    event.preventDefault();
+    this.buscadorForm.reset();
+    this.insumos = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModel(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'personaId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModal(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorForm.patchValue({
+      insumoId: null,
+      codigo: null,
+      descripcion: null,
+      fechaVencimiento: null
+    });
+    this.insumos = [];
+    this.alert=false;
+  }
+
+  selectInsumo(event, insumo: InsumoModelo){
+    this.modalService.dismissAll();
+    if(insumo.insumoId){
+      this.stockForm.get('insumos').get('insumoId').setValue(insumo.insumoId);
+    }
+    this.insumosService.getInsumo( insumo.insumoId )
+      .subscribe( (resp: InsumoModelo) => {
+        this.stockForm.get('insumos').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.obtenerError(e)
+          })
+          this.stockForm.get('insumos').get('insumoId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
   }
 
 }

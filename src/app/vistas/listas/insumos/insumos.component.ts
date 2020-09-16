@@ -60,8 +60,9 @@ export class InsumosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.obtenerError(e)
       })
+      this.cargando = false;
     });
   }
 

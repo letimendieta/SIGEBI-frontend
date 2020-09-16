@@ -113,7 +113,7 @@
           <td>{{ insumo.insumoId }}</td>
           <td>{{ insumo.codigo }}</td>
           <td>{{ insumo.descripcion }}</td>
-          <td>{{ insumo.fechaVencimiento }}</td>
+          <td>{{ insumo.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
           <td>{{ insumo.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
           <td>{{ insumo.usuarioCreacion }}</td>
           <td>{{ insumo.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
