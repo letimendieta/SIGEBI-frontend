@@ -1,7 +1,1 @@
-th{
-  white-space:nowrap;
-}
-
-body {
-  font:400 15px sans-serif;
-}
+@import './../../listas/css/listas.css';

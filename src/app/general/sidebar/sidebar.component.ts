@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild,Output,EventEmitter} from '@angular/core';
 import { TokenService } from 'src/app/servicios/token.service';
+import { HeaderComponent } from 'src/app/general/header/header.component';
 
 
 @Component({
@@ -11,7 +12,11 @@ export class SidebarComponent implements OnInit {
 
     isLogged = false;
     nombreUsuario = '';
-
+        
+    @Output()
+    toggleSideBarForMe: EventEmitter<any>= new EventEmitter();
+  
+    
     constructor(private tokenService: TokenService) { }
 
     ngOnInit() {
@@ -24,8 +29,14 @@ export class SidebarComponent implements OnInit {
       }
     }
 
-
-    
-
+    toggleSideBar() {
+      this.toggleSideBarForMe.emit();
+      setTimeout(() => {
+        window.dispatchEvent(
+          new Event('resize')
+        );
+      }, 300);
+    }
+  
 
 }

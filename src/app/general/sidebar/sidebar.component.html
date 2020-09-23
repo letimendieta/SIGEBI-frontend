@@ -1,82 +1,3 @@
-<!--<mat-nav-list>
-    <div class="profile-card">
-
-        <img src="../assets/images/Logo_bienestar.jpg" alt="Politecnica">
-
-    </div>
-<br/>
-    <mat-divider></mat-divider>
-
-    <h2 matSubheader>Administracion</h2>
-
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/">Inicio</a>
-    <a mat-list-item routerLinkActive="list-item-active"  *ngIf="isLogged" routerLink="/personas">Personas</a>
-    <a mat-list-item routerLinkActive="list-item-active"  routerLink="/pacientes">Pacientes</a>
-    <a mat-list-item routerLinkActive="list-item-active"  routerLink="/funcionarios">Funcionarios</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/parametros">Parametros</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/procedimientos">Procedimientos</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/areas">Areas</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/carreras">Carreras</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/departamentos">Departamentos</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/dependencias">Dependencias</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/estamentos">Estamentos</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/citas">Citas</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/horarios">Horarios</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/stocks">Stock</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/insumos">Insumos</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/historialesClinicos">Historales Clinicos</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/upload-files">Upload</a>
-
-    <mat-divider></mat-divider>
-
-    <h2 matSubheader>Configuracion</h2>
-
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/usuarios">
-        <mat-icon>import_contacts</mat-icon>
-        Usuarios
-    </a>
-
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/contacts">
-        <mat-icon>contact_phone</mat-icon>
-        Contactos
-    </a>
-
-</mat-nav-list>
--->
-
- <!-- A vertical navbar  <nav class="navbar bg-light">-->
-
-
-      
-
-    
-    <!-- Links -->
-   <!--<ul class="navbar-nav md-1">
-        <li class="nav-item">
-            <img src="../assets/images/Logo_bienestar.jpg" alt="Politecnica">
-          </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-home"></i> Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive="list-item-active"  *ngIf="isLogged" routerLink="/personas">Personas</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Pacientes
-        </a>
-        <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdown">
-          <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/pacientes">Pacientes</a>
-          <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/historialesClinicos">Historiales Clinicos</a>
-          
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive="list-item-active"  routerLink="/usuarios">Usuarios</a>
-      </li>
-    </ul>
-  
-  </nav> -->
    	<nav id="sidebar">
    		<div class="sidebar-header">
         <img src="../assets/images/dbi-logo.png" alt="dbi">
@@ -89,45 +10,45 @@
           <a routerLinkActive="list-item-active" routerLink="/" >Inicio</a>
         </li>
         <li>
-          <a routerLinkActive="list-item-active"  routerLink="/personas">Personas</a>
+          <a routerLinkActive="list-item-active"  routerLink="/personas" (click)="toggleSideBar()">Personas</a>
         </li>
    			<li class="active">
    				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pacientes</a>
    				<ul class="collapse list-unstyled" id="pacienteSubmenu">
    					<li>
-              <a routerLinkActive="list-item-active"  routerLink="/pacientes">Pacientes</a>
+              <a routerLinkActive="list-item-active"  routerLink="/pacientes" (click)="toggleSideBar()">Pacientes</a>
               
    					</li>
    					<li>
-                <a routerLinkActive="list-item-active"  routerLink="/historialesClinicos">Historiales Clinicos</a>
+                <a routerLinkActive="list-item-active"  routerLink="/historialesClinicos" (click)="toggleSideBar()">Historiales Clinicos</a>
              </li>
              <li>
-              <a routerLinkActive="list-item-active"  routerLink="/citas">Citas</a>
+              <a routerLinkActive="list-item-active"  routerLink="/citas" (click)="toggleSideBar()">Citas</a>
              </li>
    				</ul> 
    			</li>
         <li class="active">
-          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Parametros</a>
+          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Par&aacute;metros</a>
           <ul class="collapse list-unstyled" id="variosSubmenu">
             <li>
-             <a routerLinkActive="list-item-active"  routerLink="/areas">Areas</a>
+             <a routerLinkActive="list-item-active"  routerLink="/areas" (click)="toggleSideBar()">Areas</a>
              
             </li>
             <li>
-               <a routerLinkActive="list-item-active"  routerLink="/carreras">Carreras</a>
+               <a routerLinkActive="list-item-active"  routerLink="/carreras" (click)="toggleSideBar()">Carreras</a>
             </li>
             <li>
-              <a routerLinkActive="list-item-active"  routerLink="/departamentos">Departamentos</a>
+              <a routerLinkActive="list-item-active"  routerLink="/departamentos" (click)="toggleSideBar()">Departamentos</a>
               
              </li>
              <li>
-                <a routerLinkActive="list-item-active"  routerLink="/estamentos">Estamentos</a>
+                <a routerLinkActive="list-item-active"  routerLink="/estamentos" (click)="toggleSideBar()">Estamentos</a>
              </li>
              <li>
-              <a routerLinkActive="list-item-active"  routerLink="/dependencias">Dependencias</a>
+              <a routerLinkActive="list-item-active"  routerLink="/dependencias" (click)="toggleSideBar()">Dependencias</a>
            </li>
            <li>
-            <a routerLinkActive="list-item-active"  routerLink="/parametros">Parametros</a>
+            <a routerLinkActive="list-item-active"  routerLink="/parametros" (click)="toggleSideBar()">Param&eacute;tros</a>
          </li>
           </ul> 
         </li>
@@ -135,39 +56,33 @@
           <a href="#funcionariosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Funcionarios</a>
           <ul class="collapse list-unstyled" id="funcionariosSubmenu">
             <li>
-             <a routerLinkActive="list-item-active"  routerLink="/funcionarios">Funcionarios</a>
+             <a routerLinkActive="list-item-active"  routerLink="/funcionarios" (click)="toggleSideBar()">Funcionarios</a>
             </li>
             <li>
-             <a routerLinkActive="list-item-active"  routerLink="/horarios">Horarios</a>
+             <a routerLinkActive="list-item-active"  routerLink="/horarios" (click)="toggleSideBar()">Horarios</a>
             </li>
             
           </ul> 
         </li>
         <li>
-          <a routerLinkActive="list-item-active"  routerLink="/procedimientos">Procedimientos</a>
+          <a routerLinkActive="list-item-active"  routerLink="/procedimientos" (click)="toggleSideBar()">Procedimientos</a>
         </li>
         <li class="active">
    				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Stock</a>
    				<ul class="collapse list-unstyled" id="stockSubmenu">
    					<li>
-              <a routerLinkActive="list-item-active"  routerLink="/stocks">Stock</a>
+              <a routerLinkActive="list-item-active"  routerLink="/stocks" (click)="toggleSideBar()">Stock</a>
    					</li>
    					<li>
-              <a routerLinkActive="list-item-active"  routerLink="/insumos">Insumos</a>
+              <a routerLinkActive="list-item-active"  routerLink="/insumos" (click)="toggleSideBar()">Insumos</a>
    					</li>
    				</ul> 
          </li>
    			<li>
-   				<a routerLinkActive="list-item-active"  routerLink="/usuarios">Usuarios</a>
+   				<a routerLinkActive="list-item-active"  routerLink="/usuarios"(click)="toggleSideBar()">Usuarios</a>
    			</li>
    			
    		</ul>
    		
-   		<ul class="list-unstyled CTAs">
-   			<li>
-   				<a routerLinkActive="list-item-active"  routerLink="/upload-files" class="download">Subir archivos</a>
-   			</li>
-   		
-   		</ul>
      </nav>
     

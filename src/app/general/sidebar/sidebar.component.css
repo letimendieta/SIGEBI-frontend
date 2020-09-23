@@ -20,7 +20,7 @@ a:focus{
 .navbar{
 	padding: 15px 10px;
 	background: #fff;
-	border: none;
+	border: rgb(191, 227, 243);
 	border-radius: 0;
 	margin-bottom: 40px;
 	box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
@@ -37,7 +37,7 @@ a:focus{
 #sidebar {
     min-width: auto;
     max-width: auto;
-    background: rgb(191, 227, 243);
+    background: #fff;
     color: black;
     transition: all 0.3s;
 }
@@ -47,7 +47,7 @@ a:focus{
 
 #sidebar .sidebar-header{
 	padding: 20px;
-	background:rgb(191, 227, 243);
+	background: #fff;
 	border-bottom: 1px solid #fff;
 
 }
@@ -74,7 +74,7 @@ a:focus{
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
-	background: rgb(191, 227, 243);
+	background: #fff;
     color: black;
 }
 a[data-toggle="collapse"] {
@@ -91,7 +91,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background:rgb(191, 227, 243);
+    background:#fff;
     
 }
 

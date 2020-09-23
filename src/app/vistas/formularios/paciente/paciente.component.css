@@ -1,7 +1,6 @@
 
-body {
-    font:400 16px/1.8 sans-serif;
-}
+@import './../../formularios/css/formularios.css';
+
 
 /*
    server-side-angular-way.component.css
