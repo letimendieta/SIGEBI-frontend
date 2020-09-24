@@ -171,6 +171,7 @@ export class HistorialClinicoComponent implements OnInit {
           },
           err => {
             mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.obtenerError(err);
+            console.log(mensajeUpload);
         });
 
         this.selectedFiles = undefined;

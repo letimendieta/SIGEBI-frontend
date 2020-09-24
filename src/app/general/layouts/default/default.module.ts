@@ -33,7 +33,6 @@ import { InsumosComponent } from 'src/app/vistas/listas/insumos/insumos.componen
 import { InsumoComponent } from 'src/app/vistas/formularios/insumo/insumo.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
-import { UploadFilesComponent } from 'src/app/vistas/upload-files/upload-files.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -83,8 +82,7 @@ import {MatSelectModule} from '@angular/material/select';
     InsumosComponent,
     InsumoComponent,
     HistorialesClinicosComponent,
-    HistorialClinicoComponent,
-    UploadFilesComponent
+    HistorialClinicoComponent
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UsuarioModelo } from '../modelos/usuario.modelo';
-
+import { GlobalConstants } from '../common/global-constants';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -9,7 +9,8 @@ import { map } from 'rxjs/operators';
 })
 export class LoginService {
 
-  private url = 'http://localhost:8080/auth';
+  private url = GlobalConstants.apiUrlBackend;
+
   private apikey = '';
 
   userToken: string;

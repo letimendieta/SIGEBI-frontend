@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { DepartamentoModelo } from '../modelos/departamento.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
+import { GlobalConstants } from '../common/global-constants';
 
 
 @Injectable({
@@ -10,9 +11,7 @@ import { HttpParams } from "@angular/common/http";
 })
 export class DepartamentosService {
 
-  //private url = 'https://sigebi-app.firebaseio.com/';
-
-  private url = 'http://localhost:8080/auth';
+  private url = GlobalConstants.apiUrlBackend;
 
   constructor( private http: HttpClient ) { }
 

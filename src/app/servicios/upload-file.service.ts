@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpHeaders, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { GlobalConstants } from '../common/global-constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadFileService {
-
-  private baseUrl = 'http://localhost:8080/auth/archivos';
+  private url = GlobalConstants.apiUrlBackend + '/archivos';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,7 @@ export class UploadFileService {
     formData.append('file', file);
     formData.append('tipo', tipo);
 
-    const req = new HttpRequest('POST', `${this.baseUrl}/upload`, formData, {
+    const req = new HttpRequest('POST', `${this.url}/upload`, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -31,7 +31,7 @@ export class UploadFileService {
     formData.append('file', file);
     formData.append('tipo', tipo);
 
-    const req = new HttpRequest('POST', `${this.baseUrl}/upload`, formData);
+    const req = new HttpRequest('POST', `${this.url}/upload`, formData);
 
     return this.http.request(req);
   }
@@ -42,15 +42,15 @@ export class UploadFileService {
     formData.append('file', file);
     formData.append('tipo', tipo);  
 
-    return this.http.request(new HttpRequest('POST', `${this.baseUrl}/upload`, formData));
+    return this.http.request(new HttpRequest('POST', `${this.url}/upload`, formData));
   }
 
   getFiles( tipo: String ): Observable<any> {
-    return this.http.get(`${this.baseUrl}/filesFolder/${ tipo }`);
+    return this.http.get(`${this.url}/filesFolder/${ tipo }`);
   }
 
   getFilesName(name: String, tipo: String): Observable<any> {
-    return this.http.get(`${this.baseUrl}/filesName/${ name }/${ tipo }`);
+    return this.http.get(`${this.url}/filesName/${ name }/${ tipo }`);
   }
   
 }

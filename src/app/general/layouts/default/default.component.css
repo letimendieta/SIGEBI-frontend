@@ -17,4 +17,5 @@ mat-drawer-content {
   background-size: 80%;
   background-position: center;
   background-position-y: 10px;
+  background-repeat: no-repeat;
 }
