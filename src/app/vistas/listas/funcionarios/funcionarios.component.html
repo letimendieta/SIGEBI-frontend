@@ -109,92 +109,94 @@
     </table>
   </div>
 
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="funcionarios.length > 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&eacute;dula</th>
-          <th scope="col">Nombres</th>
-          <th scope="col">Apellidos</th>
-          <th scope="col">&Aacute;rea</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Edad</th>
-          <th scope="col">Direcci&oacute;n</th>
-          <th scope="col">Email</th>
-          <th scope="col">Estado civil</th>
-          <th scope="col">Fecha nacimiento</th>
-          <th scope="col">Nacionalidad</th>
-          <th scope="col">Sexo</th>
-          <th scope="col">Tel&eacute;fono</th>
-          <th scope="col">Celular</th>   
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let funcionario of funcionarios; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ funcionario.funcionarioId }}</td>
-          <td>{{ funcionario.personas.cedula }}</td>
-          <td>{{ funcionario.personas.nombres }}</td>
-          <td>{{ funcionario.personas.apellidos }}</td>
-          <td>{{ funcionario.areaId }}</td>
-          <td>{{ funcionario.estado }}</td>
-          <td>{{ funcionario.personas.edad }}</td>
-          <td>{{ funcionario.personas.direccion }}</td>
-          <td>{{ funcionario.personas.email }}</td>
-          <td>{{ funcionario.personas.estadoCivil }}</td>
-          <td>{{ funcionario.personas.fechaNacimiento }}</td>
-          <td>{{ funcionario.personas.nacionalidad }}</td>
-          <td>{{ funcionario.personas.sexo }}</td>
-          <td>{{ funcionario.personas.telefono }}</td>
-          <td>{{ funcionario.personas.celular}}</td>
+  <div class="card">
+    <div class="table-responsive  table-hover">
+      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+        *ngIf="funcionarios.length > 0">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">C&eacute;dula</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">&Aacute;rea</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Direcci&oacute;n</th>
+            <th scope="col">Email</th>
+            <th scope="col">Estado civil</th>
+            <th scope="col">Fecha nacimiento</th>
+            <th scope="col">Nacionalidad</th>
+            <th scope="col">Sexo</th>
+            <th scope="col">Tel&eacute;fono</th>
+            <th scope="col">Celular</th>   
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let funcionario of funcionarios; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ funcionario.funcionarioId }}</td>
+            <td>{{ funcionario.personas.cedula }}</td>
+            <td>{{ funcionario.personas.nombres }}</td>
+            <td>{{ funcionario.personas.apellidos }}</td>
+            <td>{{ funcionario.areaId }}</td>
+            <td>{{ funcionario.estado }}</td>
+            <td>{{ funcionario.personas.edad }}</td>
+            <td>{{ funcionario.personas.direccion }}</td>
+            <td>{{ funcionario.personas.email }}</td>
+            <td>{{ funcionario.personas.estadoCivil }}</td>
+            <td>{{ funcionario.personas.fechaNacimiento }}</td>
+            <td>{{ funcionario.personas.nacionalidad }}</td>
+            <td>{{ funcionario.personas.sexo }}</td>
+            <td>{{ funcionario.personas.telefono }}</td>
+            <td>{{ funcionario.personas.celular}}</td>
 
+            <td>
+              <a class="btn btn-info"
+                      [routerLink]="['/funcionario', funcionario.funcionarioId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarFuncionario($event, funcionario)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>      
           <td>
-            <a class="btn btn-info"
-                    [routerLink]="['/funcionario', funcionario.funcionarioId ]">
-              <i class="fa fa-edit"></i>
-            </a>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
           </td>
-          <td (click)="borrarFuncionario($event, funcionario)">  
-            <button class="btn btn-danger">
-            <i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>      
-        <td>
-          <h4 class="alert-heading">Cargando</h4>
-          <p>
-            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-          </p>
-          <p class="mb-0">
-            Espere por favor
-          </p>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>    
-      </tbody>
-    </table>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>    
+        </tbody>
+      </table>
+    </div>
   </div>
   <br><br>
 </body>

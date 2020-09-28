@@ -179,85 +179,87 @@
     </table>
   </div>
 
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="citas.length > 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">Paciente id</th>
-          <th scope="col">Paciente c&eacute;dula</th>
-          <th scope="col">Paciente nombres</th>
-          <th scope="col">Paciente apellidos</th>
-          <th scope="col">Funcionario id</th>
-          <th scope="col">Funcionario c&eacute;dula</th>
-          <th scope="col">Funcionario nombres</th>
-          <th scope="col">Funcionario apellidos</th>
-          <th scope="col">Codigo &aacute;rea</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Hora</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cita of citas; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ cita.citaId }}</td>
-          <td>{{ cita.pacientes.pacienteId }}</td>
-          <td>{{ cita.pacientes.personas.cedula }}</td>
-          <td>{{ cita.pacientes.personas.nombres }}</td>
-          <td>{{ cita.pacientes.personas.apellidos }}</td>
-          <td>{{ cita.funcionarios.funcionarioId }}</td>
-          <td>{{ cita.funcionarios.personas.cedula }}</td>
-          <td>{{ cita.funcionarios.personas.nombres }}</td>
-          <td>{{ cita.funcionarios.personas.apellidos }}</td>
-          <td>{{ cita.areas.codigo }}</td>
-          <td>{{ cita.fecha | date : 'dd-MM-yyyy'}}</td>
-          <td>{{ cita.hora}}</td>
-          <td>{{ cita.estado}}</td>   
+  <div class="card">
+    <div class="table-responsive table-hover">
+      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+        *ngIf="citas.length > 0">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Paciente id</th>
+            <th scope="col">Paciente c&eacute;dula</th>
+            <th scope="col">Paciente nombres</th>
+            <th scope="col">Paciente apellidos</th>
+            <th scope="col">Funcionario id</th>
+            <th scope="col">Funcionario c&eacute;dula</th>
+            <th scope="col">Funcionario nombres</th>
+            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">Codigo &aacute;rea</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Hora</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cita of citas; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ cita.citaId }}</td>
+            <td>{{ cita.pacientes.pacienteId }}</td>
+            <td>{{ cita.pacientes.personas.cedula }}</td>
+            <td>{{ cita.pacientes.personas.nombres }}</td>
+            <td>{{ cita.pacientes.personas.apellidos }}</td>
+            <td>{{ cita.funcionarios.funcionarioId }}</td>
+            <td>{{ cita.funcionarios.personas.cedula }}</td>
+            <td>{{ cita.funcionarios.personas.nombres }}</td>
+            <td>{{ cita.funcionarios.personas.apellidos }}</td>
+            <td>{{ cita.areas.codigo }}</td>
+            <td>{{ cita.fecha | date : 'dd-MM-yyyy'}}</td>
+            <td>{{ cita.hora}}</td>
+            <td>{{ cita.estado}}</td>   
 
+            <td>
+              <a class="btn btn-info"
+                      [routerLink]="['/cita', cita.citaId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarCita($event, cita)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>       
+          <td></td>
+          <td></td> 
           <td>
-            <a class="btn btn-info"
-                    [routerLink]="['/cita', cita.citaId ]">
-              <i class="fa fa-edit"></i>
-            </a>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
           </td>
-          <td (click)="borrarCita($event, cita)">  
-            <button class="btn btn-danger">
-            <i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>       
-        <td></td>
-        <td></td> 
-        <td>
-          <h4 class="alert-heading">Cargando</h4>
-          <p>
-            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-          </p>
-          <p class="mb-0">
-            Espere por favor
-          </p>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td> 
-        <td></td>
-        <td></td> 
-        <td></td>
-      </tbody>
-    </table>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td> 
+          <td></td>
+          <td></td> 
+          <td></td>
+        </tbody>
+      </table>
+    </div>
   </div>
   <br><br>
 </body>

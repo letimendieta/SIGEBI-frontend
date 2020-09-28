@@ -143,80 +143,81 @@
       </thead>    
     </table>
   </div>
+  <div class="card">
+    <div class="table-responsive table-hover">
+      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+        *ngIf="procedimientos.length > 0">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Paciente id</th>
+            <th scope="col">Paciente c&eacute;dula</th>
+            <th scope="col">Paciente nombres</th>
+            <th scope="col">Paciente apellidos</th>
+            <th scope="col">Funcionario id</th>
+            <th scope="col">Funcionario c&eacute;dula</th>
+            <th scope="col">Funcionario nombres</th>
+            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">InsumoId</th>
+            <th scope="col">Fecha procedimiento</th>  
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let procedimiento of procedimientos; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ procedimiento.procedimientoId }}</td>
+            <td>{{ procedimiento.pacientes.pacienteId }}</td>
+            <td>{{ procedimiento.pacientes.personas.cedula }}</td>
+            <td>{{ procedimiento.pacientes.personas.nombres }}</td>
+            <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
+            <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
+            <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
+            <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
+            <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
+            <td>{{ procedimiento.insumoId }}</td>
+            <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
 
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="procedimientos.length > 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">Paciente id</th>
-          <th scope="col">Paciente c&eacute;dula</th>
-          <th scope="col">Paciente nombres</th>
-          <th scope="col">Paciente apellidos</th>
-          <th scope="col">Funcionario id</th>
-          <th scope="col">Funcionario c&eacute;dula</th>
-          <th scope="col">Funcionario nombres</th>
-          <th scope="col">Funcionario apellidos</th>
-          <th scope="col">InsumoId</th>
-          <th scope="col">Fecha procedimiento</th>  
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let procedimiento of procedimientos; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ procedimiento.procedimientoId }}</td>
-          <td>{{ procedimiento.pacientes.pacienteId }}</td>
-          <td>{{ procedimiento.pacientes.personas.cedula }}</td>
-          <td>{{ procedimiento.pacientes.personas.nombres }}</td>
-          <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
-          <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
-          <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
-          <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
-          <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
-          <td>{{ procedimiento.insumoId }}</td>
-          <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
-
+            <td>
+              <a class="btn btn-info"
+                      [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarProcedimiento($event, procedimiento)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>       
+          <td></td>
           <td>
-            <a class="btn btn-info"
-                    [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
-              <i class="fa fa-edit"></i>
-            </a>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
           </td>
-          <td (click)="borrarProcedimiento($event, procedimiento)">  
-            <button class="btn btn-danger">
-            <i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>       
-        <td></td>
-        <td>
-          <h4 class="alert-heading">Cargando</h4>
-          <p>
-            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-          </p>
-          <p class="mb-0">
-            Espere por favor
-          </p>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td> 
-        <td></td>
-        <td></td> 
-      </tbody>
-    </table>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td> 
+          <td></td>
+          <td></td> 
+        </tbody>
+      </table>
+    </div>
   </div>
   <br><br>
 </body>

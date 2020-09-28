@@ -91,72 +91,74 @@
     </table>
   </div>
 
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="carreras.length > 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&oacute;digo</th>
-          <th scope="col">Descripci&oacute;n</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Fecha creaci&oacute;n</th>
-          <th scope="col">Usuario creaci&oacute;n</th>
-          <th scope="col">Fecha modificaci&oacute;n</th>
-          <th scope="col">Usuario modificaci&oacute;n</th>     
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="carreras?.length != 0">
-        <tr *ngFor="let carrera of carreras; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ carrera.carreraId }}</td>
-          <td>{{ carrera.codigo }}</td>
-          <td>{{ carrera.descripcion }}</td>
-          <td>{{ carrera.estado }}</td>
-          <td>{{ carrera.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-          <td>{{ carrera.usuarioCreacion }}</td>
-          <td>{{ carrera.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-          <td>{{ carrera.usuarioModificacion }}</td>    
+  <div class="card">
+    <div class="table-responsive table-hover">
+      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+        *ngIf="carreras.length > 0">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">C&oacute;digo</th>
+            <th scope="col">Descripci&oacute;n</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Fecha creaci&oacute;n</th>
+            <th scope="col">Usuario creaci&oacute;n</th>
+            <th scope="col">Fecha modificaci&oacute;n</th>
+            <th scope="col">Usuario modificaci&oacute;n</th>     
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="carreras?.length != 0">
+          <tr *ngFor="let carrera of carreras; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ carrera.carreraId }}</td>
+            <td>{{ carrera.codigo }}</td>
+            <td>{{ carrera.descripcion }}</td>
+            <td>{{ carrera.estado }}</td>
+            <td>{{ carrera.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ carrera.usuarioCreacion }}</td>
+            <td>{{ carrera.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ carrera.usuarioModificacion }}</td>    
 
+            <td>
+              <a class="btn btn-info"
+                [routerLink]="['/carrera', carrera.carreraId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarCarrera($event, carrera)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>       
           <td>
-            <a class="btn btn-info"
-              [routerLink]="['/carrera', carrera.carreraId ]">
-              <i class="fa fa-edit"></i>
-            </a>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
           </td>
-          <td (click)="borrarCarrera($event, carrera)">  
-            <button class="btn btn-danger">
-            <i class="fa fa-trash"></i></button>
-          </td>
-
-        </tr>
-      </tbody>
-      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>       
-        <td>
-          <h4 class="alert-heading">Cargando</h4>
-          <p>
-            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-          </p>
-          <p class="mb-0">
-            Espere por favor
-          </p>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>        
-      </tbody>
-      
-    </table>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>        
+        </tbody>
+        
+      </table>
+    </div>
   </div>
   <br><br>
 </body>

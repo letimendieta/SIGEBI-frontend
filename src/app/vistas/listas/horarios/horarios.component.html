@@ -116,85 +116,87 @@
     </table>
   </div>
 
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-    *ngIf="horarios.length > 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Hora inicio</th>
-          <th scope="col">Hora fin</th>
-          <th scope="col">Funcionario id</th>
-          <th scope="col">Funcionario c&eacute;dula</th>
-          <th scope="col">Funcionario nombres</th>
-          <th scope="col">Funcionario apellidos</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Fecha creaci&oacute;n</th>
-          <th scope="col">Usuario creaci&oacute;n</th>
-          <th scope="col">Fecha modificaci&oacute;n</th>
-          <th scope="col">Usuario modificaci&oacute;n</th>    
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let horario of horarios; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ horario.horarioDisponibleId }}</td>
-          <td>{{ horario.fecha | date : 'dd-MM-yyyy' }}</td>
-          <td>{{ horario.horaInicio }}</td>
-          <td>{{ horario.horaFin }}</td>
-          <td>{{ horario.funcionarios.funcionarioId }}</td>
-          <td>{{ horario.funcionarios.personas.cedula }}</td>
-          <td>{{ horario.funcionarios.personas.nombres }}</td>
-          <td>{{ horario.funcionarios.personas.apellidos }}</td>
-          <td>{{ horario.estado }}</td>
-          <td>{{ horario.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-          <td>{{ horario.usuarioCreacion }}</td>
-          <td>{{ horario.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-          <td>{{ horario.usuarioModificacion }}</td>      
+  <div class="card">
+    <div class="table-responsive table-hover">
+      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
+      *ngIf="horarios.length > 0">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Hora inicio</th>
+            <th scope="col">Hora fin</th>
+            <th scope="col">Funcionario id</th>
+            <th scope="col">Funcionario c&eacute;dula</th>
+            <th scope="col">Funcionario nombres</th>
+            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Fecha creaci&oacute;n</th>
+            <th scope="col">Usuario creaci&oacute;n</th>
+            <th scope="col">Fecha modificaci&oacute;n</th>
+            <th scope="col">Usuario modificaci&oacute;n</th>    
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let horario of horarios; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ horario.horarioDisponibleId }}</td>
+            <td>{{ horario.fecha | date : 'dd-MM-yyyy' }}</td>
+            <td>{{ horario.horaInicio }}</td>
+            <td>{{ horario.horaFin }}</td>
+            <td>{{ horario.funcionarios.funcionarioId }}</td>
+            <td>{{ horario.funcionarios.personas.cedula }}</td>
+            <td>{{ horario.funcionarios.personas.nombres }}</td>
+            <td>{{ horario.funcionarios.personas.apellidos }}</td>
+            <td>{{ horario.estado }}</td>
+            <td>{{ horario.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ horario.usuarioCreacion }}</td>
+            <td>{{ horario.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ horario.usuarioModificacion }}</td>      
 
+            <td>
+              <a class="btn btn-info"
+                      [routerLink]="['/horario', horario.horarioDisponibleId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarHorario($event, horario)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">    
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
           <td>
-            <a class="btn btn-info"
-                    [routerLink]="['/horario', horario.horarioDisponibleId ]">
-              <i class="fa fa-edit"></i>
-            </a>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
           </td>
-          <td (click)="borrarHorario($event, horario)">  
-            <button class="btn btn-danger">
-            <i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">    
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-          <h4 class="alert-heading">Cargando</h4>
-          <p>
-            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-          </p>
-          <p class="mb-0">
-            Espere por favor
-          </p>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tbody>
-    </table>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tbody>
+      </table>
+    </div>
   </div>
   <br><br>
 </body>
