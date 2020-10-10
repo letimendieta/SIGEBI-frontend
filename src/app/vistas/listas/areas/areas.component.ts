@@ -4,6 +4,7 @@ import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { GlobalConstants } from '../../../common/global-constants';
 
 @Component({
   selector: 'app-areas',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class AreasComponent implements OnInit {
 
-  dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   
   areas: AreaModelo[] = [];
   buscador: AreaModelo = new AreaModelo();
@@ -35,7 +36,22 @@ export class AreasComponent implements OnInit {
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
       searching: false,      
       language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sLoadingRecords": "Cargando..."
       },
       processing: true,
       columns: [
@@ -45,17 +61,87 @@ export class AreasComponent implements OnInit {
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
         {data:'Editar'},
         {data:'Borrar'}
+      ],      
+      dom: 'lBfrtip',
+      buttons: [
+        {
+          extend:    'copy',
+          text:      '<i class="far fa-copy"></i>',
+          titleAttr: 'Copiar',
+          className: 'btn btn-light',
+          title:     'Listado de Areas',
+          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
+          exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+          },
+        },
+        {
+          extend:    'csv',
+          title:     'Listado de Areas',
+          text:      '<i class="fas fa-file-csv"></i>',
+          titleAttr: 'Exportar a CSV',
+          className: 'btn btn-secondary',
+          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
+          exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+          },
+        },
+        {
+          extend:    'excelHtml5',
+          title:     'Listado de Areas',
+          text:      '<i class="fas fa-file-excel"></i> ',
+          titleAttr: 'Exportar a Excel',
+          className: 'btn btn-success',
+          autoFilter: true,
+          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
+          exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+          }
+        },
+        /*{
+          extend:    'pdfHtml5',
+          title:     'ListadoAreas',
+          text:      '<i class="fas fa-file-pdf"></i> ',
+          titleAttr: 'Exportar a PDF',
+          className: 'btn btn-danger',
+          exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+          },
+        },*/
+        {
+          extend:    'print',
+          title:     'Listado de Areas',
+          text:      '<i class="fa fa-print"></i> ',
+          titleAttr: 'Imprimir',
+          className: 'btn btn-info',
+          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
+          exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+          },
+          customize: function ( win ) {
+            $(win.document.body)
+                .css( 'font-size', '10pt' )
+                .prepend(
+                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+                );
+
+            $(win.document.body).find( 'table' )
+                .addClass( 'compact' )
+                .css( 'font-size', 'inherit' );
+          }              
+        }
       ]
     };
   }
 
    buscadorAreas(event) {
-    event.preventDefault();
+    event.preventDefault();    
     this.cargando = true;
     this.buscador = this.buscadorForm.getRawValue();
  
     this.areasService.buscarAreasFiltrosTabla(this.buscador)
     .subscribe( resp => {
+        this.areas = [];
         this.areas = resp;
         this.cargando = false;
       }, e => {      
