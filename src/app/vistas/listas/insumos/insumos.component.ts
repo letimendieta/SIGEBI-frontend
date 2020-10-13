@@ -69,7 +69,7 @@ export class InsumosComponent implements OnInit {
           title:     'Listado de insumos',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
           },
         },
         {
@@ -80,7 +80,7 @@ export class InsumosComponent implements OnInit {
           className: 'btn btn-secondary',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
           },
         },
         {
@@ -92,7 +92,7 @@ export class InsumosComponent implements OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
           }
         },          
         {
@@ -103,7 +103,7 @@ export class InsumosComponent implements OnInit {
           className: 'btn btn-info',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
           },
           customize: function ( win ) {
             $(win.document.body)

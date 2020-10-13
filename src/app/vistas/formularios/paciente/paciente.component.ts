@@ -328,8 +328,8 @@ export class PacienteComponent implements OnInit {
       pacienteId  : [null, [] ],
       personas : this.fb.group({
         personaId  : [null, [] ],
-        cedula  : [null, [ Validators.required, Validators.minLength(6) ]  ],
-        nombres  : [null, [ Validators.required, Validators.minLength(5) ]  ],
+        cedula  : [null, [ Validators.required]  ],
+        nombres  : [null, [ Validators.required]  ],
         apellidos: [null, [Validators.required] ],
         fechaNacimiento: [null, [] ],
         edad: [null, [] ],
