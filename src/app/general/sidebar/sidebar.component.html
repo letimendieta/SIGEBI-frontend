@@ -7,13 +7,19 @@
    		<ul class="list-unstyled components">
         
          <li>
-          <a routerLinkActive="list-item-active" routerLink="/" >Inicio</a>
+          <a routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-home fa-2x"></i>  Inicio</a>
         </li>
         <li>
-          <a routerLinkActive="list-item-active"  routerLink="/personas" (click)="toggleSideBar()">Personas</a>
+          <a routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-user-md fa-2x"></i> Consultorio</a>
+        </li>
+        <li>
+          <a routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-user-nurse fa-2x"></i> Enfermer&iacute;a</a>
+        </li>
+        <li>
+          <a routerLinkActive="list-item-active"  routerLink="/personas" (click)="toggleSideBar()"><i class="fas fa-users fa-2x"></i>  Personas</a>
         </li>
    			<li class="active">
-   				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pacientes</a>
+   				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-address-book fa-2x"></i>  Pacientes</a>
    				<ul class="collapse list-unstyled" id="pacienteSubmenu">
    					<li>
               <a routerLinkActive="list-item-active"  routerLink="/pacientes" (click)="toggleSideBar()">Pacientes</a>
@@ -28,7 +34,7 @@
    				</ul> 
    			</li>
         <li class="active">
-          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Par&aacute;metros</a>
+          <a href="#variosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-cogs fa-2x"></i>  Par&aacute;metros</a>
           <ul class="collapse list-unstyled" id="variosSubmenu">
             <li>
              <a routerLinkActive="list-item-active"  routerLink="/areas" (click)="toggleSideBar()">&Aacute;reas</a>
@@ -53,7 +59,7 @@
           </ul> 
         </li>
          <li class="active">
-          <a href="#funcionariosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Funcionarios</a>
+          <a href="#funcionariosSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-id-card-alt fa-2x"></i>  Funcionarios</a>
           <ul class="collapse list-unstyled" id="funcionariosSubmenu">
             <li>
              <a routerLinkActive="list-item-active"  routerLink="/funcionarios" (click)="toggleSideBar()">Funcionarios</a>
@@ -65,10 +71,10 @@
           </ul> 
         </li>
         <li>
-          <a routerLinkActive="list-item-active"  routerLink="/procedimientos" (click)="toggleSideBar()">Procedimientos</a>
+          <a routerLinkActive="list-item-active"  routerLink="/procedimientos" (click)="toggleSideBar()"><i class="fas fa-notes-medical fa-2x"></i>  Procedimientos</a>
         </li>
         <li class="active">
-   				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Stock</a>
+   				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-boxes fa-2x"></i> Stock</a>
    				<ul class="collapse list-unstyled" id="stockSubmenu">
    					<li>
               <a routerLinkActive="list-item-active"  routerLink="/stocks" (click)="toggleSideBar()">Stock</a>
@@ -79,8 +85,11 @@
    				</ul> 
          </li>
    			<li>
-   				<a routerLinkActive="list-item-active"  routerLink="/usuarios"(click)="toggleSideBar()">Usuarios</a>
-   			</li>
+   				<a routerLinkActive="list-item-active"  routerLink="/usuarios"(click)="toggleSideBar()"><i class="fas fa-users-cog fa-2x"></i>  Usuarios</a>
+         </li>
+         <li>
+          <a routerLinkActive="list-item-active" routerLink="/" ><i class="fas fa-file-alt fa-2x"></i> Reportes</a>
+        </li>
    			
    		</ul>
    		

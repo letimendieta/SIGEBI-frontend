@@ -13,6 +13,7 @@ img{
 a,
 a:hover,
 a:focus{
+	font-size: 30px;
 	color: inherit;
 	text-decoration: none;
 	transition: all 0.3s;
@@ -20,7 +21,7 @@ a:focus{
 .navbar{
 	padding: 15px 10px;
 	background: #fff;
-	border: rgb(191, 227, 243);
+	border: rgb(6, 150, 212);
 	border-radius: 0;
 	margin-bottom: 40px;
 	box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
@@ -68,7 +69,7 @@ a:focus{
 	display: block;
 }
 #sidebar ul li a:hover {
-    color: rgb(112, 196, 235);
+    color: rgb(161, 161, 161);
     background: #fff;
 }
 
@@ -89,7 +90,7 @@ a[data-toggle="collapse"] {
 }
 
 ul ul a {
-    font-size: 0.9em !important;
+    font-size: 15px !important;
     padding-left: 30px !important;
     background:#fff;
     
@@ -112,7 +113,7 @@ a.download{
 }
 a.article,
 a.article:hover {
-    background: #6d7fcc !important;
+    background: #415edf !important;
     color: #fff !important;
 }
 
