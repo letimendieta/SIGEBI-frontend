@@ -114,14 +114,14 @@
                                           &nbsp; &nbsp; &nbsp;                                                                           
                                           <div class="align-self-center">
                                                 <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                                <button (click)="limpiarModal($event)" class="btn btn-warning">Limpiar</button>                                                                            
+                                                <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
                                           </div>
                                     </div>
                               </form>
                               <br>
 
                               <!--Tabla vacia-->
-                              <div class="table-responsive">
+                              <div class="table-responsive table-hover">
                                     <table datatable [dtOptions]="dtOptions" class="table-bordered"
                                     *ngIf="!cargando && insumos.length === 0">
                                           <thead>
@@ -134,7 +134,7 @@
                                           </thead>                                                                                    
                                     </table>
                               </div>
-                              <div class="table-responsive">
+                              <div class="table-responsive table-hover">
                                     <table datatable [dtOptions]="dtOptions" class="table-bordered"
                                           *ngIf="insumos.length > 0">
                                           <thead>
