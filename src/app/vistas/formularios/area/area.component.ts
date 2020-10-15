@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { AreasService } from '../../../servicios/areas.service';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,6 +21,7 @@ export class AreaComponent implements OnInit {
 
   constructor( private areasService: AreasService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -98,7 +98,7 @@ export class AreaComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );
@@ -112,17 +112,22 @@ export class AreaComponent implements OnInit {
 
   obtenerError(e : any){
     var mensaje = "Error indefinido ";
-      if(e.error.mensaje){
-        mensaje = e.error.mensaje;
+      if(e.error){
+        if(e.error.mensaje){
+          mensaje = e.error.mensaje;
+        }
+        if(e.error.message){
+          mensaje = e.error.message;
+        }
+        if(e.error.errors){
+          mensaje = mensaje + ' ' + e.error.errors[0];
+        }
+        if(e.error.error){
+          mensaje = mensaje + ' ' + e.error.error;
+        }
       }
-      if(e.error.message){
-        mensaje = e.error.message;
-      }
-      if(e.error.errors){
-        mensaje = mensaje + ' ' + e.error.errors[0];
-      }
-      if(e.error.error){
-        mensaje = mensaje + ' ' + e.error.error;
+      if(e.message){
+        mensaje = mensaje + ' ' + e.message;
       }
     return mensaje;  
   }

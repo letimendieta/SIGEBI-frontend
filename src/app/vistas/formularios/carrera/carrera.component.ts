@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { CarreraModelo } from '../../../modelos/carrera.modelo';
 import { CarrerasService } from '../../../servicios/carreras.service';
 
@@ -22,6 +22,7 @@ export class CarreraComponent implements OnInit {
 
   constructor( private carrerasService: CarrerasService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -29,7 +30,7 @@ export class CarreraComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-
+    this.carreraForm.get('estado').setValue('A');
     if ( id !== 'nuevo' ) {
       
       this.carrerasService.getCarrera( Number(id) )
@@ -98,7 +99,7 @@ export class CarreraComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );

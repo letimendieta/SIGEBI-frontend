@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-carreras',
@@ -21,6 +22,7 @@ export class CarrerasComponent implements OnInit {
   cargando = false;  
 
   constructor( private carrerasService: CarrerasService,
+               private comunes: ComunesService,
                private fb: FormBuilder ) {    
   }
 
@@ -127,18 +129,18 @@ export class CarrerasComponent implements OnInit {
   buscadorCarreras(event) {
     event.preventDefault();    
     this.cargando = true;
+    this.carreras = [];
     this.buscador = this.buscadorForm.getRawValue();
 
     this.carrerasService.buscarCarrerasFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.carreras = [];
+    .subscribe( resp => {      
       this.carreras = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -172,14 +174,14 @@ export class CarrerasComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorCarreras(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

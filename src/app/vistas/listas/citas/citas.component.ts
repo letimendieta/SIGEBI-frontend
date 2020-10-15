@@ -10,6 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-citas',
@@ -33,6 +34,7 @@ export class CitasComponent implements OnInit {
 
 
   constructor( private citasService: CitasService,
+              private comunes: ComunesService,
               private areasService: AreasService,
               private fb: FormBuilder) {     
   }
@@ -56,6 +58,8 @@ export class CitasComponent implements OnInit {
 
   buscadorCitas(event) { 
     event.preventDefault(); 
+    this.cargando = true;
+    this.citas = [];
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -99,15 +103,14 @@ export class CitasComponent implements OnInit {
     this.buscador.funcionarios = this.funcionario;
 
     this.citasService.buscarCitasFiltros(this.buscador)
-    .subscribe( resp => {
-      this.citas = [];
+    .subscribe( resp => {      
       this.citas = resp;
       this.cargando = false;
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -237,14 +240,14 @@ export class CitasComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorCitas(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })
           }
         );

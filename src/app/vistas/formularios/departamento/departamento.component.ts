@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DepartamentoModelo } from '../../../modelos/departamento.modelo';
 import { DepartamentosService } from '../../../servicios/departamentos.service';
 
@@ -22,6 +22,7 @@ export class DepartamentoComponent implements OnInit {
 
   constructor( private departamentosService: DepartamentosService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -98,7 +99,7 @@ export class DepartamentoComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );

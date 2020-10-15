@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-funcionarios',
@@ -24,6 +25,7 @@ export class FuncionariosComponent implements OnInit {
 
 
   constructor( private funcionariosService: FuncionariosService,
+              private comunes: ComunesService,
               private fb: FormBuilder ) {    
   }
 
@@ -129,21 +131,22 @@ export class FuncionariosComponent implements OnInit {
 
   buscadorFuncionarios(event) {
     event.preventDefault();
+    this.cargando = true;
+    this.funcionarios = [];
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
     this.buscador.personas = this.persona;
     this.buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value;    
     this.funcionariosService.buscarFuncionariosFiltros(this.buscador)
-    .subscribe( resp => {
-      this.funcionarios = [];
+    .subscribe( resp => {      
       this.funcionarios = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -185,7 +188,7 @@ export class FuncionariosComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

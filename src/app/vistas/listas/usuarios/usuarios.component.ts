@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -24,6 +25,7 @@ export class UsuariosComponent implements OnInit {
 
 
   constructor( private usuariosService: UsuariosService,
+    private comunes: ComunesService,
     private fb: FormBuilder ) {    
   }
   ngOnInit() {
@@ -125,6 +127,8 @@ export class UsuariosComponent implements OnInit {
 
   buscadorUsuarios(event) {
     event.preventDefault();
+    this.cargando = true;
+    this.usuarios = [];
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -132,15 +136,14 @@ export class UsuariosComponent implements OnInit {
     this.buscador.usuarioId = this.buscadorForm.get('usuarioId').value;
     this.buscador.codigoUsuario = this.buscadorForm.get('codigoUsuario').value;
     this.usuariosService.buscarUsuariosFiltros(this.buscador)
-    .subscribe( resp => {
-      this.usuarios = [];
+    .subscribe( resp => {      
       this.usuarios = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -175,14 +178,14 @@ export class UsuariosComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorUsuarios(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })
           }
         );

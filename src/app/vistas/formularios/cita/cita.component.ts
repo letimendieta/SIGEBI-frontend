@@ -7,7 +7,7 @@ import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { CitasService } from '../../../servicios/citas.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
@@ -45,6 +45,7 @@ export class CitaComponent implements OnInit {
                private funcionariosService: FuncionariosService,
                private areasService: AreasService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder,
                private fb2: FormBuilder,
@@ -76,7 +77,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
       );
@@ -92,7 +93,7 @@ export class CitaComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salio mal',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
       );
@@ -162,7 +163,7 @@ export class CitaComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })          
        }
     );
@@ -283,7 +284,7 @@ export class CitaComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -307,7 +308,7 @@ export class CitaComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -428,7 +429,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.citaForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -446,7 +447,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.citaForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

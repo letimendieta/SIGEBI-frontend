@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-procedimientos',
@@ -31,6 +32,7 @@ export class ProcedimientosComponent implements OnInit {
 
 
   constructor( private procedimientosService: ProcedimientosService,
+              private comunes: ComunesService,
               private fb: FormBuilder) {    
   }
 
@@ -136,6 +138,8 @@ export class ProcedimientosComponent implements OnInit {
 
   buscadorProcedimientos(event) {   
     event.preventDefault();
+    this.cargando = true;
+    this.procedimientos = [];
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -175,15 +179,14 @@ export class ProcedimientosComponent implements OnInit {
     this.buscador.procedimientoId = this.buscadorForm.get('procedimientoId').value;
     this.buscador.fecha =  this.buscadorForm.get('fecha').value;
     this.procedimientosService.buscarProcedimientosFiltros(this.buscador)
-    .subscribe( resp => {
-      this.procedimientos = [];
+    .subscribe( resp => {      
       this.procedimientos = resp;
       this.cargando = false;
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -224,7 +227,7 @@ export class ProcedimientosComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

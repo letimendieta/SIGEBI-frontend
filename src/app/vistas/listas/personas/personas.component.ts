@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-personas',
@@ -21,6 +22,7 @@ export class PersonasComponent implements OnInit {
   cargando = false;  
 
   constructor( private personasService: PersonasService,
+               private comunes: ComunesService,
                private fb: FormBuilder ) { 
     
   }
@@ -127,17 +129,17 @@ export class PersonasComponent implements OnInit {
   buscadorPersonas(event) {
     event.preventDefault();
     this.cargando = true;
+    this.personas = [];
     this.buscador = this.buscadorForm.getRawValue();
     this.personasService.buscarPersonasFiltros(this.buscador)
-    .subscribe( resp => {
-      this.personas = [];
+    .subscribe( resp => {      
       this.personas = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -177,7 +179,7 @@ export class PersonasComponent implements OnInit {
                 Swal.fire({
                   icon: 'error',
                   title: 'Algo salio mal',
-                  text: e.status +'. '+ this.obtenerError(e)
+                  text: e.status +'. '+ this.comunes.obtenerError(e)
                 })
             }
         );

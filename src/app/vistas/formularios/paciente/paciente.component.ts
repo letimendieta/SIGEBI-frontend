@@ -19,7 +19,7 @@ import { EstamentosService } from '../../../servicios/estamentos.service';
 import { PersonasService } from '../../../servicios/personas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -55,6 +55,7 @@ export class PacienteComponent implements OnInit {
                private carrerasService: CarrerasService,
                private departamentosService: DepartamentosService,
                private dependenciasService: DependenciasService,
+               private comunes: ComunesService,
                private estamentosService: EstamentosService,
                private personasService: PersonasService,
                private uploadService: UploadFileService,
@@ -138,7 +139,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }
@@ -236,7 +237,7 @@ export class PacienteComponent implements OnInit {
             mensajeUpload
           },
           err => {
-            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.obtenerError(err);
+            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
         });
 
         this.selectedFiles = undefined;
@@ -260,10 +261,20 @@ export class PacienteComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Algo salio mal',
-            text:e.status +'. '+ this.obtenerError(e)
+            text:e.status +'. '+ this.comunes.obtenerError(e)
           })          
        }
     );
+  }
+
+  ageCalculator(){
+    var fechaNacimiento = this.pacienteForm.get('persona').get('fechaNacimiento').value;//toString();
+    if( fechaNacimiento ){
+      const convertAge = new Date(fechaNacimiento);
+      const timeDiff = Math.abs(Date.now() - convertAge.getTime());
+
+      this.pacienteForm.get('persona').get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
+    }
   }
 
   limpiar(){
@@ -397,7 +408,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -467,7 +478,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }

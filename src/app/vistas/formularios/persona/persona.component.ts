@@ -10,7 +10,7 @@ import { CarreraModelo } from '../../../modelos/carrera.modelo';
 import { DepartamentoModelo } from '../../../modelos/departamento.modelo';
 import { DependenciaModelo } from '../../../modelos/dependencia.modelo';
 import { EstamentoModelo } from '../../../modelos/estamento.modelo';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { PersonasService } from '../../../servicios/personas.service';
 import { ParametrosService } from '../../../servicios/parametros.service';
 import { CarrerasService } from '../../../servicios/carreras.service';
@@ -49,6 +49,7 @@ export class PersonaComponent implements OnInit {
                private parametrosService: ParametrosService,
                private carrerasService: CarrerasService,
                private departamentosService: DepartamentosService,
+               private comunes: ComunesService,
                private dependenciasService: DependenciasService,
                private estamentosService: EstamentosService,
                private uploadService: UploadFileService,
@@ -206,7 +207,7 @@ export class PersonaComponent implements OnInit {
             mensajeUpload
           },
           err => {
-            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.obtenerError(err);
+            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
             console.log(mensajeUpload);
         });
 
@@ -230,10 +231,20 @@ export class PersonaComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })
        }
     );
+  }
+
+  ageCalculator(){
+    var fechaNacimiento = this.personaForm.get('fechaNacimiento').value;//toString();
+    if( fechaNacimiento ){
+      const convertAge = new Date(fechaNacimiento);
+      const timeDiff = Math.abs(Date.now() - convertAge.getTime());
+
+      this.personaForm.get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
+    }
   }
 
   limpiar(){

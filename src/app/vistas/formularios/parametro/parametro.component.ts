@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { ParametrosService } from '../../../servicios/parametros.service';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,6 +20,7 @@ export class ParametroComponent implements OnInit {
 
   constructor( private parametrosService: ParametrosService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder ) { 
     this.crearFormulario();
@@ -27,7 +28,7 @@ export class ParametroComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-
+    this.parametroForm.get('estado').setValue('A');
     if ( id !== 'nuevo' ) {
       
       this.parametrosService.getParametro( Number(id) )
@@ -93,7 +94,7 @@ export class ParametroComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );

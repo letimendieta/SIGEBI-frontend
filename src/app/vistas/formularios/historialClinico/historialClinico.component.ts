@@ -8,6 +8,7 @@ import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
@@ -44,6 +45,7 @@ export class HistorialClinicoComponent implements OnInit {
   constructor( private historialClinicosService: HistorialesClinicosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
+               private comunes: ComunesService,
                private areasService: AreasService,
                private route: ActivatedRoute,
                private router: Router,
@@ -89,7 +91,7 @@ export class HistorialClinicoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -117,7 +119,7 @@ export class HistorialClinicoComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salio mal',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
       );
@@ -170,7 +172,7 @@ export class HistorialClinicoComponent implements OnInit {
             mensajeUpload
           },
           err => {
-            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.obtenerError(err);
+            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
             console.log(mensajeUpload);
         });
 
@@ -194,7 +196,7 @@ export class HistorialClinicoComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })          
        }
     );
@@ -294,7 +296,7 @@ export class HistorialClinicoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -365,7 +367,7 @@ export class HistorialClinicoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(null);
         }

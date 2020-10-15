@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-departamentos',
@@ -21,6 +22,7 @@ export class DepartamentosComponent implements OnInit {
   cargando = false;  
 
   constructor( private departamentosService: DepartamentosService,
+               private comunes: ComunesService,
                private fb: FormBuilder ) {    
   }
 
@@ -32,18 +34,18 @@ export class DepartamentosComponent implements OnInit {
   buscadorDepartamentos(event) {
     event.preventDefault();
     this.cargando = true;
+    this.departamentos = [];
     this.buscador = this.buscadorForm.getRawValue();
 
     this.departamentosService.buscarDepartamentosFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.departamentos = [];
+    .subscribe( resp => {      
       this.departamentos = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -157,14 +159,14 @@ export class DepartamentosComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorDepartamentos(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

@@ -10,6 +10,7 @@ import { ParametrosService } from '../../../servicios/parametros.service';
 import { InsumosService } from '../../../servicios/insumos.service';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import Swal from 'sweetalert2';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -31,6 +32,7 @@ export class StockComponent implements OnInit {
   constructor( private stocksService: StocksService,
                private parametrosService: ParametrosService,
                private insumosService: InsumosService,
+               private comunes: ComunesService,
                private route: ActivatedRoute,
                private router: Router,
                private fb: FormBuilder,
@@ -75,7 +77,7 @@ export class StockComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
           this.stockForm.get('insumos').get('insumoId').setValue(null);
         }
@@ -139,7 +141,7 @@ export class StockComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );
@@ -228,7 +230,7 @@ export class StockComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
     });
   }
@@ -298,7 +300,7 @@ export class StockComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.stockForm.get('insumos').get('insumoId').setValue(null);
         }

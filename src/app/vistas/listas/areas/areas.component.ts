@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-areas',
@@ -21,6 +22,7 @@ export class AreasComponent implements OnInit {
   cargando = false;  
 
   constructor( private areasService: AreasService,
+    private comunes: ComunesService,
                private fb: FormBuilder) {      
   }
 
@@ -137,18 +139,18 @@ export class AreasComponent implements OnInit {
    buscadorAreas(event) {
     event.preventDefault();    
     this.cargando = true;
-    this.buscador = this.buscadorForm.getRawValue();
- 
+    this.areas = [];
+    this.buscador = this.buscadorForm.getRawValue(); 
+    
     this.areasService.buscarAreasFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-        this.areas = [];
+    .subscribe( resp => {        
         this.areas = resp;
         this.cargando = false;
       }, e => {      
         Swal.fire({
           icon: 'info',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e)
+          text: e.status +'. '+ this.comunes.obtenerError(e)
         })
         this.cargando = false;
       });
@@ -182,14 +184,14 @@ export class AreasComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorAreas(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })
           }
         );

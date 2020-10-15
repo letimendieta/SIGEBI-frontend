@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-stocks',
@@ -26,6 +27,7 @@ export class StocksComponent implements OnInit {
 
   constructor( private stocksService: StocksService,
                private parametrosService: ParametrosService,
+               private comunes: ComunesService,
                private fb: FormBuilder ) {    
   }
 
@@ -142,6 +144,8 @@ export class StocksComponent implements OnInit {
 
   buscadorStocks(event) {
     event.preventDefault();
+    this.cargando = true;
+    this.stocks = [];
     var insumos = new InsumoModelo();
     this.buscador.stockId = this.buscadorForm.get('stockId').value;
     insumos.insumoId = this.buscadorForm.get('insumoId').value;
@@ -155,15 +159,14 @@ export class StocksComponent implements OnInit {
       this.buscador.insumos = null;
     } 
     this.stocksService.buscarStocksFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.stocks = [];
+    .subscribe( resp => {      
       this.stocks = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.comunes.obtenerError(e),
       })
     });
   }
@@ -196,14 +199,14 @@ export class StocksComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorStocks(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e)
+              text: e.status +'. '+ this.comunes.obtenerError(e)
             })
             this.cargando = false;
           }

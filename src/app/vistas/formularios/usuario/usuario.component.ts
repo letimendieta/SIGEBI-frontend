@@ -13,6 +13,7 @@ import { UsuariosService } from '../../../servicios/usuarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { PersonasService } from '../../../servicios/personas.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -43,6 +44,7 @@ export class UsuarioComponent implements OnInit {
                private areasService: AreasService,
                private route: ActivatedRoute,
                private router: Router,
+               private comunes: ComunesService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
                private fb3: FormBuilder,
@@ -89,7 +91,7 @@ export class UsuarioComponent implements OnInit {
         }, e => {
             Swal.fire({
               icon: 'info',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );
@@ -104,7 +106,7 @@ export class UsuarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
           this.usuarioForm.get('personas').get('personaId').setValue(null);
         }
@@ -163,7 +165,7 @@ export class UsuarioComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
+          text: e.status +'. '+ this.comunes.obtenerError(e),
         })          
       }
     );
@@ -289,7 +291,7 @@ export class UsuarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -313,7 +315,7 @@ export class UsuarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -434,7 +436,7 @@ export class UsuarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.usuarioForm.get('personas').get('personaId').setValue(null);
         }
@@ -452,7 +454,7 @@ export class UsuarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.usuarioForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

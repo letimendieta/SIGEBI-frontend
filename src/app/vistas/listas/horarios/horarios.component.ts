@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-horarios',
@@ -25,6 +26,7 @@ export class HorariosComponent implements OnInit {
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
   constructor( private horariosService: HorariosService,
+               private comunes: ComunesService,
                private fb: FormBuilder ) {    
   }
 
@@ -132,6 +134,8 @@ export class HorariosComponent implements OnInit {
 
   buscadorHorarios(event) {
     event.preventDefault();
+    this.cargando = true;
+    this.horarios = [];
     this.funcionario = new FuncionarioModelo();
     this.funcionarioPersona = new PersonaModelo();
 
@@ -153,15 +157,14 @@ export class HorariosComponent implements OnInit {
     this.buscador.funcionarios = this.funcionario;
     
     this.horariosService.buscarHorariosFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.horarios = [];
+    .subscribe( resp => {      
       this.horarios = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.comunes.obtenerError(e),
       })
     });
   }
@@ -201,7 +204,7 @@ export class HorariosComponent implements OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

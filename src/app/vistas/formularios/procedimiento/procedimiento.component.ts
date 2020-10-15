@@ -6,7 +6,7 @@ import { ProcedimientoModelo } from '../../../modelos/procedimiento.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { ProcedimientosService } from '../../../servicios/procedimientos.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
@@ -40,6 +40,7 @@ export class ProcedimientoComponent implements OnInit {
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
                private router: Router,
+               private comunes: ComunesService,
                private route: ActivatedRoute,
                private fb: FormBuilder,
                private fb2: FormBuilder,
@@ -71,7 +72,7 @@ export class ProcedimientoComponent implements OnInit {
         }, e => {
             Swal.fire({
               icon: 'info',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );
@@ -88,7 +89,7 @@ export class ProcedimientoComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salio mal',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
       );
@@ -146,7 +147,7 @@ export class ProcedimientoComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
+          text: e.status +'. '+ this.comunes.obtenerError(e),
         })          
       }
     );
@@ -262,7 +263,7 @@ export class ProcedimientoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -286,7 +287,7 @@ export class ProcedimientoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -407,7 +408,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.procedimientoForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -425,7 +426,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

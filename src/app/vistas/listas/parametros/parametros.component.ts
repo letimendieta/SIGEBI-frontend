@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-parametros',
@@ -21,6 +22,7 @@ export class ParametrosComponent implements OnInit {
   cargando = false;  
 
   constructor( private parametrosService: ParametrosService,
+    private comunes: ComunesService,
     private fb: FormBuilder ) {     
   }
 
@@ -31,17 +33,18 @@ export class ParametrosComponent implements OnInit {
 
   buscadorParametros(event) {
     event.preventDefault();
+    this.cargando = true;
+    this.parametros = [];
     this.buscador = this.buscadorForm.getRawValue();
     this.parametrosService.buscarParametrosFiltrosTabla(this.buscador)
-    .subscribe( resp => {
-      this.parametros = [];
+    .subscribe( resp => {      
       this.parametros = resp;
       this.cargando = false;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e),
+        text: e.status +'. '+ this.comunes.obtenerError(e),
       })
     });
   }
@@ -166,14 +169,14 @@ export class ParametrosComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorParametros(event);
             }
           });
         }, e => {              
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );

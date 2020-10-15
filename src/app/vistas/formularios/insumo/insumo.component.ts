@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import { InsumoModelo } from '../../../modelos/insumo.modelo';
 import { InsumosService } from '../../../servicios/insumos.service';
 
@@ -23,6 +23,7 @@ export class InsumoComponent implements OnInit {
   constructor( private insumosService: InsumosService,
                private route: ActivatedRoute,
                private router: Router,
+               private comunes: ComunesService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
   }              
@@ -97,7 +98,7 @@ export class InsumoComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );

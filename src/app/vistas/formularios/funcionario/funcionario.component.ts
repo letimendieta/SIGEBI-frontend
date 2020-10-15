@@ -11,6 +11,7 @@ import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { AreasService } from '../../../servicios/areas.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -33,6 +34,7 @@ export class FuncionarioComponent implements OnInit {
                private areasService: AreasService,
                private personasService: PersonasService,
                private pacientesService: PacientesService,
+               private comunes: ComunesService,
                private route: ActivatedRoute,
                private router: Router,
                private fb: FormBuilder,
@@ -77,7 +79,7 @@ export class FuncionarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
           this.funcionarioForm.get('personas').get('personaId').setValue(null);
         }
@@ -139,7 +141,7 @@ export class FuncionarioComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.obtenerError(e),
+          text: e.status +'. '+ this.comunes.obtenerError(e),
         })          
        }
     );
@@ -235,7 +237,7 @@ export class FuncionarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -305,7 +307,7 @@ export class FuncionarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
           this.funcionarioForm.get('personas').get('personaId').setValue(null);
         }

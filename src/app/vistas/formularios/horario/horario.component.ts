@@ -9,6 +9,7 @@ import { HorarioModelo } from '../../../modelos/horario.modelo';
 import { HorariosService } from '../../../servicios/horarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 import Swal from 'sweetalert2';
 
@@ -30,6 +31,7 @@ export class HorarioComponent implements OnInit {
   constructor( private horariosService: HorariosService,
                private funcionariosService: FuncionariosService,
                private route: ActivatedRoute,
+               private comunes: ComunesService,
                private router: Router,
                private fb: FormBuilder,
                private fb2: FormBuilder,
@@ -60,7 +62,7 @@ export class HorarioComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salio mal',
-            text: e.status +'. '+ this.obtenerError(e),
+            text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
       );
@@ -123,7 +125,7 @@ export class HorarioComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
     );
@@ -225,7 +227,7 @@ export class HorarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -296,7 +298,7 @@ export class HorarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.obtenerError(e)
+            text: e.status +'. '+ this.comunes.obtenerError(e)
           })
           this.horarioForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

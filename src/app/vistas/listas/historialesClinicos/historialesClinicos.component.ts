@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-historialesClinicos',
@@ -30,8 +31,9 @@ export class HistorialesClinicosComponent implements OnInit {
 
 
   constructor( private historialClinicosService: HistorialesClinicosService,
-              private areasService: AreasService,
-              private fb: FormBuilder) {    
+               private comunes: ComunesService,
+               private areasService: AreasService,
+               private fb: FormBuilder) {    
   }
 
   ngOnInit() {
@@ -148,6 +150,8 @@ export class HistorialesClinicosComponent implements OnInit {
 
   buscadorHistorialClinicos(event) {   
     event.preventDefault();
+    this.cargando = true;
+    this.historialClinicos = [];
     this.paciente = new PacienteModelo();
     this.pacientePersona = new PersonaModelo();
 
@@ -169,15 +173,14 @@ export class HistorialesClinicosComponent implements OnInit {
     this.buscador.pacientes = this.paciente;
 
     this.historialClinicosService.buscarHistorialClinicosFiltros(this.buscador)
-    .subscribe( resp => {
-      this.historialClinicos = [];
+    .subscribe( resp => {      
       this.historialClinicos = resp;
       this.cargando = false;
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.obtenerError(e)
+        text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -210,14 +213,14 @@ export class HistorialesClinicosComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorHistorialClinicos(event);
             }
           });
         }, e => {            
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.obtenerError(e),
+              text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
         );
