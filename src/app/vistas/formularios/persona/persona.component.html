@@ -31,7 +31,7 @@
               <div class="col-lg-5">
                 <div class="form-group" [hidden]="crear">
                   <label><b>Id</b></label>
-                  <input type="text"
+                  <input type="number"
                         class="form-control"
                         placeholder="Persona Id"
                         formControlName="personaId" 
@@ -55,7 +55,25 @@
                         Ingrese c&eacute;dula
                       </small>
                 </div>
-
+                <div>
+                  <dl class="form-inline">
+                    <dt>Cedula Prueba:  </dt>
+                    <dd>{{personaForm.get('cedula').value}}</dd>
+                  </dl>
+                </div>
+                <div class="form-inline">
+                    <label>Cedula Prueba:</label>
+                    <label>{{personaForm.get('cedula').value}}</label>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col"><b>C&eacute;dula</b></div>
+                    <div class="col">{{personaForm.get('cedula').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col">Nombres</div>
+                    <div class="col">{{personaForm.get('nombres').value}}</div>
+                  </div>
+                </div>
                 <div>
                   <label><b>Nombres</b></label>
                   <input type="text"
@@ -92,7 +110,7 @@
                 <label><b>Edad</b></label>
                 <input type="number"
                       class="form-control"
-                      formControlName="edad"
+                      formControlName="Edad"
                       name="edad"
                       placeholder="Edad"
                       (focus)="ageCalculator()">

@@ -35,6 +35,7 @@ import { InsumoComponent } from './vistas/formularios/insumo/insumo.component';
 import { InsumosComponent } from './vistas/listas/insumos/insumos.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
+import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 
 import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
 
@@ -157,6 +158,10 @@ const routes: Routes = [
   },{
     path: 'historialClinico/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HistorialClinicoComponent
+  },
+  {
+    path: 'consultorio',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: ConsultorioComponent
   }
   ]
 }];
