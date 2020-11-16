@@ -1,10 +1,9 @@
-export class InsumoModelo {
+export class VacunaModelo {
 
-    insumoId: number;
+    vacunaId: number;
     codigo: string;
     descripcion: string;
-    tipo: string;
-    fechaVencimiento: Date;
+    estado: string;    
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

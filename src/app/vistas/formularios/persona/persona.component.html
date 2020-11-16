@@ -190,7 +190,7 @@
               
                 <label><b>Carrera</b></label> 
                 <select class="form-control input-sm" name="carreraId"
-                    formControlName="carreraId">
+                    formControlName="carreras.carreraId">
                     <option value=null>Seleccione</option>
                     <option *ngFor="let item of listaCarreras; let i = index"
                       value="{{item.carreraId}}">
@@ -200,7 +200,7 @@
             
                 <label><b>Departamento</b></label>
                 <select class="form-control input-sm" name = "departamentoId"
-                    formControlName="departamentoId">
+                    formControlName="departamentos.departamentoId">
                     <option value=null>Seleccione</option>
                     <option *ngFor="let item of listaDepartamentos; let i = index"
                       value="{{item.departamentoId}}">
@@ -210,7 +210,7 @@
             
                 <label><b>Dependencia</b></label>
                 <select class="form-control input-sm" name = "dependenciaId"
-                    formControlName="dependenciaId">
+                    formControlName="dependencias.dependenciaId">
                     <option value=null>Seleccione</option>
                     <option *ngFor="let item of listaDependencias; let i = index"
                       value="{{item.dependenciaId}}">
@@ -220,7 +220,7 @@
             
                 <label><b>Estamento</b></label>
                 <select class="form-control input-sm" name = "estamentoId"
-                    formControlName="estamentoId">
+                    formControlName="estamentos.estamentoId">
                     <option value=null>Seleccione</option>
                     <option *ngFor="let item of listaEstamentos; let i = index"
                       value="{{item.estamentoId}}">

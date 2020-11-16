@@ -56,7 +56,7 @@ export class InsumosComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'fechaVencimiento'}, {data:'tipo'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
         {data:'Editar'},
         {data:'Borrar'},

@@ -36,6 +36,7 @@ import { InsumosComponent } from './vistas/listas/insumos/insumos.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
+import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 
 import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
 
@@ -162,6 +163,10 @@ const routes: Routes = [
   {
     path: 'consultorio',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: ConsultorioComponent
+  },
+  {
+    path: 'enfermeria',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: EnfermeriaComponent
   }
   ]
 }];

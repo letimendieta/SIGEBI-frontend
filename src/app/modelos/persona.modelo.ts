@@ -1,3 +1,8 @@
+import { CarreraModelo } from './carrera.modelo';
+import { DepartamentoModelo } from './departamento.modelo';
+import { DependenciaModelo } from './dependencia.modelo';
+import { EstamentoModelo } from './estamento.modelo';
+
 export class PersonaModelo {
 
     personaId: number;
@@ -13,10 +18,10 @@ export class PersonaModelo {
     sexo: string;
     telefono: string;
     celular: string;
-    carreraId: number;
-    departamentoId: number;
-    dependenciaId: number;
-    estamentoId: number;
+    carreras: CarreraModelo;
+    departamento: DepartamentoModelo;
+    dependencias: DependenciaModelo;
+    estamentos: EstamentoModelo;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

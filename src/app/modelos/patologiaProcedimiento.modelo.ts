@@ -1,10 +1,11 @@
-export class InsumoModelo {
+import { AlergenoModelo } from './alergeno.modelo';
 
-    insumoId: number;
+export class PatologiaProcedimientoModelo {
+
+    patologiaProcedimientoId: number;
     codigo: string;
     descripcion: string;
-    tipo: string;
-    fechaVencimiento: Date;
+    estado: string;    
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

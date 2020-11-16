@@ -1,10 +1,9 @@
-export class InsumoModelo {
+export class AlergenoModelo {
 
-    insumoId: number;
+    alergenoId: number;
     codigo: string;
     descripcion: string;
-    tipo: string;
-    fechaVencimiento: Date;
+    estado: string;    
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

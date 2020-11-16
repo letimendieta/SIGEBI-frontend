@@ -1,9 +1,10 @@
+import { HistorialClinicoModelo } from './historialClinico.modelo';
 import { PersonaModelo } from './persona.modelo';
 
 export class PacienteModelo {
 
     pacienteId: number;
-    historialId: number;
+    historialClinico: HistorialClinicoModelo;
     grupoSanguineo: string;
     seguroMedico: string;
     fechaCreacion: Date;

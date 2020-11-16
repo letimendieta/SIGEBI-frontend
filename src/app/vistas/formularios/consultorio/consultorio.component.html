@@ -9,7 +9,7 @@
 
     <div>
         <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
-          <div class="form-row justify-content-start">
+          <div class="d-flex p-2">
             <div class="form-inline">
               <div>
                 <mat-form-field appearance="legacy">
@@ -29,6 +29,7 @@
                 </mat-form-field> 
               </div> 
             </div>
+            &nbsp;
             <div class="align-self-center">
               <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
             </div>
@@ -37,229 +38,967 @@
               <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Limpiar"
                   (click)="limpiar($event)"><i class="fas fa-backspace"></i></button>
             </div>
+            &nbsp;
             <div>
               <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Buscador de pacientes"
-                  (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
+                  (click)="openModal(editProfileModalPacientes)"><i class="fas fa-search"></i></button>
             </div>
           </div>
         </form>
     </div>
 
+    <!--Pestanas-->
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Datos Personales</a>
-        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Ficha M&eacute;dica</a>
-        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Historial Cl&iacute;nico</a>
-        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Tratamiento</a>
+        <a class="nav-item nav-link active" id="nav-datosP-tab" data-toggle="tab" href="#nav-datosP" role="tab" aria-controls="nav-datosP" aria-selected="true">Datos Personales</a>
+        <a class="nav-item nav-link" id="nav-fichaM-tab" data-toggle="tab" href="#nav-fichaM" role="tab" aria-controls="nav-fichaM" aria-selected="false">Ficha M&eacute;dica</a>
+        <a class="nav-item nav-link" id="nav-historialC-tab" data-toggle="tab" href="#nav-historialC" role="tab" aria-controls="nav-historialC" aria-selected="false">Historial Cl&iacute;nico</a>
+        <a class="nav-item nav-link" id="nav-Anamnesis-tab" data-toggle="tab" href="#nav-Anamnesis" role="tab" aria-controls="nav-Anamnesis" aria-selected="false">Anamnesis</a>
+        <a class="nav-item nav-link" id="nav-tratamiento-tab" data-toggle="tab" href="#nav-tratamiento" role="tab" aria-controls="nav-tratamiento" aria-selected="false">Diagnostico y Tratamiento</a>
       </div>
     </nav>
 
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <div> 
-          <!--Modal buscador de pacientes-->
-          <div class="row justify-content-center">
-            <div class="col-lg-6">
-              <div class="container">              
-                <div class="row">                
-                  <ng-template #editProfileModal let-modal>
-                    <div class="modal-header">
-                    <h3 class="modal-title" id="editProfileLabel">Buscador Pacientes</h3>
-                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
-                          <span aria-hidden="true">&times;</span> 
-                    </button>
-                    </div>
-                    <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
-                          Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
-                          <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                          </button>
-                    </div>
-                    <div class="modal-body">
-                          <form [formGroup]="buscadorModalForm" (ngSubmit)="buscadorPacientes($event)">
-                                <div class="form-row justify-content-center">
-                                      <div>                                                                                                                                                          
-                                            <mat-form-field appearance="legacy">
-                                                  <mat-label>C&eacute;dula</mat-label>
-                                                  <input matInput type="text" placeholder="C&eacute;dula" 
-                                                        formControlName="cedula" id="cedula">
-                                            </mat-form-field>                                                                                                                                                         
-                                            <mat-form-field appearance="legacy">
-                                                  <mat-label>Nombres</mat-label>
-                                                  <input matInput type="text" placeholder="Nombres" 
-                                                        formControlName="nombres" id="nombres">
-                                            </mat-form-field>
-                                            <mat-form-field appearance="legacy">
-                                                  <mat-label>Apellidos</mat-label>
-                                                  <input matInput type="text" placeholder="Apellidos" 
-                                                        formControlName="apellidos" id="apellidos">
-                                            </mat-form-field>
-                                      </div>
-                                      &nbsp;                                                                            
-                                      <div class="align-self-center">
-                                            <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
-                                            <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                      </div>
-                                </div>
-                          </form>
-                          <br>
+    <!--Contenido de pestanas-->
 
-                          <!--Tabla vacia-->
-                          <div class="table-responsive table-hover">
-                                <table datatable [dtOptions]="dtOptions" class="table-bordered"
-                                *ngIf="!cargando && pacientes.length === 0">
-                                      <thead>
-                                            <tr class="table-primary">
-                                                  <th>Id</th>
-                                                  <th>C&eacute;dula</th>
-                                                  <th>Nombres</th>
-                                                  <th>Apellidos</th>
-                                            </tr>
-                                      </thead>                                                                                    
-                                </table>
-                          </div>
-                          <div class="table-responsive table-hover">
-                                <table datatable [dtOptions]="dtOptions" class="table-bordered"
-                                      *ngIf="pacientes.length > 0">
-                                      <thead>
-                                            <tr  class="table-primary">
-                                                  <th>Id</th>
-                                                  <th>C&eacute;dula</th>
-                                                  <th>Nombres</th>
-                                                  <th>Apellidos</th>
-                                            </tr>
-                                      </thead>
-                                      <tbody *ngIf="pacientes?.length != 0">
-                                            <tr *ngFor="let paciente of pacientes" 
-                                                  (click)="selectPaciente($event, paciente)">                                                                                                
-                                                  <td>{{ paciente.pacienteId }}</td>
-                                                  <td>{{ paciente.personas.cedula }}</td>
-                                                  <td>{{ paciente.personas.nombres }}</td>
-                                                  <td>{{ paciente.personas.apellidos }}</td>
-                                            </tr>
-                                      </tbody>
-                                      <tbody *ngIf="cargando">
-                                            <td></td>
-                                            <td></td>
-                                            <td><h4 class="alert-heading">Cargando</h4>
-                                                  <p>
-                                                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                                                  </p>
-                                                  <p class="mb-0">
-                                                        Espere por favor
-                                                  </p>
-                                            </td>
-                                            <td></td>
-                                      </tbody>                                                                                    
-                                </table>
-                          </div>
-                          <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
-                          </div>
-                    </div>
-                  </ng-template>                             
+    <div class="tab-content" id="nav-tabContent">
+      <!--Datos Personales-->
+      <div class="tab-pane fade show active" id="nav-datosP" role="tabpanel" aria-labelledby="nav-datosP-tab">
+        <div class="card">  
+          <div> 
+            <!--Modal buscador de pacientes-->
+            <div class="row justify-content-center">
+              <div class="col-lg-6">
+                <div class="container">              
+                  <div class="row">                
+                    <ng-template #editProfileModalPacientes let-modal>
+                      <div class="modal-header">
+                      <h3 class="modal-title" id="editProfileLabel">Buscador Pacientes</h3>
+                      <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span> 
+                      </button>
+                      </div>
+                      <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                            <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                      </div>
+                      <div class="modal-body">
+                            <form [formGroup]="buscadorModalForm" (ngSubmit)="buscadorPacientes($event)">
+                                  <div class="form-row justify-content-center">
+                                        <div>                                                                                                                                                          
+                                              <mat-form-field appearance="legacy">
+                                                    <mat-label>C&eacute;dula</mat-label>
+                                                    <input matInput type="text" placeholder="C&eacute;dula" 
+                                                          formControlName="cedula" id="cedula">
+                                              </mat-form-field>                                                                                                                                                         
+                                              <mat-form-field appearance="legacy">
+                                                    <mat-label>Nombres</mat-label>
+                                                    <input matInput type="text" placeholder="Nombres" 
+                                                          formControlName="nombres" id="nombres">
+                                              </mat-form-field>
+                                              <mat-form-field appearance="legacy">
+                                                    <mat-label>Apellidos</mat-label>
+                                                    <input matInput type="text" placeholder="Apellidos" 
+                                                          formControlName="apellidos" id="apellidos">
+                                              </mat-form-field>
+                                        </div>
+                                        &nbsp;                                                                            
+                                        <div class="align-self-center">
+                                              <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                              <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                        </div>
+                                  </div>
+                            </form>
+                            <br>
+
+                            <!--Tabla vacia-->
+                            <div class="table-responsive table-hover">
+                                  <table datatable [dtOptions]="dtOptionsBuscador" class="table-bordered"
+                                  *ngIf="!cargando && pacientes.length === 0">
+                                        <thead>
+                                              <tr class="table-primary">
+                                                    <th>Id</th>
+                                                    <th>C&eacute;dula</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                              </tr>
+                                        </thead>                                                                                    
+                                  </table>
+                            </div>
+                            <div class="table-responsive table-hover">
+                                  <table datatable [dtOptions]="dtOptionsBuscador" class="table-bordered"
+                                        *ngIf="pacientes.length > 0">
+                                        <thead>
+                                              <tr  class="table-primary">
+                                                    <th>Id</th>
+                                                    <th>C&eacute;dula</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                              </tr>
+                                        </thead>
+                                        <tbody *ngIf="pacientes?.length != 0">
+                                              <tr *ngFor="let paciente of pacientes" 
+                                                    (click)="selectPaciente($event, paciente)">                                                                                                
+                                                    <td>{{ paciente.pacienteId }}</td>
+                                                    <td>{{ paciente.personas.cedula }}</td>
+                                                    <td>{{ paciente.personas.nombres }}</td>
+                                                    <td>{{ paciente.personas.apellidos }}</td>
+                                              </tr>
+                                        </tbody>
+                                        <tbody *ngIf="cargando">
+                                              <td></td>
+                                              <td></td>
+                                              <td><h4 class="alert-heading">Cargando</h4>
+                                                    <p>
+                                                          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                          Espere por favor
+                                                    </p>
+                                              </td>
+                                              <td></td>
+                                        </tbody>                                                                                    
+                                  </table>
+                            </div>
+                            <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                            </div>
+                      </div>
+                    </ng-template>                             
+                  </div>
+                </div>              
+              </div>          
+            </div>
+            <br>
+            <!-- Datos paciente-->
+            <div class="row justify-content-center">
+              <div class="col-lg-5">
+                <div class="container">              
+                  <div class="row">                
+                    <div class="col"><b>Persona id:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('personaId').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Nombres:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('nombres').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Apellidos:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('apellidos').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Fecha nacimiento:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Edad:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('edad').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Sexo:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('sexo').value}}</div>                
+                  </div>
+                </div>              
+              </div>
+
+              <div class="col-lg-5">
+                <div class="container">
+                  <div class="row">                
+                    <div class="col"><b>Estado Civil:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('estadoCivil').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Nacionalidad:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('nacionalidad').value}}</div>
+                    <div class="w-100"></div>                
+                    <div class="col"><b>Carrera:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('carreras').get('descripcion').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Departamento:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('departamentos').get('descripcion').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Dependencia:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('dependencias').get('descripcion').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col"><b>Estamento:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('estamentos').get('descripcion').value}}</div>                
+                  </div>   
+                </div>         
+              </div>
+
+              <div class="col-lg-2">
+                <div class="container">
+                  <div class="row">                
+                    <img src="../assets/images/user-circle-solid.svg" alt="..." class="img-thumbnail">                               
+                  </div>   
+                </div>         
+              </div>
+
+            </div>
+          </div>
+          <br><br>     
+            
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
+                aria-expanded="true" aria-controls="collapseBuscador">Direcciones y contactos
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseBuscador">
+              <div class="row justify-content-center">
+                <div class="col-lg-6">
+                  <div class="col"><b>Direcci&oacute;n:</b></div>
+                  <div class="col">{{pacienteForm.get('personas').get('direccion').value}}</div>
+                  <div class="w-100"></div>
+                  <div class="col"><b>Tel&eacute;fono:</b></div>
+                  <div class="col">{{pacienteForm.get('personas').get('telefono').value}}</div>
+                  <div class="w-100"></div>
+                  <div class="col"><b>Celular:</b></div>
+                  <div class="col">{{pacienteForm.get('personas').get('celular').value}}</div>
+                  <div class="w-100"></div>
+                  <div class="col"><b>Email:</b></div>
+                  <div class="col">{{pacienteForm.get('personas').get('email').value}}</div>
                 </div>
-              </div>              
-            </div>          
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label><b>Observaciones: </b></label>
+                    <!--textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea-->
+                  </div>
+                </div>
+
+              </div>
+            </div>
           </div>
           <br>
-          <!-- Datos pacienteles-->
+          <br>
+        </div>
+      </div>
+      <!--Ficha Medica-->
+      <div class="tab-pane fade" id="nav-fichaM" role="tabpanel" aria-labelledby="nav-fichaM-tab">
+        <div class="card"> 
+          <br>
+          <!-- Datos paciente-->
           <div class="row justify-content-center">
             <div class="col-lg-5">
               <div class="container">              
-                <div class="row">                
-                  <div class="col"><b>Persona id:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('personaId').value}}</div>
+                <div class="row">
+                  <div class="col"><b>Grupo Sanguineo:</b></div>
+                  <div class="col">{{pacienteForm.get('grupoSanguineo').value}}</div>
                   <div class="w-100"></div>
-                  <div class="col"><b>Nombres:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('nombres').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Apellidos:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('apellidos').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Fecha nacimiento:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Edad:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('edad').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Sexo:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('sexo').value}}</div>                
+                  <div class="col"><b>Seguro medico:</b></div>
+                  <div class="col">{{pacienteForm.get('seguroMedico').value}}</div>                              
                 </div>
               </div>              
             </div>
 
             <div class="col-lg-5">
               <div class="container">
-                <div class="row">                
-                  <div class="col"><b>Estado Civil:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('estadoCivil').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Nacionalidad:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('nacionalidad').value}}</div>
-                  <div class="w-100"></div>                
-                  <div class="col"><b>Carrera:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('carreraId').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Departamento:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('departamentoId').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Dependencia:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('dependenciaId').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Estamento:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('estamentoId').value}}</div>                
-                </div>   
+                
               </div>         
             </div>
 
             <div class="col-lg-2">
               <div class="container">
-                <div class="row">                
-                  <img src="../assets/images/user-circle-solid.svg" alt="..." class="img-thumbnail">                               
-                </div>   
+                
               </div>         
             </div>
 
           </div>
-        </div>
-        <br><br>     
-          
-        <div class="card">
-          <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-              aria-expanded="true" aria-controls="collapseBuscador">Direcciones y contactos</h3>  
-          <div class="card-body collapse show" id="collapseBuscador">
-            <div class="row justify-content-center">
-              <div class="col-lg-6">
-                <div class="col"><b>Direcci&oacute;n:</b></div>
-                <div class="col">{{pacienteForm.get('personas').get('direccion').value}}</div>
-                <div class="w-100"></div>
-                <div class="col"><b>Tel&eacute;fono:</b></div>
-                <div class="col">{{pacienteForm.get('personas').get('telefono').value}}</div>
-                <div class="w-100"></div>
-                <div class="col"><b>Celular:</b></div>
-                <div class="col">{{pacienteForm.get('personas').get('celular').value}}</div>
-                <div class="w-100"></div>
-                <div class="col"><b>Email:</b></div>
-                <div class="col">{{pacienteForm.get('personas').get('email').value}}</div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapsePatologias"
+                aria-expanded="true" 
+                aria-controls="collapsePatologias">Patologias y tratamientos actuales
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapsePatologias">
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsPatologias" class="table table-sm" 
+                  *ngIf="patologiasProcedimientos.length > 0">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Patologia</th>
+                      <th scope="col">Tratamiento</th>
+                      <th scope="col">Estado</th>                    
+                      <th scope="col">Editar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let patologia of patologiasProcedimientos; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ patologia.patologiaId }}</td>
+                      <td>{{ patologia.codigo }}</td>
+                      <td>{{ patologia.descripcion }}</td>
+                      <td>{{ patologia.estado }}</td>        
+                      <td>
+                        <a class="btn btn-info"
+                                [routerLink]="['/patologia', patologia.patologiaId ]">
+                          <i class="fa fa-edit"></i>
+                        </a>
+                      </td>                   
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
               </div>
-
-              <div class="col-lg-6">
-                <div class="form-group">
-                  <label><b>Observaciones: </b></label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-              </div>
-
             </div>
           </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentes"
+                aria-expanded="true" 
+                aria-controls="collapseAntecedentes">Antecedentes de infecciones y procedimientos
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseAntecedentes">
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsAntecedentes" class="table table-sm" 
+                  *ngIf="antecedentes.length > 0">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Patologia/Procedimiento</th>
+                      <th scope="col">Tipo</th>                    
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let antecedente of antecedentes; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ antecedente.antecedenteId }}</td>
+                      <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
+                      <td>{{ antecedente.tipo }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentesFamiliar"
+                aria-expanded="true" 
+                aria-controls="collapseAntecedentesFamiliar">Antecedentes familiares
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseAntecedentesFamiliar">
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsAntecedentesFamiliares" class="table table-sm" 
+                  *ngIf="antecedentesFamiliares.length > 0">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Patologia/Procedimiento</th>
+                      <th scope="col">Tipo</th>                    
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let antecedente of antecedentesFamiliares; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ antecedente.antecedenteId }}</td>
+                      <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
+                      <td>{{ antecedente.tipo }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAlergias"
+                aria-expanded="true" 
+                aria-controls="collapseAlergias">Alergias
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseAlergias">
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsAlergias" class="table table-sm" 
+                  *ngIf="alergias.length > 0">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Alergeno</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let alergia of alergias; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ alergia.alergiaId }}</td>
+                      <td>{{ alergia.alergenos.descripcion }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseFichas"
+                aria-expanded="true" 
+                aria-controls="collapseFichas">Fichas Digitalizadas
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseFichas">
+              <!--div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsFichas" class="table table-sm" 
+                  *ngIf="fichas.length > 0">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Alergeno</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let ficha of fichas; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ alergia.alergiaId }}</td>
+                      <td>{{ alergia.alergenos.descripcion }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
+              </div-->
+            </div>
+          </div>
+          <br> 
+        </div>       
+      </div>      
+      <!--Historial Clinico-->
+      <div class="tab-pane fade" id="nav-historialC" role="tabpanel" aria-labelledby="nav-historialC-tab">
+        <div class="card"> 
+          <br>
+          <div class="row justify-content-center">
+            <div class="col-lg-5">
+              <div class="container">              
+                <div class="row">                
+                  <div class="col"><b>Historial clinico id:</b></div>
+                  <div class="col">{{historialClinicoForm.get('historialClinicoId').value}}</div>
+                  <div class="w-100"></div>
+                  <div class="col"><b>Area:</b></div>
+                  <div class="col">{{historialClinicoForm.get('areas').get('descripcion').value}}</div>                                               
+                </div>
+              </div>              
+            </div>
+
+            <div class="col-lg-5">
+              <div class="container">
+                
+              </div>         
+            </div>
+
+            <div class="col-lg-2">
+              <div class="container">
+                
+              </div>         
+            </div>
+
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseHistorialClinico"
+                aria-expanded="true" 
+                aria-controls="collapseHistorialClinico">Historial clinico
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseHistorialClinico">
+              
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseHistorialDigitalizado"
+                aria-expanded="true" 
+                aria-controls="collapseHistorialClinicoDigitalizado">Historial clinico digitalizado
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseHistorialClinicoDigitalizado">
+              
+            </div>
+          </div>        
+          <br>
         </div>
-        <br>
+      </div>
+      <!--Anamnesis-->
+      <div class="tab-pane fade" id="nav-Anamnesis" role="tabpanel" aria-labelledby="nav-Anamnesis-tab">
+        <div class="card">   
+          <form [formGroup]="anamnesisForm" (ngSubmit)="guardarAnamnesis($event)">
+            <br>
+            <div class="col-lg-5">
+              <div class="container">              
+                <div class="row">   
+                  <div class="col"><b>Anamnesis id: </b></div>
+                  <div class="col">{{anamnesisForm.get('anamnesisId').value}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body collapse show" id="collapseFichas">
+              <label><b>Antecedentes de la enfermedad actual</b></label>
+              <textarea class="form-control" id="antecedentes" 
+                formControlName="antecedentes" rows="6"></textarea>
+            </div>
+            <div class="card-body collapse show" id="collapseFichas">
+              <label><b>Antecedentes remotos de la enfermedad actual</b></label>
+              <textarea class="form-control" id="antecedentesRemotos" 
+                formControlName="antecedentesRemotos" rows="6"></textarea>
+            </div>          
+            <br>
+            <div class="form-group text-center">
+              <button type="submit"
+                      class="btn btn-primary ">
+                <i class="fa fa-save"></i>
+                Guardar
+              </button>              
+            </div>
+          </form> 
+        </div>        
         <br>
       </div>
-      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+      <!--Diagnostico y Tratamiento-->
+      <div class="tab-pane fade" id="nav-tratamiento" role="tabpanel" aria-labelledby="nav-tratamiento-tab">
+        <div class="card"> 
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseNuevaConsulta"
+                aria-expanded="true" 
+                aria-controls="collapseNuevaConsulta">Nuevo Diagnostico
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>
+
+            <div class="card-body collapse show" id="collapseNuevaConsulta">
+              <div class="nav nav-tabs" id="nav-tab-diagnostico" role="tablist">
+                <a class="nav-item nav-link active" id="nav-principal-tab" data-toggle="tab" href="#nav-principal" role="tab" aria-controls="nav-principal" aria-selected="true">Diagnostico Principal</a>
+                <a class="nav-item nav-link" id="nav-secundario-tab" data-toggle="tab" href="#nav-secundario" role="tab" aria-controls="nav-secundario" aria-selected="false">Diagnostico Secundario</a>
+              </div>
+              <div class="tab-content" id="nav-tabContentDiagnostico">
+                <!--form [formGroup]="diagnosticoForm"-->
+                  <div class="tab-pane fade show active" id="nav-principal" role="tabpanel" aria-labelledby="nav-principal-tab">
+                    <form [formGroup]="diagnosticoPrimarioForm"> 
+                      <br>
+                      <textarea class="form-control" formControlName="diagnosticoPrincipal" id="diagnosticoPrincipal" rows="3"></textarea>
+                      <br>
+                      <div><label><b>Nomenclatura Estandar: </b></label>
+                        <br>
+                        <div class="input-group mb-3">                    
+                          <select class="custom-select" id="ciePrincipal">
+                            <option selected>Elegir</option>
+                            <option value="1">CIE09</option> 
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label><b>Diagnostico Estandarizado: </b></label>
+                        <br>
+                        <div class="input-group mb-3">
+                          <div class="input-group mb-3">                         
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            <button type="button" class="btn btn-primary" 
+                                      (click)="openModalTerminoEstandar(editProfileModalTerminoEstadndar, 'P')"><i class="fas fa-search"></i></button>
+                          </div>
+                          <div >
+                            {{ terminoEstandarPrincipalSeleccionado.codigoUnico }} - {{ terminoEstandarPrincipalSeleccionado.termino }}
+                          </div>
+                        </div>
+                      </div> 
+                    </form>
+                  </div>
+                  <div class="tab-pane fade" id="nav-secundario" role="tabpanel" aria-labelledby="nav-secundario-tab">
+                    <form [formGroup]="diagnosticoSecundarioForm"> 
+                      <br>
+                      <textarea class="form-control" formControlName="diagnosticoSecundario" id="diagnosticoSecundario" rows="3"></textarea>
+                      <br>
+
+                      <div><label><b>Nomenclatura Estandar: </b></label>
+                        <br> 
+                        <div class="input-group mb-3">                    
+                          <select class="custom-select" id="cieSecundario">
+                            <option selected>Elegir</option>
+                            <option value="1">CIE09</option>                      
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label><b>Diagnostico Estandarizado: </b></label> 
+                        <br>
+                        <div class="input-group mb-3">
+                          <div class="input-group mb-3">                         
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            <button type="button" class="btn btn-primary" 
+                                      (click)="openModalTerminoEstandar(editProfileModalTerminoEstadndar, 'S')"><i class="fas fa-search"></i></button>
+                          </div>
+                          <div >
+                            {{ terminoEstandarSecundarioSeleccionado.codigoUnico }} - {{ terminoEstandarSecundarioSeleccionado.termino }}
+                          </div>
+                          <!--Modal buscador de Termino Estandar Principal-->
+                          <ng-template #editProfileModalTerminoEstadndar let-modal>
+                            <div class="modal-header">
+                                  <h3 class="modal-title" id="editProfileLabelTerminoEstandar">Buscador Termino Estandar</h3>
+                                  <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span> 
+                                  </button>
+                            </div>
+                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                  Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                  </button>
+                                  </div>
+                            <div class="modal-body">
+                                  <form [formGroup]="buscadorTerminoEstandarForm" (ngSubmit)="buscadorTerminoEstandar($event)">
+                                        <div class="form-row justify-content-center">
+                                              <div>                                           
+                                                <div>                                                   
+                                                  <mat-form-field appearance="legacy">
+                                                    <mat-label>Identificador</mat-label>
+                                                    <input matInput type="text" placeholder="Identificador" 
+                                                          formControlName="id" id="id">
+                                                  </mat-form-field>  
+                                                  <mat-form-field appearance="legacy">
+                                                    <mat-label>Codigo Unico</mat-label>
+                                                    <input matInput type="text" placeholder="Codigo Unico" 
+                                                          formControlName="codigoUnico" id="codigoUnico">
+                                                  </mat-form-field>
+                                                  <mat-form-field appearance="legacy">
+                                                    <mat-label>Termino</mat-label>
+                                                    <input matInput type="text" placeholder="Termino" 
+                                                          formControlName="termino" id="termino">
+                                                  </mat-form-field>
+                                                </div>                                                
+                                              </div>
+                                              &nbsp; &nbsp; &nbsp;                                                                           
+                                              <div class="align-self-center">
+                                                    <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                                    <button (click)="limpiarModalTerminoEstandar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                              </div>
+                                        </div>
+                                  </form>
+                                  <br>
+
+                                  <!--Tabla vacia-->
+                                  <div class="table-responsive table-hover">
+                                        <table datatable [dtOptions]="dtOptionsTerminoEstandar" class="table-bordered"
+                                        *ngIf="!cargando && terminosEstandar.length === 0">
+                                              <thead>
+                                                    <tr class="table-primary">
+                                                      <th>Id</th>
+                                                      <th>CodigoUnico</th>
+                                                      <th>Termino</th>                                               
+                                                    </tr>
+                                              </thead>                                                                                    
+                                        </table>
+                                  </div>
+                                  <div class="table-responsive table-hover">
+                                        <table datatable [dtOptions]="dtOptionsTerminoEstandar" class="table-bordered"
+                                              *ngIf="terminosEstandar.length > 0">
+                                              <thead>
+                                                    <tr  class="table-primary">
+                                                      <th>Id</th>
+                                                      <th>CodigoUnico</th>
+                                                      <th>Termino</th>  
+                                                    </tr>
+                                              </thead>
+                                              <tbody *ngIf="terminosEstandar?.length != 0">
+                                                    <tr *ngFor="let terminoEstandar of terminosEstandar" 
+                                                          (click)="selectTerminoEstandar($event, terminoEstandar)">                                                                                                
+                                                          <td>{{ terminoEstandar.id }}</td>
+                                                          <td>{{ terminoEstandar.codigoUnico }}</td>
+                                                          <td>{{ terminoEstandar.termino }}</td>                                                     
+                                                    </tr>
+                                              </tbody>
+                                              <tbody *ngIf="cargando">
+                                                    <td></td>
+                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                          <p>
+                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                          </p>
+                                                          <p class="mb-0">
+                                                                Espere por favor
+                                                          </p>
+                                                    </td>
+                                                    <td></td>                                              
+                                              </tbody>                                                                                    
+                                        </table>
+                                  </div>
+                                  <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                  </div>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </form> 
+                  </div>
+                <!--/form-->
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseNuevoTratamiento"
+                aria-expanded="true" 
+                aria-controls="collapseNuevoTratamiento">Nuevo Tratamiento
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseNuevoTratamiento">            
+
+              <div class="nav nav-tabs" id="nav-tab-tratamiento" role="tablist">
+                <a class="nav-item nav-link active" id="nav-farmacologica-tab" data-toggle="tab" href="#nav-farmacologica" role="tab" aria-controls="nav-farmacologica" aria-selected="true">Prescripcion farmacologica (Receta)</a>
+                <a class="nav-item nav-link" id="nav-noFarmacologica-tab" data-toggle="tab" href="#nav-noFarmacologica" role="tab" aria-controls="nav-noFarmacologica" aria-selected="false">Prescripcion no-farmacologica</a>
+              </div>
+
+              <div class="tab-content" id="nav-tabContentTratamiento">
+                <!--form [formGroup]="tratamientoForm"-->
+                  <div class="tab-pane fade show active" id="nav-farmacologica" role="tabpanel" aria-labelledby="nav-farmacologica-tab">
+                    <form [formGroup]="tratamientoFarmacologicoForm">
+                      <div [formGroup]="stockForm" >
+                        <div formGroupName="insumos" >
+                          <br>
+                          <label><b>Medicamento: </b></label>
+                          <div class="input-group mb-3"> 
+                              
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                <button type="button" class="btn btn-primary" 
+                                      (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+
+                        <!--Modal buscador de Stock-->
+                        <ng-template #editProfileModalStock let-modal>
+                              <div class="modal-header">
+                                    <h3 class="modal-title" id="editProfileLabelStock">Buscador Medicamentos</h3>
+                                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span> 
+                                    </button>
+                              </div>
+                              <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                    <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                              <div class="modal-body">
+                                    <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
+                                          <div class="form-row justify-content-center">
+                                                <div>                                           
+                                                  <div>                                                   
+                                                    <mat-form-field appearance="legacy">
+                                                      <mat-label>C&oacute;digo</mat-label>
+                                                      <input matInput type="text" placeholder="C&oacute;digo" 
+                                                            formControlName="codigo" id="codigo">
+                                                    </mat-form-field>  
+                                                    <mat-form-field appearance="legacy">
+                                                      <mat-label>Descripci&oacute;n</mat-label>
+                                                      <input matInput type="text" placeholder="Descripci&oacute;n" 
+                                                            formControlName="descripcion" id="descripcion">
+                                                    </mat-form-field>
+                                                  </div>                                                
+                                                </div>
+                                                &nbsp; &nbsp; &nbsp;                                                                           
+                                                <div class="align-self-center">
+                                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                                      <button (click)="limpiarModalStock($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                                </div>
+                                          </div>
+                                    </form>
+                                    <br>
+
+                                    <!--Tabla vacia-->
+                                    <div class="table-responsive table-hover">
+                                          <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                          *ngIf="!cargando && stocks.length === 0">
+                                                <thead>
+                                                      <tr class="table-primary">
+                                                        <th>Id</th>
+                                                        <th>C&oacute;digo</th>
+                                                        <th>Descripcion</th>
+                                                        <th>Tipo</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Fecha Vencimiento</th>                                                  
+                                                        <th>Unidad medida</th>                                                  
+                                                      </tr>
+                                                </thead>                                                                                    
+                                          </table>
+                                    </div>
+                                    <div class="table-responsive table-hover">
+                                          <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                                *ngIf="stocks.length > 0">
+                                                <thead>
+                                                      <tr  class="table-primary">
+                                                        <th>Id</th>
+                                                        <th>C&oacute;digo</th>
+                                                        <th>Descripcion</th>
+                                                        <th>Tipo</th>
+                                                        <th>Stock</th>
+                                                        <th>Fecha Vencimiento</th>                                                  
+                                                        <th>Unidad medida</th>
+                                                      </tr>
+                                                </thead>
+                                                <tbody *ngIf="stocks?.length != 0">
+                                                      <tr *ngFor="let stock of stocks" 
+                                                            (click)="selectStock($event, stock)">                                                                                                
+                                                            <td>{{ stock.stockId }}</td>
+                                                            <td>{{ stock.insumos.codigo }}</td>
+                                                            <td>{{ stock.insumos.descripcion }}</td>
+                                                            <td>{{ stock.insumos.tipo }}</td>
+                                                            <td>{{ stock.cantidad }}</td>
+                                                            <td>{{ stock.insumos.fechaVencimiento| date : 'dd-MM-yyyy' }}</td>
+                                                            <td>{{ stock.unidadMedida }}</td>                                                      
+                                                      </tr>
+                                                </tbody>
+                                                <tbody *ngIf="cargando">
+                                                      <td></td>
+                                                      <td></td>
+                                                      <td></td>
+                                                      <td><h4 class="alert-heading">Cargando</h4>
+                                                            <p>
+                                                                  <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                            </p>
+                                                            <p class="mb-0">
+                                                                  Espere por favor
+                                                            </p>
+                                                      </td>
+                                                      <td></td>
+                                                      <td></td>
+                                                      <td></td>
+                                                </tbody>                                                                                    
+                                          </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                    </div>
+                              </div>
+                        </ng-template>
+                      </div>
+
+                      <div class="card">
+                        <div class="table-responsive table-hover">
+                          <table datatable [dtOptions]="dtOptionsMedicamentos" id="tableMedicamentos" class="table table-sm">
+                            <thead>
+                              <tr class="table-primary">
+                                <th scope="col">#</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Descripci&oacute;n</th>
+                                <th scope="col">Fecha vencimiento</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Quitar</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let tratamientoInsumo of tratamientosInsumos; index as i">
+                                <th scope="row">{{ i + 1 }}</th>
+                                <td>{{ tratamientoInsumo.insumos.insumoId }}</td>
+                                <td>{{ tratamientoInsumo.insumos.codigo }}</td>
+                                <td>{{ tratamientoInsumo.insumos.descripcion }}</td>
+                                <td>{{ tratamientoInsumo.insumos.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
+                                <td><input type="number" id="cantidad" value= "1"></td>
+                                <td (click)="quitarMedicamento($event, tratamientoInsumo)">  
+                                  <button class="btn btn-danger">
+                                    <i class="fas fa-minus-circle"></i></button>
+                                </td>
+                              </tr>
+                            </tbody>                      
+                          </table>
+                        </div>
+                      </div>
+                      <br>
+                      <label><b>Prescripcion: </b></label>
+                      <textarea class="form-control" formControlName="prescripcionFarm" id="prescripcionFarm" rows="4"></textarea>
+                    </form>
+                  </div>
+                  <div class="tab-pane fade" id="nav-noFarmacologica" role="tabpanel" aria-labelledby="nav-noFarmacologica-tab">
+                    <form [formGroup]="tratamientoNoFarmacologicoForm">
+                      <br>
+                      <label><b>Tratamiento: </b></label>
+                      <textarea class="form-control" formControlName="descripcionTratamiento" id="descripcionTratamiento" rows="6"></textarea>
+                      <br><br><br><br><br>
+                    </form>  
+                  </div>
+                <!--/form-->
+              </div>
+            </div>
+          </div>
+          <br>
+            <div class="form-group text-center">
+              <button (click)="guardarDiagnosticoTratamiento($event)" type="submit"
+                      class="btn btn-primary ">
+                <i class="fa fa-save"></i>
+                Guardar
+              </button>
+            </div>
+        </div>
+      </div>
     </div>
   </div>
+  <br><br>
 </body>

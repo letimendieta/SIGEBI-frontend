@@ -78,6 +78,7 @@
           <th scope="col">C&oacute;digo</th>
           <th scope="col">Descripci&oacute;n</th>
           <th scope="col">Fecha vencimiento</th>
+          <th scope="col">Tipo</th>
           <th scope="col">Fecha creaci&oacute;n</th>
           <th scope="col">Usuario creaci&oacute;n</th>
           <th scope="col">Fecha modificaci&oacute;n</th>
@@ -100,6 +101,7 @@
             <th scope="col">C&oacute;digo</th>
             <th scope="col">Descripci&oacute;n</th>
             <th scope="col">Fecha vencimiento</th>
+            <th scope="col">Tipo</th>
             <th scope="col">Fecha creaci&oacute;n</th>
             <th scope="col">Usuario creaci&oacute;n</th>
             <th scope="col">Fecha modificaci&oacute;n</th>
@@ -115,6 +117,7 @@
             <td>{{ insumo.codigo }}</td>
             <td>{{ insumo.descripcion }}</td>
             <td>{{ insumo.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
+            <td>{{ insumo.tipo }}</td>
             <td>{{ insumo.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ insumo.usuarioCreacion }}</td>
             <td>{{ insumo.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
@@ -137,7 +140,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>       
+          <td></td>   
+          <td></td>      
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>

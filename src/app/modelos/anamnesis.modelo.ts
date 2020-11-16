@@ -1,10 +1,9 @@
-export class InsumoModelo {
+export class AnamnesisModelo {
 
-    insumoId: number;
-    codigo: string;
-    descripcion: string;
-    tipo: string;
-    fechaVencimiento: Date;
+    anamnesisId: number;
+    antecedentes: string;
+    antecedentesRemotos: string;
+    historialClinicoId: number;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

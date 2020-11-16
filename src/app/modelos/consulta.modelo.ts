@@ -1,10 +1,8 @@
-export class InsumoModelo {
+export class ConsultaModelo {
 
-    insumoId: number;
-    codigo: string;
-    descripcion: string;
-    tipo: string;
-    fechaVencimiento: Date;
+    consultaId: number;
+    fecha: Date;
+    historialClinicoId: string;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

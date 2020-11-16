@@ -130,6 +130,7 @@
                                                   <th>C&oacute;digo</th>
                                                   <th>Descripcion</th>
                                                   <th>Fecha Vencimiento</th>
+                                                  <th>Tipo</th>
                                                 </tr>
                                           </thead>                                                                                    
                                     </table>
@@ -143,6 +144,7 @@
                                                   <th>C&oacute;digo</th>
                                                   <th>Descripcion</th>
                                                   <th>Fecha Vencimiento</th>
+                                                  <th>Tipo</th>
                                                 </tr>
                                           </thead>
                                           <tbody *ngIf="insumos?.length != 0">
@@ -152,6 +154,7 @@
                                                       <td>{{ insumo.codigo }}</td>
                                                       <td>{{ insumo.descripcion }}</td>
                                                       <td>{{ insumo.fechaVencimiento| date : 'dd-MM-yyyy' }}</td>
+                                                      <td>{{ insumo.tipo }}</td>
                                                 </tr>
                                           </tbody>
                                           <tbody *ngIf="cargando">
@@ -165,6 +168,7 @@
                                                             Espere por favor
                                                       </p>
                                                 </td>
+                                                <td></td>
                                                 <td></td>
                                           </tbody>                                                                                    
                                     </table>

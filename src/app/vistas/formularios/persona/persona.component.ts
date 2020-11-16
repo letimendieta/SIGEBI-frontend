@@ -306,10 +306,18 @@ export class PersonaComponent implements OnInit {
       telefono: [null, [] ],
       email  : [null, [ Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ],
       celular: [null, [] ],
-      carreraId: [null, [] ],
-      departamentoId: [null, [] ],
-      dependenciaId: [null, [] ],
-      estamentoId: [null, [] ],
+      carreras: {
+        carreraId: [null, [] ]
+      },
+      departamentos: {
+        departamentoId: [null, [] ]
+      },
+      dependencias: {
+        dependenciaId: [null, [] ]
+      },
+      estamentos: {
+        estamentoId: [null, [] ]
+      }, 
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],

@@ -34,6 +34,7 @@ import { InsumoComponent } from 'src/app/vistas/formularios/insumo/insumo.compon
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
+import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
@@ -84,7 +85,8 @@ import {MatSelectModule} from '@angular/material/select';
     InsumoComponent,
     HistorialesClinicosComponent,
     HistorialClinicoComponent,
-    ConsultorioComponent
+    ConsultorioComponent,
+    EnfermeriaComponent
   ],
   imports: [
     CommonModule,

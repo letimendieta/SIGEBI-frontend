@@ -125,7 +125,7 @@ export class StockComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.stock.stockId.toString(),
+                title: this.stock ? this.stock.stockId.toString():null,
                 text: resp.mensaje,
               }).then( resp => {
 
@@ -267,8 +267,8 @@ export class StockComponent implements OnInit {
       },     
       searching: false,
       processing: true,
-      columns: [ { data: 'personaId' }, { data: 'cedula' }, 
-      { data: 'nombres' }, { data: 'apellidos' }]      
+      columns: [ { data: 'insumoId' }, { data: 'codigo' }, 
+      { data: 'descripcion' }, { data: 'fechaVencimiento' }, { data: 'tipo' }]      
     };
   }
 
