@@ -568,12 +568,71 @@
           </div>
           <br>
           <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseHistorialClinico"
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseConsultas"
                 aria-expanded="true" 
-                aria-controls="collapseHistorialClinico">Historial clinico
+                aria-controls="collapseConsultas">Consultas
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseHistorialClinico">
-              
+            <div class="card-body collapse show" id="collapseConsultas">
+              <!--Tabla vacia-->
+              <div class="table-responsive table-hover">
+                  <table datatable [dtOptions]="dtOptionsConsultas" class="table-bordered"
+                  *ngIf="!cargando && consultas.length === 0">
+                        <thead>
+                              <tr class="table-primary">
+                                <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Diagnostico id</th>
+                                <th>Cie principal</th>
+                                <th>Cie secundario</th>
+                                <th>Tratamiento id</th>
+                                <th>Ver</th>                                                  
+                              </tr>
+                        </thead>                                                                                    
+                  </table>
+              </div>
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsConsultas" class="table-bordered"
+                  *ngIf="consultas.length > 0">
+                  <thead>
+                        <tr  class="table-primary">
+                          <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Diagnostico id</th>
+                                <th>Cie principal</th>
+                                <th>Cie secundario</th>
+                                <th>Tratamiento id</th>
+                                <th></th>       
+                        </tr>
+                  </thead>
+                  <tbody *ngIf="consultas?.length != 0">
+                        <tr *ngFor="let consulta of consultas">                                                                                                
+                              <td>{{ consulta.consultaId }}</td>
+                              <td>{{ consulta.fecha | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+                              <td>{{ consulta.diagnosticos.diagnosticoId }}</td>
+                              <td>{{ consulta.diagnosticos.terminoEstandarPrincipal }}</td>
+                              <td>{{ consulta.diagnosticos.terminoEstandarSecundario }}</td>
+                              <td>{{ consulta.tratamientos.tratamientoId }}</td>                              
+                              <td></td>                                                      
+                        </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h4 class="alert-heading">Cargando</h4>
+                              <p>
+                                    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                              </p>
+                              <p class="mb-0">
+                                    Espere por favor
+                              </p>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                  </tbody>                                                                                    
+                </table>
+              </div>
             </div>
           </div>
           <br>

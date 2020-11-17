@@ -1,7 +1,6 @@
 export class TratamientoModelo {
 
     tratamientoId: number;
-    consultaId: number;
     prescripcionFarm: string;
     descripcionTratamiento: string;    
     fechaCreacion: Date;
