@@ -5,6 +5,7 @@ import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { Observable } from 'rxjs';
 import { GlobalConstants } from '../common/global-constants';
+import { BusquedaHistorialPacienteModelo } from '../modelos/busquedaHistorialPaciente.modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,18 @@ export class HistorialesClinicosService {
       );
   }
 
+  busquedaHistorialPacienteFiltros( busqueda: BusquedaHistorialPacienteModelo ) {
+    let params = new HttpParams();
+    var filtros = busqueda == null ? new BusquedaHistorialPacienteModelo() : busqueda;
+    params = params.append('filtros', JSON.stringify(filtros));
+
+    return this.http.get(`${ this.url }/historial-Clinico/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArregloBusqueda ),
+        delay(0)
+      );
+  }
+
   getPersona( id: number ) {
 
     return this.http.get(`${ this.url }/personas/${ id }`);
@@ -84,6 +97,19 @@ export class HistorialesClinicosService {
     Object.keys( historialClinicosObj ).forEach( key => {
 
       const historialClinico: HistorialClinicoModelo = historialClinicosObj[key];
+      historialClinicos.push( historialClinico );
+    });
+
+    return historialClinicos;
+  }
+
+  private crearArregloBusqueda( historialClinicosObj: object ) {
+
+    const historialClinicos: BusquedaHistorialPacienteModelo[] = [];
+
+    Object.keys( historialClinicosObj ).forEach( key => {
+
+      const historialClinico: BusquedaHistorialPacienteModelo = historialClinicosObj[key];
       historialClinicos.push( historialClinico );
     });
 

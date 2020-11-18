@@ -8,8 +8,12 @@ import { AreasService } from '../../../servicios/areas.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { BusquedaHistorialPacienteModelo } from 'src/app/modelos/busquedaHistorialPaciente.modelo';
+import { PacientesService } from 'src/app/servicios/pacientes.service';
 
 @Component({
   selector: 'app-historialesClinicos',
@@ -20,20 +24,26 @@ export class HistorialesClinicosComponent implements OnInit {
 
   dtOptions: any = {};
 
-  historialClinicos: HistorialClinicoModelo[] = [];
+  historialClinicos: BusquedaHistorialPacienteModelo[] = [];
+  pacientes: PacienteModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
   listaAreas: AreaModelo;
 
   buscadorForm: FormGroup;
+  buscadorModalForm: FormGroup;
   buscador: HistorialClinicoModelo = new HistorialClinicoModelo();
   cargando = false;
+  alert:boolean=false;
 
 
   constructor( private historialClinicosService: HistorialesClinicosService,
+    private pacientesService: PacientesService,
                private comunes: ComunesService,
                private areasService: AreasService,
-               private fb: FormBuilder) {    
+               private fb: FormBuilder,
+               private fb2: FormBuilder,
+               private modalService: NgbModal) {    
   }
 
   ngOnInit() {
@@ -41,6 +51,7 @@ export class HistorialesClinicosComponent implements OnInit {
     this.crearFormulario();
     this.crearTabla();
     this.listarAreas();
+    this.crearTablaModel();
   }
 
   crearTabla(){
@@ -67,10 +78,9 @@ export class HistorialesClinicosComponent implements OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'historialClinicoId'}, {data:'pacientes.pacienteId'}, 
-        {data:'pacientes.personas.cedula'},
-        {data:'pacientes.personas.nombres'}, 
-        {data:'pacientes.personas.apellido'}, {data:'areaId'},
+        {data:'historialClinico.historialClinicoId'}, {data:'paciente.pacienteId'}, 
+        {data:'paciente.personas.cedula'}, {data:'paciente.personas.nombres'}, 
+        {data:'paciente.personas.apellido'}, {data:'historialClinico.areas.areaId'},
         {data:'Editar'},
         {data:'Borrar'},
       ],
@@ -154,25 +164,42 @@ export class HistorialesClinicosComponent implements OnInit {
     this.historialClinicos = [];
     this.paciente = new PacienteModelo();
     this.pacientePersona = new PersonaModelo();
+    var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+    var buscadorHp: BusquedaHistorialPacienteModelo = new BusquedaHistorialPacienteModelo();
 
-    this.buscador = this.buscadorForm.getRawValue();
+    //this.buscador = this.buscadorForm.getRawValue();
+    var areas: AreaModelo = new AreaModelo();
+    areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
+    //this.buscador.areas = areas;
+    historialClinico.historialClinicoId = this.buscadorForm.get('historialClinicoId').value;
+    historialClinico.areas = areas;
+    if(!areas.areaId){
+      historialClinico.areas = null;
+    }
+    if(!historialClinico.historialClinicoId && !areas.areaId){
+      historialClinico = null;
+    }
 
-    this.pacientePersona.cedula = this.buscadorForm.get('pacientes').get('pacienteCedula').value;
+    /*this.pacientePersona.cedula = this.buscadorForm.get('pacientes').get('pacienteCedula').value;
     this.pacientePersona.nombres = this.buscadorForm.get('pacientes').get('pacienteNombres').value;
     this.pacientePersona.apellidos = this.buscadorForm.get('pacientes').get('pacienteApellidos').value;
     if(!this.pacientePersona.cedula && !this.pacientePersona.nombres && !this.pacientePersona.apellidos){
       this.paciente.personas = null;
     }else{
       this.paciente.personas = this.pacientePersona;
+    }*/
+    buscadorHp.paciente.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
+    if(!buscadorHp.paciente.pacienteId){
+      buscadorHp.paciente = null;
     }
-    this.paciente.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value; 
-    if(this.paciente.personas == null && !this.paciente.pacienteId){
+    buscadorHp.historialClinico = historialClinico;
+    /*if(this.paciente.personas == null && !this.paciente.pacienteId){
       this.paciente = null;
     }      
  
-    this.buscador.pacientes = this.paciente;
+    this.buscador.pacientes = this.paciente;*/
 
-    this.historialClinicosService.buscarHistorialClinicosFiltros(this.buscador)
+    this.historialClinicosService.busquedaHistorialPacienteFiltros(buscadorHp)
     .subscribe( resp => {      
       this.historialClinicos = resp;
       this.cargando = false;
@@ -249,7 +276,9 @@ export class HistorialesClinicosComponent implements OnInit {
 
     this.buscadorForm = this.fb.group({
       historialClinicoId  : ['', [] ],
-      areaId  : [null, [] ],
+      areas  : this.fb.group({
+        areaId: ['', [] ]
+      }),
       pacientes : this.fb.group({
         pacienteId  : ['', [] ],
         pacienteCedula  : ['', [] ],
@@ -257,5 +286,119 @@ export class HistorialesClinicosComponent implements OnInit {
         pacienteApellidos  : ['', [] ]        
       })   
     });
+
+    this.buscadorModalForm = this.fb2.group({
+      pacienteId  : ['', [] ],
+      cedula  : ['', [] ],
+      nombres  : ['', [] ],
+      apellidos: ['', [] ]   
+    });
   }
+
+  buscadorPacientes(event) {
+    event.preventDefault();
+    
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscadorPaciente: PacienteModelo = new PacienteModelo();
+
+    persona.cedula = this.buscadorModalForm.get('cedula').value;
+    persona.nombres = this.buscadorModalForm.get('nombres').value;
+    persona.apellidos = this.buscadorModalForm.get('apellidos').value;
+    buscadorPaciente.personas = persona;
+
+    if(!buscadorPaciente.personas.cedula 
+      && !buscadorPaciente.personas.nombres && !buscadorPaciente.personas.apellidos){
+      this.alert=true;
+      return;
+    }
+    this.cargando = true;
+    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    .subscribe( resp => {
+      this.pacientes = resp;
+      this.cargando = false;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  limpiarModal(event) {
+    event.preventDefault();
+    this.buscadorModalForm.reset();
+    this.pacientes = [];
+  }
+
+  cerrarAlert(){
+    this.alert=false;
+  }
+
+  crearTablaModel(){
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+      },     
+      searching: false,
+      processing: true,
+      columns: [ { data: 'pacienteId' }, { data: 'cedula' }, 
+      { data: 'nombres' }, { data: 'apellidos' }]      
+    };
+  }
+
+  openModal(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorModalForm.patchValue({
+      pacienteId: '',
+      cedula: '',
+      nombres: '',
+      apellidos: ''
+    });
+    this.pacientes = [];
+    this.alert=false;
+  }
+
+  selectPaciente(event, paciente: PacienteModelo){
+    this.modalService.dismissAll();
+    if(paciente.pacienteId){
+      this.buscadorModalForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
+    }
+    this.pacientesService.getPaciente( paciente.pacienteId )
+      .subscribe( (resp: PacienteModelo) => {         
+        this.buscadorModalForm.get('pacientes').patchValue(resp);
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.comunes.obtenerError(e)
+          })
+          this.buscadorModalForm.get('pacientes').get('pacienteId').setValue(null);
+        }
+      );
+  }
+
+  onSubmit() {
+    this.modalService.dismissAll();
+   }
 }

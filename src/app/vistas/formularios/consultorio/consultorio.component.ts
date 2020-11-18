@@ -897,9 +897,9 @@ export class ConsultorioComponent implements OnInit {
 
         this.tratamientosInsumos.push(tratamientoInsumo);
 
-        var table = $('tableMedicamentos').DataTable();
+        /*var table = $('tableMedicamentos').DataTable();
         table.clear();
-        table.rows.add( this.tratamientosInsumos ).draw();
+        table.rows.add( this.tratamientosInsumos ).draw();*/
         //this.medicamentos.push(resp);
       }, e => {
           Swal.fire({
