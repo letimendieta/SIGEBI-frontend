@@ -12,7 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
-import { BusquedaHistorialPacienteModelo } from 'src/app/modelos/busquedaHistorialPaciente.modelo';
+import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 
 @Component({
@@ -23,8 +23,9 @@ import { PacientesService } from 'src/app/servicios/pacientes.service';
 export class HistorialesClinicosComponent implements OnInit {
 
   dtOptions: any = {};
+  dtOptionsPacienteModel: any = {};
 
-  historialClinicos: BusquedaHistorialPacienteModelo[] = [];
+  historialClinicos: HistorialClinicoPacienteModelo[] = [];
   pacientes: PacienteModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -165,12 +166,10 @@ export class HistorialesClinicosComponent implements OnInit {
     this.paciente = new PacienteModelo();
     this.pacientePersona = new PersonaModelo();
     var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
-    var buscadorHp: BusquedaHistorialPacienteModelo = new BusquedaHistorialPacienteModelo();
+    var buscadorHp: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
 
-    //this.buscador = this.buscadorForm.getRawValue();
     var areas: AreaModelo = new AreaModelo();
     areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
-    //this.buscador.areas = areas;
     historialClinico.historialClinicoId = this.buscadorForm.get('historialClinicoId').value;
     historialClinico.areas = areas;
     if(!areas.areaId){
@@ -180,24 +179,11 @@ export class HistorialesClinicosComponent implements OnInit {
       historialClinico = null;
     }
 
-    /*this.pacientePersona.cedula = this.buscadorForm.get('pacientes').get('pacienteCedula').value;
-    this.pacientePersona.nombres = this.buscadorForm.get('pacientes').get('pacienteNombres').value;
-    this.pacientePersona.apellidos = this.buscadorForm.get('pacientes').get('pacienteApellidos').value;
-    if(!this.pacientePersona.cedula && !this.pacientePersona.nombres && !this.pacientePersona.apellidos){
-      this.paciente.personas = null;
-    }else{
-      this.paciente.personas = this.pacientePersona;
-    }*/
     buscadorHp.paciente.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
     if(!buscadorHp.paciente.pacienteId){
       buscadorHp.paciente = null;
     }
     buscadorHp.historialClinico = historialClinico;
-    /*if(this.paciente.personas == null && !this.paciente.pacienteId){
-      this.paciente = null;
-    }      
- 
-    this.buscador.pacientes = this.paciente;*/
 
     this.historialClinicosService.busquedaHistorialPacienteFiltros(buscadorHp)
     .subscribe( resp => {      
@@ -337,7 +323,7 @@ export class HistorialesClinicosComponent implements OnInit {
   }
 
   crearTablaModel(){
-    this.dtOptions = {
+    this.dtOptionsPacienteModel = {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
@@ -382,9 +368,7 @@ export class HistorialesClinicosComponent implements OnInit {
 
   selectPaciente(event, paciente: PacienteModelo){
     this.modalService.dismissAll();
-    if(paciente.pacienteId){
-      this.buscadorModalForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
-    }
+
     this.pacientesService.getPaciente( paciente.pacienteId )
       .subscribe( (resp: PacienteModelo) => {         
         this.buscadorModalForm.get('pacientes').patchValue(resp);

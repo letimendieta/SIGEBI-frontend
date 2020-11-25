@@ -19,7 +19,7 @@
                 <input matInput matInput type="number" placeholder="Historial cl&iacute;nico id" 
                   formControlName="historialClinicoId" name="historialClinicoId" id="historialClinicoId">
               </mat-form-field>
-            </p>
+            </p>            
             <div formGroupName="areas">
               <mat-form-field appearance="fill">
                 <mat-label>&Aacute;rea</mat-label>
@@ -30,15 +30,19 @@
                     {{item.codigo}} - {{item.descripcion}}</mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-
+            </div>            
           </div>
+          &nbsp;&nbsp;
           <div formGroupName="pacientes"> 
               <mat-form-field appearance="fill">
                 <mat-label>Paciente id</mat-label>
                 <input matInput matInput type="number" placeholder="Paciente id" 
                   formControlName="pacienteId" name="pacienteId" id="pacienteId">
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>                  
               </mat-form-field>
+              &nbsp; 
+              <button type="button" class="btn btn-primary" 
+                        (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
               <!--Modal buscador de pacientes-->
               <ng-template #editProfileModal let-modal>
                 <div class="modal-header">
@@ -84,7 +88,7 @@
 
                       <!--Tabla vacia-->
                       <div class="table-responsive table-hover">
-                            <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                            <table datatable [dtOptions]="dtOptionsPacienteModel" class="table-bordered"
                             *ngIf="!cargando && pacientes.length === 0">
                                   <thead>
                                         <tr class="table-primary">
@@ -97,7 +101,7 @@
                             </table>
                       </div>
                       <div class="table-responsive table-hover">
-                            <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                            <table datatable [dtOptions]="dtOptionsPacienteModel" class="table-bordered"
                                   *ngIf="pacientes.length > 0">
                                   <thead>
                                         <tr  class="table-primary">
@@ -135,33 +139,7 @@
                             <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
                       </div>
                 </div>
-              </ng-template>
-              <!--p>
-                <mat-form-field appearance="fill">
-                  <mat-label>Paciente id</mat-label>
-                  <input matInput matInput type="number" placeholder="Paciente id" 
-                    formControlName="pacienteId" name="pacienteId" id="pacienteId">
-                </mat-form-field>
- 
-                <mat-form-field appearance="fill">
-                  <mat-label>Paciente c&eacute;dula</mat-label>
-                  <input matInput matInput type="text" placeholder="Paciente c&eacute;dula" 
-                    formControlName="pacienteCedula" name="pacienteCedula" id="pacienteCedula">
-                </mat-form-field>
-              </p>
-              <p>
-                <mat-form-field appearance="fill">
-                  <mat-label>Paciente nombres</mat-label>
-                  <input matInput matInput type="text" placeholder="Paciente nombres" 
-                    formControlName="pacienteNombres" name="pacienteNombres" id="pacienteNombres">
-                </mat-form-field>
-    
-                <mat-form-field appearance="fill">
-                  <mat-label>Paciente apellidos</mat-label>
-                  <input matInput matInput type="text" placeholder="Paciente apellidos" 
-                    formControlName="pacienteApellidos" name="pacienteApellidos" id="pacienteApellidos">
-                </mat-form-field>
-              </p-->
+              </ng-template>              
           </div>
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
@@ -233,7 +211,7 @@
 
             <td>
               <a class="btn btn-info"
-                      [routerLink]="['/historialClinico', historialClinico.historialClinicoId ]">
+                      [routerLink]="['/historialClinico', historialClinico.historialClinico.historialClinicoId ]">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
