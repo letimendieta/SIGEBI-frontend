@@ -351,22 +351,25 @@ export class PacienteComponent implements OnInit {
         telefono: [null, [] ],
         email  : [null, [ Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ],
         celular: [null, [] ],
-        carreras: {
+        carreras: this.fb.group({
           carreraId: [null, [] ]
-        },
-        departamentos: {
+        }),
+        departamentos: this.fb.group({
           departamentoId: [null, [] ]
-        },
-        dependencias: {
+        }),
+        dependencias: this.fb.group({
           dependenciaId: [null, [] ]
-        },
-        estamentos: {
+        }),
+        estamentos: this.fb.group({
           estamentoId: [null, [] ]
-        },  
+        }),  
         fechaCreacion: [null, [] ],
         fechaModificacion: [null, [] ],
         usuarioCreacion: [null, [] ],
         usuarioModificacion: [null, [] ]   
+      }),
+      historialClinico: this.fb.group({
+        historialClinicoId : [null, [] ]
       }),
       grupoSanguineo  : [null, [Validators.required] ],
       seguroMedico  : [null, [] ],
@@ -383,6 +386,7 @@ export class PacienteComponent implements OnInit {
     });
 
     this.pacienteForm.get('pacienteId').disable();
+    this.pacienteForm.get('historialClinico').get('historialClinicoId').disable();
     this.pacienteForm.get('personas').get('fechaCreacion').disable();
     this.pacienteForm.get('personas').get('fechaModificacion').disable();
     this.pacienteForm.get('personas').get('usuarioCreacion').disable();

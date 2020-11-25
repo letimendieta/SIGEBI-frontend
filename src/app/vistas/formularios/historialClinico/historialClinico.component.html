@@ -46,6 +46,7 @@
                                                                   class="form-control"
                                                                   placeholder="Paciente Id"
                                                                   formControlName="pacienteId"
+                                                                  [class.is-invalid]="pacienteIdNoValido"
                                                                   name="pacienteId">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" 
@@ -55,12 +56,15 @@
                                                             </div>                                                            
                                                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                             <button type="button" class="btn btn-primary" 
-                                                                  (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
+                                                                  (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>                                                            
                                                       </div>
+                                                      <small *ngIf="pacienteIdNoValido" class="text-danger">
+                                                            Paciente es requerido
+                                                      </small>
                                                       <!--Modal buscador de pacientes-->
                                                       <ng-template #editProfileModal let-modal>
                                                             <div class="modal-header">
-                                                            <h3 class="modal-title" id="editProfileLabel">Buscador Pacientes</h3>
+                                                            <h3 class="modal-title" id="editProfileLabel">Buscador Pacientes</h3>                                                            
                                                             <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                                                                   <span aria-hidden="true">&times;</span> 
                                                             </button>
@@ -71,6 +75,12 @@
                                                                   <span aria-hidden="true">&times;</span>
                                                                   </button>
                                                             </div>
+                                                            <div *ngIf="alertPacienteId" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                  El paciente ya cuenta con un historial clinico
+                                                                  <button type="button" (click)="cerrarAlertPacienteId()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                            </div>                                                           
                                                             <div class="modal-body">
                                                                   <form [formGroup]="buscadorForm" (ngSubmit)="buscadorPacientes($event)">
                                                                         <div class="form-row justify-content-center">
@@ -110,6 +120,7 @@
                                                                                           <th>C&eacute;dula</th>
                                                                                           <th>Nombres</th>
                                                                                           <th>Apellidos</th>
+                                                                                          <th>H.C. id</th>
                                                                                     </tr>
                                                                               </thead>                                                                                    
                                                                         </table>
@@ -123,6 +134,7 @@
                                                                                           <th>C&eacute;dula</th>
                                                                                           <th>Nombres</th>
                                                                                           <th>Apellidos</th>
+                                                                                          <th>H.C. id</th>
                                                                                     </tr>
                                                                               </thead>
                                                                               <tbody *ngIf="pacientes?.length != 0">
@@ -132,6 +144,7 @@
                                                                                           <td>{{ paciente.personas.cedula }}</td>
                                                                                           <td>{{ paciente.personas.nombres }}</td>
                                                                                           <td>{{ paciente.personas.apellidos }}</td>
+                                                                                          <td>{{ paciente.historialClinico.historialClinicoId }}</td>
                                                                                     </tr>
                                                                               </tbody>
                                                                               <tbody *ngIf="cargando">
@@ -185,7 +198,7 @@
                                                 </div>
                                           </div>
                                           <div class="col-lg-5">
-                                                <div class="form-group">
+                                                <div formGroupName="areas" class="form-group">
                                                       <label><b>&Aacute;rea</b></label>
                                                       <select class="form-control input-sm" name="areaId"
                                                             formControlName="areaId" 

@@ -8,14 +8,12 @@ export class HistorialClinicoModelo {
 
     historialClinicoId: number;
     hora: Time;
-    areas: AreaModelo;
+    areas: AreaModelo = new AreaModelo();
     anamnesis: AnamnesisModelo;
     fechaCreacion: Date;
     usuarioCreacion: string;
     fechaModificacion: Date;
     usuarioModificacion: string;    
-    pacientes: PacienteModelo;
-
     constructor() {
     }
 

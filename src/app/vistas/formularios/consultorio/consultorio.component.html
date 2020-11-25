@@ -811,7 +811,7 @@
                                               <thead>
                                                     <tr class="table-primary">
                                                       <th>Id</th>
-                                                      <th>CodigoUnico</th>
+                                                      <th>Codigo Unico</th>
                                                       <th>Termino</th>                                               
                                                     </tr>
                                               </thead>                                                                                    
@@ -823,7 +823,7 @@
                                               <thead>
                                                     <tr  class="table-primary">
                                                       <th>Id</th>
-                                                      <th>CodigoUnico</th>
+                                                      <th>Codigo Unico</th>
                                                       <th>Termino</th>  
                                                     </tr>
                                               </thead>
@@ -934,7 +934,7 @@
                                     <!--Tabla vacia-->
                                     <div class="table-responsive table-hover">
                                           <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
-                                          *ngIf="!cargando && stocks.length === 0">
+                                          *ngIf="stocks.length === 0">
                                                 <thead>
                                                       <tr class="table-primary">
                                                         <th>Id</th>
@@ -998,10 +998,27 @@
                               </div>
                         </ng-template>
                       </div>
-
+                      <!--Tabla vacia-->
+                      <div class="table-responsive">
+                        <table datatable [dtOptions]="dtOptionsMedicamentos" class="table table-sm" 
+                          *ngIf="tratamientosInsumos.length === 0">
+                          <thead>
+                            <tr class="table-primary">
+                              <th scope="col">#</th>
+                              <th scope="col">Id</th>
+                              <th scope="col">C&oacute;digo</th>
+                              <th scope="col">Descripci&oacute;n</th>
+                              <th scope="col">Fecha vencimiento</th>
+                              <th scope="col">Cantidad</th>
+                              <th scope="col">Quitar</th>
+                            </tr>
+                          </thead>    
+                        </table>
+                      </div>
                       <div class="card">
                         <div class="table-responsive table-hover">
-                          <table datatable [dtOptions]="dtOptionsMedicamentos" id="tableMedicamentos" class="table table-sm">
+                          <table datatable [dtOptions]="dtOptionsMedicamentos" 
+                          id="tableMedicamentos" class="table table-sm" *ngIf="tratamientosInsumos.length > 0">
                             <thead>
                               <tr class="table-primary">
                                 <th scope="col">#</th>
@@ -1014,7 +1031,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr *ngFor="let tratamientoInsumo of tratamientosInsumos; index as i">
+                              <tr *ngFor="let tratamientoInsumo of tratamientosInsumos; let i = index">
                                 <th scope="row">{{ i + 1 }}</th>
                                 <td>{{ tratamientoInsumo.insumos.insumoId }}</td>
                                 <td>{{ tratamientoInsumo.insumos.codigo }}</td>

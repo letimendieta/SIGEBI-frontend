@@ -35,7 +35,17 @@
                                                             placeholder="Paciente id"
                                                             formControlName="pacienteId"
                                                             name="pacienteId">
-                                                      <small class="form-text text-muted">Este campo es autogenerado</small>
+                                                      <small class="form-text text-muted">Este campo es autogenerado</small>                                                      
+                                                </div>                                                
+                                          </div>
+                                          <div class="col-lg-5">
+                                                <div formGroupName="historialClinico" class="form-group" [hidden]="crear">
+                                                      <label><b>Historial Clinico id</b></label>
+                                                      <input type="number"
+                                                            class="form-control"
+                                                            placeholder="Historial Clinico id"
+                                                            formControlName="historialClinicoId"
+                                                            name="historialClinicoId">                                                      
                                                 </div>
                                           </div>
                                     </div>
@@ -302,10 +312,10 @@
                                                             name="celular"
                                                             placeholder="Celular">                  
                                                 </div>
-                                                <div class="form-group">
+                                                <div formGroupName="carreras" class="form-group">
                                                       <label><b>Carrera</b></label> 
                                                       <select class="form-control input-sm" name="carreraId"
-                                                            formControlName="carreras.carreraId">
+                                                            formControlName="carreraId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaCarreras; let i = index"
                                                             value="{{item.carreraId}}">
@@ -313,10 +323,10 @@
                                                             </option>
                                                       </select>
                                                 </div>
-                                                <div class="form-group">
+                                                <div formGroupName="departamentos" class="form-group">
                                                       <label><b>Departamento</b></label>
                                                       <select class="form-control input-sm" name = "departamentoId"
-                                                            formControlName="departamentos.departamentoId">
+                                                            formControlName="departamentoId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaDepartamentos; let i = index"
                                                             value="{{item.departamentoId}}">
@@ -324,10 +334,10 @@
                                                             </option>
                                                       </select>
                                                 </div>
-                                                <div class="form-group">
+                                                <div formGroupName="dependencias" class="form-group">
                                                       <label><b>Dependencia</b></label>
                                                       <select class="form-control input-sm" name = "dependenciaId"
-                                                            formControlName="dependencias.dependenciaId">
+                                                            formControlName="dependenciaId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaDependencias; let i = index"
                                                             value="{{item.dependenciaId}}">
@@ -335,10 +345,10 @@
                                                             </option>
                                                       </select>
                                                 </div>
-                                                <div class="form-group">
+                                                <div formGroupName="estamentos" class="form-group">
                                                       <label><b>Estamento</b></label>
                                                       <select class="form-control input-sm" name = "estamentoId"
-                                                            formControlName="estamentos.estamentoId">
+                                                            formControlName="estamentoId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaEstamentos; let i = index"
                                                             value="{{item.estamentoId}}">

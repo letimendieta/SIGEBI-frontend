@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-areas',
@@ -23,7 +24,8 @@ export class AreasComponent implements OnInit {
 
   constructor( private areasService: AreasService,
     private comunes: ComunesService,
-               private fb: FormBuilder) {      
+               private fb: FormBuilder,
+               private http: HttpClient) {      
   }
 
   ngOnInit() {    
@@ -141,7 +143,6 @@ export class AreasComponent implements OnInit {
     this.cargando = true;
     this.areas = [];
     this.buscador = this.buscadorForm.getRawValue(); 
-    
     this.areasService.buscarAreasFiltrosTabla(this.buscador)
     .subscribe( resp => {        
         this.areas = resp;

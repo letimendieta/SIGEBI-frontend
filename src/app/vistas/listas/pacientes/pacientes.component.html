@@ -78,6 +78,7 @@
           <th scope="col">C&eacute;dula</th>
           <th scope="col">Nombres</th>
           <th scope="col">Apellidos</th>
+          <th scope="col">H.C. id</th>
           <th scope="col">Grupo sangu&iacute;neo</th>
           <th scope="col">Edad</th>
           <th scope="col">Direcci&oacute;n</th>
@@ -107,6 +108,7 @@
             <th scope="col">C&eacute;dula</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
+            <th scope="col">H.C. id</th>
             <th scope="col">Grupo sangu&iacute;neo</th>
             <th scope="col">Edad</th>
             <th scope="col">Direcci&oacute;n</th>
@@ -128,6 +130,7 @@
             <td>{{ paciente.personas.cedula }}</td>
             <td>{{ paciente.personas.nombres }}</td>
             <td>{{ paciente.personas.apellidos }}</td>
+            <td>{{ paciente.historialClinico.historialClinicoId }}</td>
             <td>{{ paciente.grupoSanguineo }}</td>
             <td>{{ paciente.personas.edad }}</td>
             <td>{{ paciente.personas.direccion }}</td>
@@ -152,6 +155,7 @@
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">   
+          <td></td>
           <td></td>
           <td></td>
           <td></td>

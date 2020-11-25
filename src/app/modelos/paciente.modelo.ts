@@ -4,14 +4,14 @@ import { PersonaModelo } from './persona.modelo';
 export class PacienteModelo {
 
     pacienteId: number;
-    historialClinico: HistorialClinicoModelo;
+    historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
     grupoSanguineo: string;
     seguroMedico: string;
     fechaCreacion: Date;
     usuarioCreacion: string;
     fechaModificacion: Date;
     usuarioModificacion: string;
-    personas: PersonaModelo;
+    personas: PersonaModelo = new PersonaModelo();
 
     constructor() {
     }

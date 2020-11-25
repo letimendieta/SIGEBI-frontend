@@ -225,16 +225,14 @@ export class ConsultorioComponent implements OnInit {
   }
 
   obtenerHistorialClinico() {   
-    var buscador = new HistorialClinicoModelo();
-
-    buscador.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
-    this.historialClinicosService.buscarHistorialClinicosFiltros(buscador)
-    .subscribe( resp => {
+    var historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
+    this.historialClinicosService.getHistorialClinico(historialClinicoId)
+    .subscribe( (resp: HistorialClinicoModelo) => {
       
-      this.historialClinicoForm.patchValue(resp[0]);
-      if ( resp[0].historialClinicoId != null )
-        this.obtenerAnamnesis(resp[0].historialClinicoId);
-        this.obtenerConsultas(resp[0].historialClinicoId);
+      this.historialClinicoForm.patchValue(resp);
+      if ( resp.historialClinicoId != null )
+        this.obtenerAnamnesis(resp.historialClinicoId);
+        this.obtenerConsultas(resp.historialClinicoId);
       
     }, e => {      
       Swal.fire({
@@ -773,9 +771,12 @@ export class ConsultorioComponent implements OnInit {
 
   crearTablaMedicamentos(){
     this.dtOptionsMedicamentos = {
-      searching: false,
+      /*searching: false,
        info: false,
-       paging: false,    
+       paging: false,  */
+       pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],  
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -897,9 +898,9 @@ export class ConsultorioComponent implements OnInit {
 
         this.tratamientosInsumos.push(tratamientoInsumo);
 
-        var table = $('tableMedicamentos').DataTable();
+        /*var table = $('tableMedicamentos').DataTable();
         table.clear();
-        table.rows.add( this.tratamientosInsumos ).draw();
+        table.rows.add( this.tratamientosInsumos ).draw();*/
         //this.medicamentos.push(resp);
       }, e => {
           Swal.fire({
@@ -1179,7 +1180,10 @@ export class ConsultorioComponent implements OnInit {
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
     tratamiento.descripcionTratamiento = this.tratamientoNoFarmacologicoForm.get('descripcionTratamiento').value;
-    
+    var table = $('#tableMedicamentos').DataTable();
+        //table.clear();
+        //table.rows.add( this.tratamientosInsumos ).draw();
+
     tratamientoInsumoList = this.tratamientosInsumos;
 
     consulta.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;

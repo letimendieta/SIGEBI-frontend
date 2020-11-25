@@ -8,6 +8,7 @@ import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
 import { PacientesService } from '../../../servicios/pacientes.service';
@@ -16,6 +17,7 @@ import { AreasService } from '../../../servicios/areas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
+import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
 
 @Component({
   selector: 'app-historialClinico',
@@ -39,8 +41,10 @@ export class HistorialClinicoComponent implements OnInit {
   message = '';  
   fileInfos: Observable<any>;
   cargando = false;
-  alert:boolean=false;
+  alert: boolean=false;
+  alertPacienteId: boolean=false;
   dtOptions: any = {};
+  errMsj: string;
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private pacientesService: PacientesService,
@@ -52,7 +56,8 @@ export class HistorialClinicoComponent implements OnInit {
                private uploadService: UploadFileService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
-               private modalService: NgbModal) { 
+               private modalService: NgbModal,
+               private toastr: ToastrService) { 
     this.crearFormulario();
   }
 
@@ -61,13 +66,22 @@ export class HistorialClinicoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if ( id !== 'nuevo' ) {
-      this.historialClinicosService.getHistorialClinico( Number(id) )
-        .subscribe( (resp: HistorialClinicoModelo) => {         
-          this.historialClinicoForm.patchValue(resp);
-          this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
-          var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
-          var areaId = this.historialClinicoForm.get('areaId').value;
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+      var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo()
+      var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+      historialClinico.historialClinicoId = Number(id);
+
+      historialClinicoPaciente.historialClinico = historialClinico;
+      this.historialClinicosService.busquedaHistorialPacienteFiltros( historialClinicoPaciente )
+        .subscribe( resp  => {         
+          this.historialClinicoForm.patchValue(resp[0].historialClinico);
+          if( resp[0].paciente &&  resp[0].paciente.pacienteId ){
+            this.historialClinicoForm.get('pacientes').patchValue(resp[0].paciente);
+            this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
+            var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
+            var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+            this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+          }
+          
         });
     }else{
       this.crear = true;
@@ -147,20 +161,30 @@ export class HistorialClinicoComponent implements OnInit {
 
     let peticion: Observable<any>;
 
-    this.historialClinico = this.historialClinicoForm.getRawValue(); 
+    var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
 
-    if ( this.historialClinico.historialClinicoId ) {
-      this.historialClinico.usuarioModificacion = 'admin';
-      peticion = this.historialClinicosService.actualizarHistorialClinico( this.historialClinico );
+    historialClinico.areas.areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+
+    if ( historialClinico.historialClinicoId ) {
+      historialClinico.usuarioModificacion = 'admin';
+      peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinico );
     } else {
-      this.historialClinico.usuarioCreacion = 'admin';
-      peticion = this.historialClinicosService.crearHistorialClinico( this.historialClinico);
+      var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
+      var paciente: PacienteModelo = new PacienteModelo();
+
+      paciente.pacienteId = this.historialClinicoForm.get('pacientes').get('pacienteId').value;
+
+      historialClinico.usuarioCreacion = 'admin';
+      historialClinicoPaciente.historialClinico = historialClinico;
+      historialClinicoPaciente.paciente = paciente;
+
+      peticion = this.historialClinicosService.crearHistorialClinico( historialClinicoPaciente );
     }
 
     peticion.subscribe( resp => {
       var mensajeUpload = '';
       if(this.selectedFiles){
-        var cedula = resp.historialClinico.pacientes.personas.cedula;
+        var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
         var areaId = resp.historialClinico.areaId;
         this.currentFile = this.selectedFiles.item(0);
         var filename = cedula + '_' + areaId + '_' 
@@ -180,7 +204,7 @@ export class HistorialClinicoComponent implements OnInit {
       }
       Swal.fire({
                 icon: 'success',
-                title: this.historialClinico.historialClinicoId.toString(),
+                title: resp.historialClinico.historialClinicoId.toString(),
                 text: resp.mensaje + '. '+ mensajeUpload
               }).then( resp => {
 
@@ -231,22 +255,29 @@ export class HistorialClinicoComponent implements OnInit {
   }
 
   get areaNoValido() {
-    return this.historialClinicoForm.get('areaId').invalid 
-    && this.historialClinicoForm.get('areaId').touched
+    return this.historialClinicoForm.get('areas').get('areaId').invalid 
+    && this.historialClinicoForm.get('areas').get('areaId').touched
+  }
+
+  get pacienteIdNoValido() {
+    return this.historialClinicoForm.get('pacientes').get('pacienteId').invalid 
+    && this.historialClinicoForm.get('pacientes').get('pacienteId').touched
   }
   
   crearFormulario() {
     this.historialClinicoForm = this.fb.group({
       historialClinicoId  : [null, [] ],
       pacientes : this.fb.group({
-        pacienteId  : [null, [] ],
+        pacienteId  : [null, [Validators.required] ],
         personas : this.fb.group({
           cedula  : [null, [] ],
           nombres  : [null, [] ],
           apellidos  : [null, [] ]
         })
-      }),      
-      areaId  : [null, [Validators.required] ],     
+      }), 
+      areas: this.fb.group({     
+        areaId  : [null, [Validators.required] ]
+      }),
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
@@ -311,6 +342,9 @@ export class HistorialClinicoComponent implements OnInit {
   cerrarAlert(){
     this.alert=false;
   }
+  cerrarAlertPacienteId(){
+    this.alertPacienteId=false;
+  }
 
   crearTablaModel(){
     this.dtOptions = {
@@ -335,11 +369,12 @@ export class HistorialClinicoComponent implements OnInit {
       searching: false,
       processing: true,
       columns: [ { data: 'pacienteId' }, { data: 'cedula' }, 
-      { data: 'nombres' }, { data: 'apellidos' }]      
+      { data: 'nombres' }, { data: 'apellidos' }, { data: 'historialClinicoId' }]      
     };
   }
 
   openModal(targetModal) {
+    this.crearTablaModel();
     this.modalService.open(targetModal, {
      centered: true,
      backdrop: 'static',
@@ -354,9 +389,15 @@ export class HistorialClinicoComponent implements OnInit {
     });
     this.pacientes = [];
     this.alert=false;
+    this.alertPacienteId=false;
   }
 
   selectPaciente(event, paciente: PacienteModelo){
+    this.alertPacienteId=false;
+    if( paciente.historialClinico.historialClinicoId ){
+      this.alertPacienteId=true;     
+      return null;
+    } 
     this.modalService.dismissAll();
     if(paciente.pacienteId){
       this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);

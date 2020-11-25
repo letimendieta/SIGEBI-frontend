@@ -214,7 +214,7 @@ export class EnfermeriaComponent implements OnInit {
       paciente = null;
     }      
  
-    buscador.pacientes = this.paciente;
+    //buscador.pacientes = this.paciente;
 
     this.historialClinicosService.buscarHistorialClinicosFiltros(buscador)
     .subscribe( resp => {     
