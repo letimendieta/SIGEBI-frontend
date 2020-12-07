@@ -87,6 +87,10 @@ export class ConsultorioComponent implements OnInit {
   dtTriggerMedicamentos : Subject<any> = new Subject<any>();
   dtTriggerStock : Subject<any> = new Subject<any>();
   dtTriggerConsultas : Subject<any> = new Subject<any>();
+  dtTriggerAlergias : Subject<any> = new Subject<any>();
+  dtTriggerAntecedentes : Subject<any> = new Subject<any>();
+  dtTriggerAntecedentesFamiliares : Subject<any> = new Subject<any>();
+  dtTriggerPatologias : Subject<any> = new Subject<any>();
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -305,6 +309,7 @@ export class ConsultorioComponent implements OnInit {
     .subscribe( resp => {
 
       this.antecedentes = resp;
+      this.dtTriggerAntecedentes.next();
      
     }, e => {      
       Swal.fire({
@@ -324,7 +329,7 @@ export class ConsultorioComponent implements OnInit {
     .subscribe( resp => {
 
       this.antecedentesFamiliares = resp;
-
+      this.dtTriggerAntecedentesFamiliares.next();
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -343,7 +348,7 @@ export class ConsultorioComponent implements OnInit {
     .subscribe( resp => {
 
       this.alergias = resp;
-      
+      this.dtTriggerAlergias.next();
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -982,11 +987,13 @@ export class ConsultorioComponent implements OnInit {
     this.buscadorForm.reset();
     this.anamnesisForm.reset();
     this.antecedentes = [];
+    $('#tableAntecedentes').DataTable().destroy();
     this.antecedentesFamiliares = [];
+    $('#tableAntecedentesFamiliares').DataTable().destroy();
     this.alergias = [];
+    $('#tableAlergias').DataTable().destroy();
     this.consultas = [];
     $('#tableConsultas').DataTable().destroy();
-    //this.dtTriggerConsultas.next();
     this.diagnosticoPrimarioForm.reset();
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();

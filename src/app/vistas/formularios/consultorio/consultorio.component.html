@@ -7,8 +7,8 @@
     <h1>Consultorio </h1>
     <hr>
 
-    <div>
-        <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
+    <div class="row">
+      <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
           <div class="d-flex p-2">
             <div class="form-inline">
               <div>
@@ -42,9 +42,26 @@
             <div>
               <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Buscador de pacientes"
                   (click)="openModal(editProfileModalPacientes)"><i class="fas fa-search"></i></button>
-            </div>
+            </div> 
+            &nbsp;
+            <div class="card form-inline" [hidden]="pacienteForm.get('personas').get('personaId') == null">
+              <div class="card-body">
+                    {{pacienteForm.get('personas').get('nombres').value}}
+                    {{pacienteForm.get('personas').get('apellidos').value}}
+                    <div class="alert alert-danger" role="alert" [hidden]="alergias.length == 0">
+                      Tiene alergia a :
+                      <div class="input-group">                     
+                        <select class="custom-select">
+                          <option *ngFor="let alergia of alergias; let i = index">
+                              {{alergia.alergenos.descripcion}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>    
+              </div>
+            </div> 
           </div>
-        </form>
+      </form>
     </div>
 
     <!--Pestanas-->
@@ -306,8 +323,8 @@
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapsePatologias">
               <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsPatologias" class="table table-sm" 
-                  *ngIf="patologiasProcedimientos.length > 0">
+                <table datatable [dtOptions]="dtOptionsPatologias" class="table table-sm"
+                  [dtTrigger]="dtTriggerPatologias" id = "tablePatologias">
                   <thead>
                     <tr class="table-primary">
                       <th scope="col">#</th>
@@ -361,8 +378,8 @@
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapseAntecedentes">
               <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAntecedentes" class="table table-sm" 
-                  *ngIf="antecedentes.length > 0">
+                <table datatable [dtOptions]="dtOptionsAntecedentes" class="table table-sm"
+                  [dtTrigger]="dtTriggerAntecedentes" id = "tableAntecedentes">
                   <thead>
                     <tr class="table-primary">
                       <th scope="col">#</th>
@@ -407,8 +424,8 @@
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapseAntecedentesFamiliar">
               <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAntecedentesFamiliares" class="table table-sm" 
-                  *ngIf="antecedentesFamiliares.length > 0">
+                <table datatable [dtOptions]="dtOptionsAntecedentesFamiliares" class="table table-sm"
+                  [dtTrigger]="dtTriggerAntecedentesFamiliares" id = "tableAntecedentesFamiliares">
                   <thead>
                     <tr class="table-primary">
                       <th scope="col">#</th>
@@ -453,8 +470,8 @@
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapseAlergias">
               <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAlergias" class="table table-sm" 
-                  *ngIf="alergias.length > 0">
+                <table datatable [dtOptions]="dtOptionsAlergias"
+                  [dtTrigger]="dtTriggerAlergias" id = "tableAlergias" class="table table-sm">
                   <thead>
                     <tr class="table-primary">
                       <th scope="col">#</th>
@@ -763,14 +780,16 @@
                                                 <div>                                                   
                                                   <mat-form-field appearance="legacy">
                                                     <mat-label>Identificador</mat-label>
-                                                    <input matInput type="text" placeholder="Identificador" 
+                                                    <input matInput type="number" placeholder="Identificador" 
                                                           formControlName="id" id="id">
-                                                  </mat-form-field>  
+                                                  </mat-form-field>
+                                                  &nbsp;&nbsp;
                                                   <mat-form-field appearance="legacy">
                                                     <mat-label>Codigo Unico</mat-label>
                                                     <input matInput type="text" placeholder="Codigo Unico" 
                                                           formControlName="codigoUnico" id="codigoUnico">
                                                   </mat-form-field>
+                                                  &nbsp;&nbsp;
                                                   <mat-form-field appearance="legacy">
                                                     <mat-label>Termino</mat-label>
                                                     <input matInput type="text" placeholder="Termino" 
@@ -987,6 +1006,7 @@
                               <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
+                      <!--Tabla medicamentos (Tratamientos insumos)-->
                       <div class="card">
                         <div class="table-responsive table-hover">
                           <table datatable [dtOptions]="dtOptionsMedicamentos" [dtTrigger]="dtTriggerMedicamentos"
