@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
+  <!--Tabla vacia>
   <div class="table-responsive">
     <table datatable [dtOptions]="dtOptions" class="table table-sm" 
       *ngIf="areas.length === 0">
@@ -94,12 +94,11 @@
         </tr>
       </thead>    
     </table>
-  </div>
+  </div-->
   
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="areas.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>

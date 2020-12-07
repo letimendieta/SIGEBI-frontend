@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { ParametrosService } from '../../../servicios/parametros.service';
@@ -23,7 +23,7 @@ import { TerminoEstandarModelo } from 'src/app/modelos/terminoEstandar.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { AnamnesisModelo } from 'src/app/modelos/anamnesis.modelo';
 import { AnamnesisService } from 'src/app/servicios/anamnesis.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { DiagnosticoModelo } from 'src/app/modelos/diagnostico.modelo';
 import { TratamientoModelo } from 'src/app/modelos/tratamiento.modelo';
 import { ProcesoDiagnosticoTratamientoModelo } from 'src/app/modelos/procesoDiagnosticoTratamiento.modelo';
@@ -31,6 +31,7 @@ import { ProcesoDiagnosticoTratamientosService } from 'src/app/servicios/proceso
 import { TratamientoInsumoModelo } from 'src/app/modelos/tratamientoInsumo.modelo';
 import { ConsultaModelo } from 'src/app/modelos/consulta.modelo';
 import { ConsultasService } from 'src/app/servicios/consultas.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-consultorio',
@@ -38,7 +39,8 @@ import { ConsultasService } from 'src/app/servicios/consultas.service';
   styleUrls: ['./consultorio.component.css']
 })
 export class ConsultorioComponent implements OnInit {
-  
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
   crear = false;
   personaForm: FormGroup;
   pacienteForm: FormGroup;
@@ -63,14 +65,14 @@ export class ConsultorioComponent implements OnInit {
   listaSexo: ParametroModelo[] = [];
   listaNacionalidad: ParametroModelo[] = [];
   stocks: StockModelo[] = [];
-  consultas: ConsultaModelo[] = [];
+  consultas: ConsultaModelo[] = new Array();
   terminosEstandar: TerminoEstandarModelo[] = [];
   terminoEstandarPrincipalSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
   terminoEstandarSecundarioSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
-  //medicamentos: InsumoModelo[] = new Array();
-  tratamientosInsumos: TratamientoInsumoModelo[]  = new Array();
+  tratamientosInsumos: TratamientoInsumoModelo[] = [];//[]  = new Array();
   cargando = false;
   alert:boolean=false;
+  alertMedicamentos:boolean=false;
   tipoDiagnostico: String = null;
   dtOptionsBuscadorStock: any = {};
   dtOptionsBuscador: any = {};
@@ -78,10 +80,13 @@ export class ConsultorioComponent implements OnInit {
   dtOptionsAntecedentes: any = {};
   dtOptionsAntecedentesFamiliares: any = {};
   dtOptionsAlergias: any = {};
-  dtOptionsStock: any = {};
+  dtOptionsStock: any = {};  
   dtOptionsTerminoEstandar: any = {};
   dtOptionsConsultas: any = {};
   dtOptionsMedicamentos: any = {};
+  dtTriggerMedicamentos : Subject<any> = new Subject<any>();
+  dtTriggerStock : Subject<any> = new Subject<any>();
+  dtTriggerConsultas : Subject<any> = new Subject<any>();
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -123,8 +128,7 @@ export class ConsultorioComponent implements OnInit {
     this.crearTablaModelStock();
     this.crearTablaModelTerminoEstandar();
     this.crearTablaConsultas();
-  }  
-
+  }
 
   obtenerParametros() {
     var estadoCivilParam = new ParametroModelo();
@@ -167,16 +171,24 @@ export class ConsultorioComponent implements OnInit {
     
     paciente.pacienteId = this.buscadorForm.get('pacienteIdBusqueda').value;
     this.limpiar(event);
+
+    Swal.fire({
+      title: 'Espere',
+      text: 'Buscando...',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
+
     this.pacientesService.buscarPacientesFiltros(paciente)
-    .subscribe( resp => {   
+    .subscribe( resp => { 
       if(resp.length <= 0){
         Swal.fire({
           icon: 'info',
-          title: 'No se encontro paciente',
-          text: 'No se encontro paciente'
+          title: 'No se encontró paciente',
         })
       }else{
-
+        Swal.close();
         for (let i = 0; i < this.listaSexo.length; i++) {
           if( this.listaSexo[i].valor == resp[0].personas.sexo ){
             resp[0].personas.sexo = this.listaSexo[i].descripcionValor;
@@ -365,11 +377,14 @@ export class ConsultorioComponent implements OnInit {
   obtenerConsultas(historialClinicoId) {
     var consultas = new ConsultaModelo();
     consultas.historialClinicoId = historialClinicoId;
+    this.consultas = [];
+    $('#tableConsultas').DataTable().destroy();
 
     this.consultasService.buscarConsultasFiltrosTabla(consultas)
     .subscribe( resp => {     
 
       this.consultas = resp;
+      this.dtTriggerConsultas.next();
       
     }, e => {      
       Swal.fire({
@@ -745,6 +760,8 @@ export class ConsultorioComponent implements OnInit {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,
+      order: [0,"desc"],
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -759,10 +776,9 @@ export class ConsultorioComponent implements OnInit {
           "sPrevious": "Anterior"
         },
         "sProcessing":"Procesando...",
-      },     
-      searching: false,
+      },
       processing: true,
-      columns: [ {data:'consultaId'}, {data:'fecha'}, 
+      columns: [ {data:'consultaId'}, {data:'fecha', width: "30%"}, 
       {data:'diagnosticos.diagnosticoId'},
       {data:'diagnosticos.terminoEstandarPrincipal'},{data:'diagnosticos.terminoEstandarSecundario'},
       {data:'tratamientos.tratamientoId'}, {data:'editar'}]      
@@ -771,12 +787,10 @@ export class ConsultorioComponent implements OnInit {
 
   crearTablaMedicamentos(){
     this.dtOptionsMedicamentos = {
-      /*searching: false,
-       info: false,
-       paging: false,  */
-       pagingType: 'full_numbers',
+      pagingType: 'full_numbers',
       pageLength: 5,
-      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],  
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,  
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -793,11 +807,13 @@ export class ConsultorioComponent implements OnInit {
         "sProcessing":"Procesando...",
         "emptyTable":" "
       },
-      //processing: true,
+      processing: true,
       columns: [
         {data:'#'},
         {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'fechaVencimiento'}, {data:'cantidad', className: 'editable'}, {data:'quitar'}
+        {data:'fechaVencimiento'}, 
+        {data:'cantidad'}, 
+        {data:'quitar'}
       ]      
     };
   }
@@ -837,7 +853,9 @@ export class ConsultorioComponent implements OnInit {
 
     for (let i = 0; i < this.tratamientosInsumos.length; i++) {
       if( this.tratamientosInsumos[i].insumos.insumoId == tratamientoInsumo.insumos.insumoId ){
-        this.tratamientosInsumos.splice(i, 1);
+        $('#tableMedicamentos').DataTable().destroy();
+        this.tratamientosInsumos.splice(i, 1);        
+        this.dtTriggerMedicamentos.next();
         break;
       }
     }
@@ -896,12 +914,22 @@ export class ConsultorioComponent implements OnInit {
         var tratamientoInsumo: TratamientoInsumoModelo  = new TratamientoInsumoModelo();
         tratamientoInsumo.insumos = resp;
 
-        this.tratamientosInsumos.push(tratamientoInsumo);
-
-        /*var table = $('tableMedicamentos').DataTable();
-        table.clear();
-        table.rows.add( this.tratamientosInsumos ).draw();*/
-        //this.medicamentos.push(resp);
+        if(this.tratamientosInsumos.length > 0){
+          for (let i = 0; i < this.tratamientosInsumos.length; i++) {
+            if(this.tratamientosInsumos[i].insumos.insumoId == resp.insumoId){
+              this.alertMedicamentos=true;
+              return null;
+            }
+          }
+          $('#tableMedicamentos').DataTable().destroy();
+          this.tratamientosInsumos.push(tratamientoInsumo);
+          this.dtTriggerMedicamentos.next();
+        }else{
+          $('#tableMedicamentos').DataTable().destroy();
+          this.tratamientosInsumos.push(tratamientoInsumo);
+          this.dtTriggerMedicamentos.next();
+         
+        }
       }, e => {
           Swal.fire({
             icon: 'info',
@@ -957,6 +985,8 @@ export class ConsultorioComponent implements OnInit {
     this.antecedentesFamiliares = [];
     this.alergias = [];
     this.consultas = [];
+    $('#tableConsultas').DataTable().destroy();
+    //this.dtTriggerConsultas.next();
     this.diagnosticoPrimarioForm.reset();
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();
@@ -970,10 +1000,16 @@ export class ConsultorioComponent implements OnInit {
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();
     this.tratamientoNoFarmacologicoForm.reset();
+    this.tratamientosInsumos = [];
+    $('#tableMedicamentos').DataTable().destroy();
+    this.dtTriggerMedicamentos.next();
   }
 
   cerrarAlert(){
     this.alert=false;
+  }
+  cerrarAlertMedicamento(){
+    this.alertMedicamentos=false;
   }
 
   openModal(targetModal) {
@@ -990,7 +1026,7 @@ export class ConsultorioComponent implements OnInit {
       apellidos: ''
     });
     this.pacientes = [];
-    this.alert=false;
+    this.alert=false;    
   }
 
   openModalStock(targetModal) {
@@ -1180,9 +1216,14 @@ export class ConsultorioComponent implements OnInit {
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
     tratamiento.descripcionTratamiento = this.tratamientoNoFarmacologicoForm.get('descripcionTratamiento').value;
-    var table = $('#tableMedicamentos').DataTable();
-        //table.clear();
-        //table.rows.add( this.tratamientosInsumos ).draw();
+    
+    //var tamanho =  $('#tableMedicamentos').DataTable().rows().data().length;
+    var rows =  $('#tableMedicamentos').DataTable().rows().data();  
+    var cantidades = rows.$('input').serializeArray();
+
+    for (let i = 0; i < cantidades.length; i++) {
+      this.tratamientosInsumos[i].cantidad = Number(cantidades[i].value);
+    }    
 
     tratamientoInsumoList = this.tratamientosInsumos;
 
@@ -1200,10 +1241,11 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
                 icon: 'success',
                 text: resp.mensaje,
-              }).then( resp => {       
+      }).then( resp => {       
                 this.limpiarDiagnosticoTratamiento();
                 this.obtenerConsultas(this.historialClinicoForm.get('historialClinicoId').value);
       });
+
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
@@ -1212,6 +1254,5 @@ export class ConsultorioComponent implements OnInit {
        }
     );
   }
-
 
 }

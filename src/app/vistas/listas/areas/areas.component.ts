@@ -1,24 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreasService } from '../../../servicios/areas.service';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { HttpClient } from '@angular/common/http';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-areas',
   templateUrl: './areas.component.html',
   styleUrls: ['./areas.component.css']
 })
-export class AreasComponent implements OnInit {
+export class AreasComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
   
   areas: AreaModelo[] = [];
-  buscador: AreaModelo = new AreaModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -38,7 +41,7 @@ export class AreasComponent implements OnInit {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
-      searching: false,      
+      searching: false,
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -142,10 +145,13 @@ export class AreasComponent implements OnInit {
     event.preventDefault();    
     this.cargando = true;
     this.areas = [];
-    this.buscador = this.buscadorForm.getRawValue(); 
-    this.areasService.buscarAreasFiltrosTabla(this.buscador)
+    this.rerender();
+    var buscador = new AreaModelo();
+    buscador = this.buscadorForm.getRawValue(); 
+    this.areasService.buscarAreasFiltrosTabla(buscador)
     .subscribe( resp => {        
-        this.areas = resp;
+        this.areas = resp;        
+        this.dtTrigger.next();
         this.cargando = false;
       }, e => {      
         Swal.fire({
@@ -160,8 +166,10 @@ export class AreasComponent implements OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new AreaModelo();
-    this.areas = [];
+    this.areas = [];    
+    this.rerender();
+    this.dtTrigger.next();
+    
   }
 
   borrarArea(event,area: AreaModelo ) {
@@ -230,5 +238,20 @@ export class AreasComponent implements OnInit {
       descripcion  : ['', [] ],
       estado: [null, [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }
