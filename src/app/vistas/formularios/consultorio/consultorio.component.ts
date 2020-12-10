@@ -73,7 +73,10 @@ export class ConsultorioComponent implements OnInit {
   cargando = false;
   alert:boolean=false;
   alertMedicamentos:boolean=false;
+  alertGeneral:boolean=false;
   tipoDiagnostico: String = null;
+  mensajeGeneral: String = null;
+  historialClinicoId: any = null;
   dtOptionsBuscadorStock: any = {};
   dtOptionsBuscador: any = {};
   dtOptionsPatologias: any = {};  
@@ -170,10 +173,18 @@ export class ConsultorioComponent implements OnInit {
     event.preventDefault();    
     var paciente = new PacienteModelo();
     var persona = new PersonaModelo();
-    persona.cedula = this.buscadorForm.get('cedulaBusqueda').value;
-    if( persona.cedula ) paciente.personas = persona;
+
+    var cedula = this.buscadorForm.get('cedulaBusqueda').value;
+
+    if( cedula ){
+      persona.cedula = cedula;
+      paciente.personas = persona;
+    }else{
+      paciente.personas = null;
+    }
     
     paciente.pacienteId = this.buscadorForm.get('pacienteIdBusqueda').value;
+    paciente.historialClinico = null;
     this.limpiar(event);
 
     Swal.fire({
@@ -215,11 +226,18 @@ export class ConsultorioComponent implements OnInit {
         this.pacienteForm.patchValue(resp[0]);
         this.buscadorForm.get('pacienteIdBusqueda').setValue(resp[0].pacienteId);
         this.buscadorForm.get('cedulaBusqueda').setValue(resp[0].personas.cedula);
-        this.obtenerHistorialClinico();
-        this.obtenerAntecedentes();
-        this.obtenerAntecedentesFamiliares();
-        this.obtenerAlergias();       
 
+        this.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
+
+        if( this.historialClinicoId ){
+          this.obtenerHistorialClinico();
+          this.obtenerAntecedentes();
+          this.obtenerAntecedentesFamiliares();
+          this.obtenerAlergias(); 
+        }else{
+          this.alertGeneral = true;
+          this.mensajeGeneral = "El paciente aun no cuenta con Historial Clinico definido";
+        }
       }
     }, e => {
       Swal.fire({
@@ -439,6 +457,7 @@ export class ConsultorioComponent implements OnInit {
         telefono: [null, [] ],
         email  : [null, [] ],
         celular: [null, [] ],
+        observacion: [null, [] ],
         carreras: this.fb.group({
           carreraId: [null, [] ],
           descripcion: [null, [] ]
@@ -786,7 +805,7 @@ export class ConsultorioComponent implements OnInit {
       columns: [ {data:'consultaId'}, {data:'fecha', width: "30%"}, 
       {data:'diagnosticos.diagnosticoId'},
       {data:'diagnosticos.terminoEstandarPrincipal'},{data:'diagnosticos.terminoEstandarSecundario'},
-      {data:'tratamientos.tratamientoId'}, {data:'editar'}]      
+      {data:'tratamientos.tratamientoId'}, {data:'areas.codigo'}, {data:'editar'}]      
     };
   }
 
@@ -1000,6 +1019,7 @@ export class ConsultorioComponent implements OnInit {
     this.tratamientoNoFarmacologicoForm.reset();
     this.terminoEstandarPrincipalSeleccionado = new TerminoEstandarModelo();
     this.terminoEstandarSecundarioSeleccionado = new TerminoEstandarModelo();
+    this.alertGeneral=false;
   }
 
   limpiarDiagnosticoTratamiento() {
@@ -1017,6 +1037,9 @@ export class ConsultorioComponent implements OnInit {
   }
   cerrarAlertMedicamento(){
     this.alertMedicamentos=false;
+  }
+  cerrarAlertGeneral(){
+    this.alertGeneral=false;
   }
 
   openModal(targetModal) {
@@ -1235,6 +1258,7 @@ export class ConsultorioComponent implements OnInit {
     tratamientoInsumoList = this.tratamientosInsumos;
 
     consulta.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
+    consulta.areas.areaId = 83;//cambiar por el area del funcionario
 
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     procesoDiagnosticoTratamiento.tratamiento = tratamiento;

@@ -79,7 +79,6 @@
           <th scope="col">Nombres</th>
           <th scope="col">Apellidos</th>
           <th scope="col">Edad</th>
-          <th scope="col">Direcci&oacute;n</th>
           <th scope="col">Email</th>
           <th scope="col">Estado civil</th>
           <th scope="col">Fecha Nacimiento</th>
@@ -107,7 +106,6 @@
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">Edad</th>
-            <th scope="col">Direcci&oacute;n</th>
             <th scope="col">Email</th>
             <th scope="col">Estado civil</th>
             <th scope="col">Fecha Nacimiento</th>
@@ -127,7 +125,6 @@
             <td>{{ persona.nombres }}</td>
             <td>{{ persona.apellidos }}</td>
             <td>{{ persona.edad }}</td>
-            <td>{{ persona.direccion }}</td>
             <td>{{ persona.email }}</td>
             <td>{{ persona.estadoCivil }}</td>
             <td>{{ persona.fechaNacimiento | date : 'dd-MM-yyyy'  }}</td>
@@ -149,7 +146,6 @@
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

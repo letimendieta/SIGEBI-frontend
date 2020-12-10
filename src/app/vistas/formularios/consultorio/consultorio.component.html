@@ -7,61 +7,68 @@
     <h1>Consultorio </h1>
     <hr>
 
-    <div class="row">
-      <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
-          <div class="d-flex p-2">
-            <div class="form-inline">
-              <div>
-                <mat-form-field appearance="legacy">
-                  <mat-label>Paciente id</mat-label>
-                  <input matInput type="number" placeholder="Paciente id" 
-                        formControlName="pacienteIdBusqueda" id="pacienteIdBusqueda">
-                </mat-form-field> 
-              </div> 
-            </div>
-            &nbsp; &nbsp; &nbsp;
-            <div class="form-inline">
-              <div>
-                <mat-form-field appearance="legacy">
-                  <mat-label>C&eacute;dula</mat-label>
-                  <input matInput type="text" placeholder="C&eacute;dula" 
-                        formControlName="cedulaBusqueda" id="cedulaBusqueda">
-                </mat-form-field> 
-              </div> 
-            </div>
-            &nbsp;
-            <div class="align-self-center">
-              <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
-            </div>
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            <div>
-              <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Limpiar"
-                  (click)="limpiar($event)"><i class="fas fa-backspace"></i></button>
-            </div>
-            &nbsp;
-            <div>
-              <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Buscador de pacientes"
-                  (click)="openModal(editProfileModalPacientes)"><i class="fas fa-search"></i></button>
-            </div> 
-            &nbsp;
-            <div class="card form-inline" [hidden]="pacienteForm.get('personas').get('personaId') == null">
-              <div class="card-body">
-                    {{pacienteForm.get('personas').get('nombres').value}}
-                    {{pacienteForm.get('personas').get('apellidos').value}}
-                    <div class="alert alert-danger" role="alert" [hidden]="alergias.length == 0">
-                      Tiene alergia a :
-                      <div class="input-group">                     
-                        <select class="custom-select">
-                          <option *ngFor="let alergia of alergias; let i = index">
-                              {{alergia.alergenos.descripcion}}
-                          </option>
-                        </select>
-                      </div>
-                    </div>    
+    <div class="card">
+      <div *ngIf="alertGeneral" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> {{mensajeGeneral}}
+        <button type="button" (click)="cerrarAlertGeneral()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">      
+      <div class="row justify-content-center">
+        <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
+            <div class="d-flex p-2">
+              <div class="form-inline">
+                <div>
+                  <mat-form-field appearance="legacy">
+                    <mat-label>Paciente id</mat-label>
+                    <input matInput type="number" placeholder="Paciente id" 
+                          formControlName="pacienteIdBusqueda" id="pacienteIdBusqueda">
+                  </mat-form-field> 
+                </div> 
               </div>
-            </div> 
-          </div>
-      </form>
+              &nbsp; &nbsp; &nbsp;
+              <div class="form-inline">
+                <div>
+                  <mat-form-field appearance="legacy">
+                    <mat-label>C&eacute;dula</mat-label>
+                    <input matInput type="text" placeholder="C&eacute;dula" 
+                          formControlName="cedulaBusqueda" id="cedulaBusqueda">
+                  </mat-form-field> 
+                </div> 
+              </div>
+              &nbsp;
+              <div class="align-self-center">
+                <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+              </div>
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <div>
+                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Limpiar"
+                    (click)="limpiar($event)"><i class="fas fa-backspace"></i></button>
+              </div>
+              &nbsp;
+              <div>
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Buscador de pacientes"
+                    (click)="openModal(editProfileModalPacientes)"><i class="fas fa-search"></i></button>
+              </div> 
+              &nbsp;&nbsp;
+              <b>{{pacienteForm.get('personas').get('nombres').value}}</b>
+              &nbsp;
+              <b>{{pacienteForm.get('personas').get('apellidos').value}}</b>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="alert alert-danger" role="alert" [hidden]="alergias.length == 0">
+                <i class="fas fa-exclamation-triangle"></i> Tiene alergia a :
+                  <select class="custom-select">
+                    <option *ngFor="let alergia of alergias; let i = index">
+                        {{alergia.alergenos.descripcion}}
+                    </option>
+                  </select>
+              </div>    
+            </div>
+        </form>
+      </div>
     </div>
 
     <!--Pestanas-->
@@ -273,7 +280,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label><b>Observaciones: </b></label>
-                    <!--textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea-->
+                    <div>{{pacienteForm.get('personas').get('observacion').value}}</div>
                   </div>
                 </div>
 
@@ -601,6 +608,7 @@
                       <th>Cie principal</th>
                       <th>Cie secundario</th>
                       <th>Tratamiento id</th>
+                      <th>Cod. &Aacute;rea</th>
                       <th></th>       
                     </tr>
                   </thead>
@@ -611,7 +619,8 @@
                           <td>{{ consulta.diagnosticos.diagnosticoId }}</td>
                           <td>{{ consulta.diagnosticos.terminoEstandarPrincipal }}</td>
                           <td>{{ consulta.diagnosticos.terminoEstandarSecundario }}</td>
-                          <td>{{ consulta.tratamientos.tratamientoId }}</td>                              
+                          <td>{{ consulta.tratamientos.tratamientoId }}</td>
+                          <td>{{ consulta.areas.codigo }}</td>                              
                           <td></td>                                                      
                     </tr>
                   </tbody>
@@ -627,6 +636,7 @@
                                   Espere por favor
                             </p>
                       </td>
+                      <td></td>
                       <td></td>
                       <td></td>
                       <td></td>
@@ -673,7 +683,7 @@
             </div>          
             <br>
             <div class="form-group text-center">
-              <button type="submit"
+              <button type="submit" [disabled]="!historialClinicoId"
                       class="btn btn-primary ">
                 <i class="fa fa-save"></i>
                 Guardar
@@ -1058,8 +1068,8 @@
           </div>
           <br>
             <div class="form-group text-center">
-              <button (click)="guardarDiagnosticoTratamiento($event)" type="submit"
-                      class="btn btn-primary ">
+              <button (click)="guardarDiagnosticoTratamiento($event)" [disabled]="!historialClinicoId"
+                type="submit" class="btn btn-primary ">
                 <i class="fa fa-save"></i>
                 Guardar
               </button>

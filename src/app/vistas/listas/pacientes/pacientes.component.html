@@ -81,7 +81,6 @@
           <th scope="col">H.C. id</th>
           <th scope="col">Grupo sangu&iacute;neo</th>
           <th scope="col">Edad</th>
-          <th scope="col">Direcci&oacute;n</th>
           <th scope="col">Email</th>
           <th scope="col">Estado civil</th>
           <th scope="col">Fecha nacimiento</th>
@@ -111,7 +110,6 @@
             <th scope="col">H.C. id</th>
             <th scope="col">Grupo sangu&iacute;neo</th>
             <th scope="col">Edad</th>
-            <th scope="col">Direcci&oacute;n</th>
             <th scope="col">Email</th>
             <th scope="col">Estado civil</th>
             <th scope="col">Fecha nacimiento</th>
@@ -133,7 +131,6 @@
             <td>{{ paciente.historialClinico.historialClinicoId }}</td>
             <td>{{ paciente.grupoSanguineo }}</td>
             <td>{{ paciente.personas.edad }}</td>
-            <td>{{ paciente.personas.direccion }}</td>
             <td>{{ paciente.personas.email }}</td>
             <td>{{ paciente.personas.estadoCivil }}</td>
             <td>{{ paciente.personas.fechaNacimiento | date : 'dd-MM-yyyy' }}</td>
@@ -155,7 +152,6 @@
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">   
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

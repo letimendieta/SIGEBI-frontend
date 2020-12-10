@@ -1,3 +1,4 @@
+import { AreaModelo } from './area.modelo';
 import { DiagnosticoModelo } from './diagnostico.modelo';
 import { TratamientoModelo } from './tratamiento.modelo';
 
@@ -8,6 +9,7 @@ export class ConsultaModelo {
     tratamientos: TratamientoModelo;
     diagnosticos: DiagnosticoModelo;
     historialClinicoId: string;
+    areas: AreaModelo;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

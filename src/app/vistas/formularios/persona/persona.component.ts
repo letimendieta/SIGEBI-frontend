@@ -306,6 +306,7 @@ export class PersonaComponent implements OnInit {
       telefono: [null, [] ],
       email  : [null, [ Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ],
       celular: [null, [] ],
+      observacion:[null, []],
       carreras: {
         carreraId: [null, [] ]
       },

@@ -62,7 +62,7 @@ export class PacientesComponent implements OnInit {
         {data:'pacienteId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
         {data:'personas.apellidos'}, {data:'historialClinico.historialClinicoId'},
         {data:'grupoSanguineo'}, {data:'personas.edad'},
-        {data:'personas.direccion'}, {data:'personas.email'},
+        {data:'personas.email'},
         {data:'personas.estadoCivil'},{data:'personas.fechaNacimiento'},{data:'personas.nacionalidad'},
         {data:'personas.sexo'},{data:'personas.telefono'},{data:'personas.celular'},
         {data:'Editar'},

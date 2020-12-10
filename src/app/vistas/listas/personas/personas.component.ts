@@ -57,7 +57,7 @@ export class PersonasComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'personaId'}, {data:'cedula'}, {data:'nombres'},
-        {data:'apellidos'}, {data:'edad'}, {data:'direccion'},
+        {data:'apellidos'}, {data:'edad'},
         {data:'email'}, {data:'estadoCivil'},
         {data:'fechaNacimiento'},{data:'nacionalidad'},{data:'sexo'},
         {data:'telefono'},{data:'celular'},

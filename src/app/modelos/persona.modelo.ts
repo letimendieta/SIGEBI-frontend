@@ -18,6 +18,7 @@ export class PersonaModelo {
     sexo: string;
     telefono: string;
     celular: string;
+    observacion: string;
     carreras: CarreraModelo;
     departamento: DepartamentoModelo;
     dependencias: DependenciaModelo;
