@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CarrerasService } from '../../../servicios/carreras.service';
 import { CarreraModelo } from '../../../modelos/carrera.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-carreras',
   templateUrl: './carreras.component.html',
   styleUrls: ['./carreras.component.css']
 })
-export class CarrerasComponent implements OnInit {
+export class CarrerasComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   carreras: CarreraModelo[] = [];
   buscador: CarreraModelo = new CarreraModelo();
@@ -130,11 +134,13 @@ export class CarrerasComponent implements OnInit {
     event.preventDefault();    
     this.cargando = true;
     this.carreras = [];
+    this.rerender();
     this.buscador = this.buscadorForm.getRawValue();
 
     this.carrerasService.buscarCarrerasFiltrosTabla(this.buscador)
     .subscribe( resp => {      
       this.carreras = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -143,6 +149,7 @@ export class CarrerasComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -151,6 +158,8 @@ export class CarrerasComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new CarreraModelo();
     this.carreras = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarCarrera(event, carrera: CarreraModelo ) {
@@ -214,5 +223,20 @@ export class CarrerasComponent implements OnInit {
       descripcion  : ['', [] ],
       estado: [null, [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

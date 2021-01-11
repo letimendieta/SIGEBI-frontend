@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ParametrosService } from '../../../servicios/parametros.service';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-parametros',
   templateUrl: './parametros.component.html',
   styleUrls: ['./parametros.component.css']
 })
-export class ParametrosComponent implements OnInit {
+export class ParametrosComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   parametros: ParametroModelo[] = [];
   buscador: ParametroModelo = new ParametroModelo();
@@ -35,10 +39,12 @@ export class ParametrosComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.parametros = [];
+    this.rerender();
     this.buscador = this.buscadorForm.getRawValue();
     this.parametrosService.buscarParametrosFiltrosTabla(this.buscador)
     .subscribe( resp => {      
       this.parametros = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -46,6 +52,8 @@ export class ParametrosComponent implements OnInit {
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e),
       })
+      this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -146,6 +154,8 @@ export class ParametrosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new ParametroModelo();
     this.parametros = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarParametro(event, parametro: ParametroModelo ) {
@@ -211,5 +221,20 @@ export class ParametrosComponent implements OnInit {
       descripcionValor: ['', [] ],
       estado:  [null, [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

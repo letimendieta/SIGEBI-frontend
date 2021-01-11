@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { InsumosService } from '../../../servicios/insumos.service';
 import { InsumoModelo } from '../../../modelos/insumo.modelo';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-insumos',
   templateUrl: './insumos.component.html',
   styleUrls: ['./insumos.component.css']
 })
-export class InsumosComponent implements OnInit {
+export class InsumosComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   insumos: InsumoModelo[] = [];
   buscador: InsumoModelo = new InsumoModelo();
@@ -127,10 +131,12 @@ export class InsumosComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.insumos = [];
+    this.rerender();
     this.buscador = this.buscadorForm.getRawValue();
     this.insumosService.buscarInsumosFiltrosTabla(this.buscador)
     .subscribe( resp => {      
       this.insumos = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -139,6 +145,7 @@ export class InsumosComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -147,6 +154,8 @@ export class InsumosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new InsumoModelo();
     this.insumos = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarInsumo(event, insumo: InsumoModelo ) {
@@ -208,7 +217,23 @@ export class InsumosComponent implements OnInit {
       insumoId  : [null, [] ],
       codigo  : [null, [] ],
       descripcion  : [null, [] ],
+      tipo : [null, [] ],
       fechaVencimiento: [null, [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

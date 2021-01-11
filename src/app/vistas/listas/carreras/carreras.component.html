@@ -69,32 +69,9 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="carreras.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&oacute;digo</th>
-          <th scope="col">Descripci&oacute;n</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Fecha creaci&oacute;n</th>
-          <th scope="col">Usuario creaci&oacute;n</th>
-          <th scope="col">Fecha modificaci&oacute;n</th>
-          <th scope="col">Usuario modificaci&oacute;n</th>     
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="carreras.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>
@@ -110,7 +87,7 @@
             <th scope="col">Borrar</th>
           </tr>
         </thead>
-        <tbody *ngIf="carreras?.length != 0">
+        <tbody>
           <tr *ngFor="let carrera of carreras; let i = index">
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ carrera.carreraId }}</td>
@@ -140,7 +117,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>       
+          <td></td>
+          <td></td>      
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>
@@ -149,8 +127,7 @@
             <p class="mb-0">
               Espere por favor
             </p>
-          </td>
-          <td></td>
+          </td>          
           <td></td>
           <td></td>
           <td></td>

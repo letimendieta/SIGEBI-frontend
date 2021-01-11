@@ -67,39 +67,10 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="!cargando && pacientes.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&eacute;dula</th>
-          <th scope="col">Nombres</th>
-          <th scope="col">Apellidos</th>
-          <th scope="col">H.C. id</th>
-          <th scope="col">Grupo sangu&iacute;neo</th>
-          <th scope="col">Edad</th>
-          <th scope="col">Email</th>
-          <th scope="col">Estado civil</th>
-          <th scope="col">Fecha nacimiento</th>
-          <th scope="col">Nacionalidad</th>
-          <th scope="col">Sexo</th>
-          <th scope="col">Tel&eacute;fono</th>
-          <th scope="col">Celular</th>
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <!--Tabla de datos-->
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="pacientes.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>
           <tr class="table-primary">  
             <th scope="col">#</th>
@@ -108,15 +79,6 @@
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">H.C. id</th>
-            <th scope="col">Grupo sangu&iacute;neo</th>
-            <th scope="col">Edad</th>
-            <th scope="col">Email</th>
-            <th scope="col">Estado civil</th>
-            <th scope="col">Fecha nacimiento</th>
-            <th scope="col">Nacionalidad</th>
-            <th scope="col">Sexo</th>
-            <th scope="col">Tel&eacute;fono</th>
-            <th scope="col">Celular</th>
             <th scope="col">Editar</th>
             <th scope="col">Borrar</th>
           </tr>
@@ -129,16 +91,6 @@
             <td>{{ paciente.personas.nombres }}</td>
             <td>{{ paciente.personas.apellidos }}</td>
             <td>{{ paciente.historialClinico.historialClinicoId }}</td>
-            <td>{{ paciente.grupoSanguineo }}</td>
-            <td>{{ paciente.personas.edad }}</td>
-            <td>{{ paciente.personas.email }}</td>
-            <td>{{ paciente.personas.estadoCivil }}</td>
-            <td>{{ paciente.personas.fechaNacimiento | date : 'dd-MM-yyyy' }}</td>
-            <td>{{ paciente.personas.nacionalidad }}</td>
-            <td>{{ paciente.personas.sexo }}</td>
-            <td>{{ paciente.personas.telefono }}</td>
-            <td>{{ paciente.personas.celular}}</td>   
-
             <td>
               <a class="btn btn-info"
                       [routerLink]="['/paciente', paciente.pacienteId ]">
@@ -155,11 +107,6 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>
@@ -169,10 +116,6 @@
               Espere por favor
             </p>
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

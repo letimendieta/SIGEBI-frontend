@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EstamentosService } from '../../../servicios/estamentos.service';
 import { EstamentoModelo } from '../../../modelos/estamento.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-estamentos',
   templateUrl: './estamentos.component.html',
   styleUrls: ['./estamentos.component.css']
 })
-export class EstamentosComponent implements OnInit {
+export class EstamentosComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   estamentos: EstamentoModelo[] = [];
   buscador: EstamentoModelo = new EstamentoModelo();
@@ -35,11 +39,13 @@ export class EstamentosComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.estamentos = [];
+    this.rerender();
     this.buscador = this.buscadorForm.getRawValue();
 
     this.estamentosService.buscarEstamentosFiltrosTabla(this.buscador)
     .subscribe( resp => {      
       this.estamentos = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -48,6 +54,7 @@ export class EstamentosComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -148,6 +155,8 @@ export class EstamentosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new EstamentoModelo();
     this.estamentos = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarEstamento(event, estamento: EstamentoModelo ) {
@@ -211,5 +220,21 @@ export class EstamentosComponent implements OnInit {
       descripcion  : ['', [] ],
       estado: [null, [] ]
     });
+  }
+
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

@@ -87,32 +87,11 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="parametros.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&oacute;digo</th>
-          <th scope="col">Descripci&oacute;n</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Valor</th>
-          <th scope="col">Descripci&oacute;n valor</th>
-          <th scope="col">Estado</th>     
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="parametros.length > 0">
-        <thead class="table-info">      
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
+        <thead>
+          <tr class="table-primary">
             <th scope="col">#</th>
             <th scope="col">Id</th>
             <th scope="col">C&oacute;digo</th>
@@ -123,6 +102,7 @@
             <th scope="col">Estado</th>     
             <th scope="col">Editar</th>
             <th scope="col">Borrar</th>
+          </tr>      
         </thead>
         <tbody>
           <tr *ngFor="let parametro of parametros; let i = index">

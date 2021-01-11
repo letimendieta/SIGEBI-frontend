@@ -8,6 +8,8 @@ import { InsumoModelo } from '../../../modelos/insumo.modelo';
 import { InsumosService } from '../../../servicios/insumos.service';
 
 import Swal from 'sweetalert2';
+import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
+import { ParametrosService } from 'src/app/servicios/parametros.service';
 
 @Component({
   selector: 'app-insumo',
@@ -19,13 +21,16 @@ export class InsumoComponent implements OnInit {
   insumoForm: FormGroup;
 
   insumo: InsumoModelo = new InsumoModelo();
+  listaTipoInsumo: ParametroModelo;
 
   constructor( private insumosService: InsumosService,
+               private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private router: Router,
                private comunes: ComunesService,
                private fb: FormBuilder ) { 
     this.crearFormulario();
+    this.obtenerParametros();
   }              
 
   ngOnInit() {
@@ -104,6 +109,20 @@ export class InsumoComponent implements OnInit {
     );
   }
 
+  obtenerParametros() { 
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
+  
+    var tipoParam = new ParametroModelo();
+    tipoParam.codigoParametro = "TIPO_INSUMO";
+    tipoParam.estado = "A";
+
+    this.parametrosService.buscarParametrosFiltros( tipoParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaTipoInsumo = resp;
+    });        
+  }
+
   limpiar(){
     this.insumo = new InsumoModelo();
     this.insumoForm.reset();
@@ -130,6 +149,10 @@ export class InsumoComponent implements OnInit {
     return this.insumoForm.get('codigo').invalid && this.insumoForm.get('codigo').touched
   }
 
+  get tipoNoValido() {
+    return this.insumoForm.get('tipo').invalid && this.insumoForm.get('tipo').touched
+  }
+
   get descripcionNoValido() {
     return this.insumoForm.get('descripcion').invalid && this.insumoForm.get('descripcion').touched
   }
@@ -140,6 +163,7 @@ export class InsumoComponent implements OnInit {
       insumoId  : [null, [] ],
       codigo  : [null, [ Validators.required ]  ],
       descripcion  : [null, [ Validators.required]  ],
+      tipo  : [null, [ Validators.required]  ],
       fechaVencimiento: [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

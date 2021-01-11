@@ -176,7 +176,8 @@ export class FuncionarioComponent implements OnInit {
   }
 
   get areaNoValido() {
-    return this.funcionarioForm.get('areaId').invalid && this.funcionarioForm.get('areaId').touched
+    return this.funcionarioForm.get('areas').get('areaId').invalid 
+    && this.funcionarioForm.get('areas').get('areaId').touched
   }
 
   crearFormulario() {
@@ -188,7 +189,9 @@ export class FuncionarioComponent implements OnInit {
         nombres  : [null, [ Validators.required, Validators.minLength(5) ]  ],
         apellidos: [null, [Validators.required] ]       
       }),
-      areaId  : [null, [ Validators.required] ],
+      areas  : this.fb.group({
+        areaId: [null, [ Validators.required] ]
+      }),
       estado  : [null, [] ],
       fechaIngreso  : [null, [] ],
       fechaEgreso  : [null, [] ],

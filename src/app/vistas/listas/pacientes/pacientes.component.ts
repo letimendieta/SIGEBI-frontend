@@ -1,29 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PacientesService } from '../../../servicios/pacientes.service';
 import { PacienteModelo } from '../../../modelos/paciente.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-pacientes',
   templateUrl: './pacientes.component.html',
   styleUrls: ['./pacientes.component.css']
 })
-export class PacientesComponent implements OnInit {
+export class PacientesComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   pacientes: PacienteModelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
   buscador: PacienteModelo = new PacienteModelo();
   buscadorForm: FormGroup;
   cargando = false;
-
-
 
   constructor( private pacientesService: PacientesService,
     private comunes: ComunesService,
@@ -61,10 +63,6 @@ export class PacientesComponent implements OnInit {
         {data:'#'},
         {data:'pacienteId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
         {data:'personas.apellidos'}, {data:'historialClinico.historialClinicoId'},
-        {data:'grupoSanguineo'}, {data:'personas.edad'},
-        {data:'personas.email'},
-        {data:'personas.estadoCivil'},{data:'personas.fechaNacimiento'},{data:'personas.nacionalidad'},
-        {data:'personas.sexo'},{data:'personas.telefono'},{data:'personas.celular'},
         {data:'Editar'},
         {data:'Borrar'},
       ],
@@ -78,7 +76,7 @@ export class PacientesComponent implements OnInit {
           title:     'Listado de pacientes',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+            columns: [ 0, 1, 2, 3, 4, 5]
           },
         },
         {
@@ -89,7 +87,7 @@ export class PacientesComponent implements OnInit {
           className: 'btn btn-secondary',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+            columns: [ 0, 1, 2, 3, 4, 5 ]
           },
         },
         {
@@ -101,7 +99,7 @@ export class PacientesComponent implements OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+            columns: [ 0, 1, 2, 3, 4, 5]
           }
         },          
         {
@@ -112,7 +110,7 @@ export class PacientesComponent implements OnInit {
           className: 'btn btn-info',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+            columns: [ 0, 1, 2, 3, 4, 5 ]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -134,6 +132,7 @@ export class PacientesComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.pacientes = [];
+    this.rerender();
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -142,6 +141,7 @@ export class PacientesComponent implements OnInit {
     this.pacientesService.buscarPacientesFiltros(this.buscador)
     .subscribe( resp => {      
       this.pacientes = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -159,6 +159,8 @@ export class PacientesComponent implements OnInit {
     this.buscador = new PacienteModelo();
     this.persona = new PersonaModelo();
     this.pacientes = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarPaciente(event, paciente: PacienteModelo ) {
@@ -222,5 +224,20 @@ export class PacientesComponent implements OnInit {
       nombres  : ['', [] ],
       apellidos: ['', [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

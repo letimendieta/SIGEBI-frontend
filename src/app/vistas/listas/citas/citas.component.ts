@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CitasService } from '../../../servicios/citas.service';
 import { CitaModelo } from '../../../modelos/cita.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
@@ -7,24 +7,28 @@ import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { AreaModelo } from '../../../modelos/area.modelo';
 import { AreasService } from '../../../servicios/areas.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
   styleUrls: ['./citas.component.css']
 })
-export class CitasComponent implements OnInit {
+export class CitasComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   citas: CitaModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
-  listaAreas: AreaModelo;
+  listaAreas: AreaModelo[] = [];
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
@@ -42,6 +46,7 @@ export class CitasComponent implements OnInit {
   ngOnInit() {
     this.crearFormulario();
     this.crearTabla();  
+    this.listarAreas();
   }
 
   listarAreas() {
@@ -51,7 +56,7 @@ export class CitasComponent implements OnInit {
     area.estado = "A";
 
     this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
-      .subscribe( (resp: AreaModelo) => {
+      .subscribe( (resp: AreaModelo[]) => {
         this.listaAreas = resp;
     });
   }
@@ -60,6 +65,7 @@ export class CitasComponent implements OnInit {
     event.preventDefault(); 
     this.cargando = true;
     this.citas = [];
+    this.rerender();
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -105,6 +111,7 @@ export class CitasComponent implements OnInit {
     this.citasService.buscarCitasFiltros(this.buscador)
     .subscribe( resp => {      
       this.citas = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {      
       Swal.fire({
@@ -113,6 +120,7 @@ export class CitasComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -217,6 +225,8 @@ export class CitasComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new CitaModelo();    
     this.citas = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarCita(event, cita: CitaModelo ) {
@@ -295,5 +305,20 @@ export class CitasComponent implements OnInit {
         funcionarioApellidos  : [null, [] ]        
       })      
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

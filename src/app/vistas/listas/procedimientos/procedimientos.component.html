@@ -119,34 +119,9 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="procedimientos.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">Paciente id</th>
-          <th scope="col">Paciente c&eacute;dula</th>
-          <th scope="col">Paciente nombres</th>
-          <th scope="col">Paciente apellidos</th>
-          <th scope="col">Funcionario id</th>
-          <th scope="col">Funcionario c&eacute;dula</th>
-          <th scope="col">Funcionario nombres</th>
-          <th scope="col">Funcionario apellidos</th>
-          <th scope="col">InsumoId</th>
-          <th scope="col">Fecha procedimiento</th>  
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="procedimientos.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>

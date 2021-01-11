@@ -59,6 +59,17 @@
                 </mat-select>
               </mat-form-field>
             </p>
+            <div formGroupName="areas">
+              <mat-form-field appearance="fill">
+                <mat-label>&Aacute;rea</mat-label>
+                <mat-select formControlName="areaId" name="areaId">
+                  <mat-option value=null>TODOS</mat-option>
+                  <mat-option *ngFor="let item of listaAreas; let i = index"
+                    value="{{item.areaId}}">
+                    {{item.codigo}} - {{item.descripcion}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div> 
           </div>
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
@@ -80,39 +91,9 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="funcionarios.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&eacute;dula</th>
-          <th scope="col">Nombres</th>
-          <th scope="col">Apellidos</th>
-          <th scope="col">&Aacute;rea</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Edad</th>
-          <th scope="col">Direcci&oacute;n</th>
-          <th scope="col">Email</th>
-          <th scope="col">Estado civil</th>
-          <th scope="col">Fecha nacimiento</th>
-          <th scope="col">Nacionalidad</th>
-          <th scope="col">Sexo</th>
-          <th scope="col">Tel&eacute;fono</th>
-          <th scope="col">Celular</th>   
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <div class="card">
     <div class="table-responsive  table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="funcionarios.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>
@@ -120,17 +101,8 @@
             <th scope="col">C&eacute;dula</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
-            <th scope="col">&Aacute;rea</th>
+            <th scope="col">C&oacute;digo &aacute;rea</th>
             <th scope="col">Estado</th>
-            <th scope="col">Edad</th>
-            <th scope="col">Direcci&oacute;n</th>
-            <th scope="col">Email</th>
-            <th scope="col">Estado civil</th>
-            <th scope="col">Fecha nacimiento</th>
-            <th scope="col">Nacionalidad</th>
-            <th scope="col">Sexo</th>
-            <th scope="col">Tel&eacute;fono</th>
-            <th scope="col">Celular</th>   
             <th scope="col">Editar</th>
             <th scope="col">Borrar</th>
           </tr>
@@ -142,18 +114,8 @@
             <td>{{ funcionario.personas.cedula }}</td>
             <td>{{ funcionario.personas.nombres }}</td>
             <td>{{ funcionario.personas.apellidos }}</td>
-            <td>{{ funcionario.areaId }}</td>
+            <td>{{ funcionario.areas.codigo }}</td>  
             <td>{{ funcionario.estado }}</td>
-            <td>{{ funcionario.personas.edad }}</td>
-            <td>{{ funcionario.personas.direccion }}</td>
-            <td>{{ funcionario.personas.email }}</td>
-            <td>{{ funcionario.personas.estadoCivil }}</td>
-            <td>{{ funcionario.personas.fechaNacimiento }}</td>
-            <td>{{ funcionario.personas.nacionalidad }}</td>
-            <td>{{ funcionario.personas.sexo }}</td>
-            <td>{{ funcionario.personas.telefono }}</td>
-            <td>{{ funcionario.personas.celular}}</td>
-
             <td>
               <a class="btn btn-info"
                       [routerLink]="['/funcionario', funcionario.funcionarioId ]">
@@ -166,16 +128,11 @@
             </td>
           </tr>
         </tbody>
-        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">         
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>      
+          <td></td>    
+          <td></td>  
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>
@@ -184,16 +141,11 @@
             <p class="mb-0">
               Espere por favor
             </p>
-          </td>
+          </td>          
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>    
+          <td></td>          
         </tbody>
       </table>
     </div>

@@ -1,21 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Usuario2Modelo } from '../../../modelos/usuario2.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   usuarios: Usuario2Modelo[] = [];
   persona: PersonaModelo = new PersonaModelo();
@@ -129,6 +133,7 @@ export class UsuariosComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.usuarios = [];
+    this.rerender();
     this.persona.cedula = this.buscadorForm.get('cedula').value;
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
@@ -138,6 +143,7 @@ export class UsuariosComponent implements OnInit {
     this.usuariosService.buscarUsuariosFiltros(this.buscador)
     .subscribe( resp => {      
       this.usuarios = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -146,6 +152,7 @@ export class UsuariosComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -155,6 +162,8 @@ export class UsuariosComponent implements OnInit {
     this.buscador = new Usuario2Modelo();
     this.persona = new PersonaModelo();   
     this.usuarios = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarUsuario(event, usuario: Usuario2Modelo ) {
@@ -220,5 +229,20 @@ export class UsuariosComponent implements OnInit {
       apellidos: ['', [] ],
       estado: [null, [] ]
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

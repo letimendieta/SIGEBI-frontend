@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ProcedimientosService } from '../../../servicios/procedimientos.service';
 import { ProcedimientoModelo } from '../../../modelos/procedimiento.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { PacienteModelo } from '../../../modelos/paciente.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-procedimientos',
   templateUrl: './procedimientos.component.html',
   styleUrls: ['./procedimientos.component.css']
 })
-export class ProcedimientosComponent implements OnInit {
+export class ProcedimientosComponent implements OnDestroy,  OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   procedimientos: ProcedimientoModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
@@ -84,7 +88,7 @@ export class ProcedimientosComponent implements OnInit {
           title:     'Listado de procedimientos',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
           },
         },
         {
@@ -95,7 +99,7 @@ export class ProcedimientosComponent implements OnInit {
           className: 'btn btn-secondary',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
           },
         },
         {
@@ -107,7 +111,7 @@ export class ProcedimientosComponent implements OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
           }
         },          
         {
@@ -118,7 +122,7 @@ export class ProcedimientosComponent implements OnInit {
           className: 'btn btn-info',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -140,6 +144,7 @@ export class ProcedimientosComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.procedimientos = [];
+    this.rerender();
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
@@ -181,6 +186,7 @@ export class ProcedimientosComponent implements OnInit {
     this.procedimientosService.buscarProcedimientosFiltros(this.buscador)
     .subscribe( resp => {      
       this.procedimientos = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {      
       Swal.fire({
@@ -189,6 +195,7 @@ export class ProcedimientosComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -197,6 +204,8 @@ export class ProcedimientosComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new ProcedimientoModelo();  
     this.procedimientos = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarProcedimiento(event, procedimiento: ProcedimientoModelo ) {
@@ -270,5 +279,20 @@ export class ProcedimientosComponent implements OnInit {
         funcionarioApellidos  : ['', [] ]        
       })      
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

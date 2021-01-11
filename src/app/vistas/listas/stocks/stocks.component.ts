@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { StocksService } from '../../../servicios/stocks.service';
 import { StockModelo } from '../../../modelos/stock.modelo';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { ParametrosService } from '../../../servicios/parametros.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-stocks',
   templateUrl: './stocks.component.html',
   styleUrls: ['./stocks.component.css']
 })
-export class StocksComponent implements OnInit {
+export class StocksComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   stocks: StockModelo[] = [];
   buscador: StockModelo = new StockModelo();
@@ -146,6 +150,7 @@ export class StocksComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.stocks = [];
+    this.rerender();
     var insumos = new InsumoModelo();
     this.buscador.stockId = this.buscadorForm.get('stockId').value;
     insumos.insumoId = this.buscadorForm.get('insumoId').value;
@@ -161,6 +166,7 @@ export class StocksComponent implements OnInit {
     this.stocksService.buscarStocksFiltrosTabla(this.buscador)
     .subscribe( resp => {      
       this.stocks = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -168,6 +174,8 @@ export class StocksComponent implements OnInit {
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e),
       })
+      this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -176,6 +184,8 @@ export class StocksComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new StockModelo();
     this.stocks = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarStock(event, stock: StockModelo ) {
@@ -240,5 +250,20 @@ export class StocksComponent implements OnInit {
       codigo  : ['', [] ],
       descripcion  : ['', [] ]      
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

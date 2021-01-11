@@ -89,32 +89,9 @@
     </div>
   </div>
 
-   <!--Tabla vacia-->
-   <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="usuarios.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&oacute;digo usuario</th>
-          <th scope="col">Persona id</th>
-          <th scope="col">Funcionario id</th>
-          <th scope="col">C&eacute;dula</th>
-          <th scope="col">Nombres</th>
-          <th scope="col">Apellidos</th>      
-          <th scope="col">Estado</th>
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="usuarios.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
         <thead>   
           <tr class="table-primary">
             <th scope="col">#</th>

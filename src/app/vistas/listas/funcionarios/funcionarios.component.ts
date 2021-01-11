@@ -1,24 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
+import { AreaModelo } from 'src/app/modelos/area.modelo';
+import { AreasService } from 'src/app/servicios/areas.service';
 
 @Component({
   selector: 'app-funcionarios',
   templateUrl: './funcionarios.component.html',
   styleUrls: ['./funcionarios.component.css']
 })
-export class FuncionariosComponent implements OnInit {
+export class FuncionariosComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   funcionarios: FuncionarioModelo[] = [];
-  persona: PersonaModelo = new PersonaModelo();
+  listaAreas: AreaModelo;
   buscador: FuncionarioModelo = new FuncionarioModelo();
   buscadorForm: FormGroup;
   cargando = false;
@@ -26,12 +32,14 @@ export class FuncionariosComponent implements OnInit {
 
   constructor( private funcionariosService: FuncionariosService,
               private comunes: ComunesService,
+              private areasService: AreasService,
               private fb: FormBuilder ) {    
   }
 
   ngOnInit() {
     this.crearFormulario();
     this.crearTabla();
+    this.listarAreas();
   }
 
   crearTabla(){
@@ -59,11 +67,7 @@ export class FuncionariosComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'funcionarioId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
-        {data:'personas.apellidos'}, {data:'areaId'}, {data:'estado'},
-        {data:'personas.edad'}, {data:'personas.direccion'},
-        {data:'personas.email'},{data:'personas.estadoCivil'},{data:'personas.fechaNacimiento'},
-        {data:'personas.nacionalidad'},{data:'personas.sexo'},{data:'personas.telefono'},
-        {data:'personas.celular'},
+        {data:'personas.apellidos'}, {data:'areas.areaId'}, {data:'estado'},
         {data:'Editar'},
         {data:'Borrar'},
       ],
@@ -77,7 +81,7 @@ export class FuncionariosComponent implements OnInit {
           title:     'Listado de funcionarios',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            columns: [ 0, 1, 2, 3, 4, 5, 6]
           },
         },
         {
@@ -88,7 +92,7 @@ export class FuncionariosComponent implements OnInit {
           className: 'btn btn-secondary',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            columns: [ 0, 1, 2, 3, 4, 5, 6]
           },
         },
         {
@@ -100,7 +104,7 @@ export class FuncionariosComponent implements OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            columns: [ 0, 1, 2, 3, 4, 5, 6]
           }
         },          
         {
@@ -111,7 +115,7 @@ export class FuncionariosComponent implements OnInit {
           className: 'btn btn-info',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            columns: [ 0, 1, 2, 3, 4, 5, 6]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -129,18 +133,39 @@ export class FuncionariosComponent implements OnInit {
     };
   }
 
+  listarAreas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
+
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+      .subscribe( (resp: AreaModelo) => {
+        this.listaAreas = resp;
+    });
+  }
+
   buscadorFuncionarios(event) {
     event.preventDefault();
     this.cargando = true;
     this.funcionarios = [];
-    this.persona.cedula = this.buscadorForm.get('cedula').value;
-    this.persona.nombres = this.buscadorForm.get('nombres').value;
-    this.persona.apellidos = this.buscadorForm.get('apellidos').value;
-    this.buscador.personas = this.persona;
-    this.buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value;    
+    this.rerender();
+    var persona: PersonaModelo = new PersonaModelo();
+    persona.cedula = this.buscadorForm.get('cedula').value;
+    persona.nombres = this.buscadorForm.get('nombres').value;
+    persona.apellidos = this.buscadorForm.get('apellidos').value;
+    if( !persona.cedula && !persona.nombres && !persona.apellidos ){
+      this.buscador.personas = null;
+    }else{
+      this.buscador.personas = persona;
+    }    
+    this.buscador.estado = this.buscadorForm.get('estado').value;    
+    this.buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value; 
+    this.buscador.areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
     this.funcionariosService.buscarFuncionariosFiltros(this.buscador)
     .subscribe( resp => {      
       this.funcionarios = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -149,6 +174,7 @@ export class FuncionariosComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -156,8 +182,9 @@ export class FuncionariosComponent implements OnInit {
     event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new FuncionarioModelo();
-    this.persona = new PersonaModelo();
     this.funcionarios = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarFuncionario(event, funcionario: FuncionarioModelo ) {
@@ -220,7 +247,25 @@ export class FuncionariosComponent implements OnInit {
       cedula  : ['', [] ],
       nombres  : ['', [] ],
       apellidos: ['', [] ],
-      estado:  [null, [] ]
+      estado:  [null, [] ],
+      areas  : this.fb.group({
+        areaId: ['', [] ]
+      })
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

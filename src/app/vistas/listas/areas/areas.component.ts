@@ -6,7 +6,6 @@ import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
-import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 
 @Component({
@@ -26,9 +25,8 @@ export class AreasComponent implements OnDestroy, OnInit {
   cargando = false;  
 
   constructor( private areasService: AreasService,
-    private comunes: ComunesService,
-               private fb: FormBuilder,
-               private http: HttpClient) {      
+               private comunes: ComunesService,
+               private fb: FormBuilder) {      
   }
 
   ngOnInit() {    
@@ -160,6 +158,7 @@ export class AreasComponent implements OnDestroy, OnInit {
           text: e.status +'. '+ this.comunes.obtenerError(e)
         })
         this.cargando = false;
+        this.dtTrigger.next();
       });
   }
 

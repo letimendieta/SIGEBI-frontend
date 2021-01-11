@@ -48,6 +48,16 @@
             </p>
           </div>
           &nbsp; &nbsp; &nbsp;
+          <div>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Tipo</mat-label>
+                <input matInput matInput type="text" placeholder="Tipo" 
+                  formControlName="tipo" name="tipo" id="tipo">
+              </mat-form-field>
+            </p>    
+          </div>
+          &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
             <button type="submit" (click)="buscadorInsumos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
             &nbsp;
@@ -67,33 +77,9 @@
     </div>
   </div>
 
-  <!--Tabla vacia-->
-  <div class="table-responsive">
-    <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="insumos.length === 0">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">C&oacute;digo</th>
-          <th scope="col">Descripci&oacute;n</th>
-          <th scope="col">Fecha vencimiento</th>
-          <th scope="col">Tipo</th>
-          <th scope="col">Fecha creaci&oacute;n</th>
-          <th scope="col">Usuario creaci&oacute;n</th>
-          <th scope="col">Fecha modificaci&oacute;n</th>
-          <th scope="col">Usuario modificaci&oacute;n</th>  
-          <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
-        </tr>
-      </thead>    
-    </table>
-  </div>
-
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-        *ngIf="insumos.length > 0">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>

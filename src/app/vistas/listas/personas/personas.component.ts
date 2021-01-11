@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PersonasService } from '../../../servicios/personas.service';
 import { PersonaModelo } from '../../../modelos/persona.modelo';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-personas',
   templateUrl: './personas.component.html',
   styleUrls: ['./personas.component.css']
 })
-export class PersonasComponent implements OnInit {
+export class PersonasComponent implements OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  dtTrigger : Subject<any> = new Subject<any>();
 
   personas: PersonaModelo[] = [];
   buscador: PersonaModelo = new PersonaModelo();
@@ -57,10 +61,8 @@ export class PersonasComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'personaId'}, {data:'cedula'}, {data:'nombres'},
-        {data:'apellidos'}, {data:'edad'},
-        {data:'email'}, {data:'estadoCivil'},
-        {data:'fechaNacimiento'},{data:'nacionalidad'},{data:'sexo'},
-        {data:'telefono'},{data:'celular'},
+        {data:'apellidos'}, {data:'sexo'},
+        {data:'fechaNacimiento'},{data:'nacionalidad'},
         {data:'Editar'},
         {data:'Borrar'},
       ],
@@ -74,7 +76,7 @@ export class PersonasComponent implements OnInit {
           title:     'Listado de personas',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
           },
         },
         {
@@ -85,7 +87,7 @@ export class PersonasComponent implements OnInit {
           className: 'btn btn-secondary',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
           },
         },
         {
@@ -97,7 +99,7 @@ export class PersonasComponent implements OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
           }
         },          
         {
@@ -108,7 +110,7 @@ export class PersonasComponent implements OnInit {
           className: 'btn btn-info',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -130,10 +132,12 @@ export class PersonasComponent implements OnInit {
     event.preventDefault();
     this.cargando = true;
     this.personas = [];
+    this.rerender();
     this.buscador = this.buscadorForm.getRawValue();
     this.personasService.buscarPersonasFiltros(this.buscador)
     .subscribe( resp => {      
       this.personas = resp;
+      this.dtTrigger.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -142,6 +146,7 @@ export class PersonasComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
+      this.dtTrigger.next();
     });
   }
 
@@ -150,6 +155,8 @@ export class PersonasComponent implements OnInit {
     this.buscadorForm.reset();
     this.buscador = new PersonaModelo();
     this.personas = [];
+    this.rerender();
+    this.dtTrigger.next();
   }
 
   borrarPersona(event, persona: PersonaModelo ) {
@@ -212,5 +219,20 @@ export class PersonasComponent implements OnInit {
       nombres  : ['', [] ],
       apellidos: ['', [] ]   
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
 }

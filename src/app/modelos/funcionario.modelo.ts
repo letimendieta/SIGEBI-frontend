@@ -1,9 +1,9 @@
+import { AreaModelo } from './area.modelo';
 import { PersonaModelo } from './persona.modelo';
 
 export class FuncionarioModelo {
 
     funcionarioId: number;
-    areaId: number;
     fechaIngreso: Date;
     fechaEgreso: Date;
     estado: string;
@@ -12,6 +12,7 @@ export class FuncionarioModelo {
     fechaModificacion: Date;
     usuarioModificacion: string;
     personas: PersonaModelo;
+    areas: AreaModelo = new AreaModelo();
 
     constructor() {
     }
