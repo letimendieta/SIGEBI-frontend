@@ -69,7 +69,7 @@ export class ConsultorioComponent implements OnInit {
   terminosEstandar: TerminoEstandarModelo[] = [];
   terminoEstandarPrincipalSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
   terminoEstandarSecundarioSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
-  tratamientosInsumos: TratamientoInsumoModelo[] = [];//[]  = new Array();
+  tratamientosInsumos: TratamientoInsumoModelo[] = [];
   cargando = false;
   alert:boolean=false;
   alertMedicamentos:boolean=false;
@@ -1247,7 +1247,6 @@ export class ConsultorioComponent implements OnInit {
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
     tratamiento.descripcionTratamiento = this.tratamientoNoFarmacologicoForm.get('descripcionTratamiento').value;
     
-    //var tamanho =  $('#tableMedicamentos').DataTable().rows().data().length;
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
 

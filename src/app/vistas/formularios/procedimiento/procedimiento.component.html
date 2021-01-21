@@ -70,9 +70,9 @@
                                                                   <span aria-hidden="true">&times;</span> 
                                                             </button>
                                                             </div>
-                                                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <div *ngIf="alertPacientes" class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                   Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
-                                                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <button type="button" (click)="cerrarAlertPaciente()" class="close" data-dismiss="alert" aria-label="Close">
                                                                   <span aria-hidden="true">&times;</span>
                                                                   </button>
                                                             </div>
@@ -217,9 +217,9 @@
                                                                   <span aria-hidden="true">&times;</span> 
                                                             </button>
                                                             </div>
-                                                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <div *ngIf="alertFuncionarios" class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                   Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
-                                                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <button type="button" (click)="cerrarAlertFuncionarios()" class="close" data-dismiss="alert" aria-label="Close">
                                                                   <span aria-hidden="true">&times;</span>
                                                                   </button>
                                                             </div>
@@ -337,19 +337,7 @@
                                     </div>          
 
                                     <hr>         
-
                                     <div class="form-row justify-content-center">
-                                          <div class="col-lg-5">
-                                                <div class="form-group">
-                                                      <label><b>Insumo id</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
-                                                            formControlName="insumoId"
-                                                            name="insumoId"                                     
-                                                            placeholder="Insumo id">
-                                                </div>
-                                          </div>
-
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Fecha</b></label>
@@ -358,9 +346,193 @@
                                                             formControlName="fecha"
                                                             name="fecha"                                     
                                                             placeholder="Fecha">   
-                                                </div>                    
+                                                </div>                 
                                           
+                                          </div>  
+                                    </div>
+
+                                    <div class="form-row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Insumo id</b></label>
+                                                      <div class="input-group mb-3">
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  formControlName="insumoId"
+                                                                  name="insumoId"                                     
+                                                                  placeholder="Insumo id">
+                                                                  <div class="input-group-append">
+                                                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                                              <button type="button" class="btn btn-primary" 
+                                                                                    (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
+                                                                  </div>
+                                                      </div>
+                                                </div>
                                           </div>                
+                                    </div>
+
+                                    <div class="form-row justify-content-center">
+                                          
+                                          <div>                                                                              
+                                                <!--Modal buscador de Medicamentos (Stock)-->
+                                                <ng-template #editProfileModalStock let-modal>
+                                                      <div class="modal-header">
+                                                            <h3 class="modal-title" id="editProfileLabelStock">Buscador Medicamentos</h3>
+                                                            <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span> 
+                                                            </button>
+                                                      </div>
+                                                      <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                                            <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                            <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
+                                                                  <div class="form-row justify-content-center">
+                                                                        <div>                                           
+                                                                        <div>                                                   
+                                                                        <mat-form-field appearance="legacy">
+                                                                              <mat-label>C&oacute;digo</mat-label>
+                                                                              <input matInput type="text" placeholder="C&oacute;digo" 
+                                                                                    formControlName="codigo" id="codigo">
+                                                                        </mat-form-field>  
+                                                                        <mat-form-field appearance="legacy">
+                                                                              <mat-label>Descripci&oacute;n</mat-label>
+                                                                              <input matInput type="text" placeholder="Descripci&oacute;n" 
+                                                                                    formControlName="descripcion" id="descripcion">
+                                                                        </mat-form-field>
+                                                                        </div>                                                
+                                                                        </div>
+                                                                        &nbsp; &nbsp; &nbsp;                                                                           
+                                                                        <div class="align-self-center">
+                                                                              <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                                                              <button (click)="limpiarModalStock($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                                                        </div>
+                                                                  </div>
+                                                            </form>
+                                                            <br>
+                        
+                                                            <!--Tabla vacia-->
+                                                            <div class="table-responsive table-hover">
+                                                                  <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                                                  *ngIf="stocks.length === 0">
+                                                                        <thead>
+                                                                              <tr class="table-primary">
+                                                                              <th>Id</th>
+                                                                              <th>C&oacute;digo</th>
+                                                                              <th>Descripcion</th>
+                                                                              <th>Tipo</th>
+                                                                              <th>Cantidad</th>
+                                                                              <th>Fecha Vencimiento</th>                                                  
+                                                                              <th>Unidad medida</th>                                                  
+                                                                              </tr>
+                                                                        </thead>                                                                                    
+                                                                  </table>
+                                                            </div>
+                                                            <div class="table-responsive table-hover">
+                                                                  <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                                                        *ngIf="stocks.length > 0">
+                                                                        <thead>
+                                                                              <tr  class="table-primary">
+                                                                              <th>Id</th>
+                                                                              <th>C&oacute;digo</th>
+                                                                              <th>Descripcion</th>
+                                                                              <th>Tipo</th>
+                                                                              <th>Stock</th>
+                                                                              <th>Fecha Vencimiento</th>                                                  
+                                                                              <th>Unidad medida</th>
+                                                                              </tr>
+                                                                        </thead>
+                                                                        <tbody *ngIf="stocks?.length != 0">
+                                                                              <tr *ngFor="let stock of stocks" 
+                                                                                    (click)="selectStock($event, stock)">                                                                                                
+                                                                                    <td>{{ stock.stockId }}</td>
+                                                                                    <td>{{ stock.insumos.codigo }}</td>
+                                                                                    <td>{{ stock.insumos.descripcion }}</td>
+                                                                                    <td>{{ stock.insumos.tipo }}</td>
+                                                                                    <td>{{ stock.cantidad }}</td>
+                                                                                    <td>{{ stock.insumos.fechaVencimiento| date : 'dd-MM-yyyy' }}</td>
+                                                                                    <td>{{ stock.unidadMedida }}</td>                                                      
+                                                                              </tr>
+                                                                        </tbody>
+                                                                        <tbody *ngIf="cargando">
+                                                                              <td></td>
+                                                                              <td></td>
+                                                                              <td></td>
+                                                                              <td><h4 class="alert-heading">Cargando</h4>
+                                                                                    <p>
+                                                                                          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                    </p>
+                                                                                    <p class="mb-0">
+                                                                                          Espere por favor
+                                                                                    </p>
+                                                                              </td>
+                                                                              <td></td>
+                                                                              <td></td>
+                                                                              <td></td>
+                                                                        </tbody>                                                                                    
+                                                                  </table>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                  <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                                            </div>
+                                                      </div>
+                                                </ng-template>
+                                          </div>                      
+                                          <div *ngIf="alertMedicamentos" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                El medicamento ya existe
+                                                <button type="button" (click)="cerrarAlertMedicamento()" class="close" data-dismiss="alert" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                </button>
+                                          </div>
+                                          <!--Tabla medicamentos (Tratamientos insumos)-->
+                                          <div class="card">
+                                                <div class="table-responsive table-hover">
+                                                      <table datatable [dtOptions]="dtOptionsMedicamentos" [dtTrigger]="dtTriggerMedicamentos"
+                                                      id="tableMedicamentos" class="table table-sm">
+                                                            <thead>
+                                                                  <tr class="table-primary">
+                                                                  <th scope="col">#</th>
+                                                                  <th scope="col">Id</th>
+                                                                  <th scope="col">C&oacute;digo</th>
+                                                                  <th scope="col">Descripci&oacute;n</th>
+                                                                  <th scope="col">Fecha vencimiento</th>
+                                                                  <th scope="col">Cantidad</th>
+                                                                  <th scope="col">Estado</th>
+                                                                  <th scope="col">Quitar</th>
+                                                                  </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                  <tr *ngFor="let procedimientoInsumo of procedimientosInsumos; let i = index">
+                                                                  <th scope="row">{{ i + 1 }}</th>
+                                                                  <td>{{ procedimientoInsumo.insumos.insumoId }}</td>
+                                                                  <td>{{ procedimientoInsumo.insumos.codigo }}</td>
+                                                                  <td>{{ procedimientoInsumo.insumos.descripcion }}</td>
+                                                                  <td>{{ procedimientoInsumo.insumos.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
+                                                                  <td><input type="number" id="cantidad" name="cantidad" value="1"></td>
+                                                                  <!--td>{{ procedimientoInsumo.estado }}</td-->
+                                                                  <td>
+                                                                        {{ procedimientoInsumo.estado }}
+                                                                        <select size="1" id="estado" name="estado">                                                                             
+                                                                              <option *ngFor="let item of listaEstadosProcedimientos; let i = index"
+                                                                                    value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
+                                                                                    {{item.descripcionValor}}
+                                                                              </option>
+                                                                        </select>
+                                                                  </td>
+                                                                  <td (click)="quitarMedicamento($event, procedimientoInsumo)">  
+                                                                  <button class="btn btn-danger" [hidden]="!crear">
+                                                                        <i class="fas fa-minus-circle"></i></button>
+                                                                  </td>
+                                                                  </tr>
+                                                            </tbody>                      
+                                                      </table>
+                                                </div>
+                                          </div>
+
+              
                                     </div>
 
                                     <div class="form-row justify-content-center">
@@ -430,8 +602,7 @@
                                     <br>
                                     <div class="form-group text-center">
                                           <button type="submit" 
-                                                class="btn btn-primary"
-                                                (click)="guardar( )">
+                                                class="btn btn-primary">
                                           <i class="fa fa-save"></i>
                                           Guardar
                                           </button>

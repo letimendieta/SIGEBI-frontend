@@ -4,6 +4,8 @@ import { ProcedimientoModelo } from '../modelos/procedimiento.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
+import { ProcesoProcedimientoModelo } from '../modelos/procesoProcedimiento.modelo';
+import { ProcedimientoInsumoModelo } from '../modelos/procedimientoInsumo.modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +17,16 @@ export class ProcedimientosService {
   constructor( private http: HttpClient ) { }
 
 
-  crearProcedimiento( procedimiento: ProcedimientoModelo ) {
+  crearProcedimiento( procesoProcedimientoInsumo: ProcesoProcedimientoModelo ) {
 
-    return this.http.post(`${ this.url }/procedimientos`, procedimiento);
+    return this.http.post(`${ this.url }/procedimientos`, procesoProcedimientoInsumo);
 
   }
 
-  actualizarProcedimiento( procedimiento: ProcedimientoModelo ) {
+  actualizarProcedimiento( procesoProcedimientoInsumo: ProcesoProcedimientoModelo ) {
 
     const procedimientoTemp = {
-      ...procedimiento
+      ...procesoProcedimientoInsumo
     };
 
     return this.http.put(`${ this.url }/procedimientos/`, procedimientoTemp);
@@ -70,6 +72,18 @@ export class ProcedimientosService {
       );
   }
 
+  obtenerProcedimientosInsumos( procedimientoInsumo: ProcedimientoInsumoModelo ) {
+    let params = new HttpParams();
+    var filtros = procedimientoInsumo == null ? new ProcedimientoInsumoModelo() : procedimientoInsumo;
+    params = params.append('filtros', JSON.stringify(filtros));
+
+    return this.http.get(`${ this.url }/procedimientos-insumos/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArregloProcedimientoInsumo ),
+        delay(0)
+      );
+  }
+
   getPersona( id: number ) {
 
     return this.http.get(`${ this.url }/personas/${ id }`);
@@ -83,6 +97,19 @@ export class ProcedimientosService {
     Object.keys( procedimientosObj ).forEach( key => {
 
       const procedimiento: ProcedimientoModelo = procedimientosObj[key];
+      procedimientos.push( procedimiento );
+    });
+
+    return procedimientos;
+  }
+
+  private crearArregloProcedimientoInsumo( procedimientosObj: object ) {
+
+    const procedimientos: ProcedimientoInsumoModelo[] = [];
+
+    Object.keys( procedimientosObj ).forEach( key => {
+
+      const procedimiento: ProcedimientoInsumoModelo = procedimientosObj[key];
       procedimientos.push( procedimiento );
     });
 

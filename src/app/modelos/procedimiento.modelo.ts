@@ -4,7 +4,6 @@ import { FuncionarioModelo } from './funcionario.modelo';
 export class ProcedimientoModelo {
 
     procedimientoId: number;
-    insumoId: number;
     notas: string;
     cantidadInsumo: number;
     fecha: Date;
