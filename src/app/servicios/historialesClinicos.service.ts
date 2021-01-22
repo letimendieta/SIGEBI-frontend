@@ -22,10 +22,10 @@ export class HistorialesClinicosService {
 
   }
  
-  actualizarHistorialClinico( historialClinico: HistorialClinicoModelo ) {
+  actualizarHistorialClinico( historialClinicoPaciente: HistorialClinicoPacienteModelo ) {
 
     const historialClinicoTemp = {
-      ...historialClinico
+      ...historialClinicoPaciente
     };
 
     return this.http.put(`${ this.url }/historial-clinico/`, historialClinicoTemp);

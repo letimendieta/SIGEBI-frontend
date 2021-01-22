@@ -162,18 +162,21 @@ export class HistorialClinicoComponent implements OnInit {
     let peticion: Observable<any>;
 
     var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+    var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
+    var paciente: PacienteModelo = new PacienteModelo();
+
+    historialClinico = this.historialClinicoForm.getRawValue();
 
     historialClinico.areas.areaId = this.historialClinicoForm.get('areas').get('areaId').value;
-
-    if ( historialClinico.historialClinicoId ) {
+    paciente.pacienteId = this.historialClinicoForm.get('pacientes').get('pacienteId').value;
+    
+    if ( historialClinico.historialClinicoId ) {       
       historialClinico.usuarioModificacion = 'admin';
-      peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinico );
+      historialClinicoPaciente.historialClinico = historialClinico;
+      historialClinicoPaciente.paciente = paciente;
+      
+      peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinicoPaciente );
     } else {
-      var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
-      var paciente: PacienteModelo = new PacienteModelo();
-
-      paciente.pacienteId = this.historialClinicoForm.get('pacientes').get('pacienteId').value;
-
       historialClinico.usuarioCreacion = 'admin';
       historialClinicoPaciente.historialClinico = historialClinico;
       historialClinicoPaciente.paciente = paciente;
