@@ -100,7 +100,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
           title:     'Listado de horarios',
           text:      '<i class="fas fa-file-csv"></i>',
           titleAttr: 'Exportar a CSV',
-          className: 'btn btn-secondary',
+          className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
             columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
@@ -111,7 +111,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
           title:     'Listado de horarios',
           text:      '<i class="fas fa-file-excel"></i> ',
           titleAttr: 'Exportar a Excel',
-          className: 'btn btn-success',
+          className: 'btn btn-light',
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
@@ -123,7 +123,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
           title:     'Listado de horarios',
           text:      '<i class="fa fa-print"></i> ',
           titleAttr: 'Imprimir',
-          className: 'btn btn-info',
+          className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
             columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
