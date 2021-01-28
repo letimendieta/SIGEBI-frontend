@@ -32,6 +32,7 @@ import { TratamientoInsumoModelo } from 'src/app/modelos/tratamientoInsumo.model
 import { ConsultaModelo } from 'src/app/modelos/consulta.modelo';
 import { ConsultasService } from 'src/app/servicios/consultas.service';
 import { DataTableDirective } from 'angular-datatables';
+import { UploadFileService } from 'src/app/servicios/upload-file.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -94,6 +95,8 @@ export class ConsultorioComponent implements OnInit {
   dtTriggerAntecedentes : Subject<any> = new Subject<any>();
   dtTriggerAntecedentesFamiliares : Subject<any> = new Subject<any>();
   dtTriggerPatologias : Subject<any> = new Subject<any>();
+  hcid = 0;
+  fileInfos: Observable<any>;
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -107,6 +110,7 @@ export class ConsultorioComponent implements OnInit {
                private terminoEstandarService: TerminoEstandarService,
                private anamnesisService: AnamnesisService,
                private consultasService: ConsultasService,
+               private uploadService: UploadFileService,
                private procesoDiagnosticoTratamientoService: ProcesoDiagnosticoTratamientosService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
@@ -262,12 +266,16 @@ export class ConsultorioComponent implements OnInit {
     var historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
     this.historialClinicosService.getHistorialClinico(historialClinicoId)
     .subscribe( (resp: HistorialClinicoModelo) => {
-      
       this.historialClinicoForm.patchValue(resp);
-      if ( resp.historialClinicoId != null )
+      if ( resp.historialClinicoId != null ){
+        this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
+        var cedula = this.pacienteForm.get('personas').get('cedula').value;
+        var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+        this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+        
         this.obtenerAnamnesis(resp.historialClinicoId);
         this.obtenerConsultas(resp.historialClinicoId);
-      
+      }
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -484,15 +492,7 @@ export class ConsultorioComponent implements OnInit {
     });
 
     this.historialClinicoForm = this.fb2.group({
-      historialClinicoId  : [null, [] ],
-      pacientes : this.fb2.group({
-        pacienteId  : [null, [] ],
-        personas : this.fb2.group({
-          cedula  : [null, [] ],
-          nombres  : [null, [] ],
-          apellidos  : [null, [] ]
-        })
-      }),      
+      historialClinicoId  : [null, [] ],         
       areas  : this.fb2.group({
         areaId: [null, [] ],
         descripcion: [null, [] ]

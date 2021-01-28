@@ -30,7 +30,6 @@ export class PersonaComponent implements OnInit {
   crear = false;
   personaForm: FormGroup;
 
-  persona: PersonaModelo = new PersonaModelo();
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
@@ -73,6 +72,7 @@ export class PersonaComponent implements OnInit {
         .subscribe( (resp: PersonaModelo) => {
           this.personaForm.patchValue(resp);
           var cedula = this.personaForm.get('cedula').value;
+          this.ageCalculator();
           this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
         });
     }else{
@@ -180,16 +180,30 @@ export class PersonaComponent implements OnInit {
     Swal.showLoading();
 
     let peticion: Observable<any>;
-    this.persona = this.personaForm.getRawValue();
+    var persona: PersonaModelo = new PersonaModelo();
+    
+    persona = this.personaForm.getRawValue();
+    if ( persona.carreras != null && persona.carreras.carreraId == null ){
+      persona.carreras = null;
+    }
+    if ( persona.departamentos != null && persona.departamentos.departamentoId == null ){
+      persona.departamentos = null;
+    }
+    if ( persona.dependencias != null && persona.dependencias.dependenciaId == null ){
+      persona.dependencias = null;
+    }
+    if ( persona.estamentos != null && persona.estamentos.estamentoId == null ){
+      persona.estamentos = null;
+    }
 
-    if ( this.persona.personaId ) {
+    if ( persona.personaId ) {
       //Modificar
-      this.persona.usuarioModificacion = 'admin';
-      peticion = this.personasService.actualizarPersona( this.persona );
+      persona.usuarioModificacion = 'admin';
+      peticion = this.personasService.actualizarPersona( persona );
     } else {
       //Agregar
-      this.persona.usuarioCreacion = 'admin';
-      peticion = this.personasService.crearPersona( this.persona );
+      persona.usuarioCreacion = 'admin';
+      peticion = this.personasService.crearPersona( persona );
     }
 
     peticion.subscribe( resp => {
@@ -216,12 +230,12 @@ export class PersonaComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.persona.nombres +' '+this.persona.apellidos,
+                title: persona.nombres +' '+persona.apellidos,
                 text: resp.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.persona.personaId ) {
+          if ( persona.personaId ) {
             this.router.navigate(['/personas']);
           }else{
             this.limpiar();
@@ -248,7 +262,6 @@ export class PersonaComponent implements OnInit {
   }
 
   limpiar(){
-    this.persona = new PersonaModelo();
     this.personaForm.reset();
   }
 
@@ -307,18 +320,18 @@ export class PersonaComponent implements OnInit {
       email  : [null, [ Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ],
       celular: [null, [] ],
       observacion:[null, []],
-      carreras: {
+      carreras: this.fb.group({
         carreraId: [null, [] ]
-      },
-      departamentos: {
+      }),
+      departamentos: this.fb.group({
         departamentoId: [null, [] ]
-      },
-      dependencias: {
+      }),
+      dependencias: this.fb.group({
         dependenciaId: [null, [] ]
-      },
-      estamentos: {
+      }),
+      estamentos: this.fb.group({
         estamentoId: [null, [] ]
-      }, 
+      }), 
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],

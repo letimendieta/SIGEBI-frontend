@@ -29,8 +29,7 @@ import Swal from 'sweetalert2';
 })
 export class PacienteComponent implements OnInit {
   crear = false;
-  personas: PersonaModelo[] = [];
-  paciente: PacienteModelo = new PacienteModelo();
+  personas: PersonaModelo[] = [];  
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
@@ -81,7 +80,9 @@ export class PacienteComponent implements OnInit {
       this.pacientesService.getPaciente( Number(id) )
         .subscribe( (resp: PacienteModelo) => {  
           this.pacienteForm.patchValue(resp);
+          this.pacienteForm.get('personas').get('personaId').disable();
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
+          this.ageCalculator();
           this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
         });
     }else{
@@ -207,19 +208,35 @@ export class PacienteComponent implements OnInit {
     Swal.showLoading();
 
     let peticion: Observable<any>; 
-    
-    this.paciente = this.pacienteForm.getRawValue();
+    var paciente: PacienteModelo = new PacienteModelo();
+    paciente = this.pacienteForm.getRawValue();
 
-    if ( this.paciente.pacienteId ) {
-      this.paciente.personas.usuarioModificacion = 'admin';
-      this.paciente.usuarioModificacion = 'admin';
-      peticion = this.pacientesService.actualizarPaciente( this.paciente );
+    if ( paciente.personas.carreras != null && paciente.personas.carreras.carreraId == null ){
+      paciente.personas.carreras = null;
+    }
+    if ( paciente.personas.departamentos != null && paciente.personas.departamentos.departamentoId == null ){
+      paciente.personas.departamentos = null;
+    }
+    if ( paciente.personas.dependencias != null && paciente.personas.dependencias.dependenciaId == null ){
+      paciente.personas.dependencias = null;
+    }
+    if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
+      paciente.personas.estamentos = null;
+    }
+    if ( paciente.historialClinico != null && paciente.historialClinico.historialClinicoId == null ){
+      paciente.historialClinico = null;
+    }
+
+    if ( paciente.pacienteId ) {
+      paciente.personas.usuarioModificacion = 'admin';
+      paciente.usuarioModificacion = 'admin';
+      peticion = this.pacientesService.actualizarPaciente( paciente );
     } else {
-      if(!this.paciente.personas.personaId){
-        this.paciente.personas.usuarioCreacion = 'admin';
+      if(!paciente.personas.personaId){
+        paciente.personas.usuarioCreacion = 'admin';
       }
-      this.paciente.usuarioCreacion = 'admin';    
-      peticion = this.pacientesService.crearPaciente( this.paciente );
+      paciente.usuarioCreacion = 'admin';    
+      peticion = this.pacientesService.crearPaciente( paciente );
     }
 
     peticion.subscribe( resp => {
@@ -228,8 +245,12 @@ export class PacienteComponent implements OnInit {
       if(this.selectedFiles){
         var cedula = resp.paciente.personas.cedula;
         this.currentFile = this.selectedFiles.item(0);
-        var filename = cedula + '_'
-                      + this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
+        var nombre = resp.paciente.personas.nombres;//this.currentFile.name.split(".")[0];
+        //var tipo = this.currentFile.name.split(".")[1];
+        var filename = cedula + '_' + nombre;
+        //if(nombre) filename = filename.concat(nombre);
+        //if(tipo) filename = filename.concat(tipo);
+                      //+ this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
         var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
 
         this.uploadService.upload2(renameFile, "I").subscribe(
@@ -245,12 +266,12 @@ export class PacienteComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.paciente.personas.nombres +' '+this.paciente.personas.apellidos,
+                title: paciente.personas.nombres +' '+paciente.personas.apellidos,
                 text: resp.mensaje + '. '+ mensajeUpload
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.paciente.pacienteId ) {
+          if ( paciente.pacienteId ) {
             this.router.navigate(['/pacientes']);
           }else{
             this.limpiar();
@@ -268,17 +289,16 @@ export class PacienteComponent implements OnInit {
   }
 
   ageCalculator(){
-    var fechaNacimiento = this.pacienteForm.get('persona').get('fechaNacimiento').value;//toString();
+    var fechaNacimiento = this.pacienteForm.get('personas').get('fechaNacimiento').value;//toString();
     if( fechaNacimiento ){
       const convertAge = new Date(fechaNacimiento);
       const timeDiff = Math.abs(Date.now() - convertAge.getTime());
 
-      this.pacienteForm.get('persona').get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
+      this.pacienteForm.get('personas').get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
     }
   }
 
   limpiar(){
-    this.paciente = new PacienteModelo();
     this.pacienteForm.reset();
   }
 

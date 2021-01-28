@@ -649,10 +649,15 @@
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseHistorialDigitalizado"
                 aria-expanded="true" 
-                aria-controls="collapseHistorialClinicoDigitalizado">Historial clinico digitalizado
+                aria-controls="collapseHistorialDigitalizado">Historial clinico digitalizado
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseHistorialClinicoDigitalizado">
-              
+            <div class="card-body collapse show" id="collapseHistorialDigitalizado">
+              <ul class="list-group list-group-flush"
+                    *ngFor="let file of fileInfos | async">
+                    <li class="list-group-item">
+                          <a href="{{ file.url }}">{{ file.name }}</a>
+                    </li>
+              </ul>
             </div>
           </div>        
           <br>

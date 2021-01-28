@@ -20,7 +20,7 @@ export class PersonaModelo {
     celular: string;
     observacion: string;
     carreras: CarreraModelo;
-    departamento: DepartamentoModelo;
+    departamentos: DepartamentoModelo;
     dependencias: DependenciaModelo;
     estamentos: EstamentoModelo;
     fechaCreacion: Date;

@@ -91,10 +91,10 @@
                 <label><b>Edad</b></label>
                 <input type="number"
                       class="form-control"
-                      formControlName="Edad"
+                      formControlName="edad"
                       name="edad"
                       placeholder="Edad"
-                      (focus)="ageCalculator()">
+                      (focus)="ageCalculator()" readonly>
                     
                 <label><b>Direcci&oacute;n</b></label>
                 <input type="text"
@@ -170,44 +170,50 @@
                       placeholder="Celular">
               
                 <label><b>Carrera</b></label> 
-                <select class="form-control input-sm" name="carreraId"
-                    formControlName="carreras.carreraId">
-                    <option value=null>Seleccione</option>
-                    <option *ngFor="let item of listaCarreras; let i = index"
-                      value="{{item.carreraId}}">
-                        {{item.descripcion}}
-                    </option>
-                </select>
+                <div formGroupName="carreras">
+                  <select class="form-control input-sm" name="carreraId"
+                      formControlName="carreraId">
+                      <option value=null>Seleccione</option>
+                      <option *ngFor="let item of listaCarreras; let i = index"
+                        value="{{item.carreraId}}">
+                          {{item.descripcion}}
+                      </option>
+                  </select>
+                </div>
             
                 <label><b>Departamento</b></label>
-                <select class="form-control input-sm" name = "departamentoId"
-                    formControlName="departamentos.departamentoId">
-                    <option value=null>Seleccione</option>
-                    <option *ngFor="let item of listaDepartamentos; let i = index"
-                      value="{{item.departamentoId}}">
-                        {{item.descripcion}}
-                    </option>
-                </select>
-            
+                <div formGroupName="departamentos">
+                  <select class="form-control input-sm" name = "departamentoId"
+                      formControlName="departamentoId">
+                      <option value=null>Seleccione</option>
+                      <option *ngFor="let item of listaDepartamentos; let i = index"
+                        value="{{item.departamentoId}}">
+                          {{item.descripcion}}
+                      </option>
+                  </select>
+                </div>
                 <label><b>Dependencia</b></label>
-                <select class="form-control input-sm" name = "dependenciaId"
-                    formControlName="dependencias.dependenciaId">
-                    <option value=null>Seleccione</option>
-                    <option *ngFor="let item of listaDependencias; let i = index"
-                      value="{{item.dependenciaId}}">
-                        {{item.descripcion}}
-                    </option>
-                </select>
-            
+                <div formGroupName="dependencias">
+                  <select class="form-control input-sm" name = "dependenciaId"
+                      formControlName="dependenciaId">
+                      <option value=null>Seleccione</option>
+                      <option *ngFor="let item of listaDependencias; let i = index"
+                        value="{{item.dependenciaId}}">
+                          {{item.descripcion}}
+                      </option>
+                  </select>
+                </div>
                 <label><b>Estamento</b></label>
-                <select class="form-control input-sm" name = "estamentoId"
-                    formControlName="estamentos.estamentoId">
-                    <option value=null>Seleccione</option>
-                    <option *ngFor="let item of listaEstamentos; let i = index"
-                      value="{{item.estamentoId}}">
-                        {{item.descripcion}}
-                    </option>
-                </select>
+                <div formGroupName="estamentos">
+                  <select class="form-control input-sm" name = "estamentoId"
+                      formControlName="estamentoId">
+                      <option value=null>Seleccione</option>
+                      <option *ngFor="let item of listaEstamentos; let i = index"
+                        value="{{item.estamentoId}}">
+                          {{item.descripcion}}
+                      </option>
+                  </select>
+                </div>
               </div>
             </div>
             <br>

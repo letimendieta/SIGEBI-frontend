@@ -61,7 +61,7 @@
                                                                   placeholder="Persona id"
                                                                   formControlName="personaId"
                                                                   name="personaId" [class.is-invalid]="personaIdNoValido">
-                                                            <div class="input-group-append">
+                                                            <div class="input-group-append" [hidden]="!crear">
                                                                   <button class="btn btn-outline-info" 
                                                                         (click)="obtenerPersona($event)">
                                                                         Buscar
@@ -72,7 +72,7 @@
                                                             </small>
                                                       
                                                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                            <button type="button" class="btn btn-primary" 
+                                                            <button type="button" class="btn btn-primary" [hidden]="!crear" 
                                                                   (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
                                                       </div>
                                                       <!--Modal buscador de personas-->
@@ -232,7 +232,7 @@
                                                             formControlName="edad"
                                                             name="edad"
                                                             placeholder="Edad"
-                                                            (focus)="ageCalculator()">
+                                                            (focus)="ageCalculator()" readonly>
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Direcci&oacute;n</b></label>
@@ -450,6 +450,7 @@
                                                 </ul>
                                           </div>                       
                                     </div>
+                                    <br>
                                     <!--Paciente Fechas-->
                                     <div class="form-row justify-content-center" [hidden]="crear">
                                           <div class="col-lg-5">

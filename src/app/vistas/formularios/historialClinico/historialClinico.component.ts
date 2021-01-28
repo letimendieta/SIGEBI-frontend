@@ -188,7 +188,7 @@ export class HistorialClinicoComponent implements OnInit {
       var mensajeUpload = '';
       if(this.selectedFiles){
         var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
-        var areaId = resp.historialClinico.areaId;
+        var areaId = resp.historialClinico.areas.areaId;
         this.currentFile = this.selectedFiles.item(0);
         var filename = cedula + '_' + areaId + '_' 
                     + this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
