@@ -190,8 +190,13 @@ export class HistorialClinicoComponent implements OnInit {
         var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
         var areaId = resp.historialClinico.areas.areaId;
         this.currentFile = this.selectedFiles.item(0);
-        var filename = cedula + '_' + areaId + '_' 
-                    + this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
+
+        var archivo = this.currentFile.name.split(".")[0];
+        var tipo = this.currentFile.name.split(".")[1];
+
+        var filename = cedula + '_' + areaId + '_' + archivo;
+        if (tipo) filename = filename + '_' + tipo;
+        
         var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
 
         this.uploadService.upload2(renameFile, "H").subscribe(
