@@ -7,9 +7,8 @@ import { AnamnesisModelo } from './anamnesis.modelo';
 export class HistorialClinicoModelo {
 
     historialClinicoId: number;
-    hora: Time;
+    pacientes: PacienteModelo = new PacienteModelo();
     areas: AreaModelo = new AreaModelo();
-    anamnesis: AnamnesisModelo;
     fechaCreacion: Date;
     usuarioCreacion: string;
     fechaModificacion: Date;

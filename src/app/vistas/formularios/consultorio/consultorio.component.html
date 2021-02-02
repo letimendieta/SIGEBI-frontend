@@ -679,16 +679,26 @@
             <div class="card-body collapse show" id="collapseFichas">
               <label><b>Antecedentes de la enfermedad actual</b></label>
               <textarea class="form-control" id="antecedentes" 
-                formControlName="antecedentes" rows="6"></textarea>
+                formControlName="antecedentes" 
+                [class.is-invalid]="antecedentesNoValido" rows="6">
+              </textarea>
+              <small *ngIf="antecedentesNoValido" class="text-danger">
+                Ingrese el antecedente
+              </small>
             </div>
             <div class="card-body collapse show" id="collapseFichas">
               <label><b>Antecedentes remotos de la enfermedad actual</b></label>
               <textarea class="form-control" id="antecedentesRemotos" 
-                formControlName="antecedentesRemotos" rows="6"></textarea>
+                formControlName="antecedentesRemotos" 
+                [class.is-invalid]="antecedentesRemotosNoValido" rows="6">
+              </textarea>
+              <small *ngIf="antecedentesRemotosNoValido" class="text-danger">
+                Ingrese el antecedente remoto
+              </small>
             </div>          
             <br>
             <div class="form-group text-center">
-              <button type="submit" [disabled]="!historialClinicoId"
+              <button type="submit"
                       class="btn btn-primary ">
                 <i class="fa fa-save"></i>
                 Guardar
@@ -1073,7 +1083,7 @@
           </div>
           <br>
             <div class="form-group text-center">
-              <button (click)="guardarDiagnosticoTratamiento($event)" [disabled]="!historialClinicoId"
+              <button (click)="guardarDiagnosticoTratamiento($event)"
                 type="submit" class="btn btn-primary ">
                 <i class="fa fa-save"></i>
                 Guardar

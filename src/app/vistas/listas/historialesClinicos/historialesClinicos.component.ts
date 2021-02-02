@@ -25,7 +25,7 @@ export class HistorialesClinicosComponent implements OnInit {
   dtOptions: any = {};
   dtOptionsPacienteModel: any = {};
 
-  historialClinicos: HistorialClinicoPacienteModelo[] = [];
+  historialClinicos: HistorialClinicoModelo[] = [];
   pacientes: PacienteModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -162,30 +162,27 @@ export class HistorialesClinicosComponent implements OnInit {
   buscadorHistorialClinicos(event) {   
     event.preventDefault();
     this.cargando = true;
-    this.historialClinicos = [];
-    this.paciente = new PacienteModelo();
-    this.pacientePersona = new PersonaModelo();
-    var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
-    var buscadorHp: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
+
+    var buscador: HistorialClinicoModelo = new HistorialClinicoModelo();
 
     var areas: AreaModelo = new AreaModelo();
     areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
-    historialClinico.historialClinicoId = this.buscadorForm.get('historialClinicoId').value;
-    historialClinico.areas = areas;
+    buscador.historialClinicoId = this.buscadorForm.get('historialClinicoId').value;
+    buscador.areas = areas;
+
     if(!areas.areaId){
-      historialClinico.areas = null;
+      buscador.areas = null;
     }
-    if(!historialClinico.historialClinicoId && !areas.areaId){
-      historialClinico = null;
+    /*if(!buscador.historialClinicoId && !areas.areaId){
+      buscador = null;
+    }*/
+
+    buscador.pacientes.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
+    if(!buscador.pacientes.pacienteId){
+      buscador.pacientes = null;
     }
 
-    buscadorHp.paciente.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
-    if(!buscadorHp.paciente.pacienteId){
-      buscadorHp.paciente = null;
-    }
-    buscadorHp.historialClinico = historialClinico;
-
-    this.historialClinicosService.busquedaHistorialPacienteFiltros(buscadorHp)
+    this.historialClinicosService.buscarHistorialClinicosFiltros(buscador)
     .subscribe( resp => {      
       this.historialClinicos = resp;
       this.cargando = false;

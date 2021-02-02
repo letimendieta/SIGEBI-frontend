@@ -8,8 +8,8 @@ export class ConsultaModelo {
     fecha: Date;
     tratamientos: TratamientoModelo;
     diagnosticos: DiagnosticoModelo;
-    historialClinicoId: string;
-    areas: AreaModelo;
+    pacienteId: number;
+    areas: AreaModelo = new AreaModelo();
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

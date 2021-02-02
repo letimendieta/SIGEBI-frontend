@@ -4,7 +4,6 @@ import { PersonaModelo } from './persona.modelo';
 export class PacienteModelo {
 
     pacienteId: number;
-    historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
     grupoSanguineo: string;
     seguroMedico: string;
     fechaCreacion: Date;

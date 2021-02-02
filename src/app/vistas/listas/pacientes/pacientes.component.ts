@@ -62,7 +62,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
       columns: [
         {data:'#'},
         {data:'pacienteId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
-        {data:'personas.apellidos'}, {data:'historialClinico.historialClinicoId'},
+        {data:'personas.apellidos'},
         {data:'Editar'},
         {data:'Borrar'},
       ],

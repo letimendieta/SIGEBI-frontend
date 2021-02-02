@@ -223,9 +223,6 @@ export class PacienteComponent implements OnInit {
     if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
       paciente.personas.estamentos = null;
     }
-    if ( paciente.historialClinico != null && paciente.historialClinico.historialClinicoId == null ){
-      paciente.historialClinico = null;
-    }
 
     if ( paciente.pacienteId ) {
       paciente.personas.usuarioModificacion = 'admin';
@@ -388,10 +385,7 @@ export class PacienteComponent implements OnInit {
         fechaModificacion: [null, [] ],
         usuarioCreacion: [null, [] ],
         usuarioModificacion: [null, [] ]   
-      }),
-      historialClinico: this.fb.group({
-        historialClinicoId : [null, [] ]
-      }),
+      }),      
       grupoSanguineo  : [null, [Validators.required] ],
       seguroMedico  : [null, [] ],
       fechaCreacion: [null, [] ],
@@ -407,7 +401,6 @@ export class PacienteComponent implements OnInit {
     });
 
     this.pacienteForm.get('pacienteId').disable();
-    this.pacienteForm.get('historialClinico').get('historialClinicoId').disable();
     this.pacienteForm.get('personas').get('fechaCreacion').disable();
     this.pacienteForm.get('personas').get('fechaModificacion').disable();
     this.pacienteForm.get('personas').get('usuarioCreacion').disable();

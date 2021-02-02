@@ -3,7 +3,7 @@ import { PatologiaProcedimientoModelo } from './patologiaProcedimiento.modelo';
 export class AntecedenteModelo {
 
     antecedenteId: number;
-    historialClinicoId: number;
+    pacienteId: number;
     patologiasProcedimientos: PatologiaProcedimientoModelo;
     descripcion: string;
     tipo: string;    

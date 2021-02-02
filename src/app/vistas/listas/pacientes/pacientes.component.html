@@ -78,7 +78,6 @@
             <th scope="col">C&eacute;dula</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
-            <th scope="col">H.C. id</th>
             <th scope="col">Editar</th>
             <th scope="col">Borrar</th>
           </tr>
@@ -90,7 +89,6 @@
             <td>{{ paciente.personas.cedula }}</td>
             <td>{{ paciente.personas.nombres }}</td>
             <td>{{ paciente.personas.apellidos }}</td>
-            <td>{{ paciente.historialClinico.historialClinicoId }}</td>
             <td>
               <a class="btn btn-info"
                       [routerLink]="['/paciente', paciente.pacienteId ]">
@@ -116,7 +114,6 @@
               Espere por favor
             </p>
           </td>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

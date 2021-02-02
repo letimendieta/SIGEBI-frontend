@@ -202,20 +202,20 @@
         <tbody>
           <tr *ngFor="let historialClinico of historialClinicos; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ historialClinico.historialClinico.historialClinicoId }}</td>
-            <td>{{ historialClinico.paciente.pacienteId }}</td>
-            <td>{{ historialClinico.paciente.personas.cedula }}</td>
-            <td>{{ historialClinico.paciente.personas.nombres }}</td>
-            <td>{{ historialClinico.paciente.personas.apellidos }}</td>
-            <td>{{ historialClinico.historialClinico.areas.areaId }}</td>     
+            <td>{{ historialClinico.historialClinicoId }}</td>
+            <td>{{ historialClinico.pacientes.pacienteId }}</td>
+            <td>{{ historialClinico.pacientes.personas.cedula }}</td>
+            <td>{{ historialClinico.pacientes.personas.nombres }}</td>
+            <td>{{ historialClinico.pacientes.personas.apellidos }}</td>
+            <td>{{ historialClinico.areas.areaId }}</td>     
 
             <td>
               <a class="btn btn-info"
-                      [routerLink]="['/historialClinico', historialClinico.historialClinico.historialClinicoId ]">
+                      [routerLink]="['/historialClinico', historialClinico.historialClinicoId ]">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <td (click)="borrarHistorialClinico($event, historialClinico.historialClinico)">  
+            <td (click)="borrarHistorialClinico($event, historialClinico)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
             </td>

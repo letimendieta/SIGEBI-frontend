@@ -66,22 +66,21 @@ export class HistorialClinicoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if ( id !== 'nuevo' ) {
-      var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo()
-      var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+      var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo()
       historialClinico.historialClinicoId = Number(id);
 
-      historialClinicoPaciente.historialClinico = historialClinico;
-      this.historialClinicosService.busquedaHistorialPacienteFiltros( historialClinicoPaciente )
-        .subscribe( resp  => {         
-          this.historialClinicoForm.patchValue(resp[0].historialClinico);
-          if( resp[0].paciente &&  resp[0].paciente.pacienteId ){
-            this.historialClinicoForm.get('pacientes').patchValue(resp[0].paciente);
-            this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
-            var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
-            var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
-            this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
-          }
-          
+      this.historialClinicosService.buscarHistorialClinicosFiltros( historialClinico )
+        .subscribe( resp  => {
+          if( resp.length > 0 ){      
+            this.historialClinicoForm.patchValue(resp[0]);
+            if( resp[0].pacientes &&  resp[0].pacientes.pacienteId ){
+              this.historialClinicoForm.get('pacientes').patchValue(resp[0].pacientes);
+              this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
+              var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
+              var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+              this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+            }
+          }          
         });
     }else{
       this.crear = true;
@@ -162,7 +161,6 @@ export class HistorialClinicoComponent implements OnInit {
     let peticion: Observable<any>;
 
     var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
-    var historialClinicoPaciente: HistorialClinicoPacienteModelo = new HistorialClinicoPacienteModelo();
     var paciente: PacienteModelo = new PacienteModelo();
 
     historialClinico = this.historialClinicoForm.getRawValue();
@@ -172,16 +170,14 @@ export class HistorialClinicoComponent implements OnInit {
     
     if ( historialClinico.historialClinicoId ) {       
       historialClinico.usuarioModificacion = 'admin';
-      historialClinicoPaciente.historialClinico = historialClinico;
-      historialClinicoPaciente.paciente = paciente;
+      historialClinico.pacientes = paciente;
       
-      peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinicoPaciente );
+      peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinico );
     } else {
       historialClinico.usuarioCreacion = 'admin';
-      historialClinicoPaciente.historialClinico = historialClinico;
-      historialClinicoPaciente.paciente = paciente;
+      historialClinico.pacientes = paciente;
 
-      peticion = this.historialClinicosService.crearHistorialClinico( historialClinicoPaciente );
+      peticion = this.historialClinicosService.crearHistorialClinico( historialClinico );
     }
 
     peticion.subscribe( resp => {
@@ -402,10 +398,10 @@ export class HistorialClinicoComponent implements OnInit {
 
   selectPaciente(event, paciente: PacienteModelo){
     this.alertPacienteId=false;
-    if( paciente.historialClinico.historialClinicoId ){
+    /*if( paciente.historialClinico.historialClinicoId ){
       this.alertPacienteId=true;     
       return null;
-    } 
+    } */
     this.modalService.dismissAll();
     if(paciente.pacienteId){
       this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);

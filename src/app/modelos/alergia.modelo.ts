@@ -3,7 +3,7 @@ import { AlergenoModelo } from './alergeno.modelo';
 export class AlergiaModelo {
 
     alergiaId: number;
-    historialClinicoId: number;
+    pacienteId: number;
     alergenos: AlergenoModelo;    
     fechaCreacion: Date;
     fechaModificacion: Date;

@@ -33,6 +33,7 @@ import { ConsultaModelo } from 'src/app/modelos/consulta.modelo';
 import { ConsultasService } from 'src/app/servicios/consultas.service';
 import { DataTableDirective } from 'angular-datatables';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
+import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
 
 @Component({
   selector: 'app-consultorio',
@@ -188,7 +189,6 @@ export class ConsultorioComponent implements OnInit {
     }
     
     paciente.pacienteId = this.buscadorForm.get('pacienteIdBusqueda').value;
-    paciente.historialClinico = null;
     this.limpiar(event);
 
     Swal.fire({
@@ -226,18 +226,21 @@ export class ConsultorioComponent implements OnInit {
             break;
           }
         }
-
-        this.pacienteForm.patchValue(resp[0]);
-        this.buscadorForm.get('pacienteIdBusqueda').setValue(resp[0].pacienteId);
-        this.buscadorForm.get('cedulaBusqueda').setValue(resp[0].personas.cedula);
+        this.paciente = resp[0];
+        
+        this.pacienteForm.patchValue(this.paciente);
+        this.buscadorForm.get('pacienteIdBusqueda').setValue(this.paciente.pacienteId);
+        this.buscadorForm.get('cedulaBusqueda').setValue(this.paciente.personas.cedula);
 
         this.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
 
-        if( this.historialClinicoId ){
-          this.obtenerHistorialClinico();
+        if( this.paciente.pacienteId ){
+          this.obtenerHistorialClinico();          
           this.obtenerAntecedentes();
           this.obtenerAntecedentesFamiliares();
-          this.obtenerAlergias(); 
+          this.obtenerAlergias();
+          this.obtenerAnamnesis();
+          this.obtenerConsultas();
         }else{
           this.alertGeneral = true;
           this.mensajeGeneral = "El paciente aun no cuenta con Historial Clinico definido";
@@ -263,18 +266,20 @@ export class ConsultorioComponent implements OnInit {
   }
 
   obtenerHistorialClinico() {   
-    var historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
-    this.historialClinicosService.getHistorialClinico(historialClinicoId)
-    .subscribe( (resp: HistorialClinicoModelo) => {
-      this.historialClinicoForm.patchValue(resp);
-      if ( resp.historialClinicoId != null ){
-        this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
-        var cedula = this.pacienteForm.get('personas').get('cedula').value;
-        var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
-        this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
-        
-        this.obtenerAnamnesis(resp.historialClinicoId);
-        this.obtenerConsultas(resp.historialClinicoId);
+    var historialClinico = new HistorialClinicoModelo();
+
+    historialClinico.pacientes.pacienteId = this.paciente.pacienteId;
+    
+    this.historialClinicosService.buscarHistorialClinicosFiltros(historialClinico)
+    .subscribe( resp => {
+      if(resp.length > 0){
+        this.historialClinicoForm.patchValue(resp[0]);
+        if ( resp[0].historialClinicoId != null ){
+          this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
+          var cedula = this.pacienteForm.get('personas').get('cedula').value;
+          var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+          this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+        }
       }
     }, e => {      
       Swal.fire({
@@ -329,8 +334,8 @@ export class ConsultorioComponent implements OnInit {
   obtenerAntecedentes() {
     var antecedente = new AntecedenteModelo();
 
-    antecedente.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
-    antecedente.tipo = "P";
+    antecedente.pacienteId = this.paciente.pacienteId;
+    antecedente.tipo = "P";//antecedentes personales
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
     .subscribe( resp => {
 
@@ -349,8 +354,8 @@ export class ConsultorioComponent implements OnInit {
   obtenerAntecedentesFamiliares() {
     var antecedente = new AntecedenteModelo();
 
-    antecedente.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
-    antecedente.tipo = "F";
+    antecedente.pacienteId = this.paciente.pacienteId;
+    antecedente.tipo = "F";//antecedentes familiares
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
     .subscribe( resp => {
 
@@ -368,7 +373,7 @@ export class ConsultorioComponent implements OnInit {
   obtenerAlergias() {
     var alergias = new AlergiaModelo();
 
-    alergias.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
+    alergias.pacienteId = this.paciente.pacienteId;
 
     this.alergiaService.buscarAlergiasFiltros(alergias)
     .subscribe( resp => {
@@ -385,14 +390,14 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  obtenerAnamnesis(historialClinicoId) {
+  obtenerAnamnesis() {
     var anamnesis = new AnamnesisModelo();
-    anamnesis.historialClinicoId = historialClinicoId;
+    anamnesis.pacienteId = this.paciente.pacienteId;
 
     this.anamnesisService.buscarAnamnesisFiltrosTabla(anamnesis)
     .subscribe( resp => {     
 
-      if(resp != null){
+      if(resp != null && resp.length > 0){
         this.anamnesisForm.patchValue(resp[0]);
       }
     }, e => {      
@@ -405,9 +410,10 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  obtenerConsultas(historialClinicoId) {
+  obtenerConsultas() {
     var consultas = new ConsultaModelo();
-    consultas.historialClinicoId = historialClinicoId;
+    consultas.pacienteId = this.paciente.pacienteId;
+
     this.consultas = [];
     $('#tableConsultas').DataTable().destroy();
 
@@ -1146,12 +1152,12 @@ export class ConsultorioComponent implements OnInit {
 
     if ( anamnesis.anamnesisId ) {
       //Modificar
-      anamnesis.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
+      anamnesis.pacienteId = this.paciente.pacienteId;
       anamnesis.usuarioModificacion = 'admin';
       peticion = this.anamnesisService.actualizarAnamnesis( anamnesis );
     } else {
       //Agregar
-      anamnesis.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
+      anamnesis.pacienteId = this.paciente.pacienteId;
       anamnesis.usuarioCreacion = 'admin';
       peticion = this.anamnesisService.crearAnamnesis( anamnesis );
     }
@@ -1256,7 +1262,7 @@ export class ConsultorioComponent implements OnInit {
 
     tratamientoInsumoList = this.tratamientosInsumos;
 
-    consulta.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
+    consulta.pacienteId = this.paciente.pacienteId;
     consulta.areas.areaId = 83;//cambiar por el area del funcionario
 
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
@@ -1273,7 +1279,7 @@ export class ConsultorioComponent implements OnInit {
                 text: resp.mensaje,
       }).then( resp => {       
                 this.limpiarDiagnosticoTratamiento();
-                this.obtenerConsultas(this.historialClinicoForm.get('historialClinicoId').value);
+                this.obtenerConsultas();
       });
 
     }, e => {Swal.fire({
@@ -1283,6 +1289,16 @@ export class ConsultorioComponent implements OnInit {
             })
        }
     );
+  }
+
+  get antecedentesNoValido() {
+    return this.anamnesisForm.get('antecedentes').invalid 
+    && this.anamnesisForm.get('antecedentes').touched
+  }
+
+  get antecedentesRemotosNoValido() {
+    return this.anamnesisForm.get('antecedentesRemotos').invalid 
+    && this.anamnesisForm.get('antecedentesRemotos').touched
   }
 
 }

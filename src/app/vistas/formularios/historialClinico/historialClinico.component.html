@@ -206,7 +206,7 @@
                                                             <option value=null>Seleccionar</option>
                                                             <option *ngFor="let item of listaAreas; let i = index"
                                                                   value="{{item.areaId}}">
-                                                                  {{item.codigo}} - {{item.descripcion}}
+                                                                  {{item.areaId}} - {{item.codigo}} - {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                       <small *ngIf="areaNoValido" class="text-danger">

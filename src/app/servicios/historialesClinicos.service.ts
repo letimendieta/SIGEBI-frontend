@@ -16,16 +16,16 @@ export class HistorialesClinicosService {
   constructor( private http: HttpClient ) { }
 
 
-  crearHistorialClinico( historialClinicoPaciente: HistorialClinicoPacienteModelo) {
+  crearHistorialClinico( historialClinico: HistorialClinicoModelo) {
 
-    return this.http.post(`${ this.url }/historial-clinico`, historialClinicoPaciente);
+    return this.http.post(`${ this.url }/historial-clinico`, historialClinico);
 
   }
  
-  actualizarHistorialClinico( historialClinicoPaciente: HistorialClinicoPacienteModelo ) {
+  actualizarHistorialClinico( historialClinico: HistorialClinicoModelo ) {
 
     const historialClinicoTemp = {
-      ...historialClinicoPaciente
+      ...historialClinico
     };
 
     return this.http.put(`${ this.url }/historial-clinico/`, historialClinicoTemp);
@@ -76,7 +76,7 @@ export class HistorialesClinicosService {
     var filtros = busqueda == null ? new HistorialClinicoPacienteModelo() : busqueda;
     params = params.append('filtros', JSON.stringify(filtros));
 
-    return this.http.get(`${ this.url }/historial-clinico/buscar/`,{params:params})
+    return this.http.get(`${ this.url }/historial-clinico/buscar/historialPaciente`,{params:params})
       .pipe(
         map( this.crearArregloBusqueda ),
         delay(0)
