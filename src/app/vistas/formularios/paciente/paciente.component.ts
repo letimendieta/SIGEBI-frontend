@@ -137,7 +137,6 @@ export class PacienteComponent implements OnInit {
     this.pacientesService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
         this.pacienteForm.get('personas').patchValue(resp);
-        //this.pacienteForm.get('personas').get('cedula').disable();
         this.pacienteForm.get('personas').disable();
         this.ageCalculator();
       }, e => {
@@ -160,11 +159,11 @@ export class PacienteComponent implements OnInit {
     persona.cedula = cedula;
     this.personasService.buscarPersonasFiltros( persona )
       .subscribe( resp => {
-        this.pacienteForm.get('personas').patchValue(resp[0]);
-        //this.pacienteForm.get('personas').get('cedula').disable();
-        //this.pacienteForm.get('personas').get('personaId').disable();
-        this.pacienteForm.get('personas').disable();
-        this.ageCalculator();
+        if(resp.length > 0 ){
+          this.pacienteForm.get('personas').patchValue(resp[0]);
+          this.pacienteForm.get('personas').disable();
+          this.ageCalculator();
+        }
       }, e => {
           Swal.fire({
             icon: 'info',

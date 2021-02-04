@@ -125,7 +125,7 @@ export class StockComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.stock ? this.stock.stockId.toString():null,
+                title: resp.stock.stockId.toString(),
                 text: resp.mensaje,
               }).then( resp => {
 
