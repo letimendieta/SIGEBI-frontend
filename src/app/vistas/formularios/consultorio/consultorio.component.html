@@ -324,6 +324,50 @@
           </div>
           <br>
           <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAlergias"
+                aria-expanded="true" 
+                aria-controls="collapseAlergias">Alergias
+                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
+            <div class="card-body collapse show" id="collapseAlergias">
+              <div class="table-responsive table-hover">
+                <table datatable [dtOptions]="dtOptionsAlergias"
+                  [dtTrigger]="dtTriggerAlergias" id = "tableAlergias" class="table table-sm">
+                  <thead>
+                    <tr class="table-primary">
+                      <th scope="col">#</th>
+                      <th scope="col">Id</th>
+                      <th scope="col">Al&eacute;rgeno</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let alergia of alergias; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ alergia.alergiaId }}</td>
+                      <td>{{ alergia.alergenos.descripcion }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                    <td></td>
+                    <td></td>       
+                    <td>
+                      <h4 class="alert-heading">Cargando</h4>
+                      <p>
+                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                      </p>
+                      <p class="mb-0">
+                        Espere por favor
+                      </p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>                       
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapsePatologias"
                 aria-expanded="true" 
                 aria-controls="collapsePatologias">Patolog&iacute;as y tratamientos actuales
@@ -468,51 +512,7 @@
                 </table>
               </div>
             </div>
-          </div>
-          <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAlergias"
-                aria-expanded="true" 
-                aria-controls="collapseAlergias">Alergias
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseAlergias">
-              <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAlergias"
-                  [dtTrigger]="dtTriggerAlergias" id = "tableAlergias" class="table table-sm">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Al&eacute;rgeno</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let alergia of alergias; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ alergia.alergiaId }}</td>
-                      <td>{{ alergia.alergenos.descripcion }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td></td>       
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>                       
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          </div>          
           <br>
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseFichas"

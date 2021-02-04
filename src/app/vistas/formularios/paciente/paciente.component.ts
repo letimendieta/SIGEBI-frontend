@@ -137,6 +137,34 @@ export class PacienteComponent implements OnInit {
     this.pacientesService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
         this.pacienteForm.get('personas').patchValue(resp);
+        //this.pacienteForm.get('personas').get('cedula').disable();
+        this.pacienteForm.get('personas').disable();
+        this.ageCalculator();
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.comunes.obtenerError(e)
+          })
+          this.pacienteForm.get('personas').get('personaId').setValue(null);
+        }
+      );
+  }
+
+  buscarPersona(event){
+    event.preventDefault();
+    var cedula = this.pacienteForm.get('personas').get('cedula').value;    
+    if(!cedula){
+      return null;
+    }
+    var persona: PersonaModelo = new PersonaModelo();
+    persona.cedula = cedula;
+    this.personasService.buscarPersonasFiltros( persona )
+      .subscribe( resp => {
+        this.pacienteForm.get('personas').patchValue(resp[0]);
+        //this.pacienteForm.get('personas').get('cedula').disable();
+        //this.pacienteForm.get('personas').get('personaId').disable();
+        this.pacienteForm.get('personas').disable();
+        this.ageCalculator();
       }, e => {
           Swal.fire({
             icon: 'info',
@@ -297,6 +325,7 @@ export class PacienteComponent implements OnInit {
 
   limpiar(){
     this.pacienteForm.reset();
+    this.pacienteForm.get('personas').enable();
   }
 
   obtenerError(e : any){

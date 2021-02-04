@@ -8,8 +8,7 @@
 
       <div class="row text-right">
             <div class="col">
-                  <button class="btn btn-danger"
-                              routerLink="/pacientes">
+                  <button class="btn btn-danger" routerLink="/pacientes">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -30,14 +29,13 @@
                                                 <!-- Paciente Id-->
                                                 <div class="form-group" [hidden]="crear">
                                                       <label><b>Paciente id</b></label>
-                                                      <input type="number"
-                                                            class="form-control"
-                                                            placeholder="Paciente id"
-                                                            formControlName="pacienteId"
+                                                      <input type="number" class="form-control"
+                                                            placeholder="Paciente id" formControlName="pacienteId"
                                                             name="pacienteId">
-                                                      <small class="form-text text-muted">Este campo es autogenerado</small>                                                      
-                                                </div>                                                
-                                          </div>                                          
+                                                      <small class="form-text text-muted">Este campo es
+                                                            autogenerado</small>
+                                                </div>
+                                          </div>
                                     </div>
 
                                     <!-- Datos Personales-->
@@ -45,14 +43,13 @@
                                           <div class="col-lg-5">
                                                 <div class="form group">
                                                       <label><b>Persona id</b></label>
-                                                      <div class="input-group mb-3">                                                            
-                                                            <input type="number"
-                                                                  class="form-control"
-                                                                  placeholder="Persona id"
-                                                                  formControlName="personaId"
-                                                                  name="personaId" [class.is-invalid]="personaIdNoValido">
+                                                      <div class="input-group mb-3">
+                                                            <input type="number" class="form-control"
+                                                                  placeholder="Persona id" formControlName="personaId"
+                                                                  name="personaId"
+                                                                  [class.is-invalid]="personaIdNoValido">
                                                             <div class="input-group-append" [hidden]="!crear">
-                                                                  <button class="btn btn-outline-info" 
+                                                                  <button class="btn btn-outline-info" id="btnPersonaId"
                                                                         (click)="obtenerPersona($event)">
                                                                         Buscar
                                                                   </button>
@@ -60,49 +57,71 @@
                                                             <small *ngIf="personaIdNoValido" class="text-danger">
                                                                   Ingrese persona id
                                                             </small>
-                                                      
-                                                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                            <button type="button" class="btn btn-primary" [hidden]="!crear" 
-                                                                  (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
+
+                                                            <span class="glyphicon glyphicon-search"
+                                                                  aria-hidden="true"></span>
+                                                            <button type="button" class="btn btn-primary"
+                                                                  [hidden]="!crear"
+                                                                  (click)="openModal(editProfileModal)"><i
+                                                                        class="fas fa-search"></i></button>
                                                       </div>
                                                       <!--Modal buscador de personas-->
                                                       <ng-template #editProfileModal let-modal>
                                                             <div class="modal-header">
-                                                                  <h3 class="modal-title" id="editProfileLabel">Buscador Personas</h3>
-                                                                  <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
-                                                                  <span aria-hidden="true">&times;</span> 
-                                                                  </button>
-                                                            </div>
-                                                            <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                                  Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
-                                                                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                                                  <h3 class="modal-title" id="editProfileLabel">Buscador
+                                                                        Personas</h3>
+                                                                  <button type="button" class="close"
+                                                                        (click)="modal.dismiss()" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                   </button>
-                                                                  </div>
+                                                            </div>
+                                                            <div *ngIf="alert"
+                                                                  class="alert alert-danger alert-dismissible fade show"
+                                                                  role="alert">
+                                                                  Debe ingresar como m&iacute;nimo un dato de
+                                                                  b&uacute;squeda
+                                                                  <button type="button" (click)="cerrarAlert()"
+                                                                        class="close" data-dismiss="alert"
+                                                                        aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                            </div>
                                                             <div class="modal-body">
-                                                                  <form [formGroup]="buscadorForm" (ngSubmit)="buscadorPersonas($event)">
+                                                                  <form [formGroup]="buscadorForm"
+                                                                        (ngSubmit)="buscadorPersonas($event)">
                                                                         <div class="form-row justify-content-center">
-                                                                              <div>                                                                                                                                                        
+                                                                              <div>
                                                                                     <mat-form-field appearance="legacy">
-                                                                                          <mat-label>C&eacute;dula</mat-label>
-                                                                                          <input matInput type="text" placeholder="C&eacute;dula" 
-                                                                                                formControlName="cedula" id="cedula">
-                                                                                    </mat-form-field>                                                                                                                                                         
+                                                                                          <mat-label>C&eacute;dula
+                                                                                          </mat-label>
+                                                                                          <input matInput type="text"
+                                                                                                placeholder="C&eacute;dula"
+                                                                                                formControlName="cedula"
+                                                                                                id="cedula">
+                                                                                    </mat-form-field>
                                                                                     <mat-form-field appearance="legacy">
                                                                                           <mat-label>Nombres</mat-label>
-                                                                                          <input matInput type="text" placeholder="Nombres" 
-                                                                                                formControlName="nombres" id="nombres">
+                                                                                          <input matInput type="text"
+                                                                                                placeholder="Nombres"
+                                                                                                formControlName="nombres"
+                                                                                                id="nombres">
                                                                                     </mat-form-field>
                                                                                     <mat-form-field appearance="legacy">
-                                                                                          <mat-label>Apellidos</mat-label>
-                                                                                          <input matInput type="text" placeholder="Apellidos" 
-                                                                                                formControlName="apellidos" id="apellidos">
+                                                                                          <mat-label>Apellidos
+                                                                                          </mat-label>
+                                                                                          <input matInput type="text"
+                                                                                                placeholder="Apellidos"
+                                                                                                formControlName="apellidos"
+                                                                                                id="apellidos">
                                                                                     </mat-form-field>
                                                                               </div>
-                                                                              &nbsp;                                                                            
+                                                                              &nbsp;
                                                                               <div class="align-self-center">
-                                                                                    <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                                                                    <button (click)="limpiarModal($event)" class="btn btn-warning">Limpiar</button>                                                                            
+                                                                                    <button type="submit" hidden="true"
+                                                                                          class="btn btn-success">Buscar</button>
+                                                                                    <button
+                                                                                          (click)="limpiarModal($event)"
+                                                                                          class="btn btn-warning">Limpiar</button>
                                                                               </div>
                                                                         </div>
                                                                   </form>
@@ -110,8 +129,9 @@
 
                                                                   <!--Tabla vacia-->
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
-                                                                        *ngIf="!cargando && personas.length === 0">
+                                                                        <table datatable [dtOptions]="dtOptions"
+                                                                              class="table-bordered"
+                                                                              *ngIf="!cargando && personas.length === 0">
                                                                               <thead>
                                                                                     <tr class="table-primary">
                                                                                           <th>Id</th>
@@ -119,14 +139,15 @@
                                                                                           <th>Nombres</th>
                                                                                           <th>Apellidos</th>
                                                                                     </tr>
-                                                                              </thead>                                                                                    
+                                                                              </thead>
                                                                         </table>
                                                                   </div>
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        <table datatable [dtOptions]="dtOptions"
+                                                                              class="table-bordered"
                                                                               *ngIf="personas.length > 0">
                                                                               <thead>
-                                                                                    <tr  class="table-primary">
+                                                                                    <tr class="table-primary">
                                                                                           <th>Id</th>
                                                                                           <th>C&eacute;dula</th>
                                                                                           <th>Nombres</th>
@@ -134,31 +155,37 @@
                                                                                     </tr>
                                                                               </thead>
                                                                               <tbody *ngIf="personas?.length != 0">
-                                                                                    <tr *ngFor="let persona of personas" 
-                                                                                          (click)="selectPersona($event, persona)">                                                                                                
-                                                                                          <td>{{ persona.personaId }}</td>
+                                                                                    <tr *ngFor="let persona of personas"
+                                                                                          (click)="selectPersona($event, persona)">
+                                                                                          <td>{{ persona.personaId }}
+                                                                                          </td>
                                                                                           <td>{{ persona.cedula }}</td>
                                                                                           <td>{{ persona.nombres }}</td>
-                                                                                          <td>{{ persona.apellidos }}</td>
+                                                                                          <td>{{ persona.apellidos }}
+                                                                                          </td>
                                                                                     </tr>
                                                                               </tbody>
                                                                               <tbody *ngIf="cargando">
                                                                                     <td></td>
                                                                                     <td></td>
-                                                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                                                    <td>
+                                                                                          <h4 class="alert-heading">
+                                                                                                Cargando</h4>
                                                                                           <p>
-                                                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                                <i
+                                                                                                      class="fa fa-sync-alt fa-spin fa-2x"></i>
                                                                                           </p>
                                                                                           <p class="mb-0">
                                                                                                 Espere por favor
                                                                                           </p>
                                                                                     </td>
                                                                                     <td></td>
-                                                                              </tbody>                                                                                    
+                                                                              </tbody>
                                                                         </table>
                                                                   </div>
                                                                   <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                              (click)="modal.dismiss()">Cerrar</button>
                                                                   </div>
                                                             </div>
                                                       </ng-template>
@@ -166,27 +193,31 @@
                                                 <div>
                                                       <div class="form-group">
                                                             <label><b>C&eacute;dula</b></label>
-                                                            <input type="text"
-                                                                  class="form-control"
-                                                                  placeholder="C&eacute;dula"                      
-                                                                  name="cedula"
-                                                                  formControlName="cedula"
-                                                                  [class.is-invalid]="cedulaNoValido">
-                                                            <small *ngIf="cedulaNoValido" class="text-danger">
-                                                                  Ingrese la c&eacute;dula
-                                                            </small>
+                                                            <div class="input-group mb-3">
+                                                                  <input type="text" class="form-control"
+                                                                        placeholder="C&eacute;dula" name="cedula"
+                                                                        formControlName="cedula"
+                                                                        [class.is-invalid]="cedulaNoValido"
+                                                                        (blur)="buscarPersona($event)">
+                                                                  <!--div class="input-group-append" [hidden]="false">
+                                                                        <button class="btn btn-outline-info" id="btnCedula"
+                                                                              (click)="buscarPersona($event)">
+                                                                              Buscar
+                                                                        </button>
+                                                                  </div-->
+                                                                  <small *ngIf="cedulaNoValido" class="text-danger">
+                                                                        Ingrese la c&eacute;dula
+                                                                  </small>
+                                                            </div>
                                                       </div>
                                                 </div>
 
                                                 <div>
                                                       <div class="form-group">
                                                             <label><b>Nombres</b></label>
-                                                            <input type="text"
-                                                                  class="form-control"
-                                                                  placeholder="Nombres"
-                                                                  formControlName="nombres"
-                                                                  name="nombres"
-                                                                  [class.is-invalid]="nombreNoValido">
+                                                            <input type="text" class="form-control"
+                                                                  placeholder="Nombres" formControlName="nombres"
+                                                                  name="nombres" [class.is-invalid]="nombreNoValido">
                                                             <small *ngIf="nombreNoValido" class="text-danger">
                                                                   Ingrese el nombre
                                                             </small>
@@ -196,10 +227,8 @@
                                                 <div>
                                                       <div class="form-group">
                                                             <label><b>Apellidos</b></label>
-                                                            <input type="text"
-                                                                  class="form-control"
-                                                                  formControlName="apellidos"
-                                                                  name="apellidos"
+                                                            <input type="text" class="form-control"
+                                                                  formControlName="apellidos" name="apellidos"
                                                                   placeholder="Apellidos"
                                                                   [class.is-invalid]="apellidoNoValido">
                                                             <small *ngIf="apellidoNoValido" class="text-danger">
@@ -209,36 +238,26 @@
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Fecha Nacimiento</b></label>
-                                                      <input type="date"
-                                                            class="form-control"
-                                                            formControlName="fechaNacimiento"
-                                                            name="fechaNacimiento"
+                                                      <input type="date" class="form-control"
+                                                            formControlName="fechaNacimiento" name="fechaNacimiento"
                                                             placeholder="Fecha Nacimiento">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Edad</b></label>
-                                                      <input type="number"
-                                                            class="form-control"
-                                                            formControlName="edad"
-                                                            name="edad"
-                                                            placeholder="Edad"
-                                                            (focus)="ageCalculator()" readonly>
+                                                      <input type="number" class="form-control" formControlName="edad"
+                                                            name="edad" placeholder="Edad" (focus)="ageCalculator()"
+                                                            readonly>
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Direcci&oacute;n</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
-                                                            formControlName="direccion"
-                                                            name="direccion"
+                                                      <input type="text" class="form-control"
+                                                            formControlName="direccion" name="direccion"
                                                             placeholder="Direcci&oacute;n">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Email</b></label>
-                                                      <input type="email"
-                                                            class="form-control"
-                                                            formControlName="email"
-                                                            name="email"
-                                                            placeholder="Email"
+                                                      <input type="email" class="form-control" formControlName="email"
+                                                            name="email" placeholder="Email"
                                                             [class.is-invalid]="correoNoValido">
                                                       <small *ngIf="correoNoValido" class="text-danger">
                                                             Ingrese el correo
@@ -247,8 +266,7 @@
                                                 <div class="form-group">
                                                       <label><b>Sexo</b></label>
                                                       <select ui-select2 class="form-control input-sm"
-                                                            formControlName="sexo"
-                                                            uppercase>
+                                                            formControlName="sexo" uppercase>
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaSexo; let i = index"
                                                                   value="{{item.valor}}">
@@ -261,130 +279,117 @@
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Estado Civil</b></label>
-                                                      <select ui-seldivect2 placeholder="Estado Civil" 
-                                                            class="form-control input-sm"          
-                                                            name = "estadoCivil"
-                                                            formControlName="estadoCivil"
-                                                            uppercase>
+                                                      <select ui-seldivect2 placeholder="Estado Civil"
+                                                            class="form-control input-sm" name="estadoCivil"
+                                                            formControlName="estadoCivil" uppercase>
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaEstadoCivil; let i = index"
                                                                   value="{{item.valor}}">
-                                                                        {{item.descripcionValor}}
+                                                                  {{item.descripcionValor}}
                                                             </option>
                                                       </select>
                                                 </div>
                                                 <div class="form-group">
-                                                      <label><b>Nacionalidad</b></label>                
+                                                      <label><b>Nacionalidad</b></label>
                                                       <select ui-select2 class="form-control input-sm"
-                                                            formControlName="nacionalidad" 
-                                                            name = "nacionalidad"
+                                                            formControlName="nacionalidad" name="nacionalidad"
                                                             uppercase>
                                                             <option value=null>Seleccione</option>
-                                                            <option *ngFor="let item of listaNacionalidad; let i = index"
-                                                            value="{{item.valor}}">
+                                                            <option
+                                                                  *ngFor="let item of listaNacionalidad; let i = index"
+                                                                  value="{{item.valor}}">
                                                                   {{item.descripcionValor}}
                                                             </option>
                                                       </select>
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Tel&eacute;fono</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
-                                                            formControlName="telefono"
-                                                            name="telefono"
-                                                            placeholder="Tel&eacute;fono">
+                                                      <input type="text" class="form-control" formControlName="telefono"
+                                                            name="telefono" placeholder="Tel&eacute;fono">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Celular</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
-                                                            formControlName="celular"
-                                                            name="celular"
-                                                            placeholder="Celular">                  
+                                                      <input type="text" class="form-control" formControlName="celular"
+                                                            name="celular" placeholder="Celular">
                                                 </div>
                                                 <div formGroupName="carreras" class="form-group">
-                                                      <label><b>Carrera</b></label> 
+                                                      <label><b>Carrera</b></label>
                                                       <select class="form-control input-sm" name="carreraId"
                                                             formControlName="carreraId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaCarreras; let i = index"
-                                                            value="{{item.carreraId}}">
+                                                                  value="{{item.carreraId}}">
                                                                   {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                 </div>
                                                 <div formGroupName="departamentos" class="form-group">
                                                       <label><b>Departamento</b></label>
-                                                      <select class="form-control input-sm" name = "departamentoId"
+                                                      <select class="form-control input-sm" name="departamentoId"
                                                             formControlName="departamentoId">
                                                             <option value=null>Seleccione</option>
-                                                            <option *ngFor="let item of listaDepartamentos; let i = index"
-                                                            value="{{item.departamentoId}}">
+                                                            <option
+                                                                  *ngFor="let item of listaDepartamentos; let i = index"
+                                                                  value="{{item.departamentoId}}">
                                                                   {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                 </div>
                                                 <div formGroupName="dependencias" class="form-group">
                                                       <label><b>Dependencia</b></label>
-                                                      <select class="form-control input-sm" name = "dependenciaId"
+                                                      <select class="form-control input-sm" name="dependenciaId"
                                                             formControlName="dependenciaId">
                                                             <option value=null>Seleccione</option>
-                                                            <option *ngFor="let item of listaDependencias; let i = index"
-                                                            value="{{item.dependenciaId}}">
+                                                            <option
+                                                                  *ngFor="let item of listaDependencias; let i = index"
+                                                                  value="{{item.dependenciaId}}">
                                                                   {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                 </div>
                                                 <div formGroupName="estamentos" class="form-group">
                                                       <label><b>Estamento</b></label>
-                                                      <select class="form-control input-sm" name = "estamentoId"
+                                                      <select class="form-control input-sm" name="estamentoId"
                                                             formControlName="estamentoId">
                                                             <option value=null>Seleccione</option>
                                                             <option *ngFor="let item of listaEstamentos; let i = index"
-                                                            value="{{item.estamentoId}}">
+                                                                  value="{{item.estamentoId}}">
                                                                   {{item.descripcion}}
                                                             </option>
                                                       </select>
-                                                </div> 
+                                                </div>
                                                 <div class="col-lg-12">
                                                       <div class="form-group">
-                                                        <label><b>Observaciones: </b></label>
-                                                        <textarea class="form-control" formControlName="observacion"
-                                                        id="observacion" rows="3"></textarea>
+                                                            <label><b>Observaciones: </b></label>
+                                                            <textarea class="form-control" formControlName="observacion"
+                                                                  id="observacion" rows="3"></textarea>
                                                       </div>
-                                                </div>             
+                                                </div>
                                           </div>
                                           <div class="col-lg-5" [hidden]="true">
                                                 <div class="form-group">
                                                       <label><b>Fecha creaci&oacute;n</b></label>
-                                                      <input type="datetime-local"
-                                                            class="form-control"
-                                                            formControlName="fechaCreacion"
-                                                            name="fechaCreacion"
+                                                      <input type="datetime-local" class="form-control"
+                                                            formControlName="fechaCreacion" name="fechaCreacion"
                                                             placeholder="Fecha creaci&oacute;n">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Fecha modificaci&oacute;n</b></label>
-                                                      <input type="datetime-local"
-                                                            class="form-control"
-                                                            formControlName="fechaModificacion"
-                                                            name="fechaModificacion"
+                                                      <input type="datetime-local" class="form-control"
+                                                            formControlName="fechaModificacion" name="fechaModificacion"
                                                             placeholder="Fecha modificaci&oacute;n">
                                                 </div>
                                           </div>
                                           <div class="col-lg-5" [hidden]="true">
                                                 <div class="form-group">
                                                       <label><b>Usuario creaci&oacute;n</b></label>
-                                                      <input type="text"                  
-                                                            class="form-control"
-                                                            formControlName="usuarioCreacion"
-                                                            name="usuarioCreacion"
+                                                      <input type="text" class="form-control"
+                                                            formControlName="usuarioCreacion" name="usuarioCreacion"
                                                             placeholder="Usuario creaci&oacute;n">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Usuario modificaci&oacute;n</b></label>
-                                                      <input type="text"                  
-                                                            class="form-control"
+                                                      <input type="text" class="form-control"
                                                             formControlName="usuarioModificacion"
                                                             name="usuarioModificacion"
                                                             placeholder="Usuario modificaci&oacute;n">
@@ -397,11 +402,9 @@
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Grupo Sangu&iacute;neo</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
+                                                      <input type="text" class="form-control"
                                                             placeholder="Grupo Sangu&iacute;neo"
-                                                            formControlName="grupoSanguineo"
-                                                            name="grupoSanguineo"
+                                                            formControlName="grupoSanguineo" name="grupoSanguineo"
                                                             [class.is-invalid]="grupoSanguineoNoValido">
                                                       <small *ngIf="grupoSanguineoNoValido" class="text-danger">
                                                             Ingrese el grupo sangu&iacute;neo
@@ -409,37 +412,35 @@
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Seguro M&eacute;dico</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
+                                                      <input type="text" class="form-control"
                                                             placeholder="Seguro M&eacute;dico"
-                                                            formControlName="seguroMedico"
-                                                            name="seguroMedico">
+                                                            formControlName="seguroMedico" name="seguroMedico">
                                                 </div>
                                           </div>
                                     </div>
 
                                     <br>
                                     <div class="justify-content-center">
-                                          <div class="input-group mb-3">    
+                                          <div class="input-group mb-3">
                                                 <div class="form-group">
                                                       <label for="inputGroupFile02">Adjuntar Fotograf&iacute;a</label>
-                                                      <input type="file" class="form-control-file" 
-                                                            (change)="selectFile($event)" id="inputGroupFile02" >                                    
-                                                </div>                                                                     
+                                                      <input type="file" class="form-control-file"
+                                                            (change)="selectFile($event)" id="inputGroupFile02">
+                                                </div>
                                           </div>
-                                          
+
                                           <div class="alert alert-light" role="alert">{{ message }}</div>
-                                          
+
                                           <div class="card" [hidden]="crear">
                                                 <div class="card-header">Lista de archivos</div>
                                                 <ul class="list-group list-group-flush"
                                                       *ngFor="let file of fileInfos | async">
                                                       <li class="list-group-item">
                                                             <a href="{{ file.url }}">{{ file.name }}</a>
-                                                                  <img src="{{ file.url }}">
+                                                            <img src="{{ file.url }}">
                                                       </li>
                                                 </ul>
-                                          </div>                       
+                                          </div>
                                     </div>
                                     <br>
                                     <!--Paciente Fechas-->
@@ -447,56 +448,49 @@
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Fecha creaci&oacute;n</b></label>
-                                                      <input type="datetime-local"
-                                                            class="form-control"
-                                                            formControlName="fechaCreacion"
-                                                            name="fechaCreacion"  
+                                                      <input type="datetime-local" class="form-control"
+                                                            formControlName="fechaCreacion" name="fechaCreacion"
                                                             placeholder="Fecha creaci&oacute;n">
                                                 </div>
                                                 <div class="form-group">
                                                       <label><b>Fecha modificaci&oacute;n</b></label>
-                                                      <input type="datetime-local"
-                                                            class="form-control"
-                                                            formControlName="fechaModificacion"
-                                                            name="fechaModificacion"  
-                                                            placeholder="Fecha modificaci&oacute;n">  
+                                                      <input type="datetime-local" class="form-control"
+                                                            formControlName="fechaModificacion" name="fechaModificacion"
+                                                            placeholder="Fecha modificaci&oacute;n">
                                                 </div>
                                           </div>
 
-                                          <div class="col-lg-5">   
-                                                <div class="form-group">                                            
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
                                                       <label><b>Usuario creaci&oacute;n</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
-                                                            formControlName="usuarioCreacion"
-                                                            name="usuarioCreacion"  
+                                                      <input type="text" class="form-control"
+                                                            formControlName="usuarioCreacion" name="usuarioCreacion"
                                                             placeholder="Usuario creaci&oacute;n">
-                                                </div> 
-                                                <div class="form-group"> 
+                                                </div>
+                                                <div class="form-group">
                                                       <label><b>Usuario modificaci&oacute;n</b></label>
-                                                      <input type="text"
-                                                            class="form-control"
+                                                      <input type="text" class="form-control"
                                                             formControlName="usuarioModificacion"
-                                                            name="usuarioModificacion"  
+                                                            name="usuarioModificacion"
                                                             placeholder="Usuario modificaci&oacute;n">
-                                                </div>                                   
-                                          </div>                        
+                                                </div>
+                                          </div>
                                     </div>
                                     <hr>
                                     <br>
                                     <div class="form-group text-center">
                                           <button type="submit" class="btn btn-primary ">
                                                 <i class="fa fa-save"></i> Guardar</button>
-                                          &nbsp;  
-                                          <button (click)="limpiar()" [hidden]="!crear" 
-                                                class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
+                                          &nbsp;
+                                          <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning"><i
+                                                      class="fas fa-backspace"></i> Limpiar</button>
                                     </div>
                               </form>
                         </div>
                   </div>
-            
+
 
 
             </div>
-      </div>      
+      </div>
 </body>

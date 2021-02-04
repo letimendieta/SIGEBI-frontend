@@ -233,7 +233,7 @@ export class ConsultorioComponent implements OnInit {
         this.buscadorForm.get('cedulaBusqueda').setValue(this.paciente.personas.cedula);
 
         this.historialClinicoId = this.pacienteForm.get('historialClinico').get('historialClinicoId').value;
-
+        this.ageCalculator();
         if( this.paciente.pacienteId ){
           this.obtenerHistorialClinico();          
           this.obtenerAntecedentes();
@@ -253,9 +253,7 @@ export class ConsultorioComponent implements OnInit {
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       //this.cargando = false;
-    });
-
-
+    });   
 
     /*this.pacientesService.buscarPacientesFiltros( Number(id) )
         .subscribe( (resp: PacienteModelo) => {  
@@ -263,6 +261,16 @@ export class ConsultorioComponent implements OnInit {
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
           this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
         });*/
+  }
+
+  ageCalculator(){
+    var fechaNacimiento = this.pacienteForm.get('personas').get('fechaNacimiento').value;//toString();
+    if( fechaNacimiento ){
+      const convertAge = new Date(fechaNacimiento);
+      const timeDiff = Math.abs(Date.now() - convertAge.getTime());
+
+      this.pacienteForm.get('personas').get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
+    }
   }
 
   obtenerHistorialClinico() {   
