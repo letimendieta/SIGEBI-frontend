@@ -1,0 +1,140 @@
+<head>
+  <link rel="stylesheet" href="motivosConsulta.component.css">
+</head>
+
+<body>
+  <h1>Listado de Motivos de Consulta</h1>
+  <hr>
+
+  <div class="card">
+    <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
+        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+    <div class="card-body collapse show" id="collapseBuscador">
+      <form [formGroup]="buscadorForm">      
+        <div class="form-row justify-content-center">
+          <div>      
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Motivo Consulta id</mat-label>
+                <input matInput matInput type="number" placeholder="Motivo Consulta id" 
+                  formControlName="motivoConsultaId" name="motivoConsultaId" id="motivoConsultaId">
+              </mat-form-field>
+            </p>
+
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>C&oacute;digo</mat-label>
+                <input matInput matInput type="text" placeholder="C&oacute;digo" 
+                  formControlName="codigo" name="codigo" id="codigo">
+              </mat-form-field>
+            </p>
+          </div>
+          &nbsp; &nbsp; &nbsp;
+          <div>           
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Descripci&oacute;n</mat-label>
+                <input matInput matInput type="text" placeholder="Nombres" 
+                  formControlName="descripcion" name="descripcion" id="descripcion">
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="estado" name = "estado">
+                  <mat-option value="null">TODOS</mat-option>
+                  <mat-option value="A">ACTIVO</mat-option>
+                  <mat-option value="I">INACTIVO</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </p>
+          </div>  
+          &nbsp; &nbsp; &nbsp;
+          <div class="align-self-center">
+              <button type="submit" (click)="buscadorMotivosConsulta($event)" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
+              &nbsp;
+              <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
+          </div>            
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col text-right">
+      <button routerLink="/motivoConsulta/nuevo"
+              class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Agregar
+      </button>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="table-responsive table-hover">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">C&oacute;digo</th>
+            <th scope="col">Descripci&oacute;n</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Fecha creaci&oacute;n</th>
+            <th scope="col">Usuario creaci&oacute;n</th>
+            <th scope="col">Fecha modificaci&oacute;n</th>
+            <th scope="col">Usuario modificaci&oacute;n</th>     
+            <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let motivoConsulta of motivosConsulta; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ motivoConsulta.motivoConsultaId }}</td>
+            <td>{{ motivoConsulta.codigo }}</td>
+            <td>{{ motivoConsulta.descripcion }}</td>
+            <td>{{ motivoConsulta.estado }}</td>
+            <td>{{ motivoConsulta.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ motivoConsulta.usuarioCreacion }}</td>
+            <td>{{ motivoConsulta.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+            <td>{{ motivoConsulta.usuarioModificacion }}</td>     
+
+            <td>
+              <a class="btn btn-info"
+                      [routerLink]="['/motivoConsulta', motivoConsulta.motivoConsultaId ]">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+            <td (click)="borrarMotivoConsulta($event, motivoConsulta)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>  
+          <td></td>     
+          <td>
+            <h4 class="alert-heading">Cargando</h4>
+            <p>
+              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+            </p>
+            <p class="mb-0">
+              Espere por favor
+            </p>
+          </td>          
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>        
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br><br> 
+</body>

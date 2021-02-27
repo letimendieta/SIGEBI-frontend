@@ -3,8 +3,9 @@
         <button mat-icon-button (click)="toggleSideBar()">
             <mat-icon>menu</mat-icon>
         </button>
-
-      
+        <div class="container text-right">
+            Sistema de Gestión Departamento Bienestar Institucional - SIGEBI
+        </div>
         <div class="container text-right">
             <div *ngIf="isLogged; else loggedOut"><p>Bienvenido {{nombreUsuario}}</p></div>
             <ng-template #loggedOut><p>No has iniciado sesión</p></ng-template>

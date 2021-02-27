@@ -21,16 +21,18 @@
    			<li class="active">
    				<a href="#pacienteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-address-book fa-2x"></i>  Pacientes</a>
    				<ul class="collapse list-unstyled" id="pacienteSubmenu">
-   					<li>
-              <a routerLinkActive="list-item-active"  routerLink="/pacientes" (click)="toggleSideBar()">Pacientes</a>
-              
-   					</li>
+            <li>
+              <a routerLinkActive="list-item-active"  routerLink="/citas" (click)="toggleSideBar()">Citas</a>
+            </li>   					
    					<li>
                 <a routerLinkActive="list-item-active"  routerLink="/historialesClinicos" (click)="toggleSideBar()">Historiales Cl&iacute;nicos</a>
-             </li>
+            </li>
+            <li>
+              <a routerLinkActive="list-item-active"  routerLink="/pacientes" (click)="toggleSideBar()">Pacientes</a>              
+   					</li> 
              <li>
-              <a routerLinkActive="list-item-active"  routerLink="/citas" (click)="toggleSideBar()">Citas</a>
-             </li>
+              <a routerLinkActive="list-item-active"  routerLink="/signosVitales" (click)="toggleSideBar()">Signos Vitales</a>              
+   					</li>            
    				</ul> 
    			</li>
         <li class="active">
@@ -52,10 +54,13 @@
              </li>
              <li>
               <a routerLinkActive="list-item-active"  routerLink="/dependencias" (click)="toggleSideBar()">Dependencias</a>
-           </li>
-           <li>
+            </li>
+            <li>
             <a routerLinkActive="list-item-active"  routerLink="/parametros" (click)="toggleSideBar()">Param&eacute;tros</a>
-         </li>
+            </li>
+            <li>
+              <a routerLinkActive="list-item-active"  routerLink="/motivosConsulta" (click)="toggleSideBar()">Motivos Consulta</a>
+            </li>
           </ul> 
         </li>
          <li class="active">

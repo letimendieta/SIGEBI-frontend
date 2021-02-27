@@ -4,7 +4,7 @@ import { HistorialClinicoModelo } from '../modelos/historialClinico.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
-import { HistorialClinicoPacienteModelo } from '../modelos/HistorialClinicoPaciente.modelo';
+import { HistorialClinicoPacienteModelo } from '../modelos/historialClinicoPaciente.modelo';
 
 @Injectable({
   providedIn: 'root'

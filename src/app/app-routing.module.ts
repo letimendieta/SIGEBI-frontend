@@ -17,6 +17,8 @@ import { UsuariosComponent } from './vistas/listas/usuarios/usuarios.component';
 import { UsuarioComponent } from './vistas/formularios/usuario/usuario.component';
 import { AreasComponent } from './vistas/listas/areas/areas.component';
 import { AreaComponent } from './vistas/formularios/area/area.component';
+import { MotivosConsultaComponent } from './vistas/listas/motivosConsulta/motivosConsulta.component';
+import { MotivoConsultaComponent } from './vistas/formularios/motivoConsulta/motivoConsulta.component';
 import { CarrerasComponent } from './vistas/listas/carreras/carreras.component';
 import { CarreraComponent } from './vistas/formularios/carrera/carrera.component';
 import { DepartamentosComponent } from './vistas/listas/departamentos/departamentos.component';
@@ -35,6 +37,8 @@ import { InsumoComponent } from './vistas/formularios/insumo/insumo.component';
 import { InsumosComponent } from './vistas/listas/insumos/insumos.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
+import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
+import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signoVital.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 
@@ -167,6 +171,20 @@ const routes: Routes = [
   {
     path: 'enfermeria',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: EnfermeriaComponent
+  },
+  {
+    path: 'motivosConsulta',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: MotivosConsultaComponent
+  },{
+    path: 'motivoConsulta/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: MotivoConsultaComponent
+  },
+  {
+    path: 'signosVitales',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: SignosVitalesComponent
+  },{
+    path: 'signoVital/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: SignoVitalComponent
   }
   ]
 }];

@@ -22,7 +22,6 @@ import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { TerminoEstandarModelo } from 'src/app/modelos/terminoEstandar.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { AnamnesisModelo } from 'src/app/modelos/anamnesis.modelo';
-import { AnamnesisService } from 'src/app/servicios/anamnesis.service';
 import { Observable, Subject } from 'rxjs';
 import { DiagnosticoModelo } from 'src/app/modelos/diagnostico.modelo';
 import { TratamientoModelo } from 'src/app/modelos/tratamiento.modelo';
@@ -33,15 +32,23 @@ import { ConsultaModelo } from 'src/app/modelos/consulta.modelo';
 import { ConsultasService } from 'src/app/servicios/consultas.service';
 import { DataTableDirective } from 'angular-datatables';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
-import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
+import { MotivoConsultaModelo } from 'src/app/modelos/motivoConsulta.modelo';
+import { MotivosConsultaService } from 'src/app/servicios/motivosConsulta.service';
+import { SignoVitalModelo } from 'src/app/modelos/signoVital.modelo';
+import { SignosVitalesService } from 'src/app/servicios/signosVitales.service';
+import { FichaMedicaModelo } from 'src/app/modelos/fichaMedica.modelo';
+import { AlergenosService } from 'src/app/servicios/alergenos.service';
+import { AlergenoModelo } from 'src/app/modelos/alergeno.modelo';
+import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasProcedimientos.service';
 
 @Component({
   selector: 'app-consultorio',
   templateUrl: './consultorio.component.html',
   styleUrls: ['./consultorio.component.css']
 })
+
 export class ConsultorioComponent implements OnInit {
-  @ViewChild(DataTableDirective, {static: false})
+  @ViewChild(DataTableDirective, {static: false})  
   dtElement: DataTableDirective;
   crear = false;
   personaForm: FormGroup;
@@ -55,25 +62,33 @@ export class ConsultorioComponent implements OnInit {
   anamnesisForm: FormGroup;
   diagnosticoPrimarioForm: FormGroup;
   diagnosticoSecundarioForm: FormGroup;
+  selectFichaMedicaForm: FormGroup;
+  planTrabajoForm: FormGroup;
   tratamientoFarmacologicoForm: FormGroup;
-  tratamientoNoFarmacologicoForm: FormGroup;
+  tratamientoNoFarmacologicoForm: FormGroup;  
   pacientes: PacienteModelo[] = [];
   patologiasProcedimientos: PatologiaProcedimientoModelo[] = [];
   antecedentes: AntecedenteModelo[] = [];
   antecedentesFamiliares: AntecedenteModelo[] = [];
   alergias: AlergiaModelo[] = [];
+  diagnosticoAlergias: AlergenoModelo[] = [];
+  diagnosticoAntecPatolProc: PatologiaProcedimientoModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   listaEstadoCivil: ParametroModelo[] = [];
   listaSexo: ParametroModelo[] = [];
   listaNacionalidad: ParametroModelo[] = [];
+  listaMotivosConsulta: MotivoConsultaModelo;
   stocks: StockModelo[] = [];
   consultas: ConsultaModelo[] = new Array();
   terminosEstandar: TerminoEstandarModelo[] = [];
   terminoEstandarPrincipalSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
   terminoEstandarSecundarioSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
   tratamientosInsumos: TratamientoInsumoModelo[] = [];
+  signosVitales: SignoVitalModelo[] = [];
+  fichaMedica: FichaMedicaModelo[] = [];
   cargando = false;
   alert:boolean=false;
+  guardarBtn = true;
   alertMedicamentos:boolean=false;
   alertGeneral:boolean=false;
   tipoDiagnostico: String = null;
@@ -89,6 +104,8 @@ export class ConsultorioComponent implements OnInit {
   dtOptionsTerminoEstandar: any = {};
   dtOptionsConsultas: any = {};
   dtOptionsMedicamentos: any = {};
+  dtOptionsSignosVitales: any = {};
+  dtOptionsFichaMedica: any = {};
   dtTriggerMedicamentos : Subject<any> = new Subject<any>();
   dtTriggerStock : Subject<any> = new Subject<any>();
   dtTriggerConsultas : Subject<any> = new Subject<any>();
@@ -96,8 +113,12 @@ export class ConsultorioComponent implements OnInit {
   dtTriggerAntecedentes : Subject<any> = new Subject<any>();
   dtTriggerAntecedentesFamiliares : Subject<any> = new Subject<any>();
   dtTriggerPatologias : Subject<any> = new Subject<any>();
+  dtTriggerSignosVitales : Subject<any> = new Subject<any>();
+  dtTriggerFichaMedica : Subject<any> = new Subject<any>();
   hcid = 0;
   fileInfos: Observable<any>;
+  hiddenAlergenos = true;
+  hiddenAntePatProc = true;
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -105,13 +126,16 @@ export class ConsultorioComponent implements OnInit {
                private pacientesService: PacientesService,
                private antecedentesService: AntecedentesService,
                private alergiaService: AlergiasService,
+               private alergenosService: AlergenosService,
+               private patologiasProcedimientosService: PatologiasProcedimientosService,
                private modalService: NgbModal,
                private insumosService: InsumosService,
                private stockService: StocksService,
                private terminoEstandarService: TerminoEstandarService,
-               private anamnesisService: AnamnesisService,
                private consultasService: ConsultasService,
+               private signosVitalesService: SignosVitalesService,
                private uploadService: UploadFileService,
+               private motivosConsultaService: MotivosConsultaService,
                private procesoDiagnosticoTratamientoService: ProcesoDiagnosticoTratamientosService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
@@ -124,13 +148,16 @@ export class ConsultorioComponent implements OnInit {
                private fb9: FormBuilder,
                private fb10: FormBuilder,
                private fb11: FormBuilder,
-               private fb12: FormBuilder) { 
+               private fb12: FormBuilder,
+               private fb13: FormBuilder,
+               private fb14: FormBuilder) { 
     this.crearFormulario();
     this.ngOnInit();
   }              
 
   ngOnInit() {
     this.obtenerParametros();
+    this.listarMotivosConsultas();
     this.crearTablaPatologias();
     this.crearTablaAntecedentes();
     this.crearTablaAlergias();
@@ -140,6 +167,8 @@ export class ConsultorioComponent implements OnInit {
     this.crearTablaModelStock();
     this.crearTablaModelTerminoEstandar();
     this.crearTablaConsultas();
+    this.crearSignosVitales();
+    this.crearFichaMedica();
   }
 
   obtenerParametros() {
@@ -170,8 +199,19 @@ export class ConsultorioComponent implements OnInit {
     this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo[]) => {
         this.listaNacionalidad = resp;
+    });    
+  }
+
+  listarMotivosConsultas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var motivoConsulta = new MotivoConsultaModelo();
+    motivoConsulta.estado = "A";
+
+    this.motivosConsultaService.buscarMotivosConsultaFiltros(motivoConsulta, orderBy, orderDir )
+      .subscribe( (resp: MotivoConsultaModelo) => {
+        this.listaMotivosConsulta = resp;
     });
-    
   }
 
   buscarPaciente(event) {
@@ -236,11 +276,10 @@ export class ConsultorioComponent implements OnInit {
         this.ageCalculator();
         if( this.paciente.pacienteId ){
           this.obtenerHistorialClinico();          
-          this.obtenerAntecedentes();
-          this.obtenerAntecedentesFamiliares();
-          this.obtenerAlergias();
-          this.obtenerAnamnesis();
+          this.obtenerFichaMedica();
           this.obtenerConsultas();
+          this.obtenerSignosVitales();
+          this.guardarBtn = false;
         }else{
           this.alertGeneral = true;
           this.mensajeGeneral = "El paciente aun no cuenta con Historial Clinico definido";
@@ -297,6 +336,12 @@ export class ConsultorioComponent implements OnInit {
       })
       this.cargando = false;
     });
+  }
+
+  obtenerFichaMedica(){
+    this.obtenerAntecedentes();
+    this.obtenerAntecedentesFamiliares();
+    this.obtenerAlergias();
   }
 
   obtenerPatologiasProcedimientosActual() {   
@@ -398,7 +443,93 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  obtenerAnamnesis() {
+  listarAlergenos() {
+    //var alergias = new AlergiaModelo();
+
+    //alergias.pacienteId = this.paciente.pacienteId;
+
+    this.alergenosService.getAlergenos()
+    .subscribe( resp => {
+
+      this.diagnosticoAlergias = resp;
+      //this.dtTriggerFichaMedica.next();
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      //this.cargando = false;
+    });
+  }
+
+  listarPatologiasProcedimientos() {
+    //var alergias = new AlergiaModelo();
+
+    //alergias.pacienteId = this.paciente.pacienteId;
+
+    this.patologiasProcedimientosService.getPatologiasProcedimientos()
+    .subscribe( resp => {
+
+      this.diagnosticoAntecPatolProc = resp;
+      //this.dtTriggerFichaMedica.next();
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      //this.cargando = false;
+    });
+  }
+
+  agregarAficha(event){
+    var ficha: FichaMedicaModelo  = new FichaMedicaModelo();
+    
+    var opcionFicha = this.selectFichaMedicaForm.get('selectOpcionFicha').value;    
+    var idAlergeno = this.selectFichaMedicaForm.get('selectAlergeno').value;
+    var idAntecedente = this.selectFichaMedicaForm.get('selectAntecPatologiasProcedimientos').value;
+
+    if( opcionFicha == "ALE"){
+      for (let i = 0; i < this.diagnosticoAlergias.length; i++) {
+        if(this.diagnosticoAlergias[i].alergenoId == Number(idAlergeno)){
+          ficha.id = this.diagnosticoAlergias[i].alergenoId;
+          ficha.codigo = this.diagnosticoAlergias[i].codigo;
+          ficha.descripcion = this.diagnosticoAlergias[i].descripcion;
+          ficha.tipo = opcionFicha;
+          ficha.pacienteId = this.paciente.pacienteId;
+
+          $('#tableFichaMedica').DataTable().destroy();
+          this.fichaMedica.push(ficha);
+          this.dtTriggerFichaMedica.next();
+        }
+      }
+    }else if( opcionFicha == "P/P"){
+      for (let i = 0; i < this.diagnosticoAntecPatolProc.length; i++) {
+        if(this.diagnosticoAntecPatolProc[i].patologiaProcedimientoId== Number(idAntecedente)){
+          ficha.id = this.diagnosticoAntecPatolProc[i].patologiaProcedimientoId;
+          ficha.codigo = this.diagnosticoAntecPatolProc[i].codigo;
+          ficha.descripcion = this.diagnosticoAntecPatolProc[i].descripcion;
+          ficha.tipo = opcionFicha;
+          ficha.pacienteId = this.paciente.pacienteId;
+
+          $('#tableFichaMedica').DataTable().destroy();
+          this.fichaMedica.push(ficha);
+          this.dtTriggerFichaMedica.next();
+        }
+      }
+    }
+        
+     /* }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: e.status +'. '+ this.comunes.obtenerError(e)
+          })
+        }
+      );*/
+  }
+
+  /*obtenerAnamnesis() {
     var anamnesis = new AnamnesisModelo();
     anamnesis.pacienteId = this.paciente.pacienteId;
 
@@ -416,7 +547,7 @@ export class ConsultorioComponent implements OnInit {
       })
       this.cargando = false;
     });
-  }
+  }*/
 
   obtenerConsultas() {
     var consultas = new ConsultaModelo();
@@ -430,6 +561,31 @@ export class ConsultorioComponent implements OnInit {
 
       this.consultas = resp;
       this.dtTriggerConsultas.next();
+      
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  obtenerSignosVitales() {
+    var signoVital = new SignoVitalModelo();
+    signoVital.pacientes.pacienteId = this.paciente.pacienteId;
+    signoVital.funcionarios = null;
+    //signoVital.
+
+    this.signosVitales = [];
+    $('#tableSignosVitales').DataTable().destroy();
+
+    this.signosVitalesService.buscarSignosVitalesFiltros(signoVital)
+    .subscribe( resp => {     
+
+      this.signosVitales = resp;
+      this.dtTriggerSignosVitales.next();
       
     }, e => {      
       Swal.fire({
@@ -457,6 +613,25 @@ export class ConsultorioComponent implements OnInit {
           this.stockForm.get('insumos').get('insumoId').setValue(null);
         }
       );
+  }
+
+  opcionFicha(event: any){
+    var opcion = event.target.value;
+    if( opcion == "ALE" ){
+      this.listarAlergenos();
+      this.hiddenAlergenos = false;
+      this.hiddenAntePatProc = true;   
+    }else if( opcion == "P/T" ){      
+      this.hiddenAlergenos = true; 
+      this.hiddenAntePatProc = true;  
+    }else if( opcion == "P/P" ){
+      this.listarPatologiasProcedimientos();
+      this.hiddenAlergenos = true;
+      this.hiddenAntePatProc = false;
+    }else if( opcion == "null" ){
+      this.hiddenAlergenos = true;
+      this.hiddenAntePatProc = true;
+    }
   }
 
   crearFormulario() {
@@ -551,12 +726,13 @@ export class ConsultorioComponent implements OnInit {
     
     this.anamnesisForm = this.fb8.group({
       anamnesisId  : [null, [] ],
+      motivoConsultaId: [null, [ Validators.required]  ],
       antecedentes  : [null, [] ],
       antecedentesRemotos  : [null, [] ]
     });
 
     this.diagnosticoPrimarioForm = this.fb9.group({
-      diagnosticoPrincipal  : [null, [] ],
+      diagnosticoPrincipal  : [null, [ Validators.required]  ],
       terminoEstandarPrincipal  : [null, [] ]
     });
 
@@ -565,12 +741,22 @@ export class ConsultorioComponent implements OnInit {
       terminoEstandarSecundario  : [null, [] ]
     });
 
-    this.tratamientoFarmacologicoForm = this.fb11.group({
+    this.selectFichaMedicaForm  = this.fb11.group({
+      selectOpcionFicha  : [null, [] ],
+      selectAlergeno  : [null, [] ],
+      selectAntecPatologiasProcedimientos  : [null, [] ]
+    });
+
+    this.tratamientoFarmacologicoForm = this.fb12.group({
       prescripcionFarm  : [null, [] ]
     });
 
-    this.tratamientoNoFarmacologicoForm = this.fb12.group({
+    this.tratamientoNoFarmacologicoForm = this.fb13.group({
       descripcionTratamiento  : [null, [] ]
+    });
+
+    this.planTrabajoForm = this.fb14.group({
+      descripcionPlan  : [null, [] ]
     });
   }
 
@@ -607,7 +793,7 @@ export class ConsultorioComponent implements OnInit {
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
       searching: false, 
-      info : false,     
+      info : true,     
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -642,7 +828,7 @@ export class ConsultorioComponent implements OnInit {
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
       searching: false,
-      info : false,
+      info : true,
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -665,7 +851,7 @@ export class ConsultorioComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'antecedenteId'}, {data:'patologiasProcedimientos.descripcion'} ,
-        {data:'tipo'},
+        {data:'tipo'}
       ]
     };
   }
@@ -676,7 +862,7 @@ export class ConsultorioComponent implements OnInit {
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
       searching: false,
-      info : false,
+      info : true,
       language: {
         "lengthMenu": "Mostrar _MENU_ registros",
         "zeroRecords": "No se encontraron resultados",
@@ -699,7 +885,7 @@ export class ConsultorioComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'antecedenteId'}, {data:'patologiasProcedimientos.descripcion'} ,
-        {data:'tipo'},
+        {data:'tipo'}
       ]
     };
   }
@@ -816,10 +1002,76 @@ export class ConsultorioComponent implements OnInit {
         "sProcessing":"Procesando...",
       },
       processing: true,
-      columns: [ {data:'consultaId'}, {data:'fecha', width: "30%"}, 
-      {data:'diagnosticos.diagnosticoId'},
-      {data:'diagnosticos.terminoEstandarPrincipal'},{data:'diagnosticos.terminoEstandarSecundario'},
-      {data:'tratamientos.tratamientoId'}, {data:'areas.codigo'}, {data:'editar'}]      
+      columns: [ {data:'consultaId'}, {data:'fecha'}, 
+      {data:'anamnesis.descripcion'},
+      {data:'diagnosticos.terminoEstandarPrincipal.termino'},
+      {data:'diagnosticos.terminoEstandarSecundario'},
+      {data:'diagnosticos.diagnosticoPrincipal'},      
+      {data:'diagnosticos.diagnosticoSecundario'}, 
+      {data:'tratamientos.descripcionTratamiento'},
+      {data:'areas.codigo'}, {data:'ver'}]      
+    };
+  }
+
+  crearSignosVitales(){
+    this.dtOptionsSignosVitales = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,
+      order: [0,"desc"],
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+      },
+      processing: true,
+      columns: [ {data:'signoVitalId'}, {data:'fecha'}, 
+      {data:'frecuenciaCardiaca'},
+      {data:'frecuenciaRespiratoria'},
+      {data:'presionArterial'},
+      {data:'temperatura'},      
+      {data:'peso'}, 
+      {data:'talla'}, {data:'funcionarios.personas.nombres'}, {data:'ver'}]      
+    };
+  }
+
+  crearFichaMedica(){
+    this.dtOptionsFichaMedica = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,
+      order: [0,"desc"],
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+      },
+      processing: true,
+      columns: [ {data:'#'}, {data:'id'}, {data:'codigo'}, 
+      {data:'descripcion'},
+      {data:'tipo'}, {data:'quitar'}]      
     };
   }
 
@@ -894,6 +1146,17 @@ export class ConsultorioComponent implements OnInit {
         $('#tableMedicamentos').DataTable().destroy();
         this.tratamientosInsumos.splice(i, 1);        
         this.dtTriggerMedicamentos.next();
+        break;
+      }
+    }
+  }
+  quitarFicha(event, ficha: FichaMedicaModelo ) {
+
+    for (let i = 0; i < this.fichaMedica.length; i++) {
+      if( this.fichaMedica[i].id == ficha.id ){
+        $('#tableFichaMedica').DataTable().destroy();
+        this.fichaMedica.splice(i, 1);        
+        this.dtTriggerFichaMedica.next();
         break;
       }
     }
@@ -1027,13 +1290,17 @@ export class ConsultorioComponent implements OnInit {
     $('#tableAlergias').DataTable().destroy();
     this.consultas = [];
     $('#tableConsultas').DataTable().destroy();
+    this.signosVitales = [];
+    $('#tableSignosVitales').DataTable().destroy();
     this.diagnosticoPrimarioForm.reset();
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();
     this.tratamientoNoFarmacologicoForm.reset();
+    this.planTrabajoForm.reset();
     this.terminoEstandarPrincipalSeleccionado = new TerminoEstandarModelo();
     this.terminoEstandarSecundarioSeleccionado = new TerminoEstandarModelo();
     this.alertGeneral=false;
+    this.guardarBtn = true;
   }
 
   limpiarDiagnosticoTratamiento() {
@@ -1041,9 +1308,16 @@ export class ConsultorioComponent implements OnInit {
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();
     this.tratamientoNoFarmacologicoForm.reset();
+    this.selectFichaMedicaForm.reset();
+    this.planTrabajoForm.reset();
+    this.anamnesisForm.reset();
     this.tratamientosInsumos = [];
     $('#tableMedicamentos').DataTable().destroy();
     this.dtTriggerMedicamentos.next();
+    $('#tableFichaMedica').DataTable().destroy();
+    this.dtTriggerFichaMedica.next();
+    this.terminoEstandarPrincipalSeleccionado = new TerminoEstandarModelo();
+    this.terminoEstandarSecundarioSeleccionado = new TerminoEstandarModelo();    
   }
 
   cerrarAlert(){
@@ -1114,9 +1388,10 @@ export class ConsultorioComponent implements OnInit {
     }
     this.pacientesService.getPaciente( paciente.pacienteId )
       .subscribe( (resp: PacienteModelo) => {         
-        this.pacienteForm.patchValue(resp);
+        //this.pacienteForm.patchValue(resp);
         this.buscadorForm.get('cedulaBusqueda').setValue(resp.personas.cedula);
         this.buscadorForm.get('pacienteIdBusqueda').setValue(resp.pacienteId);
+        this.buscarPaciente(event);
       }, e => {
           Swal.fire({
             icon: 'info',
@@ -1131,7 +1406,7 @@ export class ConsultorioComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  guardarAnamnesis(event){
+  /*guardarAnamnesis(event){
     event.preventDefault();
     if ( this.anamnesisForm.invalid ) {
 
@@ -1186,7 +1461,7 @@ export class ConsultorioComponent implements OnInit {
             })
        }
     );
-  }
+  }*/
 
   guardarDiagnosticoTratamiento(event){
     event.preventDefault();
@@ -1205,6 +1480,18 @@ export class ConsultorioComponent implements OnInit {
     if ( this.diagnosticoSecundarioForm.invalid ) {
 
       return Object.values( this.diagnosticoSecundarioForm.controls ).forEach( control => {
+
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
+    }
+
+    if ( this.anamnesisForm.invalid ) {
+
+      return Object.values( this.anamnesisForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -1237,6 +1524,18 @@ export class ConsultorioComponent implements OnInit {
         }
       });
     }
+
+    if ( this.planTrabajoForm.invalid ) {
+
+      return Object.values( this.planTrabajoForm.controls ).forEach( control => {
+
+        if ( control instanceof FormGroup ) {
+          Object.values( control.controls ).forEach( control => control.markAsTouched() );
+        } else {
+          control.markAsTouched();
+        }
+      });
+    }
     
     Swal.fire({
       title: 'Espere',
@@ -1251,16 +1550,32 @@ export class ConsultorioComponent implements OnInit {
     var tratamiento: TratamientoModelo = new TratamientoModelo();
     var procesoDiagnosticoTratamiento: ProcesoDiagnosticoTratamientoModelo = new ProcesoDiagnosticoTratamientoModelo();
     var tratamientoInsumoList: TratamientoInsumoModelo[] = new Array();
+    var fichaMedicaList: FichaMedicaModelo[] = new Array();
     var consulta: ConsultaModelo = new ConsultaModelo();
-    
+    var terminoEstandarPrincipal = new TerminoEstandarModelo();
+    var anamnesis: AnamnesisModelo;
+    var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
+
+    anamnesis = this.anamnesisForm.getRawValue();
+    motivoConsulta.motivoConsultaId = this.anamnesisForm.get('motivoConsultaId').value;
+    anamnesis.motivoConsulta = motivoConsulta;
+    anamnesis.usuarioCreacion = 'admin';
+
+    terminoEstandarPrincipal.id = this.terminoEstandarPrincipalSeleccionado.id;
+    if( !this.terminoEstandarPrincipalSeleccionado.id ){
+      terminoEstandarPrincipal = null;
+    }
     diagnostico.diagnosticoPrincipal = this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').value;
     diagnostico.terminoEstandarSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
-    diagnostico.terminoEstandarPrincipal = this.terminoEstandarPrincipalSeleccionado.id;
+    diagnostico.terminoEstandarPrincipal = terminoEstandarPrincipal;
     diagnostico.terminoEstandarSecundario = this.terminoEstandarSecundarioSeleccionado.id;
+    diagnostico.usuarioCreacion = 'admin';
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
     tratamiento.descripcionTratamiento = this.tratamientoNoFarmacologicoForm.get('descripcionTratamiento').value;
-    
+    tratamiento.descripcionPlanTrabajo = this.planTrabajoForm.get('descripcionPlan').value;
+    tratamiento.usuarioCreacion = 'admin';
+
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
 
@@ -1269,14 +1584,19 @@ export class ConsultorioComponent implements OnInit {
     }    
 
     tratamientoInsumoList = this.tratamientosInsumos;
+    fichaMedicaList = this.fichaMedica;
 
     consulta.pacienteId = this.paciente.pacienteId;
     consulta.areas.areaId = 83;//cambiar por el area del funcionario
+    consulta.funcionarios.funcionarioId = 3; //cambiar por el id del funcionario
+    consulta.usuarioCreacion = 'admin';
 
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     procesoDiagnosticoTratamiento.tratamiento = tratamiento;
     procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
     procesoDiagnosticoTratamiento.consulta = consulta;
+    procesoDiagnosticoTratamiento.anamnesis = anamnesis;
+    procesoDiagnosticoTratamiento.fichaMedicaList = fichaMedicaList;
 
     peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);
     
@@ -1288,6 +1608,7 @@ export class ConsultorioComponent implements OnInit {
       }).then( resp => {       
                 this.limpiarDiagnosticoTratamiento();
                 this.obtenerConsultas();
+                this.obtenerFichaMedica();
       });
 
     }, e => {Swal.fire({
@@ -1307,6 +1628,16 @@ export class ConsultorioComponent implements OnInit {
   get antecedentesRemotosNoValido() {
     return this.anamnesisForm.get('antecedentesRemotos').invalid 
     && this.anamnesisForm.get('antecedentesRemotos').touched
+  }
+
+  get motivoNoValido() {
+    return this.anamnesisForm.get('motivoConsultaId').invalid 
+    && this.anamnesisForm.get('motivoConsultaId').touched
+  }
+
+  get diagnosticoNoValido() {
+    return this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').invalid 
+    && this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').touched
   }
 
 }

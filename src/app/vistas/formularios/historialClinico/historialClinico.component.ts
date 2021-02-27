@@ -17,7 +17,7 @@ import { AreasService } from '../../../servicios/areas.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
-import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
+import { HistorialClinicoPacienteModelo } from 'src/app/modelos/historialClinicoPaciente.modelo';
 
 @Component({
   selector: 'app-historialClinico',

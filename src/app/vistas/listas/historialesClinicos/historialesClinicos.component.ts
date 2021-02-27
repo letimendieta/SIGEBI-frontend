@@ -12,7 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
-import { HistorialClinicoPacienteModelo } from 'src/app/modelos/HistorialClinicoPaciente.modelo';
+import { HistorialClinicoPacienteModelo } from 'src/app/modelos/historialClinicoPaciente.modelo';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 
 @Component({

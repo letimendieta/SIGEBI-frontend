@@ -1,14 +1,14 @@
 <head>
-  <link rel="stylesheet" href="area.component.css">
+  <link rel="stylesheet" href="motivoConsulta.component.css">
 </head>
 
 <body>
-  <h1>&Aacute;rea </h1>
+  <h1>Motivo de Consulta </h1>
   <hr>
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/areas">
+              routerLink="/motivosConsulta">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -18,19 +18,19 @@
   <div class="row animated fadeIn faster">
     <div class="col">
       <div class="card">
-        <h3 class="card-header">Datos &Aacute;rea</h3>
+        <h3 class="card-header">Datos Motivo de Consulta</h3>
         <div class="card-body">
-          <form [formGroup]="areaForm" (ngSubmit)="guardar( )">
+          <form [formGroup]="motivoConsultaForm" (ngSubmit)="guardar( )">
             
-            <!-- Datos Area-->
+            <!-- Datos MotivoConsulta-->
             <div class="row justify-content-center">
               <div class="col-lg-5">
                 <div class="form-group" [hidden]="crear">
                   <label><b>Id</b></label>
                   <input type="text"
                         class="form-control"
-                        placeholder="areaId"
-                        formControlName="areaId" 
+                        placeholder="motivoConsultaId"
+                        formControlName="motivoConsultaId" 
                         name="id">
                   <small class="form-text text-muted">Este campo es autogenerado</small>
                 </div>
@@ -126,7 +126,6 @@
               &nbsp;&nbsp;
               <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
             </div>
-
           </form>
         </div>
       </div>

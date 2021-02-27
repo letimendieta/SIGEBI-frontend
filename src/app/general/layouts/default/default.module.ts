@@ -35,7 +35,11 @@ import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesC
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
+import { MotivosConsultaComponent } from 'src/app/vistas/listas/motivosConsulta/motivosConsulta.component';
+import { MotivoConsultaComponent } from 'src/app/vistas/formularios/motivoConsulta/motivoConsulta.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
+import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signoVital.component';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatDividerModule} from '@angular/material/divider';
@@ -49,6 +53,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -87,7 +92,11 @@ import {MatIconModule} from '@angular/material/icon';
     HistorialesClinicosComponent,
     HistorialClinicoComponent,
     ConsultorioComponent,
-    EnfermeriaComponent
+    EnfermeriaComponent,
+    MotivosConsultaComponent,
+    MotivoConsultaComponent,
+    SignosVitalesComponent,
+    SignoVitalComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +112,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatFormFieldModule, 
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatAutocompleteModule
   ],
   providers: [
     DashboardService
