@@ -11,7 +11,6 @@ import { AlergiasService } from '../../../servicios/alergias.service';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
 import { InsumosService } from '../../../servicios/insumos.service';
 import { StocksService } from '../../../servicios/stocks.service';
-import { TerminoEstandarService } from '../../../servicios/terminoEstandar.service';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PersonaModelo } from 'src/app/modelos/persona.modelo';
@@ -19,7 +18,6 @@ import { AntecedenteModelo } from 'src/app/modelos/antecedente.modelo';
 import { AlergiaModelo } from 'src/app/modelos/alergia.modelo';
 import { HistorialClinicoModelo } from 'src/app/modelos/historialClinico.modelo';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
-import { TerminoEstandarModelo } from 'src/app/modelos/terminoEstandar.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { AnamnesisModelo } from 'src/app/modelos/anamnesis.modelo';
 import { Observable, Subject } from 'rxjs';
@@ -40,6 +38,8 @@ import { FichaMedicaModelo } from 'src/app/modelos/fichaMedica.modelo';
 import { AlergenosService } from 'src/app/servicios/alergenos.service';
 import { AlergenoModelo } from 'src/app/modelos/alergeno.modelo';
 import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasProcedimientos.service';
+import { EnfermedadCie10Modelo } from 'src/app/modelos/enfermedadCie10.modelo';
+import { EnfermedadesCie10Service } from 'src/app/servicios/enfermedadesCie10.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -58,7 +58,7 @@ export class ConsultorioComponent implements OnInit {
   buscadorModalForm: FormGroup;
   stockForm: FormGroup;
   buscadorStockForm: FormGroup;
-  buscadorTerminoEstandarForm: FormGroup;
+  buscadorEnfermedadesCie10Form: FormGroup;
   anamnesisForm: FormGroup;
   diagnosticoPrimarioForm: FormGroup;
   diagnosticoSecundarioForm: FormGroup;
@@ -80,9 +80,9 @@ export class ConsultorioComponent implements OnInit {
   listaMotivosConsulta: MotivoConsultaModelo;
   stocks: StockModelo[] = [];
   consultas: ConsultaModelo[] = new Array();
-  terminosEstandar: TerminoEstandarModelo[] = [];
-  terminoEstandarPrincipalSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
-  terminoEstandarSecundarioSeleccionado: TerminoEstandarModelo = new TerminoEstandarModelo();
+  enfermedadesCie10: EnfermedadCie10Modelo[] = [];
+  enfermedadCie10PrincipalSeleccionada: EnfermedadCie10Modelo = new EnfermedadCie10Modelo();
+  enfermedadCie10SecundariaSeleccionada: EnfermedadCie10Modelo = new EnfermedadCie10Modelo();
   tratamientosInsumos: TratamientoInsumoModelo[] = [];
   signosVitales: SignoVitalModelo[] = [];
   fichaMedica: FichaMedicaModelo[] = [];
@@ -101,7 +101,7 @@ export class ConsultorioComponent implements OnInit {
   dtOptionsAntecedentesFamiliares: any = {};
   dtOptionsAlergias: any = {};
   dtOptionsStock: any = {};  
-  dtOptionsTerminoEstandar: any = {};
+  dtOptionsEnfermedadCie10: any = {};
   dtOptionsConsultas: any = {};
   dtOptionsMedicamentos: any = {};
   dtOptionsSignosVitales: any = {};
@@ -131,7 +131,7 @@ export class ConsultorioComponent implements OnInit {
                private modalService: NgbModal,
                private insumosService: InsumosService,
                private stockService: StocksService,
-               private terminoEstandarService: TerminoEstandarService,
+               private enfermedadesCie10Service: EnfermedadesCie10Service,
                private consultasService: ConsultasService,
                private signosVitalesService: SignosVitalesService,
                private uploadService: UploadFileService,
@@ -387,6 +387,9 @@ export class ConsultorioComponent implements OnInit {
   obtenerAntecedentes() {
     var antecedente = new AntecedenteModelo();
 
+    this.antecedentes = [];
+    $('#tableAntecedentes').DataTable().destroy();
+
     antecedente.pacienteId = this.paciente.pacienteId;
     antecedente.tipo = "P";//antecedentes personales
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
@@ -407,6 +410,9 @@ export class ConsultorioComponent implements OnInit {
   obtenerAntecedentesFamiliares() {
     var antecedente = new AntecedenteModelo();
 
+    this.antecedentesFamiliares = [];
+    $('#tableAntecedentesFamiliares').DataTable().destroy();
+
     antecedente.pacienteId = this.paciente.pacienteId;
     antecedente.tipo = "F";//antecedentes familiares
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
@@ -425,6 +431,9 @@ export class ConsultorioComponent implements OnInit {
 
   obtenerAlergias() {
     var alergias = new AlergiaModelo();
+
+    this.alergias = [];
+    $('#tableAlergias').DataTable().destroy();
 
     alergias.pacienteId = this.paciente.pacienteId;
 
@@ -718,10 +727,10 @@ export class ConsultorioComponent implements OnInit {
       fechaVencimiento: [null, [] ]
     });
     
-    this.buscadorTerminoEstandarForm = this.fb7.group({
-      id  : [null, [] ],
-      codigoUnico  : [null, [] ],
-      termino  : [null, [] ]
+    this.buscadorEnfermedadesCie10Form = this.fb7.group({      
+      enfermedadCie10Id  : [null, [] ],
+      codigo  : [null, [] ],
+      descripcion  : [null, [] ],
     });
     
     this.anamnesisForm = this.fb8.group({
@@ -953,7 +962,7 @@ export class ConsultorioComponent implements OnInit {
   }
 
   crearTablaModelTerminoEstandar(){
-    this.dtOptionsTerminoEstandar = {
+    this.dtOptionsEnfermedadCie10 = {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
@@ -1004,8 +1013,8 @@ export class ConsultorioComponent implements OnInit {
       processing: true,
       columns: [ {data:'consultaId'}, {data:'fecha'}, 
       {data:'anamnesis.descripcion'},
-      {data:'diagnosticos.terminoEstandarPrincipal.termino'},
-      {data:'diagnosticos.terminoEstandarSecundario'},
+      {data:'diagnosticos.enfermedadCie10Primaria.codigo'},
+      {data:'diagnosticos.enfermedadCie10Secundaria.codigo'},
       {data:'diagnosticos.diagnosticoPrincipal'},      
       {data:'diagnosticos.diagnosticoSecundario'}, 
       {data:'tratamientos.descripcionTratamiento'},
@@ -1185,18 +1194,19 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  buscadorTerminoEstandar(event) {
+  buscadorEnfermedadCie10(event) {
     event.preventDefault();
-    var buscador = new TerminoEstandarModelo();
-    buscador = this.buscadorTerminoEstandarForm.getRawValue();
+    var buscador = new EnfermedadCie10Modelo();
 
-    if( !buscador.id && !buscador.codigoUnico && !buscador.termino ){
+    buscador = this.buscadorEnfermedadesCie10Form.getRawValue();
+
+    if( !buscador.enfermedadCie10Id && !buscador.codigo && !buscador.descripcion ){
       this.alert=true;
       return;
     }
-    this.terminoEstandarService.buscarTerminoEstandarFiltrosTabla(buscador)
+    this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
     .subscribe( resp => {
-      this.terminosEstandar = resp;
+      this.enfermedadesCie10 = resp;
     }, e => {
       Swal.fire({
         icon: 'info',
@@ -1240,15 +1250,15 @@ export class ConsultorioComponent implements OnInit {
       );
   }
 
-  selectTerminoEstandar(event, terminoEstandar: TerminoEstandarModelo){
+  selectEnfermedadCie10(event, enfermedadCie10: EnfermedadCie10Modelo){
     this.modalService.dismissAll();
 
-    this.terminoEstandarService.getTerminoEstandar( terminoEstandar.id )
-      .subscribe( (resp: TerminoEstandarModelo) => {
+    this.enfermedadesCie10Service.getEnfermedadCie10( enfermedadCie10.enfermedadCie10Id )
+      .subscribe( (resp: EnfermedadCie10Modelo) => {
         if ( this.tipoDiagnostico == "P" ){
-          this.terminoEstandarPrincipalSeleccionado = resp;
+          this.enfermedadCie10PrincipalSeleccionada = resp;
         }else if ( this.tipoDiagnostico == "S" ){
-          this.terminoEstandarSecundarioSeleccionado = resp;
+          this.enfermedadCie10SecundariaSeleccionada = resp;
         }
         this.tipoDiagnostico = null;
       }, e => {
@@ -1272,8 +1282,8 @@ export class ConsultorioComponent implements OnInit {
 
   limpiarModalTerminoEstandar(event) {
     event.preventDefault();
-    this.buscadorTerminoEstandarForm.reset();
-    this.terminosEstandar = [];
+    this.buscadorEnfermedadesCie10Form.reset();
+    this.enfermedadesCie10 = [];
   }
 
   limpiar(event){
@@ -1297,8 +1307,8 @@ export class ConsultorioComponent implements OnInit {
     this.tratamientoFarmacologicoForm.reset();
     this.tratamientoNoFarmacologicoForm.reset();
     this.planTrabajoForm.reset();
-    this.terminoEstandarPrincipalSeleccionado = new TerminoEstandarModelo();
-    this.terminoEstandarSecundarioSeleccionado = new TerminoEstandarModelo();
+    this.enfermedadCie10PrincipalSeleccionada = new EnfermedadCie10Modelo();
+    this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();
     this.alertGeneral=false;
     this.guardarBtn = true;
   }
@@ -1316,8 +1326,8 @@ export class ConsultorioComponent implements OnInit {
     this.dtTriggerMedicamentos.next();
     $('#tableFichaMedica').DataTable().destroy();
     this.dtTriggerFichaMedica.next();
-    this.terminoEstandarPrincipalSeleccionado = new TerminoEstandarModelo();
-    this.terminoEstandarSecundarioSeleccionado = new TerminoEstandarModelo();    
+    this.enfermedadCie10PrincipalSeleccionada = new EnfermedadCie10Modelo();
+    this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();    
   }
 
   cerrarAlert(){
@@ -1372,12 +1382,12 @@ export class ConsultorioComponent implements OnInit {
      size: 'lg'
     });
    
-    this.buscadorTerminoEstandarForm.patchValue({
-      id  : null,
-      codigoUnico  : null,
-      termino  : null
+    this.buscadorEnfermedadesCie10Form.patchValue({
+      enfermedadCie10Id  : null,
+      codigo  : null,
+      descripcion  : null
     });
-    this.terminosEstandar = [];
+    this.enfermedadesCie10 = [];
     this.alert=false;
   }
 
@@ -1552,7 +1562,7 @@ export class ConsultorioComponent implements OnInit {
     var tratamientoInsumoList: TratamientoInsumoModelo[] = new Array();
     var fichaMedicaList: FichaMedicaModelo[] = new Array();
     var consulta: ConsultaModelo = new ConsultaModelo();
-    var terminoEstandarPrincipal = new TerminoEstandarModelo();
+    //var enfermedadCie10Principal = new EnfermedadCie10Modelo();
     var anamnesis: AnamnesisModelo;
     var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
 
@@ -1561,14 +1571,14 @@ export class ConsultorioComponent implements OnInit {
     anamnesis.motivoConsulta = motivoConsulta;
     anamnesis.usuarioCreacion = 'admin';
 
-    terminoEstandarPrincipal.id = this.terminoEstandarPrincipalSeleccionado.id;
-    if( !this.terminoEstandarPrincipalSeleccionado.id ){
-      terminoEstandarPrincipal = null;
-    }
+    //enfermedadCie10Principal.enfermedadCie10Id = this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id;
+    /*if( !this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id ){
+      enfermedadCie10Principal = null;
+    }*/
     diagnostico.diagnosticoPrincipal = this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').value;
-    diagnostico.terminoEstandarSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
-    diagnostico.terminoEstandarPrincipal = terminoEstandarPrincipal;
-    diagnostico.terminoEstandarSecundario = this.terminoEstandarSecundarioSeleccionado.id;
+    diagnostico.diagnosticoSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
+    diagnostico.enfermedadCie10PrimariaId = this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id;
+    diagnostico.enfermedadCie10SecundariaId = this.enfermedadCie10SecundariaSeleccionada.enfermedadCie10Id;
     diagnostico.usuarioCreacion = 'admin';
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
