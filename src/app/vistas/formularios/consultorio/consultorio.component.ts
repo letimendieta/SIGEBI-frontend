@@ -40,6 +40,8 @@ import { AlergenoModelo } from 'src/app/modelos/alergeno.modelo';
 import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasProcedimientos.service';
 import { EnfermedadCie10Modelo } from 'src/app/modelos/enfermedadCie10.modelo';
 import { EnfermedadesCie10Service } from 'src/app/servicios/enfermedadesCie10.service';
+import { ReporteModelo } from 'src/app/modelos/reporte.modelo';
+import { report } from 'process';
 
 @Component({
   selector: 'app-consultorio',
@@ -1565,6 +1567,7 @@ export class ConsultorioComponent implements OnInit {
     //var enfermedadCie10Principal = new EnfermedadCie10Modelo();
     var anamnesis: AnamnesisModelo;
     var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
+    var reporteModelo: ReporteModelo = new ReporteModelo;
 
     anamnesis = this.anamnesisForm.getRawValue();
     motivoConsulta.motivoConsultaId = this.anamnesisForm.get('motivoConsultaId').value;
@@ -1601,6 +1604,7 @@ export class ConsultorioComponent implements OnInit {
     consulta.funcionarios.funcionarioId = 3; //cambiar por el id del funcionario
     consulta.usuarioCreacion = 'admin';
 
+
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     procesoDiagnosticoTratamiento.tratamiento = tratamiento;
     procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
@@ -1610,15 +1614,29 @@ export class ConsultorioComponent implements OnInit {
 
     peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);
     
-    peticion.subscribe( resp => {
 
+    peticion.subscribe( resp => {
+              reporteModelo.consultaid = String(resp.consulta['consultaId']);
+              reporteModelo.format="pdf";
+              
       Swal.fire({
                 icon: 'success',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Imprimir Receta',
                 text: resp.mensaje,
-      }).then( resp => {       
-                this.limpiarDiagnosticoTratamiento();
+      }).then( resp => {  
+        if(resp.value){  
+
+     
+           this.imprimirReceta(reporteModelo);
+
+                
+               this.limpiarDiagnosticoTratamiento();
                 this.obtenerConsultas();
                 this.obtenerFichaMedica();
+        }
       });
 
     }, e => {Swal.fire({
@@ -1648,6 +1666,31 @@ export class ConsultorioComponent implements OnInit {
   get diagnosticoNoValido() {
     return this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').invalid 
     && this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').touched
+  }
+
+  imprimirReceta(reporte: ReporteModelo){
+
+    
+   
+    this.consultasService.imprimirReceta(reporte)
+    .subscribe( resp => {
+      Swal.fire({
+        icon: 'success',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+        text: 'Receta Generada',
+      })
+    
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      this.cargando = false;
+    });
   }
 
 }

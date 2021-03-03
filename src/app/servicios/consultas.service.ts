@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConsultaModelo } from '../modelos/consulta.modelo';
+import { ReporteModelo } from '../modelos/reporte.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
+
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +99,12 @@ export class ConsultasService {
     });
 
     return consultas;
+
+  }
+
+  imprimirReceta( reporte: ReporteModelo ) {
+
+    return this.http.post(`${ this.url }/consultas/reportes`, reporte);
 
   }
 }
