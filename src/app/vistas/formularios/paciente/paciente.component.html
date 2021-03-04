@@ -243,6 +243,14 @@
                                                             placeholder="Fecha Nacimiento">
                                                 </div>
                                                 <div class="form-group">
+                                                      <label><b>Lugar nacimiento</b></label>
+                                                      <input type="text"
+                                                            class="form-control"
+                                                            formControlName="lugarNacimiento"
+                                                            name="lugarNacimiento"
+                                                            placeholder="Lugar Nacimiento">
+                                                </div>
+                                                <div class="form-group">
                                                       <label><b>Edad</b></label>
                                                       <input type="number" class="form-control" formControlName="edad"
                                                             name="edad" placeholder="Edad" (focus)="ageCalculator()"
@@ -262,7 +270,19 @@
                                                       <small *ngIf="correoNoValido" class="text-danger">
                                                             Ingrese el correo
                                                       </small>
+                                                </div> 
+                                                
+                                                <div class="form-group">
+                                                      <label><b>Profesi&oacute;n</b></label>
+                                                      <input type="text"
+                                                                  class="form-control"
+                                                                  formControlName="profesion"
+                                                                  name="profesion"
+                                                                  placeholder="Profesi&oacute;n"> 
                                                 </div>
+                                          </div>
+
+                                          <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Sexo</b></label>
                                                       <select ui-select2 class="form-control input-sm"
@@ -274,9 +294,6 @@
                                                             </option>
                                                       </select>
                                                 </div>
-                                          </div>
-
-                                          <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Estado Civil</b></label>
                                                       <select ui-seldivect2 placeholder="Estado Civil"

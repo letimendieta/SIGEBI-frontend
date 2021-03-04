@@ -657,6 +657,7 @@ export class ConsultorioComponent implements OnInit {
         nombres  : [null, [] ],
         apellidos: [null, [] ],
         fechaNacimiento: [null, [] ],
+        lugarNacimiento: [null, [] ],
         edad: [null, [] ],
         direccion: [null, [] ],
         sexo: [null, [] ],
@@ -1400,7 +1401,6 @@ export class ConsultorioComponent implements OnInit {
     }
     this.pacientesService.getPaciente( paciente.pacienteId )
       .subscribe( (resp: PacienteModelo) => {         
-        //this.pacienteForm.patchValue(resp);
         this.buscadorForm.get('cedulaBusqueda').setValue(resp.personas.cedula);
         this.buscadorForm.get('pacienteIdBusqueda').setValue(resp.pacienteId);
         this.buscarPaciente(event);

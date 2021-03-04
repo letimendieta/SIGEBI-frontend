@@ -5,6 +5,7 @@ export class SignoVitalModelo {
 
     signoVitalId: number;      
     fecha: Date;
+    pulso: number;
     frecuenciaCardiaca: number;
     frecuenciaRespiratoria: number;
     presionSistolica: number;
@@ -12,6 +13,8 @@ export class SignoVitalModelo {
     temperatura: number;
     peso: number;
     talla: number;
+    indiceMasaCorporal: number;
+    ciaAbdominal: number;
     notas: string;  
     fechaCreacion: Date;
     usuarioCreacion: string;

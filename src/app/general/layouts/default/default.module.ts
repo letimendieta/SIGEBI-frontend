@@ -41,6 +41,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
 import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signoVital.component';
 import { RouterModule } from '@angular/router';
+import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
+import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatDividerModule} from '@angular/material/divider';
 import { SharedModule } from 'src/app/general/shared.module';
@@ -91,6 +93,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     InsumoComponent,
     HistorialesClinicosComponent,
     HistorialClinicoComponent,
+    EnfermedadesCie10Component,
+    EnfermedadCie10Component,
     ConsultorioComponent,
     EnfermeriaComponent,
     MotivosConsultaComponent,

@@ -39,6 +39,8 @@ import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesC
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
 import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signoVital.component';
+import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
+import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 
@@ -185,6 +187,13 @@ const routes: Routes = [
   },{
     path: 'signoVital/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: SignoVitalComponent
+  },
+  {
+    path: 'enfermedadesCie10',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: EnfermedadesCie10Component
+  },{
+    path: 'enfermedadCie10/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: EnfermedadCie10Component
   }
   ]
 }];

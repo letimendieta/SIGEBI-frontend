@@ -212,6 +212,9 @@
                     <div class="col"><b>Fecha nacimiento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value}}</div>
                     <div class="w-100"></div>
+                    <div class="col"><b>Lugar nacimiento:</b></div>
+                    <div class="col">{{pacienteForm.get('personas').get('lugarNacimiento').value}}</div>
+                    <div class="w-100"></div>
                     <div class="col"><b>Edad:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('edad').value}}</div>
                     <div class="w-100"></div>
@@ -754,7 +757,7 @@
                   </div>
                 </div>
                 <div class="card-body collapse show" id="collapseFichas">
-                  <label><b>Antecedentes de la enfermedad actual</b></label>
+                  <label><b>Antecedentes de la Enfermedad Actual (AEA) </b></label>
                   <textarea class="form-control" id="antecedentes" 
                     formControlName="antecedentes" 
                     [class.is-invalid]="antecedentesNoValido" rows="6">
@@ -764,7 +767,7 @@
                   </small>
                 </div>
                 <div class="card-body collapse show" id="collapseFichas">
-                  <label><b>Antecedentes remotos de la enfermedad actual</b></label>
+                  <label><b> Antecedentes Remotos de la Enfermedad Actual (AREA)</b></label>
                   <textarea class="form-control" id="antecedentesRemotos" 
                     formControlName="antecedentesRemotos" 
                     [class.is-invalid]="antecedentesRemotosNoValido" rows="6">

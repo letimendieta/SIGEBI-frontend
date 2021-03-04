@@ -14,6 +14,7 @@ export class PersonaModelo {
     email: string;
     estadoCivil:string;
     fechaNacimiento: Date;
+    lugarNacimiento: string;
     nacionalidad: string;
     sexo: string;
     telefono: string;

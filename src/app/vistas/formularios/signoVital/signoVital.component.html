@@ -328,27 +328,9 @@
                                     <hr>         
                                                                  
                                     <div class="row justify-content-center">
-                                          <div class="col-lg-7"> 
+                                          <div class="col-lg-7">
                                                 <div class="form-group row">
-                                                      <label class="col-sm-4 col-form-label"><b>Frecuencia card&iacute;aca</b></label>
-                                                      <div class="col-sm-3">
-                                                            <input type="number" placeholder='0'
-                                                                  class="form-control"
-                                                                  formControlName="frecuenciaCardiaca">                                                            
-                                                      </div>
-                                                      (lat/min)
-                                                </div>
-                                                <div class="form-group row">
-                                                      <label class="col-sm-4 col-form-label"><b>Frecuencia respiratoria</b></label>
-                                                      <div class="col-sm-3">
-                                                            <input type="number" placeholder='0'
-                                                                  class="form-control"
-                                                                  formControlName="frecuenciaRespiratoria">
-                                                      </div>
-                                                      (resp/min)
-                                                </div>
-                                                <div class="form-group row">
-                                                      <label class="col-sm-4 col-form-label"><b>Presi&oacute;n arterial</b></label>
+                                                      <label class="col-sm-4 col-form-label"><b>Presi&oacute;n Arterial (PA)</b></label>
                                                       <div class="col-sm-2">
                                                             <input type="number" placeholder='0'
                                                                   class="form-control"
@@ -362,6 +344,33 @@
                                                       </div>
                                                       (mmHg)
                                                 </div>
+                                                <div class="form-group row">
+                                                      <label class="col-sm-4 col-form-label"><b>Pulso </b></label>
+                                                      <div class="col-sm-3">
+                                                            <input type="number" placeholder='0'
+                                                                  class="form-control"
+                                                                  formControlName="pulso">                                                            
+                                                      </div>
+                                                      (lat/min)
+                                                </div>
+                                                <div class="form-group row">
+                                                      <label class="col-sm-4 col-form-label"><b>Frecuencia respiratoria (FR)</b></label>
+                                                      <div class="col-sm-3">
+                                                            <input type="number" placeholder='0'
+                                                                  class="form-control"
+                                                                  formControlName="frecuenciaRespiratoria">
+                                                      </div>
+                                                      (resp/min)
+                                                </div> 
+                                                <div class="form-group row">
+                                                      <label class="col-sm-4 col-form-label"><b>Frecuencia card&iacute;aca (FC)</b></label>
+                                                      <div class="col-sm-3">
+                                                            <input type="number" placeholder='0'
+                                                                  class="form-control"
+                                                                  formControlName="frecuenciaCardiaca">                                                            
+                                                      </div>
+                                                      (lat/min)
+                                                </div>                                                                                               
                                                 <div class="form-group row">
                                                       <label class="col-sm-4 col-form-label"><b>Temperatura</b></label>
                                                       <div class="col-sm-3">
@@ -387,8 +396,26 @@
                                                                   class="form-control"
                                                                   formControlName="talla">
                                                       </div>
-                                                      (m)
-                                                </div>                                                  
+                                                      (cm)
+                                                </div>  
+                                                <div class="form-group row">
+                                                      <label class="col-sm-4 col-form-label"><b>&Iacute;ndice de Masa Corporal (IMC)</b></label>
+                                                      <div class="col-sm-3">
+                                                            <input type="number" step='0.01' value='0.00' placeholder='0.00'
+                                                                  class="form-control"
+                                                                  formControlName="indiceMasaCorporal">
+                                                      </div>
+                                                      (Kg/m2)
+                                                </div>
+                                                <div class="form-group row">
+                                                      <label class="col-sm-4 col-form-label"><b>Circunferencia Abdominal</b></label>
+                                                      <div class="col-sm-3">
+                                                            <input type="number" step='0.01' value='0.00' placeholder='0.00'
+                                                                  class="form-control"
+                                                                  formControlName="ciaAbdominal">
+                                                      </div>
+                                                      (cm)
+                                                </div>                                                
                                           </div>
                                     </div>
 
