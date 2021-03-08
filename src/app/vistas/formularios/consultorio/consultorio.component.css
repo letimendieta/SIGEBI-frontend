@@ -1,2 +1,6 @@
 @import './../../formularios/css/formularios.css';
 
+.detalleConsulta {
+    font-size: 120%;
+    line-height : 25px;
+}

@@ -660,28 +660,38 @@
                     <tr  class="table-primary">
                       <th>Id</th>
                       <th>Fecha</th>
-                      <th>Motivo Consulta</th>
+                      <th>Motivo consulta</th>
                       <th>CIE principal</th>
                       <th>CIE secundario</th>
-                      <th>Diagn&oacute;stico Principal</th>                      
-                      <th>Diagn&oacute;stico Secundario</th> 
-                      <th>Tratamiento</th>
-                      <th>Cod. &Aacute;rea</th>
-                      <th>Ver detalles</th>       
+                      <!--th>Diagn&oacute;stico principal</th-->                      
+                      <!--th>Diagn&oacute;stico secundario</th--> 
+                      <th>Funcionario</th>
+                      <th>Cod. &aacute;rea</th>
+                      <th>Ver detalles</th>
+                      <th>Imprimir receta</th>       
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let consulta of consultas">                                                                                                
-                          <td>{{ consulta.consultaId }}</td>
-                          <td>{{ consulta.fecha | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
-                          <td>{{ consulta.anamnesis.motivoConsulta.descripcion }}</td>
-                          <td>{{ consulta.diagnosticos.enfermedadCie10Primaria.codigo }}</td>
-                          <td>{{ consulta.diagnosticos.enfermedadCie10Secundaria.codigo }} </td>
-                          <td>{{ consulta.diagnosticos.diagnosticoPrincipal }}</td>                          
-                          <td>{{ consulta.diagnosticos.diagnosticoSecundario }}</td> 
-                          <td>{{ consulta.tratamientos.descripcionTratamiento }}</td>
-                          <td>{{ consulta.areas.codigo }}</td>                              
-                          <td></td>                                                      
+                      <td>{{ consulta.consultaId }}</td>
+                      <td>{{ consulta.fecha | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
+                      <td>{{ consulta.anamnesis.motivoConsulta.descripcion }}</td>
+                      <td>{{ consulta.diagnosticos.enfermedadCie10Primaria.descripcion }}</td>
+                      <td>{{ consulta.diagnosticos.enfermedadCie10Secundaria.descripcion }} </td>
+                      <!--td>{{ consulta.diagnosticos.diagnosticoPrincipal }}</td-->                          
+                      <!--td>{{ consulta.diagnosticos.diagnosticoSecundario }}</td--> 
+                      <td>{{ consulta.funcionarios.personas.nombres }} {{ consulta.funcionarios.personas.apellidos }}</td>
+                      <td>{{ consulta.areas.codigo }}</td>                              
+                      <td (click)="openModalDetalleConsulta(editProfileModalDetalleConsulta, consulta)">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                          <button type="button" class="btn btn-primary">
+                            <i class="fas fa-eye"></i></button>
+                      </td>  
+                      <td (click)="detalleConsultaImprimirReceta(consulta.consultaId)">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                          <button type="button" class="btn btn-success">
+                            <i class="fas fa-file-medical"></i></button>
+                      </td>                                                    
                     </tr>
                   </tbody>
                   <tbody *ngIf="cargando">
@@ -689,21 +699,143 @@
                       <td></td>
                       <td></td>
                       <td></td>
-                      <td><h4 class="alert-heading">Cargando</h4>
-                            <p>
-                                  <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                            </p>
-                            <p class="mb-0">
-                                  Espere por favor
-                            </p>
+                      <td>
+                        <h4 class="alert-heading">Cargando</h4>
+                        <p>
+                              <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                        </p>
+                        <p class="mb-0">
+                              Espere por favor
+                        </p>
                       </td>
                       <td></td>
                       <td></td>
                       <td></td>
-                      <td></td>
+                      <td></td>                     
                   </tbody>                                                                                    
                 </table>
               </div>
+              <!--Modal detalle de consulta-->
+              <ng-template #editProfileModalDetalleConsulta let-modal>
+                <div class="modal-header detalleConsulta">
+                      <h3 class="modal-title" id="editProfileLabelStock">Detalle consulta</h3>
+                      <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span> 
+                      </button>
+                </div>                
+                <div class="modal-body">
+                  <!-- Consulta-->
+                  <div class="row justify-content-center detalleConsulta">
+                    <div class="col-lg-5">
+                      <div class="container">              
+                        <div class="row">                
+                          <div class="col"><b>Consulta id:</b></div>
+                          <div class="col">{{detalleConsultaForm.get('consultaId').value}}</div>
+                          <div class="w-100"></div>                          
+                          <div class="col"><b>Funcionario:</b></div>
+                          <div class="col">{{detalleConsultaForm.get('funcionarios').get('personas').get('nombres').value}}</div>
+                          <div class="w-100"></div>
+                          <div class="col"><b></b></div>
+                          <div class="col">{{detalleConsultaForm.get('funcionarios').get('personas').get('apellidos').value}}</div>
+                          
+                        </div>
+                      </div>              
+                    </div>
+                    <div class="col-lg-5">
+                      <div class="container">
+                        <div class="row">   
+                          <div class="col"><b>Fecha consulta:</b></div>
+                          <div class="col">{{detalleConsultaForm.get('fecha').value  | date : 'dd-MM-yyyy HH:mm:ss'}}</div>
+                          <div class="w-100"></div>  
+                          <div class="col"><b>&Aacute;rea:</b></div>
+                          <div class="col">{{detalleConsultaForm.get('areas').get('descripcion').value}}</div>
+                          <div class="w-100"></div>           
+                          
+                        </div>   
+                      </div>         
+                    </div>                  
+                    
+                  </div>
+                  <hr>
+                  <div class="detalleConsulta">
+                    <!--div class="col-lg-5"-->
+                    <div class="card border-dark">  
+                      <div class="card-header">Anamnesis</div>
+                      <div class="card-body text-dark">           
+                        <div class="row">   
+                          <div class="col"><b>Motivo consulta:</b></div>
+                          <div class="w-100"></div> 
+                          <div class="col">{{detalleConsultaForm.get('anamnesis').get('motivoConsulta').get('descripcion').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b>Antecedentes de la Enfermedad Actual (AEA):</b></div>
+                          <div class="w-100"></div> 
+                          <div class="col">{{detalleConsultaForm.get('anamnesis').get('antecedentes').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b>Antecedentes Remotos de la Enfermedad Actual (AREA):</b></div>
+                          <div class="w-100"></div> 
+                          <div class="col">{{detalleConsultaForm.get('anamnesis').get('antecedentesRemotos').value}}</div>
+                          <div class="w-100"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="card border-dark">  
+                      <div class="card-header">Diagn&oacute;stico</div>
+                      <div class="card-body text-dark">           
+                        <div class="row">
+                          <div class="col"><b><u>Principal</u></b></div>
+                          <div class="w-100"></div>
+                          <div class="col"><b>CIE: </b>{{detalleConsultaForm.get('diagnosticos').get('enfermedadCie10Primaria').get('descripcion').value}}</div>
+                          <div class="w-100"></div>
+                          <div class="col">{{detalleConsultaForm.get('diagnosticos').get('diagnosticoPrincipal').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b><u>Secundario</u></b></div>
+                          <div class="w-100"></div>
+                          <div class="col"><b>CIE: </b>{{detalleConsultaForm.get('diagnosticos').get('enfermedadCie10Secundaria').get('descripcion').value}}</div>
+                          <div class="w-100"></div>
+                          <div class="col">{{detalleConsultaForm.get('diagnosticos').get('diagnosticoSecundario').value}}</div>
+                          <div class="w-100"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="card border-dark">  
+                      <div class="card-header">Tratamiento</div>
+                      <div class="card-body text-dark">           
+                        <div class="row">        
+                          <div class="col"><b>Prescripci&oacute;n farmacol&oacute;gica:</b></div>
+                          <div class="w-100"></div>
+                          <div class="col">{{detalleConsultaForm.get('tratamientos').get('prescripcionFarm').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b>Medicamentos:</b></div>
+                          <div class="w-100"></div>
+                          <div class="col">{{detalleConsultaForm.get('medicamentos').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b>Prescripci&oacute;n no farmacol&oacute;gica:</b></div>
+                          <div class="w-100"></div>                         
+                          <div class="col">{{detalleConsultaForm.get('tratamientos').get('descripcionTratamiento').value}}</div>
+                          <div class="w-100"></div>
+                          <br>
+                          <div class="col"><b>Plan de trabajo:</b></div>
+                          <div class="w-100"></div>                         
+                          <div class="col">{{detalleConsultaForm.get('tratamientos').get('descripcionPlanTrabajo').value}}</div>
+                          <div class="w-100"></div>
+                        </div>
+                      </div>
+                    </div>              
+                    <hr>
+                  </div>
+                  <br>
+                  <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                  </div>
+                </div>
+              </ng-template>
             </div>
           </div>
           <br>

@@ -42,6 +42,7 @@ import { EnfermedadCie10Modelo } from 'src/app/modelos/enfermedadCie10.modelo';
 import { EnfermedadesCie10Service } from 'src/app/servicios/enfermedadesCie10.service';
 import { ReporteModelo } from 'src/app/modelos/reporte.modelo';
 import { report } from 'process';
+import { TratamientosInsumosService } from 'src/app/servicios/tratamientosInsumos.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -67,7 +68,8 @@ export class ConsultorioComponent implements OnInit {
   selectFichaMedicaForm: FormGroup;
   planTrabajoForm: FormGroup;
   tratamientoFarmacologicoForm: FormGroup;
-  tratamientoNoFarmacologicoForm: FormGroup;  
+  tratamientoNoFarmacologicoForm: FormGroup;
+  detalleConsultaForm: FormGroup;
   pacientes: PacienteModelo[] = [];
   patologiasProcedimientos: PatologiaProcedimientoModelo[] = [];
   antecedentes: AntecedenteModelo[] = [];
@@ -139,6 +141,7 @@ export class ConsultorioComponent implements OnInit {
                private uploadService: UploadFileService,
                private motivosConsultaService: MotivosConsultaService,
                private procesoDiagnosticoTratamientoService: ProcesoDiagnosticoTratamientosService,
+               private tratamientosInsumosService: TratamientosInsumosService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
                private fb3: FormBuilder,
@@ -152,7 +155,8 @@ export class ConsultorioComponent implements OnInit {
                private fb11: FormBuilder,
                private fb12: FormBuilder,
                private fb13: FormBuilder,
-               private fb14: FormBuilder) { 
+               private fb14: FormBuilder,
+               private fb15: FormBuilder) { 
     this.crearFormulario();
     this.ngOnInit();
   }              
@@ -293,7 +297,7 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      //this.cargando = false;
+      Swal.close();
     });   
 
     /*this.pacientesService.buscarPacientesFiltros( Number(id) )
@@ -770,6 +774,93 @@ export class ConsultorioComponent implements OnInit {
     this.planTrabajoForm = this.fb14.group({
       descripcionPlan  : [null, [] ]
     });
+
+    this.detalleConsultaForm = this.fb15.group({
+      consultaId  : [null, [] ],
+      anamnesis: this.fb15.group({
+        anamnesisId  : [null, [] ],
+        motivoConsulta: this.fb15.group({
+          motivoConsultaId: [null, [] ],
+          descripcion: [null, [] ]
+        }),
+        antecedentes  : [null, [] ],
+        antecedentesRemotos  : [null, [] ]
+      }),
+      diagnosticos: this.fb15.group({
+        diagnosticoId  : [null, [] ],
+        diagnosticoPrincipal  : [null, [] ],
+        diagnosticoSecundario  : [null, [] ],
+        enfermedadCie10Primaria: this.fb15.group({
+          descripcion: [null, [] ]
+        }),
+        enfermedadCie10Secundaria: this.fb15.group({
+          descripcion: [null, [] ]
+        })
+      }),
+      tratamientos: this.fb15.group({
+        tratamientoId  : [null, [] ],
+        prescripcionFarm  : [null, [] ],
+        descripcionTratamiento  : [null, [] ],
+        descripcionPlanTrabajo  : [null, [] ]
+      }),
+      medicamentos : [ null, [] ],
+      fecha : [null, [] ],
+      areas  : this.fb15.group({
+        areaId: [null, [] ],
+        descripcion: [null, [] ]
+      }),
+      funcionarios : this.fb15.group({
+        funcionarioId  : [null, [] ],
+        personas : this.fb15.group({
+          personaId  : [null, [] ],
+          cedula  : [null, [] ],
+          nombres  : [null, [] ],
+          apellidos: [null, [] ]    
+        })               
+      })
+      /*historialClinico: this.fb.group({
+        historialClinicoId: [null, [] ]
+      }),
+      personas : this.fb.group({
+        personaId  : [null, [] ],
+        cedula  : [null, [] ],
+        nombres  : [null, [] ],
+        apellidos: [null, [] ],
+        fechaNacimiento: [null, [] ],
+        lugarNacimiento: [null, [] ],
+        edad: [null, [] ],
+        direccion: [null, [] ],
+        sexo: [null, [] ],
+        estadoCivil: [null, [] ],
+        nacionalidad: [null, [] ],
+        telefono: [null, [] ],
+        email  : [null, [] ],
+        celular: [null, [] ],
+        observacion: [null, [] ],
+        carreras: this.fb.group({
+          carreraId: [null, [] ],
+          descripcion: [null, [] ]
+        }),
+        departamentos: this.fb.group({
+          carreraId: [null, [] ],
+          descripcion: [null, [] ]
+        }),
+        dependencias: this.fb.group({
+          carreraId: [null, [] ],
+          descripcion: [null, [] ]
+        }),
+        estamentos: this.fb.group({
+          carreraId: [null, [] ],
+          descripcion: [null, [] ]
+        }),
+        fechaCreacion: [null, [] ],
+        fechaModificacion: [null, [] ],
+        usuarioCreacion: [null, [] ],
+        usuarioModificacion: [null, [] ]   
+      }),
+      grupoSanguineo  : [null, [] ],
+      seguroMedico  : [null, [] ]   */     
+    });
   }
 
   crearTablaModel(){
@@ -1016,12 +1107,12 @@ export class ConsultorioComponent implements OnInit {
       processing: true,
       columns: [ {data:'consultaId'}, {data:'fecha'}, 
       {data:'anamnesis.descripcion'},
-      {data:'diagnosticos.enfermedadCie10Primaria.codigo'},
-      {data:'diagnosticos.enfermedadCie10Secundaria.codigo'},
-      {data:'diagnosticos.diagnosticoPrincipal'},      
-      {data:'diagnosticos.diagnosticoSecundario'}, 
-      {data:'tratamientos.descripcionTratamiento'},
-      {data:'areas.codigo'}, {data:'ver'}]      
+      {data:'diagnosticos.enfermedadCie10Primaria.descripcion'},
+      {data:'diagnosticos.enfermedadCie10Secundaria.descripcion'},
+      //{data:'diagnosticos.diagnosticoPrincipal'},      
+      //{data:'diagnosticos.diagnosticoSecundario'}, 
+      {data:'funcionario'},
+      {data:'areas.codigo'}, {data:'ver'}, {data:'imprimir'}]      
     };
   }
 
@@ -1377,6 +1468,35 @@ export class ConsultorioComponent implements OnInit {
     this.alert=false;
   }
 
+  openModalDetalleConsulta(targetModal, consulta) {
+   
+    var tratamientosInsumos: TratamientoInsumoModelo[] = [];
+    var tratamientoInsumo = new TratamientoInsumoModelo();
+    var tratamientos = new TratamientoModelo();
+    tratamientos.tratamientoId = consulta.tratamientos.tratamientoId;
+
+    tratamientoInsumo.tratamientos = tratamientos;
+    this.detalleConsultaForm.reset();
+    this.tratamientosInsumosService.buscarTratamientosInsumosFiltrosTabla(tratamientoInsumo)
+    .subscribe( (resp: TratamientoInsumoModelo[]) => {
+      tratamientosInsumos = resp;
+      var medicamentos = "";
+      for (let i = 0; i < tratamientosInsumos.length; i++) {
+        medicamentos = medicamentos 
+          + tratamientosInsumos[i].insumos.descripcion + "  -  "
+          + tratamientosInsumos[i].cantidad + ",  ";
+      }
+      this.detalleConsultaForm.get('medicamentos').setValue(medicamentos);
+  });
+    this.detalleConsultaForm.patchValue(consulta);
+    
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+  }
+
   openModalTerminoEstandar(targetModal, tipo) {
     this.tipoDiagnostico = tipo;
     this.modalService.open(targetModal, {
@@ -1564,7 +1684,6 @@ export class ConsultorioComponent implements OnInit {
     var tratamientoInsumoList: TratamientoInsumoModelo[] = new Array();
     var fichaMedicaList: FichaMedicaModelo[] = new Array();
     var consulta: ConsultaModelo = new ConsultaModelo();
-    //var enfermedadCie10Principal = new EnfermedadCie10Modelo();
     var anamnesis: AnamnesisModelo;
     var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
     var reporteModelo: ReporteModelo = new ReporteModelo;
@@ -1574,10 +1693,6 @@ export class ConsultorioComponent implements OnInit {
     anamnesis.motivoConsulta = motivoConsulta;
     anamnesis.usuarioCreacion = 'admin';
 
-    //enfermedadCie10Principal.enfermedadCie10Id = this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id;
-    /*if( !this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id ){
-      enfermedadCie10Principal = null;
-    }*/
     diagnostico.diagnosticoPrincipal = this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').value;
     diagnostico.diagnosticoSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
     diagnostico.enfermedadCie10PrimariaId = this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id;
@@ -1604,7 +1719,6 @@ export class ConsultorioComponent implements OnInit {
     consulta.funcionarios.funcionarioId = 3; //cambiar por el id del funcionario
     consulta.usuarioCreacion = 'admin';
 
-
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     procesoDiagnosticoTratamiento.tratamiento = tratamiento;
     procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
@@ -1612,40 +1726,44 @@ export class ConsultorioComponent implements OnInit {
     procesoDiagnosticoTratamiento.anamnesis = anamnesis;
     procesoDiagnosticoTratamiento.fichaMedicaList = fichaMedicaList;
 
-    peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);
-    
+    peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);    
+
+    Swal.fire({
+      title: 'Espere',
+      text: 'Generando...',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
 
     peticion.subscribe( resp => {
-              reporteModelo.consultaid = String(resp.consulta['consultaId']);
-              reporteModelo.format="pdf";
+      reporteModelo.consultaid = String(resp.consulta['consultaId']);
+      reporteModelo.format="pdf";
+      this.limpiarDiagnosticoTratamiento();
+      this.obtenerConsultas();
+      this.obtenerFichaMedica();
               
       Swal.fire({
-                icon: 'success',
-                showConfirmButton: true,
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Imprimir Receta',
-                text: resp.mensaje,
+        icon: 'success',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Imprimir Receta',
+        text: resp.mensaje
+
       }).then( resp => {  
-        if(resp.value){  
-
-     
-           this.imprimirReceta(reporteModelo);
-
-                
-               this.limpiarDiagnosticoTratamiento();
-                this.obtenerConsultas();
-                this.obtenerFichaMedica();
+        if(resp.value){     
+          this.imprimirReceta(reporteModelo);
         }
       });
-
-    }, e => {Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
-            })
-       }
-    );
+    }, e => {
+      Swal.fire({
+          icon: 'error',
+          title: 'Algo salio mal',
+          text: e.status +'. '+ this.comunes.obtenerError(e),
+        })
+      Swal.close();
+    });
   }
 
   get antecedentesNoValido() {
@@ -1669,15 +1787,20 @@ export class ConsultorioComponent implements OnInit {
   }
 
   imprimirReceta(reporte: ReporteModelo){
+    Swal.fire({
+      title: 'Espere',
+      text: 'Generando...',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
 
-    
-   
     this.consultasService.imprimirReceta(reporte)
     .subscribe( resp => {
       Swal.fire({
         icon: 'success',
         showConfirmButton: true,
-        showCancelButton: true,
+        showCloseButton: true,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'OK',
         text: 'Receta Generada',
@@ -1689,7 +1812,41 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
+      Swal.close();
+    });
+  }
+
+  detalleConsultaImprimirReceta(consultaId){
+    var reporteModelo: ReporteModelo = new ReporteModelo;
+
+    reporteModelo.consultaid = String(consultaId);
+    reporteModelo.format="pdf";
+
+    Swal.fire({
+      title: 'Espere',
+      text: 'Generando...',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
+
+    this.consultasService.imprimirReceta(reporteModelo)
+    .subscribe( resp => {
+      Swal.fire({
+        icon: 'success',
+        showConfirmButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+        text: 'Receta Generada',
+      })
+    
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      Swal.close();
     });
   }
 
