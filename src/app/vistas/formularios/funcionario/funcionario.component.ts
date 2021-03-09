@@ -27,6 +27,7 @@ export class FuncionarioComponent implements OnInit {
   funcionarioForm: FormGroup;
   buscadorForm: FormGroup;
   alert:boolean=false;
+  alertGuardar:boolean=false;
   cargando = false;
   dtOptions: any = {};
 
@@ -89,6 +90,7 @@ export class FuncionarioComponent implements OnInit {
   guardar( ) {
 
     if ( this.funcionarioForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.funcionarioForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -319,5 +321,9 @@ export class FuncionarioComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

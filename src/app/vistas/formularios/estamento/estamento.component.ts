@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 export class EstamentoComponent implements OnInit {
   crear = false;
   estamentoForm: FormGroup;
-
+  alertGuardar:boolean=false;
   estamento: EstamentoModelo = new EstamentoModelo();
 
   constructor( private estamentosService: EstamentosService,
@@ -45,7 +45,7 @@ export class EstamentoComponent implements OnInit {
   guardar( ) {
 
     if ( this.estamentoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.estamentoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -155,5 +155,7 @@ export class EstamentoComponent implements OnInit {
     this.estamentoForm.get('usuarioCreacion').disable();
     this.estamentoForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

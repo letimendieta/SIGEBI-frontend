@@ -25,6 +25,7 @@ export class StockComponent implements OnInit {
   listaUnidadMedida: ParametroModelo;
   cargando = false;
   alert:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   buscadorForm: FormGroup;
   stock: StockModelo = new StockModelo();
@@ -87,7 +88,7 @@ export class StockComponent implements OnInit {
   guardar( ) {
 
     if ( this.stockForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.stockForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -310,5 +311,8 @@ export class StockComponent implements OnInit {
   onSubmit() {
     this.modalService.dismissAll();
   }
-
+  
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

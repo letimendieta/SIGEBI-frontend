@@ -19,7 +19,7 @@ import { ParametrosService } from 'src/app/servicios/parametros.service';
 export class InsumoComponent implements OnInit {
   crear = false;
   insumoForm: FormGroup;
-
+  alertGuardar:boolean=false;
   insumo: InsumoModelo = new InsumoModelo();
   listaTipoInsumo: ParametroModelo;
 
@@ -49,7 +49,7 @@ export class InsumoComponent implements OnInit {
   guardar( ) {
 
     if ( this.insumoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.insumoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -177,5 +177,7 @@ export class InsumoComponent implements OnInit {
     this.insumoForm.get('usuarioCreacion').disable();
     this.insumoForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

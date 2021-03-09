@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 export class DependenciaComponent implements OnInit {
   crear = false;
   dependenciaForm: FormGroup;
-
+  alertGuardar:boolean=false;
   dependencia: DependenciaModelo = new DependenciaModelo();
 
   constructor( private dependenciasService: DependenciasService,
@@ -45,7 +45,7 @@ export class DependenciaComponent implements OnInit {
   guardar( ) {
 
     if ( this.dependenciaForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.dependenciaForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -155,5 +155,7 @@ export class DependenciaComponent implements OnInit {
     this.dependenciaForm.get('usuarioCreacion').disable();
     this.dependenciaForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

@@ -47,6 +47,7 @@ export class ProcedimientoComponent implements OnInit {
   alertPacientes:boolean=false;
   alertMedicamentos:boolean=false;
   alertFuncionarios:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   dtOptionsStock: any = {};  
   dtOptionsMedicamentos: any = {};
@@ -155,6 +156,7 @@ export class ProcedimientoComponent implements OnInit {
   guardar( ) {
 
     if ( this.procedimientoForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.procedimientoForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -674,5 +676,9 @@ export class ProcedimientoComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

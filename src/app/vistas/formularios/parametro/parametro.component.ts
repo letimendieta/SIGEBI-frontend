@@ -17,6 +17,7 @@ export class ParametroComponent implements OnInit {
   crear = false;
   parametroForm: FormGroup;
   parametro: ParametroModelo = new ParametroModelo();
+  alertGuardar:boolean=false;
 
   constructor( private parametrosService: ParametrosService,
                private route: ActivatedRoute,
@@ -43,6 +44,7 @@ export class ParametroComponent implements OnInit {
   guardar(  ) {
 
     if ( this.parametroForm.invalid ) {
+      this.alertGuardar = true;
       return Object.values( this.parametroForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -144,5 +146,8 @@ export class ParametroComponent implements OnInit {
     this.parametroForm.get('fechaModificacion').disable();
     this.parametroForm.get('usuarioCreacion').disable();
     this.parametroForm.get('usuarioModificacion').disable();
+  }
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
   }
 }

@@ -43,6 +43,7 @@ export class HistorialClinicoComponent implements OnInit {
   cargando = false;
   alert: boolean=false;
   alertPacienteId: boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   errMsj: string;
 
@@ -141,6 +142,7 @@ export class HistorialClinicoComponent implements OnInit {
   guardar( ) {
 
     if ( this.historialClinicoForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.historialClinicoForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -421,5 +423,9 @@ export class HistorialClinicoComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

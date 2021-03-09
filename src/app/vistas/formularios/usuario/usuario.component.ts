@@ -35,6 +35,7 @@ export class UsuarioComponent implements OnInit {
   buscadorPersonasForm: FormGroup;
   buscadorFuncionariosForm: FormGroup;
   alert:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   cargando = false;
 
@@ -116,6 +117,7 @@ export class UsuarioComponent implements OnInit {
   guardar( ) {
 
     if ( this.usuarioForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.usuarioForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -463,5 +465,9 @@ export class UsuarioComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

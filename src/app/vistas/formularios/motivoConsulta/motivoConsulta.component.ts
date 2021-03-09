@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class MotivoConsultaComponent implements OnInit {
   crear = false;
   motivoConsultaForm: FormGroup;
-
+  alertGuardar:boolean=false;
   motivoConsulta: MotivoConsultaModelo = new MotivoConsultaModelo();
 
   constructor( private motivosConsultaService: MotivosConsultaService,
@@ -44,7 +44,7 @@ export class MotivoConsultaComponent implements OnInit {
   guardar( ) {
 
     if ( this.motivoConsultaForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.motivoConsultaForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -159,5 +159,7 @@ export class MotivoConsultaComponent implements OnInit {
     this.motivoConsultaForm.get('usuarioCreacion').disable();
     this.motivoConsultaForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

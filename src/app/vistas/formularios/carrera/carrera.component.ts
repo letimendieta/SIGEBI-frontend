@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 export class CarreraComponent implements OnInit {
   crear = false;
   carreraForm: FormGroup;
-
+  alertGuardar:boolean=false;
   carrera: CarreraModelo = new CarreraModelo();
 
   constructor( private carrerasService: CarrerasService,
@@ -45,7 +45,7 @@ export class CarreraComponent implements OnInit {
   guardar( ) {
 
     if ( this.carreraForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.carreraForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -155,5 +155,7 @@ export class CarreraComponent implements OnInit {
     this.carreraForm.get('usuarioCreacion').disable();
     this.carreraForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

@@ -47,6 +47,7 @@ export class PacienteComponent implements OnInit {
   desdeModal = true;
   cargando = false;
   alert:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
 
   constructor( private pacientesService: PacientesService,
@@ -217,6 +218,7 @@ export class PacienteComponent implements OnInit {
   guardar(  ) {
 
     if ( this.pacienteForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.pacienteForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -543,5 +545,9 @@ export class PacienteComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

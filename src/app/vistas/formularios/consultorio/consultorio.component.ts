@@ -95,6 +95,7 @@ export class ConsultorioComponent implements OnInit {
   guardarBtn = true;
   alertMedicamentos:boolean=false;
   alertGeneral:boolean=false;
+  alertGuardar:boolean=false;
   tipoDiagnostico: String = null;
   mensajeGeneral: String = null;
   historialClinicoId: any = null;
@@ -1433,6 +1434,9 @@ export class ConsultorioComponent implements OnInit {
   cerrarAlertGeneral(){
     this.alertGeneral=false;
   }
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 
   openModal(targetModal) {
     this.modalService.open(targetModal, {
@@ -1598,7 +1602,7 @@ export class ConsultorioComponent implements OnInit {
   guardarDiagnosticoTratamiento(event){
     event.preventDefault();
     if ( this.diagnosticoPrimarioForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.diagnosticoPrimarioForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -1610,7 +1614,7 @@ export class ConsultorioComponent implements OnInit {
     }
 
     if ( this.diagnosticoSecundarioForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.diagnosticoSecundarioForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -1622,7 +1626,7 @@ export class ConsultorioComponent implements OnInit {
     }
 
     if ( this.anamnesisForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.anamnesisForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -1634,7 +1638,7 @@ export class ConsultorioComponent implements OnInit {
     }
 
     if ( this.tratamientoFarmacologicoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.tratamientoFarmacologicoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -1646,7 +1650,7 @@ export class ConsultorioComponent implements OnInit {
     }
 
     if ( this.tratamientoNoFarmacologicoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.tratamientoNoFarmacologicoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -1658,7 +1662,7 @@ export class ConsultorioComponent implements OnInit {
     }
 
     if ( this.planTrabajoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.planTrabajoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {

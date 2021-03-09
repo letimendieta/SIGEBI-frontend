@@ -35,6 +35,7 @@ export class CitaComponent implements OnInit {
   pacientes: PacienteModelo[] = [];
   funcionarios: FuncionarioModelo[] = [];
   alert:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   cargando = false;
   historialClinicoForm: FormGroup;
@@ -114,6 +115,7 @@ export class CitaComponent implements OnInit {
   guardar( ) {
 
     if ( this.citaForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.citaForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -456,5 +458,9 @@ export class CitaComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

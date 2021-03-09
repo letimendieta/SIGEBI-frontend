@@ -40,6 +40,7 @@ export class SignoVitalComponent implements OnInit {
   alertPacientes:boolean=false;
   alertMedicamentos:boolean=false;
   alertFuncionarios:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
   modificar: boolean = false;
   cargando = false;
@@ -123,6 +124,7 @@ export class SignoVitalComponent implements OnInit {
   guardar( ) {
 
     if ( this.signoVitalForm.invalid ){
+      this.alertGuardar = true;
       return Object.values( this.signoVitalForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -481,5 +483,9 @@ export class SignoVitalComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

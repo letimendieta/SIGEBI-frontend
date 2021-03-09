@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class AreaComponent implements OnInit {
   crear = false;
   areaForm: FormGroup;
-
+  alertGuardar:boolean=false;
   area: AreaModelo = new AreaModelo();
 
   constructor( private areasService: AreasService,
@@ -44,7 +44,7 @@ export class AreaComponent implements OnInit {
   guardar( ) {
 
     if ( this.areaForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.areaForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -159,5 +159,7 @@ export class AreaComponent implements OnInit {
     this.areaForm.get('usuarioCreacion').disable();
     this.areaForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

@@ -26,6 +26,7 @@ export class HorarioComponent implements OnInit {
   horario: HorarioModelo = new HorarioModelo();
   cargando = false;
   alert:boolean=false;
+  alertGuardar:boolean=false;
   dtOptions: any = {};
 
   constructor( private horariosService: HorariosService,
@@ -71,7 +72,7 @@ export class HorarioComponent implements OnInit {
   guardar( ) {
 
     if ( this.horarioForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.horarioForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -307,5 +308,9 @@ export class HorarioComponent implements OnInit {
 
   onSubmit() {
     this.modalService.dismissAll();
-   }
+  }
+
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

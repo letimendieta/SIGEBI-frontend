@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 export class DepartamentoComponent implements OnInit {
   crear = false;
   departamentoForm: FormGroup;
-
+  alertGuardar:boolean=false;
   departamento: DepartamentoModelo = new DepartamentoModelo();
 
   constructor( private departamentosService: DepartamentosService,
@@ -45,7 +45,7 @@ export class DepartamentoComponent implements OnInit {
   guardar( ) {
 
     if ( this.departamentoForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.departamentoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -155,5 +155,7 @@ export class DepartamentoComponent implements OnInit {
     this.departamentoForm.get('usuarioCreacion').disable();
     this.departamentoForm.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

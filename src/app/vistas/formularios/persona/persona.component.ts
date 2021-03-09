@@ -29,7 +29,6 @@ import Swal from 'sweetalert2';
 export class PersonaComponent implements OnInit {
   crear = false;
   personaForm: FormGroup;
-
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
@@ -37,7 +36,7 @@ export class PersonaComponent implements OnInit {
   listaDepartamentos: DepartamentoModelo;
   listaDependencias: DependenciaModelo;
   listaEstamentos: EstamentoModelo;
-
+  alertGuardar:boolean=false;
   selectedFiles: FileList;
   currentFile: File;
   progress = 0;
@@ -160,7 +159,7 @@ export class PersonaComponent implements OnInit {
   guardar( ) {
 
     if ( this.personaForm.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.personaForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -347,5 +346,7 @@ export class PersonaComponent implements OnInit {
     this.personaForm.get('usuarioCreacion').disable();
     this.personaForm.get('usuarioModificacion').disable();    
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }

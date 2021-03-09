@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class EnfermedadCie10Component implements OnInit {
   crear = false;
   enfermedadCie10Form: FormGroup;
-
+  alertGuardar:boolean=false;
   enfermedadCie10: EnfermedadCie10Modelo = new EnfermedadCie10Modelo();
 
   constructor( private enfermedadesCie10Service: EnfermedadesCie10Service,
@@ -44,7 +44,7 @@ export class EnfermedadCie10Component implements OnInit {
   guardar( ) {
 
     if ( this.enfermedadCie10Form.invalid ) {
-
+      this.alertGuardar = true;
       return Object.values( this.enfermedadCie10Form.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -159,5 +159,7 @@ export class EnfermedadCie10Component implements OnInit {
     this.enfermedadCie10Form.get('usuarioCreacion').disable();
     this.enfermedadCie10Form.get('usuarioModificacion').disable();
   }
-
+  cerrarAlertGuardar(){
+    this.alertGuardar=false;
+  }
 }
