@@ -180,6 +180,11 @@ export class StockComponent implements OnInit {
       && this.stockForm.get('insumos').get('insumoId').touched
   }
 
+  get unidadMedidaNoValido() {
+    return this.stockForm.get('unidadMedida').invalid 
+      && this.stockForm.get('unidadMedida').touched
+  }
+
   crearFormulario() {
 
     this.stockForm = this.fb.group({

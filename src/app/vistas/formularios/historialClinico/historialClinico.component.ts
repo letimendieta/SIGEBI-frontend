@@ -152,6 +152,14 @@ export class HistorialClinicoComponent implements OnInit {
       });
     }
 
+    if(!this.selectedFiles){
+      Swal.fire({
+        icon: 'info',
+        text: 'No se ha seleccionado ningun archivo'
+      })
+      return;
+    }
+
     Swal.fire({
       title: 'Espere',
       text: 'Guardando información',
@@ -236,6 +244,7 @@ export class HistorialClinicoComponent implements OnInit {
     this.historialClinicoForm.reset();
     this.historialClinico = new HistorialClinicoModelo();
     this.paciente = new PacienteModelo();
+    this.cerrarAlertGuardar();
   }
 
   obtenerError(e : any){
@@ -400,10 +409,7 @@ export class HistorialClinicoComponent implements OnInit {
 
   selectPaciente(event, paciente: PacienteModelo){
     this.alertPacienteId=false;
-    /*if( paciente.historialClinico.historialClinicoId ){
-      this.alertPacienteId=true;     
-      return null;
-    } */
+
     this.modalService.dismissAll();
     if(paciente.pacienteId){
       this.historialClinicoForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);

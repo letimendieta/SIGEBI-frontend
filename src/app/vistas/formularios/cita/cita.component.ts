@@ -200,12 +200,28 @@ export class CitaComponent implements OnInit {
     return this.citaForm.get('areas').get('areaId').invalid 
     && this.citaForm.get('areas').get('areaId').touched
   }
+  get pacienteIdNoValido() {
+    return this.citaForm.get('pacientes').get('pacienteId').invalid 
+    && this.citaForm.get('pacientes').get('pacienteId').touched
+  }
+  get funcionarioIdNoValido() {
+    return this.citaForm.get('funcionarios').get('funcionarioId').invalid 
+    && this.citaForm.get('funcionarios').get('funcionarioId').touched
+  }
+  get fechaNoValido() {
+    return this.citaForm.get('fecha').invalid 
+    && this.citaForm.get('fecha').touched
+  }
+  get horaNoValido() {
+    return this.citaForm.get('hora').invalid 
+    && this.citaForm.get('hora').touched
+  }
   
   crearFormulario() {
     this.citaForm = this.fb.group({
       citaId  : [null, [] ],
       pacientes : this.fb.group({
-        pacienteId  : [null, [] ],
+        pacienteId  : [null, [Validators.required] ],
         personas : this.fb.group({
           cedula  : [null, [] ],
           nombres  : [null, [] ],
@@ -213,7 +229,7 @@ export class CitaComponent implements OnInit {
         })
       }),
       funcionarios : this.fb.group({
-        funcionarioId  : [null, [] ],
+        funcionarioId  : [null, [Validators.required] ],
         personas : this.fb.group({
           cedula  : [null, [] ],
           nombres  : [null, [] ],
@@ -223,8 +239,8 @@ export class CitaComponent implements OnInit {
       areas : this.fb.group({
         areaId  : [null, [Validators.required] ]        
       }),
-      fecha  : [null, [] ],
-      hora  : [null, [] ],
+      fecha  : [null, [Validators.required] ],
+      hora  : [null, [Validators.required] ],
       estado  : ['A', [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

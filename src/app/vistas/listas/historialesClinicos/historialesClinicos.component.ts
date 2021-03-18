@@ -25,7 +25,7 @@ export class HistorialesClinicosComponent implements OnInit {
   dtOptions: any = {};
   dtOptionsPacienteModel: any = {};
 
-  historialClinicos: HistorialClinicoModelo[] = [];
+  historialesClinicos: HistorialClinicoModelo[] = [];
   pacientes: PacienteModelo[] = [];
   paciente : PacienteModelo = new PacienteModelo();
   pacientePersona: PersonaModelo = new PersonaModelo();
@@ -38,7 +38,7 @@ export class HistorialesClinicosComponent implements OnInit {
   alert:boolean=false;
 
 
-  constructor( private historialClinicosService: HistorialesClinicosService,
+  constructor( private historialesClinicosService: HistorialesClinicosService,
     private pacientesService: PacientesService,
                private comunes: ComunesService,
                private areasService: AreasService,
@@ -159,7 +159,7 @@ export class HistorialesClinicosComponent implements OnInit {
     });
   }
 
-  buscadorHistorialClinicos(event) {   
+  buscadorHistorialesClinicos(event) {   
     event.preventDefault();
     this.cargando = true;
 
@@ -182,9 +182,9 @@ export class HistorialesClinicosComponent implements OnInit {
       buscador.pacientes = null;
     }
 
-    this.historialClinicosService.buscarHistorialClinicosFiltros(buscador)
+    this.historialesClinicosService.buscarHistorialClinicosFiltros(buscador)
     .subscribe( resp => {      
-      this.historialClinicos = resp;
+      this.historialesClinicos = resp;
       this.cargando = false;
     }, e => {      
       Swal.fire({
@@ -199,7 +199,7 @@ export class HistorialesClinicosComponent implements OnInit {
   limpiar(event) {
     this.buscadorForm.reset();
     this.buscador = new HistorialClinicoModelo();    
-    this.historialClinicos = [];
+    this.historialesClinicos = [];
   }
 
   borrarHistorialClinico(event, historialClinico: HistorialClinicoModelo ) {
@@ -214,7 +214,7 @@ export class HistorialesClinicosComponent implements OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        peticion = this.historialClinicosService.borrarHistorialClinico( historialClinico.historialClinicoId );
+        peticion = this.historialesClinicosService.borrarHistorialClinico( historialClinico.historialClinicoId );
 
         peticion.subscribe( resp => {
           Swal.fire({
@@ -223,7 +223,7 @@ export class HistorialesClinicosComponent implements OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.buscadorHistorialClinicos(event);
+              this.buscadorHistorialesClinicos(event);
             }
           });
         }, e => {            

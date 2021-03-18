@@ -143,7 +143,7 @@
           </div>
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
-              <button type="submit" (click)="buscadorHistorialClinicos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+              <button type="submit" (click)="buscadorHistorialesClinicos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
               &nbsp;
               <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
           </div>
@@ -164,7 +164,7 @@
   <!--Tabla vacia-->
   <div class="table-responsive">
     <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="!cargando && historialClinicos.length === 0">
+      *ngIf="!cargando && historialesClinicos.length === 0">
       <thead>
         <tr class="table-primary">
           <th scope="col">#</th>
@@ -185,7 +185,7 @@
   <div class="card">
     <div class="table-responsive table-hover">
       <table datatable [dtOptions]="dtOptions" class="table table-sm" 
-      *ngIf="historialClinicos.length > 0">
+      *ngIf="historialesClinicos.length > 0">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>
@@ -200,7 +200,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let historialClinico of historialClinicos; let i = index">
+          <tr *ngFor="let historialClinico of historialesClinicos; let i = index">
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ historialClinico.historialClinicoId }}</td>
             <td>{{ historialClinico.pacientes.pacienteId }}</td>

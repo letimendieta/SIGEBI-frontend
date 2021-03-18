@@ -181,6 +181,10 @@ export class FuncionarioComponent implements OnInit {
     return this.funcionarioForm.get('areas').get('areaId').invalid 
     && this.funcionarioForm.get('areas').get('areaId').touched
   }
+  get fechaIngresoNoValido() {
+    return this.funcionarioForm.get('fechaIngreso').invalid 
+    && this.funcionarioForm.get('fechaIngreso').touched
+  }
 
   crearFormulario() {
     this.funcionarioForm = this.fb.group({

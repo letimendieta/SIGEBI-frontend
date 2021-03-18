@@ -45,7 +45,7 @@
             <div class="row justify-content-center">
               <div class="col-lg-5">
                 <div formGroupName="insumos" >
-                  <label><b>Insumo id </b></label>
+                  <label><b>Insumo id </b><span class="requerido"> *</span></label>
                   <div class="input-group mb-3">  
                       <input type="number"
                           class="form-control"
@@ -58,15 +58,14 @@
                               (click)="obtenerInsumo($event)">
                               Buscar
                         </button>
-                      </div>                  
-                    <small *ngIf="insumoIdNoValido" class="text-danger">
-                      Ingrese el insumo id
-                    </small>
-
+                      </div>
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         <button type="button" class="btn btn-primary" 
                               (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
                   </div>
+                  <small *ngIf="insumoIdNoValido" class="text-danger">
+                    Ingrese el insumo id
+                  </small>
 
                   <!--Modal buscador de insumos-->
                   <ng-template #editProfileModal let-modal>
@@ -199,7 +198,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label><b>Cantidad</b></label>
+                  <label><b>Cantidad</b><span class="requerido"> *</span></label>
                   <input type="number"
                         class="form-control"
                         placeholder="Cantidad"                      
@@ -212,15 +211,18 @@
                 </div>
 
                 <div class="form-group">
-                  <label><b>Unidad Medida</b></label>
-                  <select class="custom-select"
-                        formControlName="unidadMedida" name = "unidadMedida">
+                  <label><b>Unidad Medida</b><span class="requerido"> *</span></label>
+                  <select class="custom-select" [class.is-invalid]="unidadMedidaNoValido"
+                        formControlName="unidadMedida" name="unidadMedida">
                       <option value=null>Seleccione</option>
                       <option *ngFor="let item of listaUnidadMedida; let i = index"
                         value="{{item.valor}}">
                           {{item.descripcionValor}}
                       </option>
                   </select>
+                  <small *ngIf="unidadMedidaNoValido" class="text-danger">
+                    Seleccione la unidad de medida
+                  </small>
                 </div>
                       
               </div>

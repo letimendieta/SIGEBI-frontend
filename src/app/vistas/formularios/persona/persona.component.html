@@ -43,74 +43,71 @@
 
             <div class="row justify-content-center">
               <div class="col-lg-5">
-                <div>
-                  <label><b>C&eacute;dula</b></label>
-                    <input type="text"
-                          class="form-control"
-                          placeholder="C&eacute;dula"                      
-                          name="cedula"
-                          formControlName="cedula"
-                          [class.is-invalid]="cedulaNoValido">
-                      <small *ngIf="cedulaNoValido" class="text-danger">
-                        Ingrese c&eacute;dula
-                      </small>
-                </div>
-                <div>
-                  <label><b>Nombres</b></label>
+
+                <div class="form-group">
+                  <label><b>Nombres</b><span class="requerido"> *</span></label>
                   <input type="text"
-                        class="form-control"
-                        placeholder="Nombres"
-                        formControlName="nombres"
-                        name="nombres"
+                        class="form-control" placeholder="Nombres"
+                        formControlName="nombres" name="nombres"
                         [class.is-invalid]="nombreNoValido">
                     <small *ngIf="nombreNoValido" class="text-danger">
                       Ingrese nombres
                     </small>
                 </div>
 
-                <div>
-                  <label><b>Apellidos</b></label>
-                  <input type="text"
+                <div class="form-group">
+                  <label><b>C&eacute;dula</b><span class="requerido"> *</span></label>
+                    <input type="text"
+                          class="form-control" placeholder="C&eacute;dula"                      
+                          name="cedula" formControlName="cedula"
+                          [class.is-invalid]="cedulaNoValido">
+                      <small *ngIf="cedulaNoValido" class="text-danger">
+                        Ingrese c&eacute;dula
+                      </small>
+                </div>     
+
+                <div class="form-group">
+                  <label><b>Fecha nacimiento</b></label>
+                  <input type="date"
                         class="form-control"
-                        formControlName="apellidos"
-                        name="apellidos"
-                        placeholder="Apellidos"
-                        [class.is-invalid]="apellidoNoValido">
-                  <small *ngIf="apellidoNoValido" class="text-danger">
-                    Ingrese apellidos
-                  </small>
+                        formControlName="fechaNacimiento"
+                        name="fechaNacimiento"
+                        placeholder="Fecha nacimiento">
+                </div>
+                <div class="form-group">                           
+                  <label><b>Edad</b></label>
+                  <input type="number"
+                        class="form-control"
+                        formControlName="edad"
+                        name="edad"
+                        placeholder="Edad"
+                        (focus)="ageCalculator()" readonly>
+                </div>
+                <div class="form-group">
+                  <label><b>Estado Civil</b></label>
+                  <select ui-seldivect2 placeholder="Estado Civil" 
+                    class="form-control input-sm"          
+                    name = "estadoCivil"
+                    formControlName="estadoCivil"
+                    uppercase>
+                    <option value=null>Seleccione</option>
+                    <option *ngFor="let item of listaEstadoCivil; let i = index"
+                      value="{{item.valor}}">
+                        {{item.descripcionValor}}
+                    </option>
+                  </select>
                 </div>
 
-                <label><b>Fecha nacimiento</b></label>
-                <input type="date"
-                      class="form-control"
-                      formControlName="fechaNacimiento"
-                      name="fechaNacimiento"
-                      placeholder="Fecha nacimiento">
-                
-                <label><b>Lugar nacimiento</b></label>
-                <input type="text"
+                <div class="form-group">
+                  <label><b>Celular</b></label>
+                  <input type="text"
                         class="form-control"
-                        formControlName="lugarNacimiento"
-                        name="lugarNacimiento"
-                        placeholder="Lugar Nacimiento">
-            
-                <label><b>Edad</b></label>
-                <input type="number"
-                      class="form-control"
-                      formControlName="edad"
-                      name="edad"
-                      placeholder="Edad"
-                      (focus)="ageCalculator()" readonly>
-                    
-                <label><b>Direcci&oacute;n</b></label>
-                <input type="text"
-                        class="form-control"
-                        formControlName="direccion"
-                        name="direccion"
-                        placeholder="Direcci&oacute;n">
+                        formControlName="celular"
+                        name="celular"
+                        placeholder="Celular">
+                </div>
 
-                <div>
+                <div class="form-group">
                   <label><b>Email</b></label>
                   <input type="email"
                     class="form-control"
@@ -123,114 +120,144 @@
                   </small>
                 </div>
 
-                <label><b>Profesi&oacute;n</b></label>
-                <input type="text"
-                        class="form-control"
-                        formControlName="profesion"
-                        name="profesion"
-                        placeholder="Profesi&oacute;n">                 
+                <div class="form-group">
+                  <label><b>Carrera</b></label> 
+                  <div formGroupName="carreras">
+                    <select class="form-control input-sm" name="carreraId"
+                        formControlName="carreraId">
+                        <option value=null>Seleccione</option>
+                        <option *ngFor="let item of listaCarreras; let i = index"
+                          value="{{item.carreraId}}">
+                            {{item.descripcion}}
+                        </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label><b>Dependencia</b></label>
+                  <div formGroupName="dependencias">
+                    <select class="form-control input-sm" name = "dependenciaId"
+                        formControlName="dependenciaId">
+                        <option value=null>Seleccione</option>
+                        <option *ngFor="let item of listaDependencias; let i = index"
+                          value="{{item.dependenciaId}}">
+                            {{item.descripcion}}
+                        </option>
+                    </select>
+                  </div>
+                </div>
+                              
               </div>
 
               <div class="col-lg-5">
-                <label><b>Sexo</b></label>
-                <select ui-select2 class="form-control input-sm"
-                    formControlName="sexo"
+                <div class="form-group">
+                  <label><b>Apellidos</b><span class="requerido"> *</span></label>
+                  <input type="text"
+                        class="form-control"
+                        formControlName="apellidos"
+                        name="apellidos"
+                        placeholder="Apellidos"
+                        [class.is-invalid]="apellidoNoValido">
+                  <small *ngIf="apellidoNoValido" class="text-danger">
+                    Ingrese apellidos
+                  </small>
+                </div>
+
+                <div class="form-group">
+                  <label><b>Sexo</b></label>
+                  <select ui-select2 class="form-control input-sm"
+                      formControlName="sexo"
+                      uppercase>
+                      <option value=null>Seleccione</option>
+                      <option *ngFor="let item of listaSexo; let i = index"
+                        value="{{item.valor}}">
+                          {{item.descripcionValor}}
+                      </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label><b>Lugar nacimiento</b></label>
+                  <input type="text"
+                          class="form-control"
+                          formControlName="lugarNacimiento"
+                          name="lugarNacimiento"
+                          placeholder="Lugar Nacimiento">
+                </div>
+                     
+                <div class="form-group">
+                  <label><b>Nacionalidad</b></label>                
+                  <select ui-select2 class="form-control input-sm"
+                    name = "nacionalidad"
+                    formControlName="nacionalidad"
                     uppercase>
                     <option value=null>Seleccione</option>
-                    <option *ngFor="let item of listaSexo; let i = index"
+                    <option *ngFor="let item of listaNacionalidad; let i = index"
                       value="{{item.valor}}">
                         {{item.descripcionValor}}
                     </option>
-                </select>
+                  </select>
+                </div>
 
-                <label><b>Estado Civil</b></label>
-                <select ui-seldivect2 placeholder="Estado Civil" 
-                  class="form-control input-sm"          
-                  name = "estadoCivil"
-                  formControlName="estadoCivil"
-                  uppercase>
-                  <option value=null>Seleccione</option>
-                  <option *ngFor="let item of listaEstadoCivil; let i = index"
-                    value="{{item.valor}}">
-                      {{item.descripcionValor}}
-                  </option>
-                </select>
+                <div class="form-group">
+                  <label><b>Direcci&oacute;n</b></label>
+                  <input type="text"
+                          class="form-control"
+                          formControlName="direccion"
+                          name="direccion"
+                          placeholder="Direcci&oacute;n"> 
+                </div>            
                 
-                <label><b>Nacionalidad</b></label>                
-                <select ui-select2 class="form-control input-sm"
-                  name = "nacionalidad"
-                  formControlName="nacionalidad"
-                  uppercase>
-                  <option value=null>Seleccione</option>
-                  <option *ngFor="let item of listaNacionalidad; let i = index"
-                    value="{{item.valor}}">
-                      {{item.descripcionValor}}
-                  </option>
-                </select>
-                                                
-                <label><b>Tel&eacute;fono</b></label>
-                <input type="text"
-                      class="form-control"
-                      formControlName="telefono"
-                      name="telefono"
-                      placeholder="Tel&eacute;fono">
-            
-                <label><b>Celular</b></label>
-                <input type="text"
-                      class="form-control"
-                      formControlName="celular"
-                      name="celular"
-                      placeholder="Celular">
-              
-                <label><b>Carrera</b></label> 
-                <div formGroupName="carreras">
-                  <select class="form-control input-sm" name="carreraId"
-                      formControlName="carreraId">
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaCarreras; let i = index"
-                        value="{{item.carreraId}}">
-                          {{item.descripcion}}
-                      </option>
-                  </select>
+                <div class="form-group">
+                  <label><b>Tel&eacute;fono</b></label>
+                  <input type="text"
+                        class="form-control"
+                        formControlName="telefono"
+                        name="telefono"
+                        placeholder="Tel&eacute;fono">
                 </div>
-            
-                <label><b>Departamento</b></label>
-                <div formGroupName="departamentos">
-                  <select class="form-control input-sm" name = "departamentoId"
-                      formControlName="departamentoId">
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaDepartamentos; let i = index"
-                        value="{{item.departamentoId}}">
-                          {{item.descripcion}}
-                      </option>
-                  </select>
+
+                <div class="form-group">
+                  <label><b>Profesi&oacute;n</b></label>
+                  <input type="text"
+                          class="form-control"
+                          formControlName="profesion"
+                          name="profesion"
+                          placeholder="Profesi&oacute;n">
                 </div>
-                <label><b>Dependencia</b></label>
-                <div formGroupName="dependencias">
-                  <select class="form-control input-sm" name = "dependenciaId"
-                      formControlName="dependenciaId">
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaDependencias; let i = index"
-                        value="{{item.dependenciaId}}">
-                          {{item.descripcion}}
-                      </option>
-                  </select>
+                      
+                <div class="form-group">
+                  <label><b>Departamento</b></label>
+                  <div formGroupName="departamentos">
+                    <select class="form-control input-sm" name = "departamentoId"
+                        formControlName="departamentoId">
+                        <option value=null>Seleccione</option>
+                        <option *ngFor="let item of listaDepartamentos; let i = index"
+                          value="{{item.departamentoId}}">
+                            {{item.descripcion}}
+                        </option>
+                    </select>
+                  </div>
                 </div>
-                <label><b>Estamento</b></label>
-                <div formGroupName="estamentos">
-                  <select class="form-control input-sm" name = "estamentoId"
-                      formControlName="estamentoId">
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaEstamentos; let i = index"
-                        value="{{item.estamentoId}}">
-                          {{item.descripcion}}
-                      </option>
-                  </select>
+
+                <div class="form-group">
+                  <label><b>Estamento</b></label>
+                  <div formGroupName="estamentos">
+                    <select class="form-control input-sm" name = "estamentoId"
+                        formControlName="estamentoId">
+                        <option value=null>Seleccione</option>
+                        <option *ngFor="let item of listaEstamentos; let i = index"
+                          value="{{item.estamentoId}}">
+                            {{item.descripcion}}
+                        </option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
             <br>
-            <div>
+            <div class="row justify-content-center">
 
               <div class="col-lg-6">
                 <div class="form-group">

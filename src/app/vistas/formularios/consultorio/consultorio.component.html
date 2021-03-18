@@ -873,7 +873,7 @@
                 <div class="col-lg-5">
                   <div class="container">              
                     <div class="form-row">   
-                      <div class="col"><b>Motivo Consulta </b></div>
+                      <div class="col"><b>Motivo Consulta </b><span class="requerido"> *</span></div>
                       <select class="form-control input-sm" name="motivoConsultaId"
                             formControlName="motivoConsultaId" [class.is-invalid]="motivoNoValido">
                             <option value=null>Seleccionar</option>
@@ -928,9 +928,12 @@
                 <div class="tab-pane fade show active" id="nav-principal" role="tabpanel" aria-labelledby="nav-principal-tab">
                   <form [formGroup]="diagnosticoPrimarioForm"> 
                     <br>
-                    <textarea class="form-control" formControlName="diagnosticoPrincipal" 
-                      id="diagnosticoPrincipal" rows="3" [class.is-invalid]="diagnosticoNoValido">
-                    </textarea>
+                    <div class="input-group mb-3">
+                      <textarea class="form-control" formControlName="diagnosticoPrincipal" 
+                        id="diagnosticoPrincipal" rows="3" [class.is-invalid]="diagnosticoNoValido">
+                      </textarea>
+                      <span class="requerido"> *</span>
+                    </div>
                     <small *ngIf="diagnosticoNoValido" class="text-danger">
                       Ingrese un diagn&oacute;stico
                     </small>

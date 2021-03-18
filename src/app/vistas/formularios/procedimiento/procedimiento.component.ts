@@ -251,15 +251,26 @@ export class ProcedimientoComponent implements OnInit {
     return mensaje;  
   }
   
-  get notaNoValido() {
-    return this.procedimientoForm.get('notas').invalid && this.procedimientoForm.get('notas').touched
+  get pacienteIdNoValido() {
+    return this.procedimientoForm.get('pacientes').get('pacienteId').invalid 
+    && this.procedimientoForm.get('pacientes').get('pacienteId').touched
+  }
+
+  get funcionarioIdNoValido() {
+    return this.procedimientoForm.get('funcionarios').get('funcionarioId').invalid 
+    && this.procedimientoForm.get('funcionarios').get('funcionarioId').touched
+  }
+
+  get fechaNoValido() {
+    return this.procedimientoForm.get('fecha').invalid 
+    && this.procedimientoForm.get('fecha').touched
   }
 
   crearFormulario() {
     this.procedimientoForm = this.fb.group({
       procedimientoId  : [null, [] ],
       pacientes : this.fb.group({
-        pacienteId  : [null, [] ],
+        pacienteId  : [null, [Validators.required] ],
         personas : this.fb.group({
           cedula  : [null, [] ],
           nombres  : [null, [] ],
@@ -267,7 +278,7 @@ export class ProcedimientoComponent implements OnInit {
         })
       }),
       funcionarios : this.fb.group({
-        funcionarioId  : [null, [] ],
+        funcionarioId  : [null, [Validators.required] ],
         personas : this.fb.group({
           cedula  : [null, [] ],
           nombres  : [null, [] ],

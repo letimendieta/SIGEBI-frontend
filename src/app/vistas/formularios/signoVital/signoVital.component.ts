@@ -31,7 +31,6 @@ export class SignoVitalComponent implements OnInit {
   stocks: StockModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
-  listaEstadosSignosVitales: ParametroModelo;
   buscadorPacientesForm: FormGroup;
   buscadorFuncionariosForm: FormGroup;
   signoVitalForm: FormGroup;
@@ -48,7 +47,6 @@ export class SignoVitalComponent implements OnInit {
   constructor( private signoVitalService: SignosVitalesService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
-               private parametrosService: ParametrosService,
                private router: Router,
                private comunes: ComunesService,
                private route: ActivatedRoute,
@@ -68,11 +66,10 @@ export class SignoVitalComponent implements OnInit {
       this.signoVitalService.getSignoVital( Number(id) )
         .subscribe( (resp: SignoVitalModelo) => {         
           this.signoVitalForm.patchValue(resp);
-          this.listarEstadosSignosVitales();
         });
     }else{
       this.crear = true;
-      this.listarEstadosSignosVitales();
+      this.signoVitalForm.get('fecha').setValue(new Date().toDateString());
     }
   }  
 
@@ -106,20 +103,7 @@ export class SignoVitalComponent implements OnInit {
         }
       );
   }
-
-  listarEstadosSignosVitales() {
-    var orderBy = "descripcion";
-    var orderDir = "asc";
-
-    var sexoParam = new ParametroModelo();
-    sexoParam.codigoParametro = "EST_PROCE";
-    sexoParam.estado = "A";
-
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaEstadosSignosVitales = resp;
-    });
-  }
+ 
   
   guardar( ) {
 
@@ -204,8 +188,14 @@ export class SignoVitalComponent implements OnInit {
     return mensaje;  
   }
   
-  get notaNoValido() {
-    return this.signoVitalForm.get('notas').invalid && this.signoVitalForm.get('notas').touched
+  get fechaNoValido() {
+    return this.signoVitalForm.get('fecha').invalid && this.signoVitalForm.get('fecha').touched
+  }
+  get pacienteIdNoValido() {
+    return this.signoVitalForm.get('pacientes').get('pacienteId').invalid && this.signoVitalForm.get('pacientes').get('pacienteId').touched
+  }
+  get funcionarioIdNoValido() {
+    return this.signoVitalForm.get('funcionarios').get('funcionarioId').invalid && this.signoVitalForm.get('funcionarios').get('funcionarioId').touched
   }
 
   crearFormulario() {
@@ -227,7 +217,7 @@ export class SignoVitalComponent implements OnInit {
           apellidos  : [null, [] ]
         })
       }),
-      fecha  : [null, [] ],
+      fecha  : [null, [Validators.required] ],
       notas  : [null, [] ],
       pulso : [null, [] ],
       frecuenciaCardiaca  : [null, [] ],

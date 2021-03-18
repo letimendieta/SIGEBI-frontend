@@ -32,6 +32,7 @@ export class PacienteComponent implements OnInit {
   personas: PersonaModelo[] = [];  
   listaEstadoCivil: ParametroModelo;
   listaSexo: ParametroModelo;
+  listaGrupoSanguineo: ParametroModelo;
   listaNacionalidad: ParametroModelo;
   listaCarreras: CarreraModelo;
   listaDepartamentos: DepartamentoModelo;
@@ -126,7 +127,16 @@ export class PacienteComponent implements OnInit {
     this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaNacionalidad = resp;
-    });    
+    });  
+    
+    var grupoSanguineoParam = new ParametroModelo();
+    grupoSanguineoParam.codigoParametro = "GRUPO_SANGUINEO";
+    grupoSanguineoParam.estado = "A";
+
+    this.parametrosService.buscarParametrosFiltros( grupoSanguineoParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaGrupoSanguineo = resp;
+    });
   }
 
   obtenerPersona(event){

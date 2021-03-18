@@ -40,7 +40,7 @@
                         
                                                 <!-- Datos Paciente-->
                                                 <div formGroupName="pacientes">                              
-                                                      <label><b>Paciente id</b></label>
+                                                      <label><b>Paciente id</b><span class="requerido"> *</span></label>
                                                       <div class="input-group mb-3">
                                                             <input type="number"
                                                                   class="form-control"
@@ -199,7 +199,7 @@
                                           </div>
                                           <div class="col-lg-5">
                                                 <div formGroupName="areas" class="form-group">
-                                                      <label><b>&Aacute;rea</b></label>
+                                                      <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
                                                       <select class="form-control input-sm" name="areaId"
                                                             formControlName="areaId" 
                                                             [class.is-invalid]="areaNoValido">
@@ -220,7 +220,7 @@
                                     <div justify-content-center>
                                           <div class="input-group mb-3">    
                                                 <div class="form-group">
-                                                      <label for="inputGroupFile02">Adjuntar Archivo</label>
+                                                      <label for="inputGroupFile02">Adjuntar Archivo<span class="requerido"> *</span></label>
                                                       <input type="file" class="form-control-file" 
                                                             (change)="selectFile($event)" id="inputGroupFile02" >                                    
                                                 </div>                                                                     

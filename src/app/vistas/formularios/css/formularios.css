@@ -1,7 +1,10 @@
 body {
     font:400 16px/1.8 sans-serif;
 }
-
+.requerido {
+  color: red;
+  font-weight: bold;
+}
 /*estilos para la tabla*/
 table th {
     background-color: #337ab7 !important;

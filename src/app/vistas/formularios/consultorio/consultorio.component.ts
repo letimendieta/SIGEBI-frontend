@@ -301,12 +301,6 @@ export class ConsultorioComponent implements OnInit {
       Swal.close();
     });   
 
-    /*this.pacientesService.buscarPacientesFiltros( Number(id) )
-        .subscribe( (resp: PacienteModelo) => {  
-          this.pacienteForm.patchValue(resp);
-          var cedula = this.pacienteForm.get('personas').get('cedula').value;
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
-        });*/
   }
 
   ageCalculator(){
@@ -460,42 +454,32 @@ export class ConsultorioComponent implements OnInit {
   }
 
   listarAlergenos() {
-    //var alergias = new AlergiaModelo();
-
-    //alergias.pacienteId = this.paciente.pacienteId;
-
+   
     this.alergenosService.getAlergenos()
     .subscribe( resp => {
 
       this.diagnosticoAlergias = resp;
-      //this.dtTriggerFichaMedica.next();
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      //this.cargando = false;
     });
   }
 
   listarPatologiasProcedimientos() {
-    //var alergias = new AlergiaModelo();
-
-    //alergias.pacienteId = this.paciente.pacienteId;
-
+   
     this.patologiasProcedimientosService.getPatologiasProcedimientos()
     .subscribe( resp => {
 
       this.diagnosticoAntecPatolProc = resp;
-      //this.dtTriggerFichaMedica.next();
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      //this.cargando = false;
     });
   }
 
@@ -1419,6 +1403,7 @@ export class ConsultorioComponent implements OnInit {
     this.tratamientosInsumos = [];
     $('#tableMedicamentos').DataTable().destroy();
     this.dtTriggerMedicamentos.next();
+    this.fichaMedica = [];
     $('#tableFichaMedica').DataTable().destroy();
     this.dtTriggerFichaMedica.next();
     this.enfermedadCie10PrincipalSeleccionada = new EnfermedadCie10Modelo();

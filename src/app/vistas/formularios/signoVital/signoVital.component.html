@@ -43,12 +43,15 @@
                                     <div class="form-row justify-content-center">
                                           <div class="col-lg-5">
                                                 <div class="form-group">
-                                                      <label><b>Fecha</b></label>
+                                                      <label><b>Fecha</b><span class="requerido"> *</span></label>
                                                       <input type="datetime-local"
                                                             class="form-control"
                                                             formControlName="fecha"
-                                                            name="fecha"                                     
-                                                            placeholder="Fecha">   
+                                                            name="fecha" [class.is-invalid]="fechaNoValido"                                     
+                                                            placeholder="Fecha"> 
+                                                      <small *ngIf="fechaNoValido" class="text-danger">
+                                                            Fecha es requerido
+                                                      </small>
                                                 </div>
                                           </div>  
                                     </div>                                    
@@ -56,13 +59,13 @@
                                           <!-- Datos Paciente-->
                                           <div formGroupName="pacientes" class="col-lg-5">                              
                                                 <div class="form group">
-                                                      <label><b>Paciente id</b></label>
+                                                      <label><b>Paciente id</b><span class="requerido"> *</span></label>
                                                       <div class="input-group mb-3">
                                                             <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Paciente id"
                                                                   formControlName="pacienteId"
-                                                                  name="pacienteId">
+                                                                  name="pacienteId" [class.is-invalid]="pacienteIdNoValido">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" 
                                                                         (click)="obtenerPaciente($event)">
@@ -73,6 +76,9 @@
                                                             <button type="button" class="btn btn-primary" 
                                                                   (click)="openModalPacientes(modalPacientes)"><i class="fas fa-search"></i></button>
                                                       </div>
+                                                      <small *ngIf="pacienteIdNoValido" class="text-danger">
+                                                            Paciente es requerido
+                                                      </small>
                                                       <!--Modal buscador de pacientes-->
                                                       <ng-template #modalPacientes let-modal>
                                                             <div class="modal-header">
@@ -191,13 +197,13 @@
                                           <!-- Datos del Funcionario-->
                                           <div formGroupName="funcionarios" class="col-lg-5">                              
                                                 <div class="form group">
-                                                      <label><b>Funcionario id</b></label>                           
+                                                      <label><b>Funcionario id</b><span class="requerido"> *</span></label>                           
                                                       <div class="input-group mb-3">
                                                             <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Funcionario id"
                                                                   formControlName="funcionarioId"
-                                                                  name="funcionarioId">
+                                                                  name="funcionarioId" [class.is-invalid]="funcionarioIdNoValido">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info"
                                                                   (click)="obtenerFuncionario($event)">
@@ -208,7 +214,9 @@
                                                             <button type="button" class="btn btn-primary" 
                                                                   (click)="openModalFuncionarios(modalFuncionarios)"><i class="fas fa-search"></i></button>
                                                       </div>
-
+                                                      <small *ngIf="funcionarioIdNoValido" class="text-danger">
+                                                            Funcionario es requerido
+                                                      </small>
                                                       <!--Modal buscador de funcionarios-->
                                                       <ng-template #modalFuncionarios let-modal>
                                                             <div class="modal-header">
@@ -426,22 +434,12 @@
                                                       <textarea class="form-control" 
                                                       formControlName="notas"
                                                             name = "notas"
-                                                            maxlength="500" rows="5"
-                                                            [class.is-invalid]="notaNoValido">
+                                                            maxlength="500" rows="5">
                                                       </textarea>
-                                                      <small *ngIf="notaNoValido" class="text-danger">
-                                                            Ingrese una nota
-                                                      </small>
                                                 </div>
                                           </div>
                                     </div>
-                                    <!--div class="input-group mb-3">
-                                          <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile02">
-                                                <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
-                                          </div>                        
-                                    </div-->
-                                    
+                                                                       
                                     <div class="form-row justify-content-center" [hidden]="crear">
                                           <div class="col-lg-5"> 
                                                 <div class="form-group">

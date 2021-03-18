@@ -46,7 +46,7 @@
               <div class="col-lg-5">
                 <div>
                   <div class="form-group">
-                    <label><b>C&oacute;digo</b></label>
+                    <label><b>C&oacute;digo</b><span class="requerido"> *</span></label>
                     <input type="text"
                           class="form-control"
                           placeholder="C&oacute;digo"                      
@@ -61,7 +61,7 @@
 
                 <div>
                   <div class="form-group">
-                    <label><b>Descripci&oacute;n</b></label>
+                    <label><b>Descripci&oacute;n</b><span class="requerido"> *</span></label>
                     <input type="text"
                           class="form-control"
                           placeholder="Descripci&oacute;n"
@@ -76,8 +76,9 @@
 
                 <div>
                   <div class="form-group">
-                    <label><b>Tipo</b></label>
+                    <label><b>Tipo</b><span class="requerido"> *</span></label>
                     <select ui-select2 class="form-control input-sm"
+                      [class.is-invalid]="tipoNoValido"
                       formControlName="tipo"
                       uppercase>
                       <option value=null>Seleccione</option>
@@ -86,9 +87,9 @@
                           {{item.descripcionValor}}
                       </option>
                     </select>
-                      <small *ngIf="tipoNoValido" class="text-danger">
-                        Ingrese el tipo de insumo
-                      </small>
+                    <small *ngIf="tipoNoValido" class="text-danger">
+                      Ingrese el tipo de insumo
+                    </small>
                   </div>
                 </div>
 
