@@ -54,8 +54,12 @@ export class HorarioComponent implements OnInit {
     }
   } 
 
-  obtenerFuncionario( ){
+  obtenerFuncionario(event){
+    event.preventDefault();
     var id = this.horarioForm.get('funcionarios').get('funcionarioId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
         this.horarioForm.get('funcionarios').patchValue(resp);

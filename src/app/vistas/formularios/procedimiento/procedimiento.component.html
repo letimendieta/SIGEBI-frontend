@@ -211,11 +211,11 @@
                                                             </div>
                                                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                             <button type="button" class="btn btn-primary" 
-                                                                  (click)="openModalFuncionarios(modalFuncionarios)"><i class="fas fa-search"></i></button>
-                                                            <small *ngIf="funcionarioIdNoValido" class="text-danger">
-                                                                  Funcionario es requerido
-                                                            </small>
+                                                                  (click)="openModalFuncionarios(modalFuncionarios)"><i class="fas fa-search"></i></button>                                                            
                                                       </div>
+                                                      <small *ngIf="funcionarioIdNoValido" class="text-danger">
+                                                            Funcionario es requerido
+                                                      </small>
 
                                                       <!--Modal buscador de funcionarios-->
                                                       <ng-template #modalFuncionarios let-modal>
@@ -349,16 +349,16 @@
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Fecha</b><span class="requerido"> *</span></label>
-                                                      <input type="datetime-local"
+                                                      <input type="datetime-local" id="fecha"
                                                             [class.is-invalid]="fechaNoValido"
                                                             class="form-control"
                                                             formControlName="fecha"
                                                             name="fecha"                                     
                                                             placeholder="Fecha">   
-                                                </div>                 
-                                                <small *ngIf="fechaNoValido" class="text-danger">
-                                                      Fecha es requerido
-                                                </small>
+                                                            <small *ngIf="fechaNoValido" class="text-danger">
+                                                                  Fecha es requerido
+                                                            </small>
+                                                </div> 
                                           </div>  
                                     </div>
 

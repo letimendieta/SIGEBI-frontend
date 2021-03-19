@@ -126,6 +126,9 @@ export class HistorialClinicoComponent implements OnInit {
 
   obtenerFuncionario( ){
     var id = this.historialClinicoForm.get('funcionarios').get('funcionarioId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
         this.historialClinicoForm.get('funcionarios').patchValue(resp);

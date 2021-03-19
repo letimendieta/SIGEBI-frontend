@@ -72,6 +72,9 @@ export class CitaComponent implements OnInit {
   obtenerPaciente(event){
     event.preventDefault();
     var id = this.citaForm.get('pacientes').get('pacienteId').value;
+    if(!id){
+      return null;
+    }
     this.pacientesService.getPaciente( id )
       .subscribe( (resp: PacienteModelo) => {         
         this.citaForm.get('pacientes').patchValue(resp);
@@ -87,6 +90,9 @@ export class CitaComponent implements OnInit {
   obtenerFuncionario(event){
     event.preventDefault();
     var id = this.citaForm.get('funcionarios').get('funcionarioId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
         this.citaForm.get('funcionarios').patchValue(resp);

@@ -74,6 +74,9 @@ export class FuncionarioComponent implements OnInit {
   obtenerPersona(event){
     event.preventDefault();
     var id = this.funcionarioForm.get('personas').get('personaId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
         this.funcionarioForm.get('personas').patchValue(resp);
@@ -199,7 +202,7 @@ export class FuncionarioComponent implements OnInit {
         areaId: [null, [ Validators.required] ]
       }),
       estado  : [null, [] ],
-      fechaIngreso  : [null, [] ],
+      fechaIngreso  : [null, [Validators.required] ],
       fechaEgreso  : [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

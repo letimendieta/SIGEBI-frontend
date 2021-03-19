@@ -69,13 +69,16 @@ export class SignoVitalComponent implements OnInit {
         });
     }else{
       this.crear = true;
-      this.signoVitalForm.get('fecha').setValue(new Date().toDateString());
+      //this.signoVitalForm.get('fecha').setValue(new Date().toDateString());
     }
   }  
 
   obtenerPaciente(event ){
     event.preventDefault();
     var id = this.signoVitalForm.get('pacientes').get('pacienteId').value;
+    if(!id){
+      return null;
+    }
     this.pacientesService.getPaciente( id )
         .subscribe( (resp: PacienteModelo) => {         
           this.signoVitalForm.get('pacientes').patchValue(resp);
@@ -90,8 +93,10 @@ export class SignoVitalComponent implements OnInit {
 
   obtenerFuncionario(event ){
     event.preventDefault();
-
     var id = this.signoVitalForm.get('funcionarios').get('funcionarioId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
         this.signoVitalForm.get('funcionarios').patchValue(resp);

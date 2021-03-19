@@ -72,6 +72,9 @@ export class StockComponent implements OnInit {
   obtenerInsumo(event) {
     event.preventDefault();
     var id = this.stockForm.get('insumos').get('insumoId').value;
+    if(!id){
+      return null;
+    }
     this.insumosService.getInsumo( id )
     .subscribe( (resp: InsumoModelo) => {
         this.stockForm.get('insumos').patchValue(resp);

@@ -89,9 +89,12 @@ export class ProcedimientoComponent implements OnInit {
     }
   }  
 
-  obtenerPaciente(event ){
+  obtenerPaciente(event){
     event.preventDefault();
     var id = this.procedimientoForm.get('pacientes').get('pacienteId').value;
+    if(!id){
+      return null;
+    }
     this.pacientesService.getPaciente( id )
         .subscribe( (resp: PacienteModelo) => {         
           this.procedimientoForm.get('pacientes').patchValue(resp);
@@ -106,8 +109,10 @@ export class ProcedimientoComponent implements OnInit {
 
   obtenerFuncionario(event ){
     event.preventDefault();
-
     var id = this.procedimientoForm.get('funcionarios').get('funcionarioId').value;
+    if(!id){
+      return null;
+    }
     this.funcionariosService.getFuncionario( id )
       .subscribe( (resp: FuncionarioModelo) => {          
         this.procedimientoForm.get('funcionarios').patchValue(resp);
@@ -286,7 +291,7 @@ export class ProcedimientoComponent implements OnInit {
         })
       }),
       insumoId  : [null, [] ],
-      fecha  : [null, [] ],
+      fecha  : [null, [Validators.required] ],
       notas  : [null, [Validators.required] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
