@@ -5,7 +5,7 @@ import { TokenService } from '../servicios/token.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AreasGuardService implements CanActivate {
+export class fichasClinicasGuardService implements CanActivate {
 
   realRol: string;
 

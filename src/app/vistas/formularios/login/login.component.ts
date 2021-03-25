@@ -16,64 +16,67 @@ export class LoginComponent implements OnInit {
 
   forma: FormGroup;
   isLogged = false;
-    isLoginFail = false;
-    loginUsuario: UsuarioModelo;
-    nombreUsuario: string;
-    password: string;
-    roles: string[] = [];
-    errMsj: string;
-    alert:boolean=false;
+  isLoginFail = false;
+  loginUsuario: UsuarioModelo;
+  nombreUsuario: string;
+  password: string;
+  roles: string[] = [];
+  errMsj: string;
+  alert:boolean=false;
+  load = false;
 
-    constructor(private frmbuilder: FormBuilder,
-      private tokenService: TokenService,
-      private authService: AuthService,
-      private router: Router,
-      private toastr: ToastrService
-    ) { }
+  constructor(private frmbuilder: FormBuilder,
+    private tokenService: TokenService,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
-    ngOnInit() {
-      this.forma = this.frmbuilder.group({
-        nombreUsuario: [''],
-        password: ['']
+  ngOnInit() {
+    this.forma = this.frmbuilder.group({
+      nombreUsuario: [''],
+      password: ['']
 
-    })
-      if (this.tokenService.getToken()) {
+  })
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+      this.isLoginFail = false;
+      this.roles = this.tokenService.getAuthorities();
+    }
+  }
+
+  onLogin(): void {
+    this.load = true;
+    console.log(this.forma.get('nombreUsuario').value)
+    this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
+    this.authService.login(this.loginUsuario).subscribe(
+      data => {
+        
         this.isLogged = true;
-        this.isLoginFail = false;
-        this.roles = this.tokenService.getAuthorities();
+        this.load = false;
+        this.tokenService.setToken(data.token);
+        this.tokenService.setUserName(data.nombreUsuario);
+        this.tokenService.setAuthorities(data.authorities);
+        this.roles = data.authorities;
+        this.toastr.success('Bienvenido ' + data.nombreUsuario, 'OK', {
+          timeOut: 3000, positionClass: 'toast-top-center'
+        });
+        this.router.navigate(['/']);
+      },
+      err => {
+        this.load = false;
+        this.isLogged = false;
+        this.errMsj = "Error al autenticarse: " + err.error.message;
+        this.toastr.error(this.errMsj, 'Fail', {
+          timeOut: 3000,  positionClass: 'toast-top-center',
+        });
+        this.alert=true;
+        console.log(err.error.message);
       }
-    }
+    );
+  }
 
-    onLogin(): void {
-      
-      console.log(this.forma.get('nombreUsuario').value)
-      this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
-      this.authService.login(this.loginUsuario).subscribe(
-        data => {
-          
-          this.isLogged = true;
-
-          this.tokenService.setToken(data.token);
-          this.tokenService.setUserName(data.nombreUsuario);
-          this.tokenService.setAuthorities(data.authorities);
-          this.roles = data.authorities;
-          this.toastr.success('Bienvenido ' + data.nombreUsuario, 'OK', {
-            timeOut: 3000, positionClass: 'toast-top-center'
-          });
-          this.router.navigate(['/']);
-        },
-        err => {
-          this.isLogged = false;
-          this.errMsj = "Error al autenticarse: " + err.error.message;
-          this.toastr.error(this.errMsj, 'Fail', {
-            timeOut: 3000,  positionClass: 'toast-top-center',
-          });
-          this.alert=true;
-          console.log(err.error.message);
-        }
-      );
-    }
-
-
-
+  cerrarAlert(){
+    this.alert=false;
+  }
 }

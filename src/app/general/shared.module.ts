@@ -10,9 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
-
-
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { HeaderComponent } from '../general/header/header.component';
 import { FooterComponent } from '../general/footer/footer.component';
 import { SidebarComponent } from '../general/sidebar/sidebar.component';
@@ -34,8 +32,8 @@ import { SidebarComponent } from '../general/sidebar/sidebar.component';
     FlexLayoutModule,
     MatListModule,
     RouterModule,
-    MatTooltipModule
-
+    MatTooltipModule,
+    UiSwitchModule
 
   ],
   exports: [

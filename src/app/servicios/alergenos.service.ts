@@ -74,6 +74,18 @@ export class AlergenosService {
     return this.http.get(`${ this.url }/alergenos/buscar/`,{params:params});
   }
 
+  buscarAlergenosFiltrosOrder( alergeno: AlergenoModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = alergeno == null ? new AlergenoModelo() : alergeno;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    params = params.append('filtros', JSON.stringify(filtros));
+    return this.http.get(`${ this.url }/alergenos/buscar/`,{params:params});
+  }
+
   buscarAlergenosFiltrosTabla( alergeno: AlergenoModelo ) {
     let params = new HttpParams();
     var filtros = alergeno == null ? new AlergenoModelo() : alergeno;

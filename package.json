@@ -41,6 +41,7 @@
     "jszip": "^3.5.0",
     "ng-sidebar": "^9.2.1",
     "ngx-toastr": "^13.0.0",
+    "ngx-ui-switch": "^10.0.2",
     "pdfmake": "^0.1.68",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",

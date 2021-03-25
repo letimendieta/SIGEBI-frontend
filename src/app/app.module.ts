@@ -18,6 +18,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatSortModule,
     FontAwesomeModule,
     NgbModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    UiSwitchModule
   ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]

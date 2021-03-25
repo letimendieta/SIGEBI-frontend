@@ -33,6 +33,7 @@ import { InsumosComponent } from 'src/app/vistas/listas/insumos/insumos.componen
 import { InsumoComponent } from 'src/app/vistas/formularios/insumo/insumo.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
+import { FichaClinicaComponent } from 'src/app/vistas/formularios/fichaClinica/fichaClinica.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { MotivosConsultaComponent } from 'src/app/vistas/listas/motivosConsulta/motivosConsulta.component';
@@ -56,7 +57,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     InsumoComponent,
     HistorialesClinicosComponent,
     HistorialClinicoComponent,
+    FichaClinicaComponent,
     EnfermedadesCie10Component,
     EnfermedadCie10Component,
     ConsultorioComponent,
@@ -117,7 +119,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatInputModule,
     MatSelectModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    UiSwitchModule
   ],
   providers: [
     DashboardService

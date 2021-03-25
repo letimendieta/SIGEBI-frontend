@@ -1,12 +1,9 @@
-import { AlergenoModelo } from './alergeno.modelo';
+export class FichaClinicaModelo {
 
-export class PatologiaProcedimientoModelo {
-
-    patologiaProcedimientoId: number;
+    fichaClinicaId: number;
     codigo: string;
     descripcion: string;
     estado: string;    
-    tipo: string;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

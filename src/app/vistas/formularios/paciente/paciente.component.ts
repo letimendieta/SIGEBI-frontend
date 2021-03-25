@@ -21,6 +21,14 @@ import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { FichaClinicaModelo } from 'src/app/modelos/fichaClinica.modelo';
+import { PatologiaProcedimientoModelo } from 'src/app/modelos/patologiaProcedimiento.modelo';
+import { VacunaModelo } from 'src/app/modelos/vacuna.modelo';
+import { AlergenoModelo } from 'src/app/modelos/alergeno.modelo';
+import { AlergenosService } from 'src/app/servicios/alergenos.service';
+import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasProcedimientos.service';
+import { VacunasService } from 'src/app/servicios/vacunas.service';
+import { ProcesoPacienteFichaClinicaModelo } from 'src/app/modelos/procesoPacienteFichaClinica.modelo';
 
 @Component({
   selector: 'app-paciente',
@@ -50,6 +58,16 @@ export class PacienteComponent implements OnInit {
   alert:boolean=false;
   alertGuardar:boolean=false;
   dtOptions: any = {};
+  fichaClinicaForm: FormGroup;
+  fichaClinica: FichaClinicaModelo = new FichaClinicaModelo();
+  patologiasProcedimientos: PatologiaProcedimientoModelo[] = [];
+  patologiasFamiliares: PatologiaProcedimientoModelo[] = [];
+  vacunas: VacunaModelo[] = [];
+  alergenos: AlergenoModelo[] = [];
+  alergenosSeleccionados: number[] = [];
+  patologiasProcedimientosSeleccionados: number[] = [];
+  patologiasFamiliaresSeleccionados: number[] = [];
+  vacunasSeleccionadas: number[] = [];
 
   constructor( private pacientesService: PacientesService,
                private parametrosService: ParametrosService,
@@ -64,7 +82,10 @@ export class PacienteComponent implements OnInit {
                private route: ActivatedRoute,
                private fb: FormBuilder,
                private fb2: FormBuilder,
-               private modalService: NgbModal) { 
+               private modalService: NgbModal,
+               private alergenosService: AlergenosService,
+               private patologiasProcedimientosService: PatologiasProcedimientosService,
+               private vacunasService: VacunasService,) { 
     this.crearFormulario();
   }              
 
@@ -76,6 +97,10 @@ export class PacienteComponent implements OnInit {
     this.listarDepartamentos();
     this.listarDependencias();
     this.listarEstamentos();
+    this.listarAlergenos();
+    this.listarPatologiasProcedimientos();
+    this.listarPatologiasFamiliares();
+    this.listarVacunas();
 
     if ( id !== 'nuevo' ) {
 
@@ -97,6 +122,143 @@ export class PacienteComponent implements OnInit {
   selectFile(event) {
     this.progress = 0;
     this.selectedFiles = event.target.files;
+  }
+
+  listarAlergenos() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var alergeno = new AlergenoModelo();
+    alergeno.estado = "A";
+
+    this.alergenosService.buscarAlergenosFiltrosOrder(alergeno, orderBy, orderDir)
+    .subscribe( (resp: AlergenoModelo[]) => {
+
+      this.alergenos = resp;
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  listarPatologiasProcedimientos() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var patologiaProcedimiento = new PatologiaProcedimientoModelo();
+    patologiaProcedimiento.estado = "A";
+
+    this.patologiasProcedimientosService.
+    buscarPatologiasProcedimientosFiltrosTablaOrder(patologiaProcedimiento, orderBy, orderDir)
+    .subscribe( (resp: PatologiaProcedimientoModelo[]) => {
+
+      this.patologiasProcedimientos = resp;
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  listarPatologiasFamiliares() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var patologia = new PatologiaProcedimientoModelo();
+    patologia.estado = "A";
+    patologia.tipo = "PAT";
+
+    this.patologiasProcedimientosService.
+    buscarPatologiasProcedimientosFiltrosTablaOrder(patologia, orderBy, orderDir)
+    .subscribe( (resp: PatologiaProcedimientoModelo[]) => {
+
+      this.patologiasFamiliares = resp;
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  listarVacunas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var vacuna = new VacunaModelo();
+    vacuna.estado = "A";
+
+    this.vacunasService.buscarVacunasFiltrosTablaOrder(vacuna, orderBy, orderDir)
+    .subscribe( (resp: VacunaModelo[]) => {
+
+      this.vacunas = resp;
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  onCheckChangeAlergeno(event) {
+    
+    if(event.target.checked){
+     
+      this.alergenosSeleccionados.push(event.target.value);
+    }
+    else{     
+      for (let i = 0; i < this.alergenosSeleccionados.length; i++) {
+        if(this.alergenosSeleccionados[i] == event.target.value) {
+          this.alergenosSeleccionados.splice(i, 1); 
+          return;
+        }
+      }
+    }
+  }
+
+  onCheckChangePatologiaProcedimiento(event) {  
+    if(event.target.checked){     
+      this.patologiasProcedimientosSeleccionados.push(event.target.value);
+    }
+    else{
+      for (let i = 0; i < this.patologiasProcedimientosSeleccionados.length; i++) {
+        if(this.patologiasProcedimientosSeleccionados[i] == event.target.value) {
+          this.patologiasProcedimientosSeleccionados.splice(i, 1); 
+          return;
+        }
+      }
+    }
+  }
+
+  onCheckChangePatologiaFamiliar(event) {  
+    if(event.target.checked){     
+      this.patologiasFamiliaresSeleccionados.push(event.target.value);
+    }
+    else{
+      for (let i = 0; i < this.patologiasFamiliaresSeleccionados.length; i++) {
+        if(this.patologiasFamiliaresSeleccionados[i] == event.target.value) {
+          this.patologiasFamiliaresSeleccionados.splice(i, 1); 
+          return;
+        }
+      }
+    }
+  }
+
+  onCheckChangeVacuna(event) {  
+    if(event.target.checked){     
+      this.vacunasSeleccionadas.push(event.target.value);
+    }
+    else{
+      for (let i = 0; i < this.vacunasSeleccionadas.length; i++) {
+        if(this.vacunasSeleccionadas[i] == event.target.value) {
+          this.vacunasSeleccionadas.splice(i, 1); 
+          return;
+        }
+      }
+    }
   }
 
   obtenerParametros() {
@@ -246,6 +408,10 @@ export class PacienteComponent implements OnInit {
     });
     Swal.showLoading();
 
+    var procesoPacienteFichaClinica = new ProcesoPacienteFichaClinicaModelo();
+    
+    //var values = this.fichaClinicaForm.getRawValue();
+
     let peticion: Observable<any>; 
     var paciente: PacienteModelo = new PacienteModelo();
     paciente = this.pacienteForm.getRawValue();
@@ -263,6 +429,12 @@ export class PacienteComponent implements OnInit {
       paciente.personas.estamentos = null;
     }
 
+    procesoPacienteFichaClinica.paciente = paciente;
+    procesoPacienteFichaClinica.alergenosIdList = this.alergenosSeleccionados;
+    procesoPacienteFichaClinica.patologiasProcedimientosIdList = this.patologiasProcedimientosSeleccionados;
+    procesoPacienteFichaClinica.patologiasFamiliaresIdList = this.patologiasFamiliaresSeleccionados;
+    procesoPacienteFichaClinica.vacunasIdList = this.vacunasSeleccionadas;
+    
     if ( paciente.pacienteId ) {
       paciente.personas.usuarioModificacion = 'admin';
       paciente.usuarioModificacion = 'admin';
@@ -272,7 +444,7 @@ export class PacienteComponent implements OnInit {
         paciente.personas.usuarioCreacion = 'admin';
       }
       paciente.usuarioCreacion = 'admin';    
-      peticion = this.pacientesService.crearPaciente( paciente );
+      peticion = this.pacientesService.crearPacienteFichaClinica( procesoPacienteFichaClinica );
     }
 
     peticion.subscribe( resp => {
@@ -440,6 +612,20 @@ export class PacienteComponent implements OnInit {
       cedula  : ['', [] ],
       nombres  : ['', [] ],
       apellidos: ['', [] ]   
+    });
+
+    this.fichaClinicaForm = this.fb.group({
+      fichaClinicaId  : [null, [] ],
+      patologia  : [null, [] ],
+      tratamiento  : [null, [] ],      
+      opcion6  : [null, [] ],
+      opcion7  : [null, [] ],
+      opcion8: [null, [] ],
+      opcion9: [null, [] ],
+      fechaCreacion: [null, [] ],
+      fechaModificacion: [null, [] ],
+      usuarioCreacion: [null, [] ],
+      usuarioModificacion: [null, [] ]    
     });
 
     this.pacienteForm.get('pacienteId').disable();

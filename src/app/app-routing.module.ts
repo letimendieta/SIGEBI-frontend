@@ -35,6 +35,7 @@ import { StockComponent } from './vistas/formularios/stock/stock.component';
 import { StocksComponent } from './vistas/listas/stocks/stocks.component';
 import { InsumoComponent } from './vistas/formularios/insumo/insumo.component';
 import { InsumosComponent } from './vistas/listas/insumos/insumos.component';
+import { FichaClinicaComponent } from 'src/app/vistas/formularios/fichaClinica/fichaClinica.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
@@ -158,6 +159,10 @@ const routes: Routes = [
   },{
     path: 'insumo/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: InsumoComponent
+  },
+  {
+    path: 'fichaClinica',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: FichaClinicaComponent
   },
   {
     path: 'historialesClinicos',canActivate: [guard], data: { expectedRol: ['admin'] },

@@ -4,6 +4,7 @@ import { PacienteModelo } from '../modelos/paciente.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
+import { ProcesoPacienteFichaClinicaModelo } from '../modelos/procesoPacienteFichaClinica.modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,12 @@ export class PacientesService {
   crearPaciente( paciente: PacienteModelo ) {
 
     return this.http.post(`${ this.url }/pacientes`, paciente);
+
+  }
+
+  crearPacienteFichaClinica( pacienteFichaClinica: ProcesoPacienteFichaClinicaModelo ) {
+
+    return this.http.post(`${ this.url }/pacientes/paciente-ficha-clinica`, pacienteFichaClinica);
 
   }
 
