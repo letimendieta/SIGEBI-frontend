@@ -21,14 +21,23 @@ import { UploadFileService } from 'src/app/servicios/upload-file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
-import { FichaClinicaModelo } from 'src/app/modelos/fichaClinica.modelo';
 import { PatologiaProcedimientoModelo } from 'src/app/modelos/patologiaProcedimiento.modelo';
 import { VacunaModelo } from 'src/app/modelos/vacuna.modelo';
 import { AlergenoModelo } from 'src/app/modelos/alergeno.modelo';
 import { AlergenosService } from 'src/app/servicios/alergenos.service';
 import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasProcedimientos.service';
 import { VacunasService } from 'src/app/servicios/vacunas.service';
-import { ProcesoPacienteFichaClinicaModelo } from 'src/app/modelos/procesoPacienteFichaClinica.modelo';
+import { ProcesoPacienteHistorialClinicoModelo } from 'src/app/modelos/procesoPacienteHistorialClinico.modelo';
+import { HistorialClinicoModelo } from 'src/app/modelos/historialClinico.modelo';
+import { AreaModelo } from 'src/app/modelos/area.modelo';
+import { AreasService } from 'src/app/servicios/areas.service';
+import { HistorialesClinicosService } from 'src/app/servicios/historialesClinicos.service';
+import { AntecedenteModelo } from 'src/app/modelos/antecedente.modelo';
+import { AntecedentesService } from 'src/app/servicios/antecedentes.service';
+import { AlergiasService } from 'src/app/servicios/alergias.service';
+import { AlergiaModelo } from 'src/app/modelos/alergia.modelo';
+import { VacunacionModelo } from 'src/app/modelos/vacunacion.modelo';
+import { VacunacionesService } from 'src/app/servicios/vacunaciones.service';
 
 @Component({
   selector: 'app-paciente',
@@ -46,24 +55,33 @@ export class PacienteComponent implements OnInit {
   listaDepartamentos: DepartamentoModelo;
   listaDependencias: DependenciaModelo;
   listaEstamentos: EstamentoModelo;
+  listaAreas: AreaModelo;
   buscadorForm: FormGroup;
   pacienteForm: FormGroup;
   selectedFiles: FileList;
+  selectedFilesHistorialClinico: FileList;
   currentFile: File;
+  currentFileHistorialClinico: File;
   progress = 0;
+  hcid = 0;
+  progressHistorialClinico = 0;
   message = '';  
   fileInfos: Observable<any>;
+  fileInfosHistorialClinico: Observable<any>;
   desdeModal = true;
   cargando = false;
   alert:boolean=false;
   alertGuardar:boolean=false;
   dtOptions: any = {};
-  fichaClinicaForm: FormGroup;
-  fichaClinica: FichaClinicaModelo = new FichaClinicaModelo();
+  historialClinicoForm: FormGroup;
+  antecedentes: AntecedenteModelo[] = [];
+  alergias: AlergiaModelo[] = [];
+  antecedentesFamiliares: AntecedenteModelo[] = [];
   patologiasProcedimientos: PatologiaProcedimientoModelo[] = [];
   patologiasFamiliares: PatologiaProcedimientoModelo[] = [];
   vacunas: VacunaModelo[] = [];
   alergenos: AlergenoModelo[] = [];
+  vacunaciones: VacunacionModelo[] = [];
   alergenosSeleccionados: number[] = [];
   patologiasProcedimientosSeleccionados: number[] = [];
   patologiasFamiliaresSeleccionados: number[] = [];
@@ -78,10 +96,16 @@ export class PacienteComponent implements OnInit {
                private estamentosService: EstamentosService,
                private personasService: PersonasService,
                private uploadService: UploadFileService,
+               private areasService: AreasService,
+               private historialClinicosService: HistorialesClinicosService,
+               private antecedentesService: AntecedentesService,
+               private alergiaService: AlergiasService,
+               private vacunacionesService: VacunacionesService,
                private router: Router,
                private route: ActivatedRoute,
                private fb: FormBuilder,
                private fb2: FormBuilder,
+               private fb3: FormBuilder,
                private modalService: NgbModal,
                private alergenosService: AlergenosService,
                private patologiasProcedimientosService: PatologiasProcedimientosService,
@@ -93,6 +117,7 @@ export class PacienteComponent implements OnInit {
 
     const id = this.route.snapshot.paramMap.get('id');
     this.obtenerParametros();
+    this.listarAreas();
     this.listarCarreras();
     this.listarDepartamentos();
     this.listarDependencias();
@@ -111,7 +136,31 @@ export class PacienteComponent implements OnInit {
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
           this.ageCalculator();
           this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
-        });
+      });
+
+      var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+      historialClinico.areas = null;
+      historialClinico.pacienteId = Number(id);
+  
+      this.historialClinicosService.buscarHistorialClinicosFiltros( historialClinico )
+        .subscribe( resp  => {
+          if( resp.length > 0 ){      
+            this.historialClinicoForm.patchValue(resp[0]);
+            if( resp[0].pacienteId &&  resp[0].pacienteId ){
+              //this.historialClinicoForm.get('pacientes').patchValue(resp[0].pacienteId);
+              this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
+              var cedula = this.pacienteForm.get('personas').get('cedula').value;
+              var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+              this.fileInfosHistorialClinico = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+            }
+          }          
+      });
+
+      this.obtenerAntecedentes(id);
+      this.obtenerAlergias(id);
+      this.obtenerAntecedentesFamiliares(id);
+      this.obtenerVacunaciones(id);
+
     }else{
       this.crear = true;
     }
@@ -119,9 +168,114 @@ export class PacienteComponent implements OnInit {
     this.crearTablaModel();
   }
 
+  obtenerAntecedentes(pacienteId) {
+    var antecedente = new AntecedenteModelo();
+
+    this.antecedentes = [];
+
+    antecedente.pacienteId = pacienteId;
+    antecedente.tipo = "P";//antecedentes personales
+    this.antecedentesService.buscarAntecedentesFiltros(antecedente)
+    .subscribe( resp => {
+      this.antecedentes = resp;
+      for (let i = 0; i < this.antecedentes.length; i++) {
+        this.patologiasProcedimientosSeleccionados.push(this.antecedentes[i].patologiasProcedimientos.patologiaProcedimientoId);
+      }      
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  obtenerAlergias(pacienteId) {
+    var alergias = new AlergiaModelo();
+
+    this.alergias = [];
+
+    alergias.pacienteId = pacienteId;
+
+    this.alergiaService.buscarAlergiasFiltros(alergias)
+    .subscribe( resp => {
+      this.alergias = resp;
+      for (let i = 0; i < this.alergias.length; i++) {
+        this.alergenosSeleccionados.push(this.alergias[i].alergenos.alergenoId);
+      }
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  obtenerAntecedentesFamiliares(pacienteId) {
+    var antecedente = new AntecedenteModelo();
+
+    this.antecedentesFamiliares = [];
+
+    antecedente.pacienteId = pacienteId;
+    antecedente.tipo = "F";//antecedentes familiares
+    this.antecedentesService.buscarAntecedentesFiltros(antecedente)
+    .subscribe( resp => {
+      this.antecedentesFamiliares = resp;
+      for (let i = 0; i < this.antecedentesFamiliares.length; i++) {
+        this.patologiasFamiliaresSeleccionados.push(this.antecedentesFamiliares[i].patologiasProcedimientos.patologiaProcedimientoId);
+      }
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  obtenerVacunaciones(pacienteId) {
+    var vacunacion = new VacunacionModelo();
+
+    this.vacunaciones = [];
+
+    vacunacion.pacienteId = pacienteId;
+    this.vacunacionesService.buscarVacunacionesFiltrosTabla(vacunacion)
+    .subscribe( resp => {
+      this.vacunaciones = resp;
+      for (let i = 0; i < this.vacunaciones.length; i++) {
+        this.vacunasSeleccionadas.push(this.vacunaciones[i].vacunas.vacunaId);
+      }
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
   selectFile(event) {
     this.progress = 0;
     this.selectedFiles = event.target.files;
+  }
+
+  selectFileHistorialClinico(event) {
+    this.progressHistorialClinico = 0;
+    this.selectedFilesHistorialClinico = event.target.files;
+  }
+
+  listarAreas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
+
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+      .subscribe( (resp: AreaModelo) => {
+        this.listaAreas = resp;
+    });
   }
 
   listarAlergenos() {
@@ -388,112 +542,149 @@ export class PacienteComponent implements OnInit {
   }
 
   guardar(  ) {
-
-    if ( this.pacienteForm.invalid ){
-      this.alertGuardar = true;
-      return Object.values( this.pacienteForm.controls ).forEach( control => {
-        if ( control instanceof FormGroup ) {
-          Object.values( control.controls ).forEach( control => control.markAsTouched() );
-        } else {
-          control.markAsTouched();
-        }
-      });
-    }
-
-    Swal.fire({
-      title: 'Espere',
-      text: 'Guardando información',
-      icon: 'info',
-      allowOutsideClick: false
-    });
-    Swal.showLoading();
-
-    var procesoPacienteFichaClinica = new ProcesoPacienteFichaClinicaModelo();
-    
-    //var values = this.fichaClinicaForm.getRawValue();
-
-    let peticion: Observable<any>; 
-    var paciente: PacienteModelo = new PacienteModelo();
-    paciente = this.pacienteForm.getRawValue();
-
-    if ( paciente.personas.carreras != null && paciente.personas.carreras.carreraId == null ){
-      paciente.personas.carreras = null;
-    }
-    if ( paciente.personas.departamentos != null && paciente.personas.departamentos.departamentoId == null ){
-      paciente.personas.departamentos = null;
-    }
-    if ( paciente.personas.dependencias != null && paciente.personas.dependencias.dependenciaId == null ){
-      paciente.personas.dependencias = null;
-    }
-    if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
-      paciente.personas.estamentos = null;
-    }
-
-    procesoPacienteFichaClinica.paciente = paciente;
-    procesoPacienteFichaClinica.alergenosIdList = this.alergenosSeleccionados;
-    procesoPacienteFichaClinica.patologiasProcedimientosIdList = this.patologiasProcedimientosSeleccionados;
-    procesoPacienteFichaClinica.patologiasFamiliaresIdList = this.patologiasFamiliaresSeleccionados;
-    procesoPacienteFichaClinica.vacunasIdList = this.vacunasSeleccionadas;
-    
-    if ( paciente.pacienteId ) {
-      paciente.personas.usuarioModificacion = 'admin';
-      paciente.usuarioModificacion = 'admin';
-      peticion = this.pacientesService.actualizarPaciente( paciente );
-    } else {
-      if(!paciente.personas.personaId){
-        paciente.personas.usuarioCreacion = 'admin';
-      }
-      paciente.usuarioCreacion = 'admin';    
-      peticion = this.pacientesService.crearPacienteFichaClinica( procesoPacienteFichaClinica );
-    }
-
-    peticion.subscribe( resp => {
-      
-      var mensajeUpload = '';
-      if(this.selectedFiles){
-        var cedula = resp.paciente.personas.cedula;
-        this.currentFile = this.selectedFiles.item(0);
-        var nombre = resp.paciente.personas.nombres;//this.currentFile.name.split(".")[0];
-        //var tipo = this.currentFile.name.split(".")[1];
-        var filename = cedula + '_' + nombre;
-        //if(nombre) filename = filename.concat(nombre);
-        //if(tipo) filename = filename.concat(tipo);
-                      //+ this.currentFile.name.split(".")[0] + this.currentFile.name.split(".")[1];
-        var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
-
-        this.uploadService.upload2(renameFile, "I").subscribe(
-          event => {
-            mensajeUpload
-          },
-          err => {
-            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
+    try {
+          
+      if ( this.pacienteForm.invalid ){
+        this.alertGuardar = true;
+        return Object.values( this.pacienteForm.controls ).forEach( control => {
+          if ( control instanceof FormGroup ) {
+            Object.values( control.controls ).forEach( control => control.markAsTouched() );
+          } else {
+            control.markAsTouched();
+          }
         });
-
-        this.selectedFiles = undefined;
       }
 
       Swal.fire({
-                icon: 'success',
-                title: paciente.personas.nombres +' '+paciente.personas.apellidos,
-                text: resp.mensaje + '. '+ mensajeUpload
-              }).then( resp => {
-
-        if ( resp.value ) {
-          if ( paciente.pacienteId ) {
-            this.router.navigate(['/pacientes']);
-          }else{
-            this.limpiar();
-          }
-        }
+        title: 'Espere',
+        text: 'Guardando información',
+        icon: 'info',
+        allowOutsideClick: false
       });
-    }, e => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Algo salio mal',
-            text:e.status +'. '+ this.comunes.obtenerError(e)
-          })          
-       }
-    );
+      Swal.showLoading();
+
+      var procesoPacienteHistorialClinico = new ProcesoPacienteHistorialClinicoModelo();
+      var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
+      
+      let peticion: Observable<any>; 
+      var paciente: PacienteModelo = new PacienteModelo();
+      paciente = this.pacienteForm.getRawValue();
+
+      if ( paciente.personas.carreras != null && paciente.personas.carreras.carreraId == null ){
+        paciente.personas.carreras = null;
+      }
+      if ( paciente.personas.departamentos != null && paciente.personas.departamentos.departamentoId == null ){
+        paciente.personas.departamentos = null;
+      }
+      if ( paciente.personas.dependencias != null && paciente.personas.dependencias.dependenciaId == null ){
+        paciente.personas.dependencias = null;
+      }
+      if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
+        paciente.personas.estamentos = null;
+      }
+      
+      historialClinico = this.historialClinicoForm.getRawValue();
+
+      historialClinico.pacienteId = paciente.pacienteId;
+      historialClinico.usuarioCreacion = 'admin';
+
+      procesoPacienteHistorialClinico.paciente = paciente;
+      procesoPacienteHistorialClinico.historialClinico = historialClinico;
+      procesoPacienteHistorialClinico.alergenosIdList = this.alergenosSeleccionados;
+      procesoPacienteHistorialClinico.patologiasProcedimientosIdList = this.patologiasProcedimientosSeleccionados;
+      procesoPacienteHistorialClinico.patologiasFamiliaresIdList = this.patologiasFamiliaresSeleccionados;
+      procesoPacienteHistorialClinico.vacunasIdList = this.vacunasSeleccionadas;
+      
+      if ( paciente.pacienteId ) {
+        paciente.personas.usuarioModificacion = 'admin';
+        paciente.usuarioModificacion = 'admin';
+        peticion = this.pacientesService.actualizarPacienteHistorialClinico( procesoPacienteHistorialClinico );
+      } else {
+        if(!paciente.personas.personaId){
+          paciente.personas.usuarioCreacion = 'admin';
+        }
+        paciente.usuarioCreacion = 'admin';    
+        peticion = this.pacientesService.crearPacienteHistorialClinico( procesoPacienteHistorialClinico );
+      }
+
+      peticion.subscribe( resp => {
+        //guardar la imagen del paciente
+        var mensajeUpload = '';
+        if(this.selectedFiles){
+          var cedula = resp.paciente.personas.cedula;
+          this.currentFile = this.selectedFiles.item(0);
+          var nombre = resp.paciente.personas.nombres;
+          var filename = cedula + '_' + nombre;
+          
+          var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
+
+          this.uploadService.upload2(renameFile, "I").subscribe(
+            event => {
+              mensajeUpload
+            },
+            err => {
+              mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
+          });
+
+          this.selectedFiles = undefined;
+        }
+        //guardar el historial clinico digitalizado
+        var mensajeUploadHistorialClinico = '';
+        if(this.selectedFilesHistorialClinico){
+          var cedula = resp.paciente.personas.cedula;
+          var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+          this.currentFileHistorialClinico = this.selectedFilesHistorialClinico.item(0);
+
+          var archivo = this.currentFileHistorialClinico.name.split(".")[0];
+          var tipo = this.currentFileHistorialClinico.name.split(".")[1];
+
+          var filename = cedula + '_' + areaId + '_' + archivo;
+          if (tipo) filename = filename + '_' + tipo;
+          
+          var renameFile = new File([this.currentFileHistorialClinico], filename, {type:this.currentFileHistorialClinico.type});
+
+          this.uploadService.upload2(renameFile, "H").subscribe(
+            event => {
+              mensajeUploadHistorialClinico
+            },
+            err => {
+              mensajeUploadHistorialClinico = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
+              console.log(mensajeUploadHistorialClinico);
+          });
+
+          this.selectedFilesHistorialClinico = undefined;
+        }
+
+        Swal.fire({
+                  icon: 'success',
+                  title: paciente.personas.nombres +' '+paciente.personas.apellidos,
+                  text: resp.mensaje + '. '+ mensajeUpload
+                }).then( resp => {
+
+          if ( resp.value ) {
+            if ( paciente.pacienteId ) {
+              this.router.navigate(['/pacientes']);
+            }else{
+              this.limpiar();
+            }
+          }
+        });
+      }, e => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Algo salio mal',
+              text:e.status +'. '+ this.comunes.obtenerError(e)
+            })          
+        }
+      );
+    } catch (error) {
+      Swal.close();
+      Swal.fire({
+        icon: 'error',
+        title: 'Algo salio mal',
+        text:'verifique la consola...'
+      })  
+    }
   }
 
   ageCalculator(){
@@ -536,6 +727,11 @@ export class PacienteComponent implements OnInit {
   get personaIdNoValido() {
     return this.pacienteForm.get('personas').get('personaId').invalid 
       && this.pacienteForm.get('personas').get('personaId').touched
+  }
+
+  get areaNoValido() {
+    return this.historialClinicoForm.get('areas').get('areaId').invalid 
+    && this.historialClinicoForm.get('areas').get('areaId').touched
   }
 
   get cedulaNoValido() {
@@ -614,10 +810,13 @@ export class PacienteComponent implements OnInit {
       apellidos: ['', [] ]   
     });
 
-    this.fichaClinicaForm = this.fb.group({
-      fichaClinicaId  : [null, [] ],
-      patologia  : [null, [] ],
-      tratamiento  : [null, [] ],      
+    this.historialClinicoForm = this.fb3.group({
+      historialClinicoId  : [null, [] ],
+      areas: this.fb3.group({     
+        areaId  : [null, [Validators.required] ]
+      }),
+      patologiaActual  : [null, [] ],
+      tratamientoActual  : [null, [] ],      
       opcion6  : [null, [] ],
       opcion7  : [null, [] ],
       opcion8: [null, [] ],
@@ -633,6 +832,9 @@ export class PacienteComponent implements OnInit {
     this.pacienteForm.get('personas').get('fechaModificacion').disable();
     this.pacienteForm.get('personas').get('usuarioCreacion').disable();
     this.pacienteForm.get('personas').get('usuarioModificacion').disable();
+
+    this.historialClinicoForm.get('historialClinicoId').disable();
+    this.historialClinicoForm.get('areas').get('areaId').disable();
 
     this.pacienteForm.get('fechaCreacion').disable();
     this.pacienteForm.get('fechaModificacion').disable();
@@ -666,6 +868,46 @@ export class PacienteComponent implements OnInit {
       })
       this.cargando = false;
     });
+  }
+
+  getCheckedAntecedentes(patologiaProcedimientoId) {
+
+    for (let i = 0; i < this.antecedentes.length; i++) {
+      if(this.antecedentes[i].patologiasProcedimientos.patologiaProcedimientoId == patologiaProcedimientoId) {        
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getCheckedAlergias(alergenoId) {
+
+    for (let i = 0; i < this.alergias.length; i++) {
+      if(this.alergias[i].alergenos.alergenoId == alergenoId) {        
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getCheckedAntecedentesFamiliares(patologiaProcedimientoId) {
+
+    for (let i = 0; i < this.antecedentesFamiliares.length; i++) {
+      if(this.antecedentesFamiliares[i].patologiasProcedimientos.patologiaProcedimientoId == patologiaProcedimientoId) {        
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getCheckedVacunaciones(vacunaId) {
+
+    for (let i = 0; i < this.vacunaciones.length; i++) {
+      if(this.vacunaciones[i].vacunas.vacunaId == vacunaId) {        
+        return true;
+      }
+    }
+    return false;
   }
 
   limpiarModal(event) {

@@ -43,6 +43,8 @@ import { EnfermedadesCie10Service } from 'src/app/servicios/enfermedadesCie10.se
 import { ReporteModelo } from 'src/app/modelos/reporte.modelo';
 import { report } from 'process';
 import { TratamientosInsumosService } from 'src/app/servicios/tratamientosInsumos.service';
+import { VacunacionModelo } from 'src/app/modelos/vacunacion.modelo';
+import { VacunacionesService } from 'src/app/servicios/vacunaciones.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -71,6 +73,7 @@ export class ConsultorioComponent implements OnInit {
   tratamientoNoFarmacologicoForm: FormGroup;
   detalleConsultaForm: FormGroup;
   pacientes: PacienteModelo[] = [];
+  vacunaciones: VacunacionModelo[] = [];
   patologiasProcedimientos: PatologiaProcedimientoModelo[] = [];
   antecedentes: AntecedenteModelo[] = [];
   antecedentesFamiliares: AntecedenteModelo[] = [];
@@ -105,6 +108,7 @@ export class ConsultorioComponent implements OnInit {
   dtOptionsAntecedentes: any = {};
   dtOptionsAntecedentesFamiliares: any = {};
   dtOptionsAlergias: any = {};
+  dtOptionsVacunaciones: any = {};
   dtOptionsStock: any = {};  
   dtOptionsEnfermedadCie10: any = {};
   dtOptionsConsultas: any = {};
@@ -118,12 +122,15 @@ export class ConsultorioComponent implements OnInit {
   dtTriggerAntecedentes : Subject<any> = new Subject<any>();
   dtTriggerAntecedentesFamiliares : Subject<any> = new Subject<any>();
   dtTriggerPatologias : Subject<any> = new Subject<any>();
+  dtTriggerVacunaciones : Subject<any> = new Subject<any>();
   dtTriggerSignosVitales : Subject<any> = new Subject<any>();
   dtTriggerFichaMedica : Subject<any> = new Subject<any>();
   hcid = 0;
   fileInfos: Observable<any>;
   hiddenAlergenos = true;
   hiddenAntePatProc = true;
+  hiddenPatologiaActual = true;
+  existePatologiaActual = 0;
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -131,6 +138,7 @@ export class ConsultorioComponent implements OnInit {
                private pacientesService: PacientesService,
                private antecedentesService: AntecedentesService,
                private alergiaService: AlergiasService,
+               private vacunacionesService: VacunacionesService,
                private alergenosService: AlergenosService,
                private patologiasProcedimientosService: PatologiasProcedimientosService,
                private modalService: NgbModal,
@@ -169,6 +177,7 @@ export class ConsultorioComponent implements OnInit {
     this.crearTablaAntecedentes();
     this.crearTablaAlergias();
     this.crearTablaAntecedentesFamiliares();
+    this.crearTablaVacunaciones();
     this.crearTablaMedicamentos();
     this.crearTablaModel();
     this.crearTablaModelStock();
@@ -316,12 +325,16 @@ export class ConsultorioComponent implements OnInit {
   obtenerHistorialClinico() {   
     var historialClinico = new HistorialClinicoModelo();
 
-    historialClinico.pacientes.pacienteId = this.paciente.pacienteId;
+    historialClinico.pacienteId = this.paciente.pacienteId;
     
     this.historialClinicosService.buscarHistorialClinicosFiltros(historialClinico)
     .subscribe( resp => {
       if(resp.length > 0){
         this.historialClinicoForm.patchValue(resp[0]);
+        if(this.historialClinicoForm.get('patologiaActual').value
+          || this.historialClinicoForm.get('tratamientoActual').value){
+          this.existePatologiaActual = 1;
+        }
         if ( resp[0].historialClinicoId != null ){
           this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
@@ -343,46 +356,7 @@ export class ConsultorioComponent implements OnInit {
     this.obtenerAntecedentes();
     this.obtenerAntecedentesFamiliares();
     this.obtenerAlergias();
-  }
-
-  obtenerPatologiasProcedimientosActual() {   
-    var patologiaProcedimiento = new PatologiaProcedimientoModelo();
-
-    /*patologiaProcedimiento. = this.buscadorForm.get('cedulaBusqueda').value;
-    if(!pacientePersona.cedula){
-      paciente.personas = null;
-    }else{
-      paciente.personas = pacientePersona;
-    }
-    paciente.pacienteId = this.buscadorForm.get('pacienteIdBusqueda').value;
-    if(paciente.personas == null && !paciente.pacienteId){
-      paciente = null;
-    }      
- 
-    buscador.pacientes = this.paciente;
-
-    this.historialClinicosService.buscarHistorialClinicosFiltros(buscador)
-    .subscribe( resp => {     
-
-      if(resp.length <= 0){
-        Swal.fire({
-          icon: 'info',
-          title: 'No se encontro paciente',
-          text: 'No se encontro paciente'
-        })
-      }else{
-        this.historialClinicoForm.patchValue(resp[0]);
-        //this.buscadorForm.get('pacienteIdBusqueda').setValue(resp[0].pacienteId);
-        //this.buscadorForm.get('cedulaBusqueda').setValue(resp[0].personas.cedula);
-      }
-    }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
-    });*/
+    this.obtenerVacunaciones();
   }
 
   obtenerAntecedentes() {
@@ -443,6 +417,29 @@ export class ConsultorioComponent implements OnInit {
 
       this.alergias = resp;
       this.dtTriggerAlergias.next();
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+      this.cargando = false;
+    });
+  }
+
+  obtenerVacunaciones() {
+    var vacunacion = new VacunacionModelo();
+
+    this.vacunaciones = [];
+    $('#tableVacunaciones').DataTable().destroy();
+
+    vacunacion.pacienteId = this.paciente.pacienteId;
+
+    this.vacunacionesService.buscarVacunacionesFiltrosTabla(vacunacion)
+    .subscribe( resp => {
+
+      this.vacunaciones = resp;
+      this.dtTriggerVacunaciones.next();
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -620,17 +617,23 @@ export class ConsultorioComponent implements OnInit {
     if( opcion == "ALE" ){
       this.listarAlergenos();
       this.hiddenAlergenos = false;
-      this.hiddenAntePatProc = true;   
-    }else if( opcion == "P/T" ){      
+      this.hiddenAntePatProc = true;
+      this.hiddenPatologiaActual = true;   
+    }else if( opcion == "P/T" ){ 
+      this.hiddenPatologiaActual = false;     
       this.hiddenAlergenos = true; 
-      this.hiddenAntePatProc = true;  
+      this.hiddenAntePatProc = true;      
+      this.selectFichaMedicaForm.get('patologiaActual').setValue(this.historialClinicoForm.get('patologiaActual').value);
+      this.selectFichaMedicaForm.get('tratamientoActual').setValue(this.historialClinicoForm.get('tratamientoActual').value);
     }else if( opcion == "P/P" ){
       this.listarPatologiasProcedimientos();
       this.hiddenAlergenos = true;
       this.hiddenAntePatProc = false;
+      this.hiddenPatologiaActual = true;
     }else if( opcion == "null" ){
       this.hiddenAlergenos = true;
       this.hiddenAntePatProc = true;
+      this.hiddenPatologiaActual = true;
     }
   }
 
@@ -682,7 +685,9 @@ export class ConsultorioComponent implements OnInit {
     });
 
     this.historialClinicoForm = this.fb2.group({
-      historialClinicoId  : [null, [] ],         
+      historialClinicoId  : [null, [] ],
+      patologiaActual  : [null, [] ], 
+      tratamientoActual  : [null, [] ],      
       areas  : this.fb2.group({
         areaId: [null, [] ],
         descripcion: [null, [] ]
@@ -745,7 +750,9 @@ export class ConsultorioComponent implements OnInit {
     this.selectFichaMedicaForm  = this.fb11.group({
       selectOpcionFicha  : [null, [] ],
       selectAlergeno  : [null, [] ],
-      selectAntecPatologiasProcedimientos  : [null, [] ]
+      selectAntecPatologiasProcedimientos  : [null, [] ],
+      patologiaActual : [null, [] ],
+      tratamientoActual : [null, [] ]
     });
 
     this.tratamientoFarmacologicoForm = this.fb12.group({
@@ -1007,6 +1014,39 @@ export class ConsultorioComponent implements OnInit {
         {data:'#'},
         {data:'alergiaId'},
         {data:'alergenos.descripcion'}
+      ]
+    };
+  }
+
+  crearTablaVacunaciones(){
+    this.dtOptionsVacunaciones = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,      
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sLoadingRecords": "Cargando..."
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'vacunaId'},{data:'codigo'},
+        {data:'descripcion'},{data:'estado'},
       ]
     };
   }
@@ -1381,6 +1421,8 @@ export class ConsultorioComponent implements OnInit {
     $('#tableConsultas').DataTable().destroy();
     this.signosVitales = [];
     $('#tableSignosVitales').DataTable().destroy();
+    this.vacunaciones = [];
+    $('#tableVacunaciones').DataTable().destroy();
     this.diagnosticoPrimarioForm.reset();
     this.diagnosticoSecundarioForm.reset();
     this.tratamientoFarmacologicoForm.reset();
@@ -1390,6 +1432,7 @@ export class ConsultorioComponent implements OnInit {
     this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();
     this.alertGeneral=false;
     this.guardarBtn = true;
+    this.existePatologiaActual = 0;
   }
 
   limpiarDiagnosticoTratamiento() {
@@ -1407,7 +1450,10 @@ export class ConsultorioComponent implements OnInit {
     $('#tableFichaMedica').DataTable().destroy();
     this.dtTriggerFichaMedica.next();
     this.enfermedadCie10PrincipalSeleccionada = new EnfermedadCie10Modelo();
-    this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();    
+    this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();
+    this.hiddenAlergenos = true;
+    this.hiddenAntePatProc = true;
+    this.hiddenPatologiaActual = true;   
   }
 
   cerrarAlert(){
@@ -1676,6 +1722,7 @@ export class ConsultorioComponent implements OnInit {
     var anamnesis: AnamnesisModelo;
     var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
     var reporteModelo: ReporteModelo = new ReporteModelo;
+    var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
 
     anamnesis = this.anamnesisForm.getRawValue();
     motivoConsulta.motivoConsultaId = this.anamnesisForm.get('motivoConsultaId').value;
@@ -1708,12 +1755,18 @@ export class ConsultorioComponent implements OnInit {
     consulta.funcionarios.funcionarioId = 3; //cambiar por el id del funcionario
     consulta.usuarioCreacion = 'admin';
 
+    historialClinico.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
+    historialClinico.patologiaActual = this.selectFichaMedicaForm.get('patologiaActual').value;
+    historialClinico.tratamientoActual = this.selectFichaMedicaForm.get('tratamientoActual').value;
+    historialClinico.usuarioModificacion = 'admin';
+
     procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     procesoDiagnosticoTratamiento.tratamiento = tratamiento;
     procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
     procesoDiagnosticoTratamiento.consulta = consulta;
     procesoDiagnosticoTratamiento.anamnesis = anamnesis;
     procesoDiagnosticoTratamiento.fichaMedicaList = fichaMedicaList;
+    procesoDiagnosticoTratamiento.historialClinico = historialClinico;
 
     peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);    
 

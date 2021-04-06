@@ -74,8 +74,8 @@ export class HistorialClinicoComponent implements OnInit {
         .subscribe( resp  => {
           if( resp.length > 0 ){      
             this.historialClinicoForm.patchValue(resp[0]);
-            if( resp[0].pacientes &&  resp[0].pacientes.pacienteId ){
-              this.historialClinicoForm.get('pacientes').patchValue(resp[0].pacientes);
+            if( resp[0].pacienteId &&  resp[0].pacienteId ){
+              this.historialClinicoForm.get('pacientes').patchValue(resp[0].pacienteId);
               this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
               var cedula = this.historialClinicoForm.get('pacientes').get('personas').get('cedula').value;
               var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
@@ -183,12 +183,12 @@ export class HistorialClinicoComponent implements OnInit {
     
     if ( historialClinico.historialClinicoId ) {       
       historialClinico.usuarioModificacion = 'admin';
-      historialClinico.pacientes = paciente;
+      //historialClinico.pacientes = paciente;
       
       peticion = this.historialClinicosService.actualizarHistorialClinico( historialClinico );
     } else {
       historialClinico.usuarioCreacion = 'admin';
-      historialClinico.pacientes = paciente;
+      //historialClinico.pacientes = paciente;
 
       peticion = this.historialClinicosService.crearHistorialClinico( historialClinico );
     }
@@ -219,6 +219,8 @@ export class HistorialClinicoComponent implements OnInit {
 
         this.selectedFiles = undefined;
       }
+
+      
       Swal.fire({
                 icon: 'success',
                 title: resp.historialClinico.historialClinicoId.toString(),

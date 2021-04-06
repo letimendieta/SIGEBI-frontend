@@ -177,9 +177,9 @@ export class HistorialesClinicosComponent implements OnInit {
       buscador = null;
     }*/
 
-    buscador.pacientes.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
-    if(!buscador.pacientes.pacienteId){
-      buscador.pacientes = null;
+    buscador.pacienteId = this.buscadorForm.get('pacientes').get('pacienteId').value;
+    if(!buscador.pacienteId){
+      buscador.pacienteId = null;
     }
 
     this.historialesClinicosService.buscarHistorialClinicosFiltros(buscador)

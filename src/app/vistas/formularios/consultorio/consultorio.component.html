@@ -75,7 +75,7 @@
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <a class="nav-item nav-link active" id="nav-datosP-tab" data-toggle="tab" href="#nav-datosP" role="tab" aria-controls="nav-datosP" aria-selected="true">Datos Personales</a>
-        <a class="nav-item nav-link" id="nav-fichaM-tab" data-toggle="tab" href="#nav-fichaM" role="tab" aria-controls="nav-fichaM" aria-selected="false">Ficha M&eacute;dica</a>
+        <!--a class="nav-item nav-link" id="nav-fichaM-tab" data-toggle="tab" href="#nav-fichaM" role="tab" aria-controls="nav-fichaM" aria-selected="false">Ficha M&eacute;dica</a-->
         <a class="nav-item nav-link" id="nav-historialC-tab" data-toggle="tab" href="#nav-historialC" role="tab" aria-controls="nav-historialC" aria-selected="false">Historial Cl&iacute;nico</a>
         <!--a class="nav-item nav-link" id="nav-Anamnesis-tab" data-toggle="tab" href="#nav-Anamnesis" role="tab" aria-controls="nav-Anamnesis" aria-selected="false">Anamnesis</a-->
         <a class="nav-item nav-link" id="nav-tratamiento-tab" data-toggle="tab" href="#nav-tratamiento" role="tab" aria-controls="nav-tratamiento" aria-selected="false">Anamnesis, Diagn&oacute;stico y Tratamiento</a>
@@ -295,19 +295,14 @@
         </div>
       </div>
       <!--Ficha Medica-->
-      <div class="tab-pane fade" id="nav-fichaM" role="tabpanel" aria-labelledby="nav-fichaM-tab">
+      <!--div class="tab-pane fade" id="nav-fichaM" role="tabpanel" aria-labelledby="nav-fichaM-tab">
         <div class="card"> 
           <br>
-          <!-- Datos paciente-->
           <div class="row justify-content-center">
             <div class="col-lg-5">
               <div class="container">              
                 <div class="row">
-                  <div class="col"><b>Grupo Sangu&iacute;neo:</b></div>
-                  <div class="col">{{pacienteForm.get('grupoSanguineo').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Seguro m&eacute;dico:</b></div>
-                  <div class="col">{{pacienteForm.get('seguroMedico').value}}</div>                              
+                                               
                 </div>
               </div>              
             </div>
@@ -326,191 +321,13 @@
 
           </div>
           <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAlergias"
-                aria-expanded="true" 
-                aria-controls="collapseAlergias">Alergias
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseAlergias">
-              <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAlergias"
-                  [dtTrigger]="dtTriggerAlergias" id = "tableAlergias" class="table table-sm">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Al&eacute;rgeno</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let alergia of alergias; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ alergia.alergiaId }}</td>
-                      <td>{{ alergia.alergenos.descripcion }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>                                       
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          
           <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapsePatologias"
-                aria-expanded="true" 
-                aria-controls="collapsePatologias">Patolog&iacute;as y tratamientos actuales
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapsePatologias">
-              <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsPatologias" class="table table-sm"
-                  [dtTrigger]="dtTriggerPatologias" id = "tablePatologias">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Patolog&iacute;a</th>
-                      <th scope="col">Tratamiento</th>
-                      <th scope="col">Estado</th>                    
-                      <th scope="col">Editar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let patologia of patologiasProcedimientos; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ patologia.patologiaId }}</td>
-                      <td>{{ patologia.codigo }}</td>
-                      <td>{{ patologia.descripcion }}</td>
-                      <td>{{ patologia.estado }}</td>        
-                      <td>
-                        <a class="btn btn-info"
-                                [routerLink]="['/patologia', patologia.patologiaId ]">
-                          <i class="fa fa-edit"></i>
-                        </a>
-                      </td>                   
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td></td>       
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>                       
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          
           <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentes"
-                aria-expanded="true" 
-                aria-controls="collapseAntecedentes">Antecedentes de infecciones y procedimientos
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseAntecedentes">
-              <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAntecedentes" class="table table-sm"
-                  [dtTrigger]="dtTriggerAntecedentes" id = "tableAntecedentes">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Patolog&iacute;a/Procedimiento</th>
-                      <th scope="col">Tipo</th>                    
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let antecedente of antecedentes; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ antecedente.antecedenteId }}</td>
-                      <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
-                      <td>{{ antecedente.tipo }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td></td>       
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>                       
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          
           <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentesFamiliar"
-                aria-expanded="true" 
-                aria-controls="collapseAntecedentesFamiliar">Antecedentes familiares
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseAntecedentesFamiliar">
-              <div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsAntecedentesFamiliares" class="table table-sm"
-                  [dtTrigger]="dtTriggerAntecedentesFamiliares" id = "tableAntecedentesFamiliares">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Patolog&iacute;a/Procedimiento</th>
-                      <th scope="col">Tipo</th>                    
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let antecedente of antecedentesFamiliares; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ antecedente.antecedenteId }}</td>
-                      <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
-                      <td>{{ antecedente.tipo }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td></td>       
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>                                     
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>          
+                    
           <br>
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseFichas"
@@ -518,46 +335,12 @@
                 aria-controls="collapseFichas">Fichas Digitalizadas
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapseFichas">
-              <!--div class="table-responsive table-hover">
-                <table datatable [dtOptions]="dtOptionsFichas" class="table table-sm" 
-                  *ngIf="fichas.length > 0">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">#</th>
-                      <th scope="col">Id</th>
-                      <th scope="col">Alergeno</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let ficha of fichas; let i = index">
-                      <th scope="row">{{ i + 1 }}</th>
-                      <td>{{ alergia.alergiaId }}</td>
-                      <td>{{ alergia.alergenos.descripcion }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
-                    <td></td>
-                    <td></td>       
-                    <td>
-                      <h4 class="alert-heading">Cargando</h4>
-                      <p>
-                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                      </p>
-                      <p class="mb-0">
-                        Espere por favor
-                      </p>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>                       
-                  </tbody>
-                </table>
-              </div-->
+              
             </div>
           </div>
           <br> 
         </div>       
-      </div>      
+      </div-->      
       <!--Historial Clinico-->
       <div class="tab-pane fade" id="nav-historialC" role="tabpanel" aria-labelledby="nav-historialC-tab">
         <div class="card"> 
@@ -570,8 +353,15 @@
                   <div class="col">{{historialClinicoForm.get('historialClinicoId').value}}</div>
                   <div class="w-100"></div>
                   <div class="col"><b>&Aacute;rea:</b></div>
-                  <div class="col">{{historialClinicoForm.get('areas').get('descripcion').value}}</div>                                               
-                </div>
+                  <div class="col">{{historialClinicoForm.get('areas').get('descripcion').value}}</div>  
+                  <div class="w-100"></div>                                             
+                  <div class="col"><b>Grupo Sangu&iacute;neo:</b></div>
+                  <div class="col">{{pacienteForm.get('grupoSanguineo').value}}</div>
+                  <div class="w-100"></div>
+                  <div class="col"><b>Seguro m&eacute;dico:</b></div>
+                  <div class="col">{{pacienteForm.get('seguroMedico').value}}</div> 
+                  <div class="w-100"></div>                  
+                </div>                
               </div>              
             </div>
 
@@ -588,13 +378,27 @@
             </div>
 
           </div>
+          <div class="text-center">
+            <p>
+              <button class="btn btn-light" type="button" 
+                data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" 
+                aria-controls="collapseSignosVitales collapseConsultas collapseAlergias collapsePatologias 
+                collapseAntecedentes collapseAntecedentesFamiliar">
+                <i class="fas fa-angle-double-up"></i>&nbsp;&nbsp;<i class="fas fa-angle-double-down"></i>
+                &nbsp;&nbsp; Desplegar/contraer todo
+              </button>
+            </p>
+          </div>
           <br>
+          <!--Signos vitales-->
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseSignosVitales"
                 aria-expanded="true" 
                 aria-controls="collapseSignosVitales">Signos vitales
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseSignosVitales">              
+                &nbsp;<i class="fas fa-angle-double-up"></i> 
+                &nbsp;&nbsp;({{signosVitales.length}})
+            </h3>  
+            <div class="card-body collapse show multi-collapse" id="collapseSignosVitales">              
               <div class="table-responsive table-hover">
                 <table datatable [dtOptions]="dtOptionsSignosVitales" 
                   [dtTrigger]="dtTriggerSignosVitales" id = "tableSignosVitales" class="table-bordered">
@@ -647,12 +451,15 @@
             </div>
           </div>
           <br>
+          <!--Consultas-->
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseConsultas"
                 aria-expanded="true" 
                 aria-controls="collapseConsultas">Consultas
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseConsultas">              
+                &nbsp;<i class="fas fa-angle-double-up"></i>
+                &nbsp;&nbsp;({{consultas.length}})
+            </h3>  
+            <div class="card-body collapse show multi-collapse" id="collapseConsultas">              
               <div class="table-responsive table-hover">
                 <table datatable [dtOptions]="dtOptionsConsultas" 
                   [dtTrigger]="dtTriggerConsultas" id = "tableConsultas" class="table-bordered">
@@ -839,12 +646,235 @@
             </div>
           </div>
           <br>
+          <!--Patologias y tratamientos actuales-->
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapsePatologiasActual"
+                aria-expanded="true" 
+                aria-controls="collapsePatologiasActual">Patolog&iacute;as y tratamientos actuales
+                &nbsp;<i class="fas fa-angle-double-up"></i>
+                &nbsp;&nbsp;({{existePatologiaActual}})
+            </h3>  
+            <div class="card-body collapse show multi-collapse" id="collapsePatologiasActual">
+              <div class="row">
+                <div class="col-lg-5">
+                    <label><b>Patolog&iacute;a</b></label>
+                    <p>{{historialClinicoForm.get('patologiaActual').value}}</p>
+                </div>
+                <div class="col-lg-5">
+                    <label><b>Tratamiento</b></label>
+                    <p>{{historialClinicoForm.get('tratamientoActual').value}}</p>
+                </div>
+              </div> 
+            </div>
+          </div>
+          <br>
+          <!--Alergias-->
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card">
+                <h3 class="card-header" data-toggle="collapse" data-target="#collapseAlergias"
+                    aria-expanded="true" 
+                    aria-controls="collapseAlergias">Alergias
+                    &nbsp;<i class="fas fa-angle-double-up"></i>
+                    &nbsp;&nbsp;({{alergias.length}})
+                </h3>  
+                <div class="card-body collapse show multi-collapse" id="collapseAlergias">
+                  <div class="table-responsive table-hover">
+                    <table datatable [dtOptions]="dtOptionsAlergias"
+                      [dtTrigger]="dtTriggerAlergias" id = "tableAlergias" class="table table-sm">
+                      <thead>
+                        <tr class="table-primary">
+                          <th scope="col">#</th>
+                          <th scope="col">Id</th>
+                          <th scope="col">Al&eacute;rgeno</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let alergia of alergias; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ alergia.alergiaId }}</td>
+                          <td>{{ alergia.alergenos.descripcion }}</td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                        <td></td>
+                        <td>
+                          <h4 class="alert-heading">Cargando</h4>
+                          <p>
+                            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                          </p>
+                          <p class="mb-0">
+                            Espere por favor
+                          </p>
+                        </td>
+                        <td></td>                                       
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <h3 class="card-header" data-toggle="collapse" data-target="#collapseVacunaciones"
+                    aria-expanded="true" 
+                    aria-controls="collapseVacunaciones">Vacunaciones
+                    &nbsp;<i class="fas fa-angle-double-up"></i>
+                    &nbsp;&nbsp;({{vacunaciones.length}})
+                </h3>  
+                <div class="card-body collapse show multi-collapse" id="collapseVacunaciones">
+                  <div class="table-responsive table-hover">
+                    <table datatable [dtOptions]="dtOptionsVacunaciones" class="table table-sm"
+                      [dtTrigger]="dtTriggerVacunaciones" id = "tableVacunaciones">
+                      <thead>
+                        <tr class="table-primary">
+                          <th scope="col">#</th>
+                          <th scope="col">Id</th>
+                          <th scope="col">Codigo</th>
+                          <th scope="col">Descripcion</th>
+                          <th scope="col">Estado</th>                    
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let vacunacion of vacunaciones; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ vacunacion.vacunas.vacunaId }}</td>
+                          <td>{{ vacunacion.vacunas.codigo }}</td>
+                          <td>{{ vacunacion.vacunas.descripcion }}</td>
+                          <td>{{ vacunacion.vacunas.estado }}</td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                        <td></td>
+                        <td></td>       
+                        <td>
+                          <h4 class="alert-heading">Cargando</h4>
+                          <p>
+                            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                          </p>
+                          <p class="mb-0">
+                            Espere por favor
+                          </p>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>                       
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <!--Antecedentes-->
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card">
+                <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentes"
+                    aria-expanded="true" 
+                    aria-controls="collapseAntecedentes">Antecedentes de infecciones y procedimientos
+                    &nbsp;<i class="fas fa-angle-double-up"></i>
+                    &nbsp;&nbsp;({{antecedentes.length}})
+                </h3>  
+                <div class="card-body collapse show multi-collapse" id="collapseAntecedentes">
+                  <div class="table-responsive table-hover">
+                    <table datatable [dtOptions]="dtOptionsAntecedentes" class="table table-sm"
+                      [dtTrigger]="dtTriggerAntecedentes" id = "tableAntecedentes">
+                      <thead>
+                        <tr class="table-primary">
+                          <th scope="col">#</th>
+                          <th scope="col">Id</th>
+                          <th scope="col">Patolog&iacute;a/Procedimiento</th>
+                          <th scope="col">Tipo</th>                    
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let antecedente of antecedentes; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ antecedente.antecedenteId }}</td>
+                          <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
+                          <td>{{ antecedente.tipo }}</td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                        <td></td>
+                        <td></td>       
+                        <td>
+                          <h4 class="alert-heading">Cargando</h4>
+                          <p>
+                            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                          </p>
+                          <p class="mb-0">
+                            Espere por favor
+                          </p>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>                       
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <h3 class="card-header" data-toggle="collapse" data-target="#collapseAntecedentesFamiliar"
+                    aria-expanded="true" 
+                    aria-controls="collapseAntecedentesFamiliar">Antecedentes familiares
+                    &nbsp;<i class="fas fa-angle-double-up"></i>
+                    &nbsp;&nbsp;({{antecedentesFamiliares.length}})
+                </h3>  
+                <div class="card-body collapse show multi-collapse" id="collapseAntecedentesFamiliar">
+                  <div class="table-responsive table-hover">
+                    <table datatable [dtOptions]="dtOptionsAntecedentesFamiliares" class="table table-sm"
+                      [dtTrigger]="dtTriggerAntecedentesFamiliares" id = "tableAntecedentesFamiliares">
+                      <thead>
+                        <tr class="table-primary">
+                          <th scope="col">#</th>
+                          <th scope="col">Id</th>
+                          <th scope="col">Patolog&iacute;a/Procedimiento</th>
+                          <th scope="col">Tipo</th>                    
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let antecedente of antecedentesFamiliares; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ antecedente.antecedenteId }}</td>
+                          <td>{{ antecedente.patologiasProcedimientos.descripcion}}</td>
+                          <td>{{ antecedente.tipo }}</td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
+                        <td></td>
+                        <td></td>       
+                        <td>
+                          <h4 class="alert-heading">Cargando</h4>
+                          <p>
+                            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                          </p>
+                          <p class="mb-0">
+                            Espere por favor
+                          </p>
+                        </td>
+                        <td></td>                                     
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>            
+          <br>
+          <!--Historial clinco digitalizado-->
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseHistorialDigitalizado"
                 aria-expanded="true" 
                 aria-controls="collapseHistorialDigitalizado">Historial cl&iacute;nico digitalizado
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseHistorialDigitalizado">
+                &nbsp;<i class="fas fa-angle-double-up"></i>
+            </h3>  
+            <div class="card-body collapse show multi-collapse" id="collapseHistorialDigitalizado">
               <ul class="list-group list-group-flush"
                     *ngFor="let file of fileInfos | async">
                     <li class="list-group-item">
@@ -862,6 +892,18 @@
       </div-->
       <!--Diagnostico y Tratamiento-->
       <div class="tab-pane fade" id="nav-tratamiento" role="tabpanel" aria-labelledby="nav-tratamiento-tab">    
+        <!--br>
+        <div class="text-center">
+          <p>
+            <button class="btn btn-light" type="button" 
+              data-toggle="collapseConsulta" data-target=".multi-collapse" aria-expanded="false" 
+              aria-controls="collapseAnamnesis collapseNuevoDiagnostico collapseNuevoTratamiento">
+              <i class="fas fa-angle-double-up"></i>&nbsp;&nbsp;<i class="fas fa-angle-double-down"></i>
+              &nbsp;&nbsp; Desplegar/contraer todo
+            </button>
+          </p>
+        </div-->
+        <br>
         <div class="card">
           <div class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseAnamnesis"
@@ -913,16 +955,16 @@
           </div> 
           <br>
           <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseNuevaConsulta"
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapseNuevoDiagnostico"
                 aria-expanded="true" 
-                aria-controls="collapseNuevaConsulta">Nuevo Diagn&oacute;stico
+                aria-controls="collapseNuevoDiagnostico">Nuevo Diagn&oacute;stico
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>
 
-            <div class="card-body collapse show" id="collapseNuevaConsulta">
+            <div class="card-body collapse show" id="collapseNuevoDiagnostico">
               <div class="nav nav-tabs" id="nav-tab-diagnostico" role="tablist">
                 <a class="nav-item nav-link active" id="nav-principal-tab" data-toggle="tab" href="#nav-principal" role="tab" aria-controls="nav-principal" aria-selected="true">Diagn&oacute;stico Principal</a>
                 <a class="nav-item nav-link" id="nav-secundario-tab" data-toggle="tab" href="#nav-secundario" role="tab" aria-controls="nav-secundario" aria-selected="false">Diagn&oacute;stico Secundario</a>
-                <a class="nav-item nav-link" id="nav-fichaMedica-tab" data-toggle="tab" href="#nav-fichaMedica" role="tab" aria-controls="nav-fichaMedica" aria-selected="false">Actualizar Ficha M&eacute;dica</a>
+                <a class="nav-item nav-link" id="nav-historialClinico-tab" data-toggle="tab" href="#nav-historialClinico" role="tab" aria-controls="nav-historialClinico" aria-selected="false">Actualizar Historial Cl&iacute;nico</a>
               </div>
               <div class="tab-content" id="nav-tabContentDiagnostico">
                 <div class="tab-pane fade show active" id="nav-principal" role="tabpanel" aria-labelledby="nav-principal-tab">
@@ -1094,14 +1136,11 @@
                     </div>
                   </form> 
                 </div>
-                <div class="tab-pane fade" id="nav-fichaMedica" role="tabpanel" aria-labelledby="nav-fichaMedica-tab">                    
-                  <br>
-
-                  
+                <div class="tab-pane fade" id="nav-historialClinico" role="tabpanel" aria-labelledby="nav-historialClinico-tab">                    
+                  <br>                  
                   <form [formGroup]="selectFichaMedicaForm">
                     <div class="form-row" >
                       <div class="col-lg-5">
-                        <!--div class="col"><b>Elegir:</b></div-->
                         <select (change)="opcionFicha($event)" class="form-control input-sm" 
                           formControlName="selectOpcionFicha">
                             <option [selected]="true" value=null>Seleccione una opci&oacute;n</option>
@@ -1130,6 +1169,21 @@
                         </mat-form-field>
                         &nbsp;
                         <button (click)="agregarAficha($event)"> <i class="fas fa-plus-circle"></i> </button>
+                      </div>
+                    </div>
+                    <br>
+                    <div>
+                      <div class="row" [hidden]="hiddenPatologiaActual">                  
+                        <div class="col-lg-5">
+                              <label><b>Patolog&iacute;a: </b></label>
+                              <textarea class="form-control" formControlName="patologiaActual"
+                                    id="patologiaActual" rows="3"></textarea>
+                        </div>
+                        <div class="col-lg-5">
+                              <label><b>Tratamiento: </b></label>
+                              <textarea class="form-control" formControlName="tratamientoActual"
+                                    id="tratamientoActual" rows="3"></textarea>
+                        </div>                  
                       </div>
                     </div>
                   </form>

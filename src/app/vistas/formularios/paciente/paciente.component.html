@@ -27,7 +27,7 @@
                               <nav>
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <a class="nav-item nav-link active" id="nav-datosPaciente-tab" data-toggle="tab" href="#nav-datosPaciente" role="tab" aria-controls="nav-datosPaciente" aria-selected="true">Datos Paciente</a>
-                                    <a class="nav-item nav-link" id="nav-fichaClinica-tab" data-toggle="tab" href="#nav-fichaClinica" role="tab" aria-controls="nav-fichaClinica" aria-selected="false">Ficha Cl&iacute;nica</a>
+                                    <a class="nav-item nav-link" id="nav-historialClinico-tab" data-toggle="tab" href="#nav-historialClinico" role="tab" aria-controls="nav-historialClinico" aria-selected="false">Historial Cl&iacute;nico</a>
                                     </div>
                               </nav>
                               <div class="tab-content" id="nav-tabContent">
@@ -536,24 +536,42 @@
                                                 </form>
                                           </div>
                                     </div>
-                                    <!--Ficha Clinica-->
-                                    <div class="tab-pane fade" id="nav-fichaClinica" role="tabpanel" aria-labelledby="nav-fichaClinica-tab">
-                                          <form [formGroup]="fichaClinicaForm" (ngSubmit)="guardar( )">
+                                    <!--Historial Clinico-->
+                                    <div class="tab-pane fade" id="nav-historialClinico" role="tabpanel" aria-labelledby="nav-historialClinico-tab">
+                                          <form [formGroup]="historialClinicoForm" (ngSubmit)="guardar( )">
             
-                                                <!-- Datos FichaClinica-->
+                                                <!-- Datos historialClinico-->
                                                 <div class="row justify-content-center">
                                                   <div class="col-lg-5">
                                                     <div class="form-group" [hidden]="crear">
                                                       <label><b>Id</b></label>
                                                       <input type="text"
                                                             class="form-control"
-                                                            placeholder="fichaClinicaId"
-                                                            formControlName="fichaClinicaId" 
+                                                            placeholder="historialClinicoId"
+                                                            formControlName="historialClinicoId" 
                                                             name="id">
                                                       <small class="form-text text-muted">Este campo es autogenerado</small>
                                                     </div>
                                                   </div>
                                                 </div>
+                                                <br>
+                                                <div class="col-lg-5">
+                                                      <div formGroupName="areas" class="form-group">
+                                                            <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
+                                                            <select class="form-control input-sm" name="areaId"
+                                                                  formControlName="areaId" 
+                                                                  [class.is-invalid]="areaNoValido">
+                                                                  <option value=null>Seleccionar</option>
+                                                                  <option *ngFor="let item of listaAreas; let i = index"
+                                                                        value="{{item.areaId}}">
+                                                                        {{item.areaId}} - {{item.codigo}} - {{item.descripcion}}
+                                                                  </option>
+                                                            </select>
+                                                            <small *ngIf="areaNoValido" class="text-danger">
+                                                                  Seleccione el &aacute;rea
+                                                            </small>
+                                                      </div>                                           
+                                                </div> 
                                                 <br>
                                                 <div class="card border-dark">
                                                   <div class="card-header">Citar Patolog&iacute;as y tratamientos que padece y realiza: </div>
@@ -562,13 +580,13 @@
                                                 
                                                       <div class="col-lg-5">
                                                             <label><b>Patolog&iacute;a: </b></label>
-                                                            <textarea class="form-control" formControlName="patologia"
-                                                                  id="patologia" rows="3"></textarea>
+                                                            <textarea class="form-control" formControlName="patologiaActual"
+                                                                  id="patologiaActual" rows="3"></textarea>
                                                       </div>
                                                       <div class="col-lg-5">
                                                             <label><b>Tratamiento: </b></label>
-                                                            <textarea class="form-control" formControlName="tratamiento"
-                                                                  id="tratamiento" rows="3"></textarea>
+                                                            <textarea class="form-control" formControlName="tratamientoActual"
+                                                                  id="tratamientoActual" rows="3"></textarea>
                                                       </div>
                                                 
                                                     </div>
@@ -582,7 +600,9 @@
                                                 
                                                       <div *ngFor="let patologiaProcedimiento of patologiasProcedimientos; let i=index" class="col-md-2">
                                                         <label>
-                                                          <input type="checkbox" [value]="patologiaProcedimiento.patologiaProcedimientoId" (change)="onCheckChangePatologiaProcedimiento($event)">
+                                                          <input type="checkbox" [value]="patologiaProcedimiento.patologiaProcedimientoId" 
+                                                            (change)="onCheckChangePatologiaProcedimiento($event)" 
+                                                            [checked]="getCheckedAntecedentes(patologiaProcedimiento.patologiaProcedimientoId)">
                                                           {{patologiaProcedimiento.descripcion}}
                                                         </label>
                                                       </div>
@@ -598,7 +618,9 @@
                                                 
                                                       <div *ngFor="let alergeno of alergenos; let i=index" class="col-md-2">
                                                         <label>
-                                                          <input type="checkbox" [value]="alergeno.alergenoId" (change)="onCheckChangeAlergeno($event)">
+                                                          <input type="checkbox" [value]="alergeno.alergenoId" 
+                                                          (change)="onCheckChangeAlergeno($event)"
+                                                          [checked]="getCheckedAlergias(alergeno.alergenoId)">
                                                           {{alergeno.descripcion}}
                                                         </label>
                                                       </div>
@@ -614,7 +636,9 @@
                                                 
                                                       <div *ngFor="let patologiaFamiliar of patologiasFamiliares; let i=index" class="col-md-2">
                                                         <label>
-                                                          <input type="checkbox" [value]="patologiaFamiliar.patologiaProcedimientoId" (change)="onCheckChangePatologiaFamiliar($event)">
+                                                          <input type="checkbox" [value]="patologiaFamiliar.patologiaProcedimientoId" 
+                                                          (change)="onCheckChangePatologiaFamiliar($event)"
+                                                          [checked]="getCheckedAntecedentesFamiliares(patologiaFamiliar.patologiaProcedimientoId)">
                                                           {{patologiaFamiliar.descripcion}}
                                                         </label>
                                                       </div>
@@ -630,7 +654,9 @@
                                                 
                                                       <div *ngFor="let vacuna of vacunas; let i=index" class="col-md-2">
                                                         <label>
-                                                          <input type="checkbox" [value]="vacuna.vacunaId" (change)="onCheckChangeVacuna($event)">
+                                                          <input type="checkbox" [value]="vacuna.vacunaId" 
+                                                          (change)="onCheckChangeVacuna($event)"
+                                                          [checked]="getCheckedVacunaciones(vacuna.vacunaId)">
                                                           {{vacuna.descripcion}}
                                                         </label>
                                                       </div>
@@ -682,6 +708,29 @@
                                                       <ui-switch uncheckedLabel="no" formControlName="opcion9" checkedLabel="si"></ui-switch>                  
                                                     </p>
                                                   </div>
+                                                </div>
+                                                <br>
+                                                <!--Upload historial clinico-->
+                                                <div justify-content-center>
+                                                      <div class="input-group mb-3">    
+                                                            <div class="form-group">
+                                                                  <label for="inputGroupFile02">Adjuntar Archivo</label>
+                                                                  <input type="file" class="form-control-file" 
+                                                                        (change)="selectFileHistorialClinico($event)" id="inputGroupFile02" >                                    
+                                                            </div>                                                                     
+                                                      </div>
+                                                      
+                                                      <div class="alert alert-light" role="alert">{{ message }}</div>
+                                                      
+                                                      <div class="card" [hidden]="crear">
+                                                            <div class="card-header">Lista de archivos</div>
+                                                            <ul class="list-group list-group-flush"
+                                                                  *ngFor="let file of fileInfos | async">
+                                                                  <li class="list-group-item">
+                                                                        <a href="{{ file.url }}">{{ file.name }}</a>
+                                                                  </li>
+                                                            </ul>
+                                                      </div>                       
                                                 </div>
                                                 <br>
                                                 <div class="form-row justify-content-center" [hidden]="crear">

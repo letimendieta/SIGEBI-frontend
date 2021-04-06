@@ -4,7 +4,7 @@ import { PacienteModelo } from '../modelos/paciente.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
-import { ProcesoPacienteFichaClinicaModelo } from '../modelos/procesoPacienteFichaClinica.modelo';
+import { ProcesoPacienteHistorialClinicoModelo } from '../modelos/procesoPacienteHistorialClinico.modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,15 @@ export class PacientesService {
 
   }
 
-  crearPacienteFichaClinica( pacienteFichaClinica: ProcesoPacienteFichaClinicaModelo ) {
+  crearPacienteHistorialClinico( pacienteHistorialClinico: ProcesoPacienteHistorialClinicoModelo ) {
 
-    return this.http.post(`${ this.url }/pacientes/paciente-ficha-clinica`, pacienteFichaClinica);
+    return this.http.post(`${ this.url }/pacientes/paciente-historial-clinico`, pacienteHistorialClinico);
+
+  }
+
+  actualizarPacienteHistorialClinico( pacienteHistorialClinico: ProcesoPacienteHistorialClinicoModelo ) {
+
+    return this.http.put(`${ this.url }/pacientes/paciente-historial-clinico`, pacienteHistorialClinico);
 
   }
 

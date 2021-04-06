@@ -190,24 +190,24 @@
           <tr class="table-primary">
             <th scope="col">#</th>
             <th scope="col">Id</th>
-            <th scope="col">Paciente id</th>
+            <!--th scope="col">Paciente id</th>
             <th scope="col">Paciente c&eacute;dula</th>
             <th scope="col">Paciente nombres</th>
             <th scope="col">Paciente apellidos</th>
             <th scope="col">&Aacute;rea id</th>   
             <th scope="col">Editar</th>
-            <th scope="col">Borrar</th>
+            <th scope="col">Borrar</th-->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let historialClinico of historialesClinicos; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ historialClinico.historialClinicoId }}</td>
+            <!--td>{{ historialClinico.historialClinicoId }}</td>
             <td>{{ historialClinico.pacientes.pacienteId }}</td>
             <td>{{ historialClinico.pacientes.personas.cedula }}</td>
             <td>{{ historialClinico.pacientes.personas.nombres }}</td>
             <td>{{ historialClinico.pacientes.personas.apellidos }}</td>
-            <td>{{ historialClinico.areas.areaId }}</td>     
+            <td>{{ historialClinico.areas.areaId }}</td-->     
 
             <td>
               <a class="btn btn-info"
