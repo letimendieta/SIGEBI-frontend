@@ -131,6 +131,9 @@ export class ConsultorioComponent implements OnInit {
   hiddenAntePatProc = true;
   hiddenPatologiaActual = true;
   existePatologiaActual = 0;
+  profile: any = "assets/images/profile.jpg";
+  size:any=0;
+  nombre:any = "";
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -283,6 +286,12 @@ export class ConsultorioComponent implements OnInit {
           }
         }
         this.paciente = resp[0];
+
+        if( resp[0].personas.foto ){
+          this.profile = resp[0].personas.foto;
+        }else {
+          this.profile = "assets/images/profile.jpg";
+        }
         
         this.pacienteForm.patchValue(this.paciente);
         this.buscadorForm.get('pacienteIdBusqueda').setValue(this.paciente.pacienteId);
@@ -320,6 +329,19 @@ export class ConsultorioComponent implements OnInit {
 
       this.pacienteForm.get('personas').get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
     }
+  }
+
+  myUploader(event) {
+    /*console.log(event.files[0])
+    this.size = event.files[0].size;
+    this.nombre =  event.files[0].name;
+    let fileReader = new FileReader();
+    for (let file of event.files) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload =  () => {
+        this.profile = fileReader.result
+      }
+    }*/
   }
 
   obtenerHistorialClinico() {   
@@ -1433,6 +1455,7 @@ export class ConsultorioComponent implements OnInit {
     this.alertGeneral=false;
     this.guardarBtn = true;
     this.existePatologiaActual = 0;
+    this.profile = "assets/images/profile.jpg";
   }
 
   limpiarDiagnosticoTratamiento() {

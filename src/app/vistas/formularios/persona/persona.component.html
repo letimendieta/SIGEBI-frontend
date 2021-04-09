@@ -267,25 +267,24 @@
                 </div>
               </div>
 
-              <div class="input-group mb-3">    
-                    <div class="form-group">
-                          <label for="inputGroupFile02">Adjuntar Fotograf&iacute;a</label>
-                          <input type="file" class="form-control-file" 
-                                (change)="selectFile($event)" id="inputGroupFile02" >                                    
-                    </div>                                                                     
-              </div>
-                  
-              <div class="alert alert-light" role="alert">{{ message }}</div>
-              
-              <div class="card" [hidden]="crear">
-                    <div class="card-header">Lista de archivos</div>
-                    <ul class="list-group list-group-flush"
-                          *ngFor="let file of fileInfos | async">
-                          <li class="list-group-item">
-                                <a href="{{ file.url }}">{{ file.name }}</a>
-                          </li>
-                    </ul>
-              </div>                       
+              <div class="col-lg-6">
+                <div class=" row justify-content-center">
+                  <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" accept="image/*"
+                    maxFileSize="10000000" [auto]="true" [chooseLabel]="'Elegir imagen'" [chooseIcon]="'icon-camera'">
+                    <ng-template pTemplate="toolbar">
+                          <div></div>
+                    </ng-template>
+                    <ng-template let-file pTemplate="file">
+                          <div class="mb-3"></div>
+                    </ng-template>
+                    <ng-template pTemplate="content" let-files>
+                          <div class="profile-img">
+                                <img src="{{profile}}" alt="">
+                          </div>
+                    </ng-template>
+                  </p-fileUpload>
+                </div>
+              </div>                  
             </div>
             <br>
             <!--Personas Fechas-->

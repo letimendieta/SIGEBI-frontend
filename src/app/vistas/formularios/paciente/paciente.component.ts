@@ -86,6 +86,9 @@ export class PacienteComponent implements OnInit {
   patologiasProcedimientosSeleccionados: number[] = [];
   patologiasFamiliaresSeleccionados: number[] = [];
   vacunasSeleccionadas: number[] = [];
+  profile: any = "assets/images/profile.jpg";
+  size:any=0;
+  nombre:any = "";
 
   constructor( private pacientesService: PacientesService,
                private parametrosService: ParametrosService,
@@ -114,7 +117,7 @@ export class PacienteComponent implements OnInit {
   }              
 
   ngOnInit() {
-
+   
     const id = this.route.snapshot.paramMap.get('id');
     this.obtenerParametros();
     this.listarAreas();
@@ -135,7 +138,14 @@ export class PacienteComponent implements OnInit {
           this.pacienteForm.get('personas').get('personaId').disable();
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
           this.ageCalculator();
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
+
+          if( resp.personas.foto ){
+            this.profile = resp.personas.foto;
+          }else {
+            this.profile = "assets/images/profile.jpg";
+          }
+
+          //this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
       });
 
       var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
@@ -264,6 +274,29 @@ export class PacienteComponent implements OnInit {
   selectFileHistorialClinico(event) {
     this.progressHistorialClinico = 0;
     this.selectedFilesHistorialClinico = event.target.files;
+  }
+
+  descargar(url,event) {
+    event.preventDefault();
+    console.log(url);
+    let posicion = url.indexOf("files");
+    console.log(posicion);
+    var fileName = url.slice(posicion + 6);
+    console.log(fileName);
+    this.uploadService.getFilesServer(fileName);    
+  }
+
+  myUploader(event) {
+    console.log(event.files[0])
+    this.size = event.files[0].size;
+    this.nombre =  event.files[0].name;
+    let fileReader = new FileReader();
+    for (let file of event.files) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload =  () => {
+        this.profile = fileReader.result
+      }
+    }
   }
 
   listarAreas() {
@@ -581,6 +614,10 @@ export class PacienteComponent implements OnInit {
       }
       if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
         paciente.personas.estamentos = null;
+      }
+
+      if(this.profile!="" && this.profile != "assets/images/profile.jpg"){
+        paciente.personas.foto = this.profile;
       }
       
       historialClinico = this.historialClinicoForm.getRawValue();

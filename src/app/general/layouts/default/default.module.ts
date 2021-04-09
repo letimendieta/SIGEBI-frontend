@@ -58,6 +58,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { UiSwitchModule } from 'ngx-ui-switch';
+import {FileUploadModule} from 'primeng/fileupload';
+
 
 @NgModule({
   declarations: [
@@ -120,7 +122,8 @@ import { UiSwitchModule } from 'ngx-ui-switch';
     MatSelectModule,
     MatIconModule,
     MatAutocompleteModule,
-    UiSwitchModule
+    UiSwitchModule,
+    FileUploadModule
   ],
   providers: [
     DashboardService

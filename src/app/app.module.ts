@@ -19,6 +19,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { UiSwitchModule } from 'ngx-ui-switch';
+import {FileUploadModule} from 'primeng/fileupload';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { UiSwitchModule } from 'ngx-ui-switch';
     FontAwesomeModule,
     NgbModule,
     MatFormFieldModule,
-    UiSwitchModule
+    UiSwitchModule,
+    FileUploadModule
   ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]

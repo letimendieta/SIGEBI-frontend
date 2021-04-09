@@ -53,7 +53,7 @@ export class UploadFileService {
     return this.http.get(`${this.url}/filesName/${ name }/${ tipo }`);
   }
 
-  getFilesServer(name: String, tipo: String): Observable<any> {
+  getFilesServer(name: String): Observable<any> {
     return this.http.get(`${this.url}/files/${ name }`);
   }
   

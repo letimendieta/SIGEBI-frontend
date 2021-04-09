@@ -14,6 +14,7 @@ import { UiSwitchModule } from 'ngx-ui-switch';
 import { HeaderComponent } from '../general/header/header.component';
 import { FooterComponent } from '../general/footer/footer.component';
 import { SidebarComponent } from '../general/sidebar/sidebar.component';
+import {FileUploadModule} from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { SidebarComponent } from '../general/sidebar/sidebar.component';
     MatListModule,
     RouterModule,
     MatTooltipModule,
-    UiSwitchModule
+    UiSwitchModule,
+    FileUploadModule
 
   ],
   exports: [

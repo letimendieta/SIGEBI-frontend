@@ -42,6 +42,9 @@ export class PersonaComponent implements OnInit {
   progress = 0;
   message = '';  
   fileInfos: Observable<any>;
+  profile: any = "assets/images/profile.jpg";
+  size:any=0;
+  nombre:any = "";
 
   constructor( private personasService: PersonasService,
                private parametrosService: ParametrosService,
@@ -72,7 +75,13 @@ export class PersonaComponent implements OnInit {
           this.personaForm.patchValue(resp);
           var cedula = this.personaForm.get('cedula').value;
           this.ageCalculator();
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
+          //this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
+
+          if( resp.foto ){
+            this.profile = resp.foto;
+          }else {
+            this.profile = "assets/images/profile.jpg";
+          }
         });
     }else{
       this.crear = true;
@@ -257,6 +266,19 @@ export class PersonaComponent implements OnInit {
       const timeDiff = Math.abs(Date.now() - convertAge.getTime());
 
       this.personaForm.get('edad').setValue(Math.floor((timeDiff / (1000 * 3600 * 24))/365));
+    }
+  }
+
+  myUploader(event) {
+    console.log(event.files[0])
+    this.size = event.files[0].size;
+    this.nombre =  event.files[0].name;
+    let fileReader = new FileReader();
+    for (let file of event.files) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload =  () => {
+        this.profile = fileReader.result
+      }
     }
   }
 

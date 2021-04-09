@@ -19,3 +19,12 @@ table th {
   .btn-group, .btn-group-vertical {
     position: absolute !important;
   }
+
+  .profile-img img{
+    height: 150px;
+ }
+ 
+ .profile-img{
+    padding: 5px !important;
+    background-color: #337ab7 !important;
+ }

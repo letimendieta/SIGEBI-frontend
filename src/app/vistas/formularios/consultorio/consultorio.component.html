@@ -250,8 +250,22 @@
 
               <div class="col-lg-2">
                 <div class="container">
-                  <div class="row">                
-                    <img src="../assets/images/user-circle-solid.svg" alt="..." class="img-thumbnail">                               
+                  <div class="row justify-content-start">                
+                    <p-fileUpload name="myfile[]" disabled="true" customUpload="true" (uploadHandler)="myUploader($event)" accept="image/*"
+                      maxFileSize="10000000" [auto]="true" [chooseLabel]="'Foto'" [chooseIcon]="'icon-camera'"
+                      invalidFileSizeMessageDetail = "maximo 10 Mb">
+                      <ng-template pTemplate="toolbar">
+                            <div></div>
+                      </ng-template>
+                      <ng-template let-file pTemplate="file">
+                            <div class="mb-3"></div>
+                      </ng-template>
+                      <ng-template pTemplate="content" let-files>
+                            <div class="profile-img">
+                                  <img src="{{profile}}" alt="">
+                            </div>
+                      </ng-template>
+                    </p-fileUpload>
                   </div>   
                 </div>         
               </div>
@@ -294,53 +308,6 @@
           <br>
         </div>
       </div>
-      <!--Ficha Medica-->
-      <!--div class="tab-pane fade" id="nav-fichaM" role="tabpanel" aria-labelledby="nav-fichaM-tab">
-        <div class="card"> 
-          <br>
-          <div class="row justify-content-center">
-            <div class="col-lg-5">
-              <div class="container">              
-                <div class="row">
-                                               
-                </div>
-              </div>              
-            </div>
-
-            <div class="col-lg-5">
-              <div class="container">
-                
-              </div>         
-            </div>
-
-            <div class="col-lg-2">
-              <div class="container">
-                
-              </div>         
-            </div>
-
-          </div>
-          <br>
-          
-          <br>
-          
-          <br>
-          
-          <br>
-                    
-          <br>
-          <div class="card">
-            <h3 class="card-header" data-toggle="collapse" data-target="#collapseFichas"
-                aria-expanded="true" 
-                aria-controls="collapseFichas">Fichas Digitalizadas
-                &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
-            <div class="card-body collapse show" id="collapseFichas">
-              
-            </div>
-          </div>
-          <br> 
-        </div>       
-      </div-->      
       <!--Historial Clinico-->
       <div class="tab-pane fade" id="nav-historialC" role="tabpanel" aria-labelledby="nav-historialC-tab">
         <div class="card"> 

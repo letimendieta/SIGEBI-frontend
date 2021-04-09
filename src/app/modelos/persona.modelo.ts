@@ -24,6 +24,7 @@ export class PersonaModelo {
     departamentos: DepartamentoModelo;
     dependencias: DependenciaModelo;
     estamentos: EstamentoModelo;
+    foto: string;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;
