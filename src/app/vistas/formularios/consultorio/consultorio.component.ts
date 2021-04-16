@@ -45,6 +45,10 @@ import { report } from 'process';
 import { TratamientosInsumosService } from 'src/app/servicios/tratamientosInsumos.service';
 import { VacunacionModelo } from 'src/app/modelos/vacunacion.modelo';
 import { VacunacionesService } from 'src/app/servicios/vacunaciones.service';
+import { PreguntaModelo } from 'src/app/modelos/pregunta.modelo';
+import { PreguntaHistorialModelo } from 'src/app/modelos/preguntaHistorial.modelo';
+import { PreguntasService } from 'src/app/servicios/preguntas.service';
+import { PreguntasHistorialService } from 'src/app/servicios/preguntasHistorial.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -93,6 +97,9 @@ export class ConsultorioComponent implements OnInit {
   tratamientosInsumos: TratamientoInsumoModelo[] = [];
   signosVitales: SignoVitalModelo[] = [];
   fichaMedica: FichaMedicaModelo[] = [];
+  preguntas: PreguntaModelo[] = [];
+  preguntasHistorial: PreguntaHistorialModelo[] = [];
+  preguntasSeleccionadas: PreguntaModelo[] = []; 
   cargando = false;
   alert:boolean=false;
   guardarBtn = true;
@@ -154,6 +161,8 @@ export class ConsultorioComponent implements OnInit {
                private motivosConsultaService: MotivosConsultaService,
                private procesoDiagnosticoTratamientoService: ProcesoDiagnosticoTratamientosService,
                private tratamientosInsumosService: TratamientosInsumosService,
+               private preguntasService: PreguntasService,
+               private preguntasHistorialService: PreguntasHistorialService,
                private fb: FormBuilder,
                private fb2: FormBuilder,
                private fb3: FormBuilder,
@@ -332,16 +341,7 @@ export class ConsultorioComponent implements OnInit {
   }
 
   myUploader(event) {
-    /*console.log(event.files[0])
-    this.size = event.files[0].size;
-    this.nombre =  event.files[0].name;
-    let fileReader = new FileReader();
-    for (let file of event.files) {
-      fileReader.readAsDataURL(file);
-      fileReader.onload =  () => {
-        this.profile = fileReader.result
-      }
-    }*/
+  
   }
 
   obtenerHistorialClinico() {   
@@ -360,8 +360,10 @@ export class ConsultorioComponent implements OnInit {
         if ( resp[0].historialClinicoId != null ){
           this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
-          var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
-          this.fileInfos = this.uploadService.getFilesName(cedula + '_' + areaId + '_', "H");
+          //var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
+          this.fileInfos = this.uploadService.getFilesName(cedula + '_' + this.hcid + '_', "HC");
+
+          this.obtenerPreguntasSeleccionadas();
         }
       }
     }, e => {      
@@ -472,6 +474,49 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
+  obtenerPreguntasSeleccionadas() {
+    var preguntaHistorial = new PreguntaHistorialModelo();
+
+    this.preguntas = [];
+
+    preguntaHistorial.historialClinicoId = this.hcid;
+    this.preguntasHistorialService.buscarPreguntasHistorialFiltrosTabla(preguntaHistorial)
+    .subscribe( resp => {
+      this.preguntasHistorial = resp;
+      for (let i = 0; i < this.preguntasHistorial.length; i++) {
+        this.preguntasSeleccionadas.push(this.preguntasHistorial[i].preguntas);
+      }
+
+      this.listarPreguntas();
+
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  listarPreguntas() {
+    var orderBy = "numero";
+    var orderDir = "asc";
+    var pregunta = new PreguntaModelo();
+    pregunta.estado = "A";
+
+    this.preguntasService.buscarPreguntasFiltrosTablaOrder(pregunta, orderBy, orderDir)
+    .subscribe( (resp: PreguntaModelo[]) => {
+
+      this.preguntas = resp;
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: e.status +'. '+ this.comunes.obtenerError(e)
+      })
+    });
+  }
+
   listarAlergenos() {
    
     this.alergenosService.getAlergenos()
@@ -538,35 +583,7 @@ export class ConsultorioComponent implements OnInit {
         }
       }
     }
-        
-     /* }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-        }
-      );*/
   }
-
-  /*obtenerAnamnesis() {
-    var anamnesis = new AnamnesisModelo();
-    anamnesis.pacienteId = this.paciente.pacienteId;
-
-    this.anamnesisService.buscarAnamnesisFiltrosTabla(anamnesis)
-    .subscribe( resp => {     
-
-      if(resp != null && resp.length > 0){
-        this.anamnesisForm.patchValue(resp[0]);
-      }
-    }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
-    });
-  }*/
 
   obtenerConsultas() {
     var consultas = new ConsultaModelo();
@@ -632,6 +649,16 @@ export class ConsultorioComponent implements OnInit {
           this.stockForm.get('insumos').get('insumoId').setValue(null);
         }
       );
+  }
+
+  getCheckedPreguntas(pregunta) {
+
+    for (let i = 0; i < this.preguntasSeleccionadas.length; i++) {
+      if(this.preguntasSeleccionadas[i].preguntaId == pregunta.preguntaId) {        
+        return true;
+      }
+    }
+    return false;
   }
 
   opcionFicha(event: any){
@@ -831,49 +858,7 @@ export class ConsultorioComponent implements OnInit {
           nombres  : [null, [] ],
           apellidos: [null, [] ]    
         })               
-      })
-      /*historialClinico: this.fb.group({
-        historialClinicoId: [null, [] ]
-      }),
-      personas : this.fb.group({
-        personaId  : [null, [] ],
-        cedula  : [null, [] ],
-        nombres  : [null, [] ],
-        apellidos: [null, [] ],
-        fechaNacimiento: [null, [] ],
-        lugarNacimiento: [null, [] ],
-        edad: [null, [] ],
-        direccion: [null, [] ],
-        sexo: [null, [] ],
-        estadoCivil: [null, [] ],
-        nacionalidad: [null, [] ],
-        telefono: [null, [] ],
-        email  : [null, [] ],
-        celular: [null, [] ],
-        observacion: [null, [] ],
-        carreras: this.fb.group({
-          carreraId: [null, [] ],
-          descripcion: [null, [] ]
-        }),
-        departamentos: this.fb.group({
-          carreraId: [null, [] ],
-          descripcion: [null, [] ]
-        }),
-        dependencias: this.fb.group({
-          carreraId: [null, [] ],
-          descripcion: [null, [] ]
-        }),
-        estamentos: this.fb.group({
-          carreraId: [null, [] ],
-          descripcion: [null, [] ]
-        }),
-        fechaCreacion: [null, [] ],
-        fechaModificacion: [null, [] ],
-        usuarioCreacion: [null, [] ],
-        usuarioModificacion: [null, [] ]   
-      }),
-      grupoSanguineo  : [null, [] ],
-      seguroMedico  : [null, [] ]   */     
+      }) 
     });
   }
 
@@ -1595,63 +1580,6 @@ export class ConsultorioComponent implements OnInit {
   onSubmit() {
     this.modalService.dismissAll();
   }
-
-  /*guardarAnamnesis(event){
-    event.preventDefault();
-    if ( this.anamnesisForm.invalid ) {
-
-      return Object.values( this.anamnesisForm.controls ).forEach( control => {
-
-        if ( control instanceof FormGroup ) {
-          Object.values( control.controls ).forEach( control => control.markAsTouched() );
-        } else {
-          control.markAsTouched();
-        }
-      });
-    }
-    
-    Swal.fire({
-      title: 'Espere',
-      text: 'Guardando información',
-      icon: 'info',
-      allowOutsideClick: false
-    });
-    Swal.showLoading();
-
-
-    let peticion: Observable<any>;
-    var anamnesis: AnamnesisModelo;
-    anamnesis = this.anamnesisForm.getRawValue();
-
-    if ( anamnesis.anamnesisId ) {
-      //Modificar
-      anamnesis.pacienteId = this.paciente.pacienteId;
-      anamnesis.usuarioModificacion = 'admin';
-      peticion = this.anamnesisService.actualizarAnamnesis( anamnesis );
-    } else {
-      //Agregar
-      anamnesis.pacienteId = this.paciente.pacienteId;
-      anamnesis.usuarioCreacion = 'admin';
-      peticion = this.anamnesisService.crearAnamnesis( anamnesis );
-    }
-
-    peticion.subscribe( resp => {
-
-      Swal.fire({
-                icon: 'success',
-                title: anamnesis.anamnesisId ? anamnesis.anamnesisId.toString(): null,
-                text: resp.mensaje,
-              }).then( resp => {       
-
-      });
-    }, e => {Swal.fire({
-              icon: 'error',
-              title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
-            })
-       }
-    );
-  }*/
 
   guardarDiagnosticoTratamiento(event){
     event.preventDefault();

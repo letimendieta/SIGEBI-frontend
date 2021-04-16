@@ -539,7 +539,7 @@
                                                 <div class="row justify-content-center">
                                                   <div class="col-lg-5">
                                                     <div class="form-group" [hidden]="crear">
-                                                      <label><b>Id</b></label>
+                                                      <label><b>Historial Clinico id</b></label>
                                                       <input type="text"
                                                             class="form-control"
                                                             placeholder="historialClinicoId"
@@ -550,7 +550,7 @@
                                                   </div>
                                                 </div>
                                                 <br>
-                                                <div class="col-lg-5">
+                                                <!--div class="col-lg-5">
                                                       <div formGroupName="areas" class="form-group">
                                                             <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
                                                             <select class="form-control input-sm" name="areaId"
@@ -566,7 +566,7 @@
                                                                   Seleccione el &aacute;rea
                                                             </small>
                                                       </div>                                           
-                                                </div> 
+                                                </div--> 
                                                 <br>
                                                 <div class="card border-dark">
                                                   <div class="card-header">Citar Patolog&iacute;as y tratamientos que padece y realiza: </div>
@@ -660,8 +660,23 @@
                                                   </div>
                                                 </div>
                                     
+                                                <br>                                          
+                                                
+                                                <!--div class="col"-->
+                                                      <div *ngFor="let pregunta of preguntas; let i=index">
+                                                            <!--div class="row"-->
+                                                                  <b>{{pregunta.numero}} - {{pregunta.descripcion}}</b> 
+                                                            <!--/div-->
+                                                            <div class="row">
+                                                                  <p><ui-switch uncheckedLabel="no" [checked]="getCheckedPreguntas(pregunta)"
+                                                                        (change)="onCheckPregunta($event, pregunta)" checkedLabel="si"></ui-switch></p>
+                                                            </div>
+                                                      </div>
+                                                <!--/div-->
+                                                
+                                    
                                                 <br>
-                                                <div class="col">
+                                                <!--div class="col">
                                                   <div class="row">
                                                     <b>6- Sangra excesivamente por extracciones dentarias o cortaduras:</b>
                                                   </div>
@@ -704,7 +719,7 @@
                                                     </p>
                                                   </div>
                                                 </div>
-                                                <br>
+                                                <br-->
                                                 <!--Upload historial clinico-->
                                                 <div justify-content-center>
                                                       <div class="input-group mb-3">    

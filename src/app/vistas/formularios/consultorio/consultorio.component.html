@@ -832,7 +832,24 @@
                 </div>
               </div>
             </div>
-          </div>            
+          </div>
+          <br>                                          
+          <div class="card">
+            <h3 class="card-header" data-toggle="collapse" data-target="#collapsePreguntas"
+                aria-expanded="true" 
+                aria-controls="collapsePreguntas">Preguntas
+                &nbsp;<i class="fas fa-angle-double-up"></i>
+                &nbsp;&nbsp;({{preguntas.length}})
+            </h3>  
+            <div class="card-body collapse show multi-collapse" id="collapsePreguntas">                                      
+              <div *ngFor="let pregunta of preguntas; let i=index">
+                <b>{{pregunta.descripcion}}</b> &nbsp;&nbsp;                     
+                          <ui-switch uncheckedLabel="no" [checked]="getCheckedPreguntas(pregunta)"
+                              [disabled]="true"  checkedLabel="si"></ui-switch>
+                    
+              </div>
+            </div>
+          </div>
           <br>
           <!--Historial clinco digitalizado-->
           <div class="card">
