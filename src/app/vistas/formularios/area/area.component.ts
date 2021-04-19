@@ -17,7 +17,6 @@ export class AreaComponent implements OnInit {
   crear = false;
   areaForm: FormGroup;
   alertGuardar:boolean=false;
-  area: AreaModelo = new AreaModelo();
 
   constructor( private areasService: AreasService,
                private route: ActivatedRoute,
@@ -63,49 +62,48 @@ export class AreaComponent implements OnInit {
     });
     Swal.showLoading();
 
+    var area = new AreaModelo();
 
     let peticion: Observable<any>;
 
-    this.area = this.areaForm.getRawValue();
+    area = this.areaForm.getRawValue();
 
-    if ( this.area.areaId ) {
+    if ( area.areaId ) {
       //Modificar
-      this.area.usuarioModificacion = 'admin';
-      peticion = this.areasService.actualizarArea( this.area );
+      area.usuarioModificacion = 'admin';
+      peticion = this.areasService.actualizarArea( area );
     } else {
       //Agregar
-      this.area.usuarioCreacion = 'admin';
-      peticion = this.areasService.crearArea( this.area );
+      area.usuarioCreacion = 'admin';
+      peticion = this.areasService.crearArea( area );
     }
 
-    peticion.subscribe( resp => {
+    peticion.subscribe( response => {
 
       Swal.fire({
                 icon: 'success',
-                title: this.area.codigo,
-                text: resp.mensaje,
+                title: response.area.codigo,
+                text: response.mensaje
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.area.areaId ) {
+          if ( response.area.areaId ) {
             this.router.navigate(['/areas']);
           }else{
             this.limpiar();
           }
         }
-
       });
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e)
             })
        }
     );
   }
 
   limpiar(){
-    this.area = new AreaModelo();
     this.areaForm.reset();
     this.areaForm.get('estado').setValue('A');
   }

@@ -57,13 +57,13 @@ export class StockComponent implements OnInit {
   } 
 
   obtenerParametros() {
-    var estadoCivilParam = new ParametroModelo();
-    estadoCivilParam.codigoParametro = "UNI_MEDIDA";
-    estadoCivilParam.estado = "A";
+    var unidadMedidaParam = new ParametroModelo();
+    unidadMedidaParam.codigoParametro = "UNI_MEDIDA_STOCK";
+    unidadMedidaParam.estado = "A";
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaUnidadMedida = resp;
     });

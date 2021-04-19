@@ -96,7 +96,7 @@
                   <div class="row">                
                     <ng-template #editProfileModalPacientes let-modal>
                       <div class="modal-header">
-                      <h3 class="modal-title" id="editProfileLabel">Buscador Pacientes</h3>
+                      <h3 class="modal-title" id="editProfileModalPacientes">Buscador Pacientes</h3>
                       <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                             <span aria-hidden="true">&times;</span> 
                       </button>
@@ -492,7 +492,7 @@
               <!--Modal detalle de consulta-->
               <ng-template #editProfileModalDetalleConsulta let-modal>
                 <div class="modal-header detalleConsulta">
-                      <h3 class="modal-title" id="editProfileLabelStock">Detalle consulta</h3>
+                      <h3 class="modal-title" id="editProfileModalDetalleConsulta">Detalle consulta</h3>
                       <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                       <span aria-hidden="true">&times;</span> 
                       </button>
@@ -954,11 +954,11 @@
                 <div class="tab-pane fade show active" id="nav-principal" role="tabpanel" aria-labelledby="nav-principal-tab">
                   <form [formGroup]="diagnosticoPrimarioForm"> 
                     <br>
+                    <span class="requerido"> *</span>
                     <div class="input-group mb-3">
                       <textarea class="form-control" formControlName="diagnosticoPrincipal" 
                         id="diagnosticoPrincipal" rows="3" [class.is-invalid]="diagnosticoNoValido">
-                      </textarea>
-                      <span class="requerido"> *</span>
+                      </textarea>                      
                     </div>
                     <small *ngIf="diagnosticoNoValido" class="text-danger">
                       Ingrese un diagn&oacute;stico
@@ -1362,6 +1362,7 @@
                               <th scope="col">Descripci&oacute;n</th>
                               <th scope="col">Fecha vencimiento</th>
                               <th scope="col">Cantidad</th>
+                              <th scope="col">Medida</th>
                               <th scope="col">Quitar</th>
                             </tr>
                           </thead>
@@ -1373,6 +1374,15 @@
                               <td>{{ tratamientoInsumo.insumos.descripcion }}</td>
                               <td>{{ tratamientoInsumo.insumos.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
                               <td><input type="number" id="cantidad" name="cantidad" value="1"></td>
+                              <td>
+                                <select class="form-control input-sm" name="medida" id="medida">
+                                  <option value=null>Seleccionar</option>
+                                  <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
+                                    value="{{medida.valor}}">
+                                    {{medida.descripcionValor}}
+                                  </option>
+                                </select>
+                              </td>                              
                               <td (click)="quitarMedicamento($event, tratamientoInsumo)">  
                                 <button class="btn btn-danger">
                                   <i class="fas fa-minus-circle"></i></button>
@@ -1413,8 +1423,138 @@
             <span aria-hidden="true">&times;</span>
             </button>
           </div>
+
+<!----------------------------------->
+
+<!--Modal confirmar-->
+<ng-template #editProfileModalConfirmar let-modal>
+  <div class="modal-header confirmar">
+        <h3 class="modal-title" id="editProfileModalConfirmar">Confirmar datos consulta</h3>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+        <span aria-hidden="true">&times;</span> 
+        </button>
+  </div>                
+  <div class="modal-body">
+    <!-- Consulta-->
+    <div class="row justify-content-center confirmar">
+      <div class="col-lg-5">
+        <div class="container">              
+          <div class="row">
+            <!--div class="col"><b>Funcionario:</b></div>
+            <div class="col">{{procesoDiagnosticoTratamiento.consulta.funcionarios.personas.nombres}}</div>
+            <div class="w-100"></div>
+            <div class="col"><b></b></div>
+            <div class="col">{{procesoDiagnosticoTratamiento.consulta.funcionarios.personas.apellidos}}</div-->
+            
+          </div>
+        </div>              
+      </div>
+      <div class="col-lg-5">
+        <div class="container">
+          <div class="row">   
+            <!--div class="col"><b>Fecha consulta:</b></div>
+            <div class="col">{{detalleConsultaForm.get('fecha').value  | date : 'dd-MM-yyyy HH:mm:ss'}}</div>
+            <div class="w-100"></div>  
+            <div class="col"><b>&Aacute;rea:</b></div>
+            <div class="col">{{detalleConsultaForm.get('areas').get('descripcion').value}}</div>
+            <div class="w-100"></div-->           
+            
+          </div>   
+        </div>         
+      </div>                  
+      
+    </div>
+    <hr>
+    <div class="detalleConsulta">
+      <!--div class="col-lg-5"-->
+      <div class="card border-dark">  
+        <div class="card-header">Anamnesis</div>
+        <div class="card-body text-dark">           
+          <div class="row">   
+            <div class="col"><b>Motivo consulta:</b></div>
+            <div class="w-100"></div> 
+            <div class="col">{{procesoDiagnosticoTratamiento.anamnesis.motivoConsulta.descripcion}}</div>
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b>Antecedentes de la Enfermedad Actual (AEA):</b></div>
+            <div class="w-100"></div> 
+            <div class="col">{{procesoDiagnosticoTratamiento.anamnesis.antecedentes}}</div>
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b>Antecedentes Remotos de la Enfermedad Actual (AREA):</b></div>
+            <div class="w-100"></div> 
+            <div class="col">{{procesoDiagnosticoTratamiento.anamnesis.antecedentesRemotos}}</div>
+            <div class="w-100"></div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="card border-dark">  
+        <div class="card-header">Diagn&oacute;stico</div>
+        <div class="card-body text-dark">           
+          <div class="row">
+            <div class="col"><b><u>Principal</u></b></div>
+            <div class="w-100"></div>
+            <div class="col"><b>CIE: </b>{{procesoDiagnosticoTratamiento.diagnostico.enfermedadCie10Primaria.descripcion}}</div>
+            <div class="w-100"></div>
+            <div class="col">{{procesoDiagnosticoTratamiento.diagnostico.diagnosticoPrincipal}}</div>
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b><u>Secundario</u></b></div>
+            <div class="w-100"></div>
+            <div class="col"><b>CIE: </b>{{procesoDiagnosticoTratamiento.diagnostico.enfermedadCie10Secundaria.descripcion}}</div>
+            <div class="w-100"></div>
+            <div class="col">{{procesoDiagnosticoTratamiento.diagnostico.diagnosticoSecundario}}</div>
+            <div class="w-100"></div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="card border-dark">  
+        <div class="card-header">Tratamiento</div>
+        <div class="card-body text-dark">           
+          <div class="row">        
+            <div class="col"><b>Prescripci&oacute;n farmacol&oacute;gica:</b></div>
+            <div class="w-100"></div>
+            <div class="col">{{procesoDiagnosticoTratamiento.tratamiento.prescripcionFarm}}</div>
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b>Medicamentos:</b></div>
+            <div class="w-100"></div>
+            <div *ngFor="let tratamientoInsumo of procesoDiagnosticoTratamiento.tratamientoInsumoList; let i=index">
+              
+              <div class="col">{{tratamientoInsumo.insumos.descripcion}} - {{tratamientoInsumo.cantidad}} {{tratamientoInsumo.medida}}</div>
+              <div class="w-100"></div>
+              
+            </div>            
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b>Prescripci&oacute;n no farmacol&oacute;gica:</b></div>
+            <div class="w-100"></div>                         
+            <div class="col">{{procesoDiagnosticoTratamiento.tratamiento.descripcionTratamiento}}</div>
+            <div class="w-100"></div>
+            <br>
+            <div class="col"><b>Plan de trabajo:</b></div>
+            <div class="w-100"></div>                         
+            <div class="col">{{procesoDiagnosticoTratamiento.tratamiento.descripcionPlanTrabajo}}</div>
+            <div class="w-100"></div>
+          </div>
+        </div>
+      </div>              
+      <hr>
+    </div>
+    <br>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="modal.dismiss();confirmar($event)">Confirmar</button>
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancelar</button>
+    </div>    
+  </div>
+</ng-template>
+
+<!----------------------------------->
+
           <div class="form-group text-center">
-            <button (click)="guardarDiagnosticoTratamiento($event)" [disabled]="guardarBtn"
+            <button (click)="guardarDiagnosticoTratamiento($event, editProfileModalConfirmar)" [disabled]="guardarBtn"
               type="submit" class="btn btn-primary ">
               <i class="fa fa-save"></i>
               Guardar

@@ -88,7 +88,8 @@ export class ConsultorioComponent implements OnInit {
   listaEstadoCivil: ParametroModelo[] = [];
   listaSexo: ParametroModelo[] = [];
   listaNacionalidad: ParametroModelo[] = [];
-  listaMotivosConsulta: MotivoConsultaModelo;
+  listaMotivosConsulta: MotivoConsultaModelo[] = [];
+  listaMedidasMedicamentos: ParametroModelo;
   stocks: StockModelo[] = [];
   consultas: ConsultaModelo[] = new Array();
   enfermedadesCie10: EnfermedadCie10Modelo[] = [];
@@ -100,6 +101,7 @@ export class ConsultorioComponent implements OnInit {
   preguntas: PreguntaModelo[] = [];
   preguntasHistorial: PreguntaHistorialModelo[] = [];
   preguntasSeleccionadas: PreguntaModelo[] = []; 
+  procesoDiagnosticoTratamiento: ProcesoDiagnosticoTratamientoModelo = new ProcesoDiagnosticoTratamientoModelo();
   cargando = false;
   alert:boolean=false;
   guardarBtn = true;
@@ -228,6 +230,17 @@ export class ConsultorioComponent implements OnInit {
       .subscribe( (resp: ParametroModelo[]) => {
         this.listaNacionalidad = resp;
     });    
+
+    var unidadMedidaParam = new ParametroModelo();
+    unidadMedidaParam.codigoParametro = "UNI_MEDIDA_MEDICAMENTOS";
+    unidadMedidaParam.estado = "A";
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
+
+    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaMedidasMedicamentos = resp;
+    });
   }
 
   listarMotivosConsultas() {
@@ -237,7 +250,7 @@ export class ConsultorioComponent implements OnInit {
     motivoConsulta.estado = "A";
 
     this.motivosConsultaService.buscarMotivosConsultaFiltros(motivoConsulta, orderBy, orderDir )
-      .subscribe( (resp: MotivoConsultaModelo) => {
+      .subscribe( (resp: MotivoConsultaModelo[]) => {
         this.listaMotivosConsulta = resp;
     });
   }
@@ -323,7 +336,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       Swal.close();
     });   
@@ -370,7 +383,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -401,7 +414,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -423,7 +436,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -445,7 +458,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -468,7 +481,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -493,7 +506,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -512,7 +525,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -527,7 +540,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -542,7 +555,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -602,7 +615,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -627,7 +640,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -644,7 +657,7 @@ export class ConsultorioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
           this.stockForm.get('insumos').get('insumoId').setValue(null);
         }
@@ -1238,6 +1251,7 @@ export class ConsultorioComponent implements OnInit {
         {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
         {data:'fechaVencimiento'}, 
         {data:'cantidad'}, 
+        {data:'medida'}, 
         {data:'quitar'}
       ]      
     };
@@ -1268,7 +1282,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -1315,7 +1329,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -1337,7 +1351,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -1370,7 +1384,7 @@ export class ConsultorioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
         }
       );
@@ -1390,7 +1404,7 @@ export class ConsultorioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
         }
       );
@@ -1437,6 +1451,7 @@ export class ConsultorioComponent implements OnInit {
     this.planTrabajoForm.reset();
     this.enfermedadCie10PrincipalSeleccionada = new EnfermedadCie10Modelo();
     this.enfermedadCie10SecundariaSeleccionada = new EnfermedadCie10Modelo();
+    this.procesoDiagnosticoTratamiento = new ProcesoDiagnosticoTratamientoModelo();
     this.alertGeneral=false;
     this.guardarBtn = true;
     this.existePatologiaActual = 0;
@@ -1462,6 +1477,7 @@ export class ConsultorioComponent implements OnInit {
     this.hiddenAlergenos = true;
     this.hiddenAntePatProc = true;
     this.hiddenPatologiaActual = true;   
+    this.procesoDiagnosticoTratamiento = new ProcesoDiagnosticoTratamientoModelo();
   }
 
   cerrarAlert(){
@@ -1527,7 +1543,8 @@ export class ConsultorioComponent implements OnInit {
       for (let i = 0; i < tratamientosInsumos.length; i++) {
         medicamentos = medicamentos 
           + tratamientosInsumos[i].insumos.descripcion + "  -  "
-          + tratamientosInsumos[i].cantidad + ",  ";
+          + tratamientosInsumos[i].cantidad
+          + tratamientosInsumos[i].medida + "    ";
       }
       this.detalleConsultaForm.get('medicamentos').setValue(medicamentos);
   });
@@ -1557,6 +1574,15 @@ export class ConsultorioComponent implements OnInit {
     this.alert=false;
   }
 
+  openModalConfirmacion(targetModal) {
+
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+  }
+
   selectPaciente(event, paciente: PacienteModelo){
     this.modalService.dismissAll();
     if(paciente.pacienteId){
@@ -1570,7 +1596,7 @@ export class ConsultorioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.buscadorForm.get('pacienteIdBusqueda').setValue(null);
         }
@@ -1581,7 +1607,7 @@ export class ConsultorioComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  guardarDiagnosticoTratamiento(event){
+  guardarDiagnosticoTratamiento(event, targetModal){
     event.preventDefault();
     if ( this.diagnosticoPrimarioForm.invalid ) {
       this.alertGuardar = true;
@@ -1653,37 +1679,29 @@ export class ConsultorioComponent implements OnInit {
           control.markAsTouched();
         }
       });
-    }
-    
-    Swal.fire({
-      title: 'Espere',
-      text: 'Guardando información',
-      icon: 'info',
-      allowOutsideClick: false
-    });
-    Swal.showLoading();
-
-    let peticion: Observable<any>;
+    }    
+        
     var diagnostico: DiagnosticoModelo = new DiagnosticoModelo();
-    var tratamiento: TratamientoModelo = new TratamientoModelo();
-    var procesoDiagnosticoTratamiento: ProcesoDiagnosticoTratamientoModelo = new ProcesoDiagnosticoTratamientoModelo();
+    var tratamiento: TratamientoModelo = new TratamientoModelo();    
     var tratamientoInsumoList: TratamientoInsumoModelo[] = new Array();
     var fichaMedicaList: FichaMedicaModelo[] = new Array();
     var consulta: ConsultaModelo = new ConsultaModelo();
     var anamnesis: AnamnesisModelo;
-    var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;
-    var reporteModelo: ReporteModelo = new ReporteModelo;
+    var motivoConsulta : MotivoConsultaModelo = new MotivoConsultaModelo;    
     var historialClinico: HistorialClinicoModelo = new HistorialClinicoModelo();
 
     anamnesis = this.anamnesisForm.getRawValue();
     motivoConsulta.motivoConsultaId = this.anamnesisForm.get('motivoConsultaId').value;
+    motivoConsulta.descripcion = this.obtenerMotivoDescripcion(motivoConsulta.motivoConsultaId);
     anamnesis.motivoConsulta = motivoConsulta;
     anamnesis.usuarioCreacion = 'admin';
 
     diagnostico.diagnosticoPrincipal = this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').value;
     diagnostico.diagnosticoSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
     diagnostico.enfermedadCie10PrimariaId = this.enfermedadCie10PrincipalSeleccionada.enfermedadCie10Id;
+    diagnostico.enfermedadCie10Primaria = this.enfermedadCie10PrincipalSeleccionada;
     diagnostico.enfermedadCie10SecundariaId = this.enfermedadCie10SecundariaSeleccionada.enfermedadCie10Id;
+    diagnostico.enfermedadCie10Secundaria = this.enfermedadCie10SecundariaSeleccionada;
     diagnostico.usuarioCreacion = 'admin';
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
@@ -1693,10 +1711,14 @@ export class ConsultorioComponent implements OnInit {
 
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
+    var medidas = rows.$('select').serializeArray();
 
     for (let i = 0; i < cantidades.length; i++) {
       this.tratamientosInsumos[i].cantidad = Number(cantidades[i].value);
-    }    
+    }   
+    for (let i = 0; i < medidas.length; i++) {
+      this.tratamientosInsumos[i].medida = medidas[i].value;
+    }   
 
     tratamientoInsumoList = this.tratamientosInsumos;
     fichaMedicaList = this.fichaMedica;
@@ -1711,15 +1733,37 @@ export class ConsultorioComponent implements OnInit {
     historialClinico.tratamientoActual = this.selectFichaMedicaForm.get('tratamientoActual').value;
     historialClinico.usuarioModificacion = 'admin';
 
-    procesoDiagnosticoTratamiento.diagnostico = diagnostico;
-    procesoDiagnosticoTratamiento.tratamiento = tratamiento;
-    procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
-    procesoDiagnosticoTratamiento.consulta = consulta;
-    procesoDiagnosticoTratamiento.anamnesis = anamnesis;
-    procesoDiagnosticoTratamiento.fichaMedicaList = fichaMedicaList;
-    procesoDiagnosticoTratamiento.historialClinico = historialClinico;
+    this.procesoDiagnosticoTratamiento.diagnostico = diagnostico;
+    this.procesoDiagnosticoTratamiento.tratamiento = tratamiento;
+    this.procesoDiagnosticoTratamiento.tratamientoInsumoList = tratamientoInsumoList;
+    this.procesoDiagnosticoTratamiento.consulta = consulta;
+    this.procesoDiagnosticoTratamiento.anamnesis = anamnesis;
+    this.procesoDiagnosticoTratamiento.fichaMedicaList = fichaMedicaList;
+    this.procesoDiagnosticoTratamiento.historialClinico = historialClinico;
 
-    peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(procesoDiagnosticoTratamiento);    
+    this.modalService.open(targetModal, {
+      centered: true,
+      backdrop: 'static',
+      size: 'lg'
+     });    
+    
+  }
+
+  confirmar(event){
+    event.preventDefault();
+
+    Swal.fire({
+      title: 'Espere',
+      text: 'Guardando información',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
+    
+    let peticion: Observable<any>;
+    var reporteModelo: ReporteModelo = new ReporteModelo;
+
+    peticion = this.procesoDiagnosticoTratamientoService.crearProcesoDiagnosticoTratamiento(this.procesoDiagnosticoTratamiento);    
 
     Swal.fire({
       title: 'Espere',
@@ -1739,7 +1783,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'success',
         showConfirmButton: true,
-        showCancelButton: true,
+        showCloseButton: true,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Imprimir Receta',
         text: resp.mensaje
@@ -1753,10 +1797,17 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e),
+          text: this.comunes.obtenerError(e),
         })
       Swal.close();
     });
+  }
+
+  obtenerMotivoDescripcion(motivoId){
+    for (let i = 0; i < this.listaMotivosConsulta.length; i++) {
+      this.listaMotivosConsulta[i].motivoConsultaId = Number(motivoId);
+      return this.listaMotivosConsulta[i].descripcion;
+    } 
   }
 
   get antecedentesNoValido() {
@@ -1803,7 +1854,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       Swal.close();
     });
@@ -1837,7 +1888,7 @@ export class ConsultorioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       Swal.close();
     });

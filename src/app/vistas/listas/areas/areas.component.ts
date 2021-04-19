@@ -155,7 +155,7 @@ export class AreasComponent implements OnDestroy, OnInit {
         Swal.fire({
           icon: 'info',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e)
+          text: this.comunes.obtenerError(e)
         })
         this.cargando = false;
         this.dtTrigger.next();
@@ -199,7 +199,7 @@ export class AreasComponent implements OnDestroy, OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e)
+              text: this.comunes.obtenerError(e)
             })
           }
         );

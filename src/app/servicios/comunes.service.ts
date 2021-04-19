@@ -12,20 +12,17 @@ export class ComunesService {
       if(e.error){
         if(e.error.mensaje){
           mensaje = e.error.mensaje;
-        }
-        if(e.error.message){
+        } else if(e.error.message){
           mensaje = e.error.message;
-        }
-        if(e.error.errors){
+        } else if(e.error.errors){
           mensaje = mensaje + ' ' + e.error.errors[0];
-        }
-        if(e.error.error){
+        } else if(e.error.error){
           mensaje = mensaje + ' ' + e.error.error;
         }
       }
-      if(e.message){
+      /*if(e.message){
         mensaje = mensaje + ' ' + e.message;
-      }
+      }*/
     return mensaje;  
   }
 }

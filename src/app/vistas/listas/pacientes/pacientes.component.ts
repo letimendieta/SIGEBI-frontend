@@ -22,7 +22,6 @@ export class PacientesComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   pacientes: PacienteModelo[] = [];
-  persona: PersonaModelo = new PersonaModelo();
   buscador: PacienteModelo = new PacienteModelo();
   buscadorForm: FormGroup;
   cargando = false;
@@ -132,11 +131,16 @@ export class PacientesComponent implements OnDestroy, OnInit {
     event.preventDefault();
     this.cargando = true;
     this.pacientes = [];
+    var persona = new PersonaModelo();
     this.rerender();
-    this.persona.cedula = this.buscadorForm.get('cedula').value;
-    this.persona.nombres = this.buscadorForm.get('nombres').value;
-    this.persona.apellidos = this.buscadorForm.get('apellidos').value;
-    this.buscador.personas = this.persona;
+    persona.cedula = this.buscadorForm.get('cedula').value;
+    persona.nombres = this.buscadorForm.get('nombres').value;
+    persona.apellidos = this.buscadorForm.get('apellidos').value;
+    
+    if(!persona.cedula && !persona.nombres && !persona.apellidos){
+      persona = null;
+    }
+    this.buscador.personas = persona;
     this.buscador.pacienteId = this.buscadorForm.get('pacienteId').value;
     this.pacientesService.buscarPacientesFiltros(this.buscador)
     .subscribe( resp => {      
@@ -147,7 +151,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -157,7 +161,6 @@ export class PacientesComponent implements OnDestroy, OnInit {
     event.preventDefault();
     this.buscadorForm.reset();
     this.buscador = new PacienteModelo();
-    this.persona = new PersonaModelo();
     this.pacientes = [];
     this.rerender();
     this.dtTrigger.next();
@@ -191,7 +194,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );

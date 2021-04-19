@@ -5,6 +5,7 @@ export class TratamientoInsumoModelo {
 
     tratamientoInsumoId: number;
     cantidad: number;
+    medida: string;
     tratamientos: TratamientoModelo;
     insumos: InsumoModelo;    
     fechaCreacion: Date;
