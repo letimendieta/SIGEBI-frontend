@@ -334,10 +334,11 @@
             <th scope="col">Funcionario c&eacute;dula</th>
             <th scope="col">Funcionario nombres</th>
             <th scope="col">Funcionario apellidos</th>
-            <th scope="col">Cantidad Insumos</th>
+            <th scope="col">Cantidad medicamento</th>
+            <th scope="col">Estado procedimiento</th>
             <th scope="col">Fecha procedimiento</th>  
             <th scope="col">Editar</th>
-            <th scope="col">Borrar</th>
+            <!--th scope="col">Borrar</th-->
           </tr>
         </thead>
         <tbody>
@@ -352,7 +353,8 @@
             <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
             <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
             <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
-            <td>{{ procedimiento.cantidad }}</td>
+            <td>{{ procedimiento.cantidadInsumo }}</td>
+            <td>{{ procedimiento.estado }}</td>
             <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
 
             <td>
@@ -361,10 +363,10 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <td (click)="borrarProcedimiento($event, procedimiento)">  
+            <!--td (click)="borrarProcedimiento($event, procedimiento)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
-            </td>
+            </td-->
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">

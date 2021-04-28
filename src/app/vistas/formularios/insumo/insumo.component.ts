@@ -164,7 +164,6 @@ export class InsumoComponent implements OnInit {
       codigo  : [null, [ Validators.required ]  ],
       descripcion  : [null, [ Validators.required]  ],
       tipo  : [null, [ Validators.required]  ],
-      fechaVencimiento: [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],

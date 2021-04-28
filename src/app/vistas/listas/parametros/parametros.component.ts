@@ -82,7 +82,8 @@ export class ParametrosComponent implements OnDestroy, OnInit {
       columns: [
         {data:'#'},
         {data:'parametroId'}, {data:'codigoParametro'}, {data:'descripcion'},
-        {data:'nombre'}, {data:'valor'}, {data:'descripcionValor'},
+        //{data:'nombre'}, 
+        {data:'valor'}, {data:'descripcionValor'},
         {data:'estado'},
         {data:'Editar'},
         {data:'Borrar'},

@@ -60,7 +60,7 @@ export class InsumosComponent implements OnDestroy, OnInit {
       columns: [
         {data:'#'},
         {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'fechaVencimiento'}, {data:'tipo'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
+        {data:'tipo'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
         {data:'Editar'},
         {data:'Borrar'},
@@ -217,8 +217,7 @@ export class InsumosComponent implements OnDestroy, OnInit {
       insumoId  : [null, [] ],
       codigo  : [null, [] ],
       descripcion  : [null, [] ],
-      tipo : [null, [] ],
-      fechaVencimiento: [null, [] ]
+      tipo : [null, [] ]
     });
   }
 

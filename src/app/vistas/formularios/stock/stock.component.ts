@@ -208,8 +208,7 @@ export class StockComponent implements OnInit {
     this.buscadorForm = this.fb2.group({
       insumoId  : [null, [] ],
       codigo  : [null, [] ],
-      descripcion  : [null, [] ],
-      fechaVencimiento: [null, [] ]
+      descripcion  : [null, [] ]
     });
 
     this.stockForm.get('stockId').disable();
@@ -228,7 +227,7 @@ export class StockComponent implements OnInit {
     buscador = this.buscadorForm.getRawValue();
 
     if(!buscador.insumoId && !buscador.codigo
-      && !buscador.descripcion && !buscador.fechaVencimiento){
+      && !buscador.descripcion){
       this.alert=true;
       return;
     }
@@ -277,7 +276,7 @@ export class StockComponent implements OnInit {
       searching: false,
       processing: true,
       columns: [ { data: 'insumoId' }, { data: 'codigo' }, 
-      { data: 'descripcion' }, { data: 'fechaVencimiento' }, { data: 'tipo' }]      
+      { data: 'descripcion' }, { data: 'tipo' }]      
     };
   }
 
@@ -291,8 +290,7 @@ export class StockComponent implements OnInit {
     this.buscadorForm.patchValue({
       insumoId: null,
       codigo: null,
-      descripcion: null,
-      fechaVencimiento: null
+      descripcion: null
     });
     this.insumos = [];
     this.alert=false;

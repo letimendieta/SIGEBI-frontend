@@ -41,7 +41,6 @@ import { PatologiasProcedimientosService } from 'src/app/servicios/patologiasPro
 import { EnfermedadCie10Modelo } from 'src/app/modelos/enfermedadCie10.modelo';
 import { EnfermedadesCie10Service } from 'src/app/servicios/enfermedadesCie10.service';
 import { ReporteModelo } from 'src/app/modelos/reporte.modelo';
-import { report } from 'process';
 import { TratamientosInsumosService } from 'src/app/servicios/tratamientosInsumos.service';
 import { VacunacionModelo } from 'src/app/modelos/vacunacion.modelo';
 import { VacunacionesService } from 'src/app/servicios/vacunaciones.service';
@@ -143,6 +142,7 @@ export class ConsultorioComponent implements OnInit {
   profile: any = "assets/images/profile.jpg";
   size:any=0;
   nombre:any = "";
+  mensajeError: String;
 
   constructor( private historialClinicosService: HistorialesClinicosService,
                private parametrosService: ParametrosService,
@@ -1717,6 +1717,12 @@ export class ConsultorioComponent implements OnInit {
       this.tratamientosInsumos[i].cantidad = Number(cantidades[i].value);
     }   
     for (let i = 0; i < medidas.length; i++) {
+      if(medidas[i].value == "null"){
+        this.alertGuardar = true;
+        Swal.close();
+        this.mensajeError = "Debe seleccionar la medida de los medicamentos. ";
+        return;
+      }
       this.tratamientosInsumos[i].medida = medidas[i].value;
     }   
 

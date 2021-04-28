@@ -64,8 +64,8 @@ export class UsuariosComponent implements OnDestroy, OnInit {
         {data:'usuarioId'}, {data:'codigoUsuario'}, {data:'personas.personaId'},
         {data:'funcionarios.funcionarioId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
         {data:'personas.apellido'}, {data:'estado'},
-        {data:'Editar'},
-        {data:'Borrar'}
+        {data:'Editar'}//,
+        //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
       buttons: [

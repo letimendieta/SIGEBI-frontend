@@ -5,6 +5,7 @@ export class ProcedimientoInsumoModelo {
 
     procedimientoInsumoId: number;
     cantidad: number;
+    medida: string;
     procedimientos: ProcedimientoModelo;
     insumos: InsumoModelo;    
     estado: string;

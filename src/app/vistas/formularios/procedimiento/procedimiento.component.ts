@@ -16,12 +16,16 @@ import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { StocksService } from 'src/app/servicios/stocks.service';
-import { TratamientoInsumoModelo } from 'src/app/modelos/tratamientoInsumo.modelo';
 import { InsumosService } from 'src/app/servicios/insumos.service';
 import { ProcedimientoInsumoModelo } from 'src/app/modelos/procedimientoInsumo.modelo';
 import { ProcesoProcedimientoModelo } from 'src/app/modelos/procesoProcedimiento.modelo';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
+import { AreaModelo } from 'src/app/modelos/area.modelo';
+import { AreasService } from 'src/app/servicios/areas.service';
+import { MotivoConsultaModelo } from 'src/app/modelos/motivoConsulta.modelo';
+import { MotivosConsultaService } from 'src/app/servicios/motivosConsulta.service';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 @Component({
   selector: 'app-procedimiento',
@@ -36,9 +40,12 @@ export class ProcedimientoComponent implements OnInit {
   funcionarios: FuncionarioModelo[] = [];
   stocks: StockModelo[] = [];
   procedimientosInsumos: ProcedimientoInsumoModelo[] = [];
+  listaMotivosConsulta: MotivoConsultaModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
-  listaEstadosProcedimientos: ParametroModelo;
+  listaAreas: AreaModelo;
+  listaEstadosEntrega: ParametroModelo;
+  listaMedidasMedicamentos: ParametroModelo;
   buscadorPacientesForm: FormGroup;
   buscadorFuncionariosForm: FormGroup;
   procedimientoForm: FormGroup;
@@ -54,6 +61,10 @@ export class ProcedimientoComponent implements OnInit {
   dtTriggerMedicamentos : Subject<any> = new Subject<any>();
   modificar: boolean = false;
   cargando = false;
+  consultaId: number = null;
+  procedimientoPendiente: boolean = false;
+  mensajeError: String;
+  finalizado = false;
 
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
@@ -61,6 +72,8 @@ export class ProcedimientoComponent implements OnInit {
                private stockService: StocksService,
                private insumosService: InsumosService,
                private parametrosService: ParametrosService,
+               private motivosConsultaService: MotivosConsultaService,
+               private areasService: AreasService,
                private router: Router,
                private comunes: ComunesService,
                private route: ActivatedRoute,
@@ -73,19 +86,29 @@ export class ProcedimientoComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.listarMotivosConsultas();
+    this.listarMedidasMedicamentos();
     const id = this.route.snapshot.paramMap.get('id');
-
+    this.listarAreas();
+    this.procedimientoForm.get('estado').disable();
     if ( id !== 'nuevo' ) {
       this.procedimientosService.getProcedimiento( Number(id) )
-        .subscribe( (resp: ProcedimientoModelo) => {         
+        .subscribe( (resp: ProcedimientoModelo) => {  
+          this.consultaId = resp.consultaId;   
+          if( resp && resp.consultaId ){
+            this.procedimientoPendiente = true;
+          }  
+          if( resp && resp.estado == GlobalConstants.PROC_FINALIZADO ){
+            this.finalizado = true;
+          }     
           this.procedimientoForm.patchValue(resp);
-          this.listarEstadosProcedimientos();
-          this.obtenerProcedimientosInsumos();          
+          this.listarEstadosEntrega();
+          this.obtenerProcedimientosInsumos();
+          this.deshabilitarDatos();     
         });
     }else{
       this.crear = true;
-      this.listarEstadosProcedimientos();
+      this.listarEstadosEntrega();
     }
   }  
 
@@ -98,10 +121,13 @@ export class ProcedimientoComponent implements OnInit {
     this.pacientesService.getPaciente( id )
         .subscribe( (resp: PacienteModelo) => {         
           this.procedimientoForm.get('pacientes').patchValue(resp);
+          this.obtenerProcedimientoPorPaciente(resp.pacienteId); 
+          this.obtenerProcedimientosInsumosPorPaciente(resp.pacienteId);
+
         }, e => {
             Swal.fire({
               icon: 'info',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
@@ -119,7 +145,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
         }
       );
@@ -134,34 +160,124 @@ export class ProcedimientoComponent implements OnInit {
 
     this.procedimientosService.obtenerProcedimientosInsumos(procedimientoInsumo)
     .subscribe( resp => {
-      this.procedimientosInsumos = resp;     
+      this.procedimientosInsumos = resp;          
     }, e => {      
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
 
-  listarEstadosProcedimientos() {
+  obtenerProcedimientoPorPaciente(pacienteId) {
+    
+    this.procedimientosService.obtenerProcedimientoPaciente(pacienteId)
+    .subscribe( resp => {
+      if( resp.length > 0 ){
+        if( resp[0].consultaId ){
+          this.procedimientoPendiente = true;
+        } 
+        this.procedimientoForm.patchValue(resp[0]);
+        this.procedimientoForm.get('funcionarios').get('funcionarioId').disable();
+        this.procedimientoForm.get('areas').get('areaId').disable();
+        this.procedimientoForm.get('fecha').disable();
+      }
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  obtenerProcedimientosInsumosPorPaciente(pacienteId) {
+    
+    this.procedimientosService.obtenerProcedimientosInsumosPaciente(pacienteId)
+    .subscribe( resp => {
+      this.procedimientosInsumos = resp;   
+    }, e => {      
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  listarEstadosEntrega() {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
     var sexoParam = new ParametroModelo();
-    sexoParam.codigoParametro = "EST_PROCE";
+    sexoParam.codigoParametro = "EST_ENTREGA_INSUMO";
     sexoParam.estado = "A";
 
     this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
-        this.listaEstadosProcedimientos = resp;
+        this.listaEstadosEntrega = resp;
     });
   }
-  
-  guardar( ) {
+  listarMedidasMedicamentos() {
+    var unidadMedidaParam = new ParametroModelo();
+    unidadMedidaParam.codigoParametro = "UNI_MEDIDA_MEDICAMENTOS";
+    unidadMedidaParam.estado = "A";
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
 
+    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaMedidasMedicamentos = resp;
+    });
+  }
+
+  listarMotivosConsultas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var motivoConsulta = new MotivoConsultaModelo();
+    motivoConsulta.estado = "A";
+
+    this.motivosConsultaService.buscarMotivosConsultaFiltros(motivoConsulta, orderBy, orderDir )
+      .subscribe( (resp: MotivoConsultaModelo[]) => {
+        this.listaMotivosConsulta = resp;
+    });
+  }
+
+  listarAreas() {
+    var orderBy = "descripcion";
+    var orderDir = "asc";
+    var area = new AreaModelo();
+    area.estado = "A";
+
+    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+      .subscribe( (resp: AreaModelo) => {
+        this.listaAreas = resp;
+    });
+  }
+
+  deshabilitarDatos(){
+    this.procedimientoForm.get('pacientes').get('pacienteId').disable();
+    this.procedimientoForm.get('funcionarios').get('funcionarioId').disable();
+    this.procedimientoForm.get('areas').get('areaId').disable();
+    this.procedimientoForm.get('fecha').disable();
+    this.procedimientoForm.get('motivoConsulta').get('motivoConsultaId').disable();
+    this.procedimientoForm.get('notas').disable();
+  }
+  
+  guardar( event ) {
+    event.preventDefault();
     if ( this.procedimientoForm.invalid ){
       this.alertGuardar = true;
+      
+      var camposObligatorios;
+      for (let el in this.procedimientoForm.controls) {
+        if (this.procedimientoForm.controls[el].errors) {
+          console.log(el)
+          camposObligatorios = camposObligatorios + el;
+        }
+      } 
+      this.mensajeError = "Existen campos obligatorios. Verifique. ";
       return Object.values( this.procedimientoForm.controls ).forEach( control => {
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -184,14 +300,39 @@ export class ProcedimientoComponent implements OnInit {
     var procedimiento: ProcedimientoModelo = new ProcedimientoModelo();
 
     procedimiento = this.procedimientoForm.getRawValue();
+    procedimiento.estado = GlobalConstants.PROC_FINALIZADO;
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
     var estados = rows.$('select').serializeArray();
 
+    var contador = 0;
     for (let i = 0; i < estados.length; i++) {
-      this.procedimientosInsumos[i].estado = estados[i].value;
-      this.procedimientosInsumos[i].cantidad = Number(cantidades[i].value);
-    }   
+      if(estados[i].name == "estado"){
+        this.procedimientosInsumos[contador].estado = estados[i].value; 
+        contador++;      
+      }      
+    }
+
+    var contador = 0;
+    for (let j = 0; j < estados.length; j++) {
+      if( !procedimiento.consultaId){
+        if(estados[j].name == "medida"){
+          if(estados[j].value == "null"){
+            this.alertGuardar = true;
+            Swal.close();
+            this.mensajeError = "Debe seleccionar la medida de los medicamentos. ";
+            return;
+          }
+          this.procedimientosInsumos[contador].medida = estados[j].value;
+          contador++;
+        }
+      }      
+    }
+    for (let k = 0; k < cantidades.length; k++) {
+      if( !procedimiento.consultaId){
+        this.procedimientosInsumos[k].cantidad = Number(cantidades[k].value);
+      }
+    }
 
     procesoProcedimientoInsumo.procedimiento = procedimiento;
     procesoProcedimientoInsumo.procedimientoInsumoList = this.procedimientosInsumos;
@@ -224,7 +365,7 @@ export class ProcedimientoComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e),
+          text: this.comunes.obtenerError(e),
         })          
       }
     );
@@ -237,6 +378,10 @@ export class ProcedimientoComponent implements OnInit {
     this.procedimientosInsumos = [];
     $('#tableMedicamentos').DataTable().destroy();
     this.dtTriggerMedicamentos.next();
+    this.procedimientoForm.get('funcionarios').get('funcionarioId').enable();
+    this.procedimientoForm.get('areas').get('areaId').enable();
+    this.procedimientoForm.get('fecha').enable();
+    this.consultaId = null;
   }
 
   obtenerError(e : any){
@@ -266,14 +411,32 @@ export class ProcedimientoComponent implements OnInit {
     && this.procedimientoForm.get('funcionarios').get('funcionarioId').touched
   }
 
+  get areaNoValido() {
+    return this.procedimientoForm.get('areas').get('areaId').invalid 
+    && this.procedimientoForm.get('areas').get('areaId').touched
+  }
+
   get fechaNoValido() {
     return this.procedimientoForm.get('fecha').invalid 
     && this.procedimientoForm.get('fecha').touched
   }
 
+  get motivoNoValido() {
+    return this.procedimientoForm.get('motivoConsulta').get('motivoConsultaId').invalid 
+    && this.procedimientoForm.get('motivoConsulta').get('motivoConsultaId').touched
+  }
+
   crearFormulario() {
     this.procedimientoForm = this.fb.group({
       procedimientoId  : [null, [] ],
+      areas: this.fb.group({     
+        areaId  : [null, [Validators.required] ]
+      }),
+      consultaId  : [null, [] ],
+      motivoConsulta: this.fb.group({     
+        motivoConsultaId  : [null, [Validators.required] ]
+      }),
+      estado  : [null, [] ],
       pacientes : this.fb.group({
         pacienteId  : [null, [Validators.required] ],
         personas : this.fb.group({
@@ -292,7 +455,7 @@ export class ProcedimientoComponent implements OnInit {
       }),
       insumoId  : [null, [] ],
       fecha  : [null, [Validators.required] ],
-      notas  : [null, [Validators.required] ],
+      notas  : [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
@@ -316,8 +479,7 @@ export class ProcedimientoComponent implements OnInit {
     this.buscadorStockForm = this.fb4.group({
       insumoId  : [null, [] ],
       codigo  : [null, [] ],
-      descripcion  : [null, [] ],
-      fechaVencimiento: [null, [] ]
+      descripcion  : [null, [] ]
     });
 
     this.procedimientoForm.get('procedimientoId').disable();
@@ -360,7 +522,7 @@ export class ProcedimientoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -384,7 +546,7 @@ export class ProcedimientoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -408,7 +570,7 @@ export class ProcedimientoComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -520,7 +682,7 @@ export class ProcedimientoComponent implements OnInit {
       processing: true,
       columns: [ {data:'stockId'}, {data:'insumos.codigo'}, 
       {data:'insumos.descripcion'}, {data:'insumos.tipo'},
-      {data:'cantidad'}, {data:'estado'}, {data:'insumo.fechaVencimiento'}, 
+      {data:'cantidad'}, {data:'estado'}, 
       {data:'unidadMedida'}]      
     };
   }
@@ -551,8 +713,8 @@ export class ProcedimientoComponent implements OnInit {
       columns: [
         {data:'#'},
         {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'fechaVencimiento'}, 
-        {data:'cantidad'}, 
+        {data:'tipo'}, 
+        {data:'cantidad'}, {data:'medida'}, 
         {data:'quitar'}
       ]      
     };
@@ -613,8 +775,7 @@ export class ProcedimientoComponent implements OnInit {
     this.buscadorStockForm.patchValue({
       insumoId: null,
       codigo: null,
-      descripcion: null,
-      fechaVencimiento: null
+      descripcion: null
     });
     this.stocks = [];
     this.alert=false;
@@ -631,7 +792,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.procedimientoForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -649,7 +810,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(null);
         }
@@ -684,7 +845,7 @@ export class ProcedimientoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
         }
       );

@@ -62,8 +62,8 @@ export class PacientesComponent implements OnDestroy, OnInit {
         {data:'#'},
         {data:'pacienteId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
         {data:'personas.apellidos'},
-        {data:'Editar'},
-        {data:'Borrar'},
+        {data:'Editar'}//,
+        //{data:'Borrar'},
       ],
       dom: 'lBfrtip',
       buttons: [

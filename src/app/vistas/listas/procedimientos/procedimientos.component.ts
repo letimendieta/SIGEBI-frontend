@@ -86,9 +86,10 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
         {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
         {data:'funcionarios.funcionarioId'},
         {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
-        {data:'funcionarios.personas.apellidos'},{data:'cantidad'},{data:'fecha'},
-        {data:'Editar'},
-        {data:'Borrar'}
+        {data:'funcionarios.personas.apellidos'},{data:'cantidadInsumo'},
+        {data:'estado'},{data:'fecha'},
+        {data:'Editar'}//,
+        //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
       buttons: [
@@ -100,7 +101,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
           title:     'Listado de procedimientos',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           },
         },
         {
@@ -111,7 +112,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
           className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           },
         },
         {
@@ -123,7 +124,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           }
         },          
         {
@@ -134,7 +135,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
           className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -204,7 +205,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
       this.dtTrigger.next();
@@ -248,7 +249,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
@@ -332,7 +333,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -356,7 +357,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -472,17 +473,6 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       this.buscadorForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
       this.buscadorForm.get('pacientes').get('pacienteCedula').setValue(paciente.personas.cedula);
     }
-    /*this.pacientesService.getPaciente( paciente.pacienteId )
-      .subscribe( (resp: PacienteModelo) => {         
-        this.procedimientoForm.get('pacientes').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.procedimientoForm.get('pacientes').get('pacienteId').setValue(null);
-        }
-      );*/
   }
 
   selectFuncionario(event, funcionario: FuncionarioModelo){
@@ -491,17 +481,6 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       this.buscadorForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
       this.buscadorForm.get('funcionarios').get('funcionarioCedula').setValue(funcionario.personas.cedula);
     }
-    /*this.funcionariosService.getFuncionario( funcionario.funcionarioId )
-      .subscribe( (resp: FuncionarioModelo) => {         
-        this.procedimientoForm.get('funcionarios').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(null);
-        }
-      );*/
   }
 
   onSubmit() {

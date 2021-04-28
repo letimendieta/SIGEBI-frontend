@@ -39,13 +39,13 @@
               </mat-form-field>
             </p>    
 
-            <p>
+            <!--p>
               <mat-form-field appearance="fill">
                 <mat-label>Fecha vencimiento</mat-label>
                 <input matInput matInput type="date" placeholder="Fecha vencimiento" 
                   formControlName="fechaVencimiento" name="fechaVencimiento" id="fechaVencimiento">
               </mat-form-field>
-            </p>
+            </p-->
           </div>
           &nbsp; &nbsp; &nbsp;
           <div>
@@ -86,7 +86,6 @@
             <th scope="col">Id</th>
             <th scope="col">C&oacute;digo</th>
             <th scope="col">Descripci&oacute;n</th>
-            <th scope="col">Fecha vencimiento</th>
             <th scope="col">Tipo</th>
             <th scope="col">Fecha creaci&oacute;n</th>
             <th scope="col">Usuario creaci&oacute;n</th>
@@ -102,7 +101,6 @@
             <td>{{ insumo.insumoId }}</td>
             <td>{{ insumo.codigo }}</td>
             <td>{{ insumo.descripcion }}</td>
-            <td>{{ insumo.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
             <td>{{ insumo.tipo }}</td>
             <td>{{ insumo.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ insumo.usuarioCreacion }}</td>

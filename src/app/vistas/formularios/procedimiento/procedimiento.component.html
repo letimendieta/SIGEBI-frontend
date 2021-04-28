@@ -24,7 +24,7 @@
                         </div>
                         <div class="card-body">
 
-                              <form [formGroup]="procedimientoForm" (ngSubmit)="guardar( )">
+                              <form [formGroup]="procedimientoForm" (ngSubmit)="guardar( $event )">
                                     <div class="row justify-content-center">
                                           <div class="col-lg-5">
                                                 <!-- Procedimiento Id-->
@@ -54,13 +54,13 @@
                                                                   [class.is-invalid]="pacienteIdNoValido"
                                                                   name="pacienteId">
                                                             <div class="input-group-append">
-                                                                  <button class="btn btn-outline-info" 
+                                                                  <button class="btn btn-outline-info" [disabled]="consultaId != null"
                                                                         (click)="obtenerPaciente($event)">
                                                                         Buscar
                                                                   </button>
                                                             </div>
                                                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                            <button type="button" class="btn btn-primary" 
+                                                            <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
                                                                   (click)="openModalPacientes(modalPacientes)"><i class="fas fa-search"></i></button>
                                                       </div>
                                                       <small *ngIf="pacienteIdNoValido" class="text-danger">
@@ -204,13 +204,13 @@
                                                                   [class.is-invalid]="funcionarioIdNoValido"
                                                                   name="funcionarioId">
                                                             <div class="input-group-append">
-                                                                  <button class="btn btn-outline-info"
+                                                                  <button class="btn btn-outline-info" [disabled]="consultaId != null"
                                                                   (click)="obtenerFuncionario($event)">
                                                                         Buscar
                                                                   </button>
                                                             </div>
                                                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                            <button type="button" class="btn btn-primary" 
+                                                            <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
                                                                   (click)="openModalFuncionarios(modalFuncionarios)"><i class="fas fa-search"></i></button>                                                            
                                                       </div>
                                                       <small *ngIf="funcionarioIdNoValido" class="text-danger">
@@ -344,8 +344,27 @@
                                           </div>
                                     </div>          
 
-                                    <hr>         
+                                    <hr>  
+                                    
+
                                     <div class="form-row justify-content-center">
+                                          <div class="col-lg-5">
+                                                <div formGroupName="areas" class="form-group">
+                                                      <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
+                                                      <select class="form-control input-sm" name="areaId"
+                                                            formControlName="areaId" 
+                                                            [class.is-invalid]="areaNoValido">
+                                                            <option value=null>Seleccionar</option>
+                                                            <option *ngFor="let item of listaAreas; let i = index"
+                                                                  value="{{item.areaId}}">
+                                                                  {{item.areaId}} - {{item.codigo}} - {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                      <small *ngIf="areaNoValido" class="text-danger">
+                                                            Seleccione el &aacute;rea
+                                                      </small>
+                                                </div>                                           
+                                          </div> 
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Fecha</b><span class="requerido"> *</span></label>
@@ -364,6 +383,31 @@
 
                                     <div class="form-row justify-content-center">
                                           <div class="col-lg-5">
+                                                <div formGroupName="motivoConsulta" class="form-group">   
+                                                      <label><b>Motivo Consulta </b><span class="requerido"> *</span></label>
+                                                      <select class="form-control input-sm" name="motivoConsultaId"
+                                                            formControlName="motivoConsultaId" [class.is-invalid]="motivoNoValido">
+                                                            <option value=null>Seleccionar</option>
+                                                            <option *ngFor="let item of listaMotivosConsulta; let i = index"
+                                                                  value="{{item.motivoConsultaId}}">
+                                                                  {{item.motivoConsultaId}} - {{item.codigo}} - {{item.descripcion}}
+                                                            </option>
+                                                      </select>
+                                                      <small *ngIf="motivoNoValido" class="text-danger">
+                                                      Seleccione el motivo de consulta
+                                                      </small>
+                                                </div>
+                                          </div>
+                                          <div class="col-lg-5">
+                                                <div class="form-group">
+                                                      <label><b>Estado</b></label>
+                                                      <input type="text" id="estado"
+                                                            class="form-control"
+                                                            formControlName="estado"
+                                                            name="estado">   
+                                                </div> 
+                                          </div> 
+                                          <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Insumo id</b></label>
                                                       <div class="input-group mb-3">
@@ -374,7 +418,7 @@
                                                                   placeholder="Insumo id">
                                                                   <div class="input-group-append">
                                                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                                              <button type="button" class="btn btn-primary" 
+                                                                              <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
                                                                                     (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
                                                                   </div>
                                                       </div>
@@ -436,7 +480,6 @@
                                                                               <th>Descripcion</th>
                                                                               <th>Tipo</th>
                                                                               <th>Cantidad</th>
-                                                                              <th>Fecha Vencimiento</th>                                                  
                                                                               <th>Unidad medida</th>                                                  
                                                                               </tr>
                                                                         </thead>                                                                                    
@@ -452,7 +495,6 @@
                                                                               <th>Descripcion</th>
                                                                               <th>Tipo</th>
                                                                               <th>Stock</th>
-                                                                              <th>Fecha Vencimiento</th>                                                  
                                                                               <th>Unidad medida</th>
                                                                               </tr>
                                                                         </thead>
@@ -464,7 +506,6 @@
                                                                                     <td>{{ stock.insumos.descripcion }}</td>
                                                                                     <td>{{ stock.insumos.tipo }}</td>
                                                                                     <td>{{ stock.cantidad }}</td>
-                                                                                    <td>{{ stock.insumos.fechaVencimiento| date : 'dd-MM-yyyy' }}</td>
                                                                                     <td>{{ stock.unidadMedida }}</td>                                                      
                                                                               </tr>
                                                                         </tbody>
@@ -480,7 +521,6 @@
                                                                                           Espere por favor
                                                                                     </p>
                                                                               </td>
-                                                                              <td></td>
                                                                               <td></td>
                                                                               <td></td>
                                                                         </tbody>                                                                                    
@@ -509,8 +549,9 @@
                                                                   <th scope="col">Id</th>
                                                                   <th scope="col">C&oacute;digo</th>
                                                                   <th scope="col">Descripci&oacute;n</th>
-                                                                  <th scope="col">Fecha vencimiento</th>
+                                                                  <th scope="col">Tipo</th>
                                                                   <th scope="col">Cantidad</th>
+                                                                  <th scope="col">Medida</th>
                                                                   <th scope="col">Estado</th>
                                                                   <th scope="col">Quitar</th>
                                                                   </tr>
@@ -521,16 +562,41 @@
                                                                   <td>{{ procedimientoInsumo.insumos.insumoId }}</td>
                                                                   <td>{{ procedimientoInsumo.insumos.codigo }}</td>
                                                                   <td>{{ procedimientoInsumo.insumos.descripcion }}</td>
-                                                                  <td>{{ procedimientoInsumo.insumos.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
-                                                                  <td><input type="number" id="cantidad" name="cantidad" value="1"></td>
+                                                                  <td>{{ procedimientoInsumo.insumos.tipo }}</td>
                                                                   <td>
-                                                                        {{ procedimientoInsumo.estado }}
-                                                                        <select size="1" id="estado" name="estado">                                                                             
-                                                                              <option *ngFor="let item of listaEstadosProcedimientos; let i = index"
-                                                                                    value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
-                                                                                    {{item.descripcionValor}}
-                                                                              </option>
-                                                                        </select>
+                                                                        <div [hidden]="!crear">
+                                                                              <input type="number" id="cantidad" name="cantidad" value="1" [disabled]="!crear">
+                                                                        </div>
+                                                                        <div [hidden]="crear">
+                                                                              {{ procedimientoInsumo.cantidad }}
+                                                                        </div>
+                                                                  </td>
+                                                                  <td>
+                                                                        <div [hidden]="!crear">
+                                                                              <select class="form-control input-sm" name="medida" id="medida">
+                                                                                    <option value=null>Seleccionar</option>
+                                                                                    <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
+                                                                                      value="{{medida.valor}}">
+                                                                                      {{medida.descripcionValor}}
+                                                                                    </option>
+                                                                              </select>
+                                                                        </div>
+                                                                        <div [hidden]="crear">
+                                                                              {{ procedimientoInsumo.medida }}
+                                                                        </div>
+                                                                  </td>
+                                                                  <td>
+                                                                        <div [hidden]="crear == false && procedimientoPendiente == false">
+                                                                              <select size="1" id="estado" name="estado">                                                                             
+                                                                                    <option *ngFor="let item of listaEstadosEntrega; let i = index"
+                                                                                          value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
+                                                                                          {{item.descripcionValor}}
+                                                                                    </option>
+                                                                              </select>
+                                                                        </div>
+                                                                        <div [hidden]="crear == false && procedimientoPendiente == true ">
+                                                                              {{ procedimientoInsumo.estado }}
+                                                                        </div>
                                                                   </td>
                                                                   <td (click)="quitarMedicamento($event, procedimientoInsumo)">  
                                                                   <button class="btn btn-danger" [hidden]="!crear">
@@ -557,12 +623,12 @@
                                           </div>
                                     </div>
 
-                                    <div class="input-group mb-3">
+                                    <!--div class="input-group mb-3">
                                           <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="inputGroupFile02">
                                                 <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
                                           </div>                        
-                                    </div>
+                                    </div-->
                                     
                                     <div class="form-row justify-content-center" [hidden]="crear">
                                           <div class="col-lg-5"> 
@@ -603,16 +669,17 @@
                                                 </div>                                    
                                           </div>                        
                                     </div>
+                              
                                     <hr>
                                     <br>
                                     <div *ngIf="alertGuardar" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                                          Existen campos obligatorios. Verifique.
+                                          {{mensajeError}}
                                           <button type="button" (click)="cerrarAlertGuardar()" class="close" data-dismiss="alert" aria-label="Close">
                                           <span aria-hidden="true">&times;</span>
                                           </button>
                                     </div>
                                     <div class="form-group text-center">
-                                          <button type="submit" 
+                                          <button type="submit" [disabled]="!crear && finalizado == true "
                                                 class="btn btn-primary">
                                           <i class="fa fa-save"></i>
                                           Guardar
@@ -621,8 +688,8 @@
                                           <button (click)="limpiar()" [hidden]="!crear" 
                                                 class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
                                     </div>
-
                               </form>
+                              
                         </div>
                   </div>
 

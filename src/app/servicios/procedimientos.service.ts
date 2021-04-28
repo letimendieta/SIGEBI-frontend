@@ -84,6 +84,22 @@ export class ProcedimientosService {
       );
   }
 
+  obtenerProcedimientosInsumosPaciente( pacienteId: number ) {
+
+    return this.http.get(`${ this.url }/procedimientos-insumos/paciente/${ pacienteId }`).pipe(
+      map( this.crearArregloProcedimientoInsumo ),
+      delay(0)
+    );
+  }
+
+  obtenerProcedimientoPaciente( pacienteId: number ) {
+
+    return this.http.get(`${ this.url }/procedimientos/paciente/${ pacienteId }`).pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
   getPersona( id: number ) {
 
     return this.http.get(`${ this.url }/personas/${ id }`);
