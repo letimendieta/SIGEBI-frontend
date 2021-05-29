@@ -1,6 +1,4 @@
-import { InsumoModelo } from './insumo.modelo';
 import { PreguntaModelo } from './pregunta.modelo';
-import { ProcedimientoModelo } from './procedimiento.modelo';
 
 export class PreguntaHistorialModelo {
 

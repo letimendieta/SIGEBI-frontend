@@ -14,9 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
-import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { StocksService } from 'src/app/servicios/stocks.service';
-import { InsumosService } from 'src/app/servicios/insumos.service';
 import { ProcedimientoInsumoModelo } from 'src/app/modelos/procedimientoInsumo.modelo';
 import { ProcesoProcedimientoModelo } from 'src/app/modelos/procesoProcedimiento.modelo';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
@@ -26,6 +24,8 @@ import { AreasService } from 'src/app/servicios/areas.service';
 import { MotivoConsultaModelo } from 'src/app/modelos/motivoConsulta.modelo';
 import { MotivosConsultaService } from 'src/app/servicios/motivosConsulta.service';
 import { GlobalConstants } from 'src/app/common/global-constants';
+import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 
 @Component({
   selector: 'app-procedimiento',
@@ -38,8 +38,10 @@ export class ProcedimientoComponent implements OnInit {
   funcionarioPersona: PersonaModelo = new PersonaModelo();
   pacientes: PacienteModelo[] = [];
   funcionarios: FuncionarioModelo[] = [];
-  stocks: StockModelo[] = [];
-  procedimientosInsumos: ProcedimientoInsumoModelo[] = [];
+  stocksMedicamentos: StockModelo[] = [];
+  stocksInsumoMedico: StockModelo[] = [];
+  procedimientosInsumosMedicos: ProcedimientoInsumoModelo[] = [];
+  procedimientosMedicamentos: ProcedimientoInsumoModelo[] = [];
   listaMotivosConsulta: MotivoConsultaModelo[] = [];
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
@@ -53,24 +55,30 @@ export class ProcedimientoComponent implements OnInit {
   alert:boolean=false;
   alertPacientes:boolean=false;
   alertMedicamentos:boolean=false;
+  alertInsumosMedicos:boolean=false;
   alertFuncionarios:boolean=false;
   alertGuardar:boolean=false;
-  dtOptions: any = {};
+  dtOptionsPacientes: any = {};
+  dtOptionsFuncionarios: any = {};
   dtOptionsStock: any = {};  
+  dtOptionsStockInsumoMedico: any = {};  
   dtOptionsMedicamentos: any = {};
+  dtOptionsInsumosMedicos: any = {};
   dtTriggerMedicamentos : Subject<any> = new Subject<any>();
+  dtTriggerInsumosMedicos : Subject<any> = new Subject<any>();
   modificar: boolean = false;
   cargando = false;
   consultaId: number = null;
   procedimientoPendiente: boolean = false;
   mensajeError: String;
   finalizado = false;
+  busquedaMedicamento = false;
+  busquedaInsumoMedico = false;
 
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
                private stockService: StocksService,
-               private insumosService: InsumosService,
                private parametrosService: ParametrosService,
                private motivosConsultaService: MotivosConsultaService,
                private areasService: AreasService,
@@ -88,6 +96,11 @@ export class ProcedimientoComponent implements OnInit {
   ngOnInit() {
     this.listarMotivosConsultas();
     this.listarMedidasMedicamentos();
+    this.crearTablaInsumosMedicos();
+    this.crearTablaMedicamentos();
+    this.crearTablaModelFuncionarios();
+    this.crearTablaModelPacientes();
+    this.crearTablaModelStock();
     const id = this.route.snapshot.paramMap.get('id');
     this.listarAreas();
     this.procedimientoForm.get('estado').disable();
@@ -108,7 +121,7 @@ export class ProcedimientoComponent implements OnInit {
         });
     }else{
       this.crear = true;
-      this.listarEstadosEntrega();
+      this.listarEstadosEntrega();      
     }
   }  
 
@@ -120,10 +133,7 @@ export class ProcedimientoComponent implements OnInit {
     }
     this.pacientesService.getPaciente( id )
         .subscribe( (resp: PacienteModelo) => {         
-          this.procedimientoForm.get('pacientes').patchValue(resp);
-          this.obtenerProcedimientoPorPaciente(resp.pacienteId); 
-          this.obtenerProcedimientosInsumosPorPaciente(resp.pacienteId);
-
+          this.procedimientoForm.get('pacientes').patchValue(resp);         
         }, e => {
             Swal.fire({
               icon: 'info',
@@ -160,7 +170,16 @@ export class ProcedimientoComponent implements OnInit {
 
     this.procedimientosService.obtenerProcedimientosInsumos(procedimientoInsumo)
     .subscribe( resp => {
-      this.procedimientosInsumos = resp;          
+      var procedimientosInsumos = resp;      
+      
+      for (let i = 0; i < procedimientosInsumos.length; i++) {
+        if(procedimientosInsumos[i].insumosMedicos && procedimientosInsumos[i].insumosMedicos.insumoMedicoId){
+          this.procedimientosInsumosMedicos.push(procedimientosInsumos[i]);
+        }
+        if(procedimientosInsumos[i].medicamentos && procedimientosInsumos[i].medicamentos.medicamentoId){
+          this.procedimientosMedicamentos.push(procedimientosInsumos[i]);
+        }
+      }  
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -192,20 +211,6 @@ export class ProcedimientoComponent implements OnInit {
     });
   }
 
-  obtenerProcedimientosInsumosPorPaciente(pacienteId) {
-    
-    this.procedimientosService.obtenerProcedimientosInsumosPaciente(pacienteId)
-    .subscribe( resp => {
-      this.procedimientosInsumos = resp;   
-    }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-    });
-  }
-
   listarEstadosEntrega() {
     var orderBy = "descripcion";
     var orderDir = "asc";
@@ -219,6 +224,7 @@ export class ProcedimientoComponent implements OnInit {
         this.listaEstadosEntrega = resp;
     });
   }
+
   listarMedidasMedicamentos() {
     var unidadMedidaParam = new ParametroModelo();
     unidadMedidaParam.codigoParametro = "UNI_MEDIDA_MEDICAMENTOS";
@@ -262,7 +268,9 @@ export class ProcedimientoComponent implements OnInit {
     this.procedimientoForm.get('areas').get('areaId').disable();
     this.procedimientoForm.get('fecha').disable();
     this.procedimientoForm.get('motivoConsulta').get('motivoConsultaId').disable();
-    this.procedimientoForm.get('notas').disable();
+    if(this.finalizado){
+      this.procedimientoForm.get('notas').disable();
+    }
   }
   
   guardar( event ) {
@@ -298,44 +306,15 @@ export class ProcedimientoComponent implements OnInit {
     let peticion: Observable<any>;
     var procesoProcedimientoInsumo: ProcesoProcedimientoModelo = new ProcesoProcedimientoModelo();
     var procedimiento: ProcedimientoModelo = new ProcedimientoModelo();
+    var procedimientoInsumo: ProcedimientoInsumoModelo[] = [];
 
     procedimiento = this.procedimientoForm.getRawValue();
     procedimiento.estado = GlobalConstants.PROC_FINALIZADO;
-    var rows =  $('#tableMedicamentos').DataTable().rows().data();  
-    var cantidades = rows.$('input').serializeArray();
-    var estados = rows.$('select').serializeArray();
 
-    var contador = 0;
-    for (let i = 0; i < estados.length; i++) {
-      if(estados[i].name == "estado"){
-        this.procedimientosInsumos[contador].estado = estados[i].value; 
-        contador++;      
-      }      
-    }
-
-    var contador = 0;
-    for (let j = 0; j < estados.length; j++) {
-      if( !procedimiento.consultaId){
-        if(estados[j].name == "medida"){
-          if(estados[j].value == "null"){
-            this.alertGuardar = true;
-            Swal.close();
-            this.mensajeError = "Debe seleccionar la medida de los medicamentos. ";
-            return;
-          }
-          this.procedimientosInsumos[contador].medida = estados[j].value;
-          contador++;
-        }
-      }      
-    }
-    for (let k = 0; k < cantidades.length; k++) {
-      if( !procedimiento.consultaId){
-        this.procedimientosInsumos[k].cantidad = Number(cantidades[k].value);
-      }
-    }
-
+    procedimientoInsumo = this.unificarProcedimientosInsumos(procedimiento);
+    
     procesoProcedimientoInsumo.procedimiento = procedimiento;
-    procesoProcedimientoInsumo.procedimientoInsumoList = this.procedimientosInsumos;
+    procesoProcedimientoInsumo.procedimientoInsumoList = procedimientoInsumo;
   
     if ( procedimiento.procedimientoId ) {
       procedimiento.usuarioModificacion = 'admin';
@@ -371,11 +350,64 @@ export class ProcedimientoComponent implements OnInit {
     );
   }
 
+  unificarProcedimientosInsumos(procedimiento: ProcedimientoModelo){
+    var procedimientoInsumo: ProcedimientoInsumoModelo[] = [];
+
+    for (let i = 0; i < this.procedimientosMedicamentos.length; i++) {
+
+      var rows =  $('#tableMedicamentos').DataTable().rows().data();  
+      var cantidades = rows.$('input').serializeArray();
+      var estados = rows.$('select').serializeArray();
+
+      var contador = 0;
+      for (let a = 0; a < estados.length; a++) {
+        if(estados[a].name == "estado"){
+          this.procedimientosMedicamentos[contador].estado = estados[a].value;
+          contador++;      
+        }      
+      }
+
+      for (let k = 0; k < cantidades.length; k++) {
+        if( !procedimiento.consultaId){
+          this.procedimientosMedicamentos[k].cantidad = Number(cantidades[k].value);
+        }
+      }
+      procedimientoInsumo.push(this.procedimientosMedicamentos[i]);
+    }
+
+    for (let j = 0; j < this.procedimientosInsumosMedicos.length; j++) {
+
+      var rows =  $('#tableInsumosMedicos').DataTable().rows().data();  
+      var cantidades = rows.$('input').serializeArray();
+      var estados = rows.$('select').serializeArray();
+
+      var contador = 0;
+      for (let b = 0; b < estados.length; b++) {
+        if(estados[b].name == "estado"){
+          this.procedimientosInsumosMedicos[contador].estado = estados[b].value;
+          contador++;      
+        }      
+      }
+
+      for (let k = 0; k < cantidades.length; k++) {
+        if( !procedimiento.consultaId){
+          this.procedimientosInsumosMedicos[k].cantidad = Number(cantidades[k].value);
+        }
+      }
+      procedimientoInsumo.push(this.procedimientosInsumosMedicos[j]);
+    }
+
+    return procedimientoInsumo;
+  }
+
   limpiar(){
     this.procedimientoForm.reset();
     this.paciente = new PacienteModelo();
     this.funcionario = new FuncionarioModelo();
-    this.procedimientosInsumos = [];
+    this.procedimientosInsumosMedicos = [];
+    this.procedimientosMedicamentos = [];
+    $('#tableInsumosMedicos').DataTable().destroy();
+    this.dtTriggerInsumosMedicos.next();
     $('#tableMedicamentos').DataTable().destroy();
     this.dtTriggerMedicamentos.next();
     this.procedimientoForm.get('funcionarios').get('funcionarioId').enable();
@@ -452,8 +484,7 @@ export class ProcedimientoComponent implements OnInit {
           nombres  : [null, [] ],
           apellidos  : [null, [] ]
         })
-      }),
-      insumoId  : [null, [] ],
+      }),    
       fecha  : [null, [Validators.required] ],
       notas  : [null, [] ],
       fechaCreacion: [null, [] ],
@@ -477,9 +508,12 @@ export class ProcedimientoComponent implements OnInit {
     });
 
     this.buscadorStockForm = this.fb4.group({
-      insumoId  : [null, [] ],
-      codigo  : [null, [] ],
-      descripcion  : [null, [] ]
+      medicamentoId  : [null, [] ],
+      codigoMedicamento  : [null, [] ],
+      medicamento  : [null, [] ],
+      insumoMedicoId  : [null, [] ],
+      codigoInsumo  : [null, [] ],
+      nombre  : [null, [] ]
     });
 
     this.procedimientoForm.get('procedimientoId').disable();
@@ -555,17 +589,50 @@ export class ProcedimientoComponent implements OnInit {
   buscadorStock(event) {
     event.preventDefault();
     var buscador = new StockModelo();
-    var insumo = new InsumoModelo();
-    insumo = this.buscadorStockForm.getRawValue();
+    var medicamento = new MedicamentoModelo();
+    var insumoMedico = new InsumoMedicoModelo();
 
-    if( !insumo.codigo && !insumo.descripcion ){
+    medicamento.medicamentoId = this.buscadorStockForm.get('medicamentoId').value;
+    medicamento.codigo = this.buscadorStockForm.get('codigoMedicamento').value;
+    medicamento.medicamento = this.buscadorStockForm.get('medicamento').value;
+    insumoMedico.insumoMedicoId = this.buscadorStockForm.get('insumoMedicoId').value;
+    insumoMedico.codigo = this.buscadorStockForm.get('codigoInsumo').value;
+    insumoMedico.nombre = this.buscadorStockForm.get('nombre').value;
+
+    if(!medicamento.medicamentoId && !medicamento.medicamento
+      && !insumoMedico.insumoMedicoId && !insumoMedico.codigo
+      && !insumoMedico.nombre){
       this.alert=true;
       return;
     }
-    buscador.insumos = insumo;
+    if(!medicamento.medicamentoId && !medicamento.medicamento){
+      medicamento = null;
+    }
+    if(!insumoMedico.insumoMedicoId && !insumoMedico.codigo
+      && !insumoMedico.nombre){
+      insumoMedico = null;
+    }
+
+    buscador.medicamentos = medicamento;
+    buscador.insumosMedicos = insumoMedico;
+
     this.stockService.buscarStocksFiltrosTabla(buscador)
     .subscribe( resp => {
-      this.stocks = resp;
+      var stocks = resp;
+
+      for (let i = 0; i < stocks.length; i++) {
+        if(stocks[i].insumosMedicos && stocks[i].insumosMedicos.insumoMedicoId){
+          this.busquedaInsumoMedico = true;
+          this.busquedaMedicamento = false;
+          this.stocksInsumoMedico = stocks;
+        }
+        if(stocks[i].medicamentos && stocks[i].medicamentos.medicamentoId){
+          this.stocksMedicamentos = stocks;
+          this.busquedaMedicamento = true;
+          this.busquedaInsumoMedico = false;
+        }
+      } 
+
     }, e => {
       Swal.fire({
         icon: 'info',
@@ -589,6 +656,8 @@ export class ProcedimientoComponent implements OnInit {
 
   limpiarModalStock(event) {
     event.preventDefault();
+    this.busquedaInsumoMedico = false;
+    this.busquedaMedicamento = false;
     this.buscadorStockForm.reset();
   }
 
@@ -598,6 +667,9 @@ export class ProcedimientoComponent implements OnInit {
   cerrarAlertMedicamento(){
     this.alertMedicamentos=false;
   }
+  cerrarAlertInsumoMedico(){
+    this.alertInsumosMedicos=false;
+  }
   cerrarAlertPaciente(){
     this.alertPacientes=false;
   }
@@ -605,7 +677,7 @@ export class ProcedimientoComponent implements OnInit {
     this.alertFuncionarios=false;
   }
   crearTablaModelPacientes(){
-    this.dtOptions = {
+    this.dtOptionsPacientes = {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
@@ -632,7 +704,7 @@ export class ProcedimientoComponent implements OnInit {
   }
 
   crearTablaModelFuncionarios(){
-    this.dtOptions = {
+    this.dtOptionsFuncionarios = {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
@@ -685,6 +757,32 @@ export class ProcedimientoComponent implements OnInit {
       {data:'cantidad'}, {data:'estado'}, 
       {data:'unidadMedida'}]      
     };
+
+    this.dtOptionsStockInsumoMedico = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+      },     
+      searching: false,
+      processing: true,
+      columns: [ {data:'insumo.insumoMedicoId'}, {data:'insumo.codigo'}, 
+      {data:'insumo.nombre'}, {data:'insumo.presentacion'},
+      {data:'insumo.unidadMedida'}, {data:'cantidad'}]      
+    };
   }
 
   crearTablaMedicamentos(){
@@ -712,21 +810,69 @@ export class ProcedimientoComponent implements OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'tipo'}, 
-        {data:'cantidad'}, {data:'medida'}, 
-        {data:'quitar'}
+        {data:'medicamentos.medicamentoId'}, {data:'medicamentos.codigo'},
+         {data:'.medicamentos.medicamento'},
+        {data:'medicamentos.concentracion'}, 
+        {data:'medicamentos.forma'}, {data:'medicamentos.presentacion'}, 
+        {data:'cantidad'},{data:'estado'}, {data:'quitar'}
+      ]      
+    };
+  }
+
+  crearTablaInsumosMedicos(){
+    this.dtOptionsInsumosMedicos = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
+      searching: false,  
+      language: {
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sSearch": "Buscar:",
+        "oPaginate": {
+          "sFirst": "Primero",
+          "sLast":"Último",
+          "sNext":"Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "sProcessing":"Procesando...",
+        "emptyTable":" "
+      },
+      processing: true,
+      columns: [
+        {data:'#'},
+        {data:'insumosMedicos.insumoMedicoId'}, 
+        {data:'insumosMedicos.codigo'},
+        {data:'insumosMedicos.nombre'},
+        {data:'insumosMedicos.presentacion'}, 
+        {data:'insumosMedicos.unidadMedida'},
+        {data:'cantidad'},{data:'estado'}, {data:'quitar'}
       ]      
     };
   }
 
   quitarMedicamento(event, procedimientoInsumo: ProcedimientoInsumoModelo ) {
 
-    for (let i = 0; i < this.procedimientosInsumos.length; i++) {
-      if( this.procedimientosInsumos[i].insumos.insumoId == procedimientoInsumo.insumos.insumoId ){
+    for (let i = 0; i < this.procedimientosMedicamentos.length; i++) {
+      if( this.procedimientosMedicamentos[i].medicamentos.medicamentoId == procedimientoInsumo.medicamentos.medicamentoId ){
         $('#tableMedicamentos').DataTable().destroy();
-        this.procedimientosInsumos.splice(i, 1);        
+        this.procedimientosMedicamentos.splice(i, 1);        
         this.dtTriggerMedicamentos.next();
+        break;
+      }
+    }
+  }
+
+  quitarInsumoMedico(event, procedimientoInsumo: ProcedimientoInsumoModelo ) {
+
+    for (let i = 0; i < this.procedimientosInsumosMedicos.length; i++) {
+      if( this.procedimientosInsumosMedicos[i].insumosMedicos.insumoMedicoId == procedimientoInsumo.insumosMedicos.insumoMedicoId ){
+        $('#tableInsumosMedicos').DataTable().destroy();
+        this.procedimientosInsumosMedicos.splice(i, 1);        
+        this.dtTriggerInsumosMedicos.next();
         break;
       }
     }
@@ -771,13 +917,19 @@ export class ProcedimientoComponent implements OnInit {
      backdrop: 'static',
      size: 'lg'
     });
-   
+
+    this.busquedaInsumoMedico = false;
+    this.busquedaMedicamento = false;
+    
     this.buscadorStockForm.patchValue({
-      insumoId: null,
-      codigo: null,
-      descripcion: null
+      medicamentoId: null,
+      codigoMedicamento: null,
+      medicamento: null,
+      insumoMedicoId: null,
+      codigoInsumo: null,
+      nombre: null
     });
-    this.stocks = [];
+    this.stocksMedicamentos = [];
     this.alert=false;
   }
 
@@ -819,36 +971,50 @@ export class ProcedimientoComponent implements OnInit {
 
   selectStock(event, stock: StockModelo){
     this.modalService.dismissAll();
-   
-    this.insumosService.getInsumo( stock.insumos.insumoId )
-      .subscribe( (resp: InsumoModelo) => {
 
-        var procedimientoInsumo: ProcedimientoInsumoModelo  = new ProcedimientoInsumoModelo();
-        procedimientoInsumo.insumos = resp;
+    if(stock.insumosMedicos && stock.insumosMedicos.insumoMedicoId){
 
-        if(this.procedimientosInsumos.length > 0){
-          for (let i = 0; i < this.procedimientosInsumos.length; i++) {
-            if(this.procedimientosInsumos[i].insumos.insumoId == resp.insumoId){
-              this.alertMedicamentos=true;
-              return null;
-            }
+      var procedimientoInsumo: ProcedimientoInsumoModelo  = new ProcedimientoInsumoModelo();
+      procedimientoInsumo.insumosMedicos = stock.insumosMedicos;
+
+      if(this.procedimientosInsumosMedicos.length > 0){
+        for (let i = 0; i < this.procedimientosInsumosMedicos.length; i++) {
+          if(this.procedimientosInsumosMedicos[i].insumosMedicos.insumoMedicoId == stock.insumosMedicos.insumoMedicoId){
+            this.alertInsumosMedicos=true;
+            return null;
           }
-          $('#tableMedicamentos').DataTable().destroy();
-          this.procedimientosInsumos.push(procedimientoInsumo);
-          this.dtTriggerMedicamentos.next();
-        }else{
-          $('#tableMedicamentos').DataTable().destroy();
-          this.procedimientosInsumos.push(procedimientoInsumo);
-          this.dtTriggerMedicamentos.next();
-         
         }
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: this.comunes.obtenerError(e)
-          })
+        $('#tableInsumosMedicos').DataTable().destroy();
+        this.procedimientosInsumosMedicos.push(procedimientoInsumo);
+        this.dtTriggerInsumosMedicos.next();
+      }else{
+        $('#tableInsumosMedicos').DataTable().destroy();
+        this.procedimientosInsumosMedicos.push(procedimientoInsumo);
+        this.dtTriggerInsumosMedicos.next();
+        
+      }
+     
+    }else if(stock.medicamentos && stock.medicamentos.medicamentoId){
+
+      var procedimientoInsumo: ProcedimientoInsumoModelo  = new ProcedimientoInsumoModelo();
+      procedimientoInsumo.medicamentos = stock.medicamentos;
+
+      if(this.procedimientosMedicamentos.length > 0){
+        for (let i = 0; i < this.procedimientosMedicamentos.length; i++) {
+          if(this.procedimientosMedicamentos[i].medicamentos.medicamentoId == stock.medicamentos.medicamentoId){
+            this.alertMedicamentos=true;
+            return null;
+          }
         }
-      );
+        $('#tableMedicamentos').DataTable().destroy();
+        this.procedimientosMedicamentos.push(procedimientoInsumo);
+        this.dtTriggerMedicamentos.next();
+      }else{
+        $('#tableMedicamentos').DataTable().destroy();
+        this.procedimientosMedicamentos.push(procedimientoInsumo);
+        this.dtTriggerMedicamentos.next();        
+      }     
+    }
   }
 
   onSubmit() {

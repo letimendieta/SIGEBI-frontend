@@ -1,42 +1,43 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { InsumosMedicosService } from '../../../servicios/insumosMedicos.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
-import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
+import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
 
 @Component({
-  selector: 'app-insumos',
-  templateUrl: './insumos.component.html',
-  styleUrls: ['./insumos.component.css']
+  selector: 'app-medicamentos',
+  templateUrl: './medicamentos.component.html',
+  styleUrls: ['./medicamentos.component.css']
 })
-export class InsumosComponent implements OnInit {
+export class MedicamentosComponent implements OnInit {
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective;
 
-  dtOptionsInsumos: any = {};
-  dtTriggerInsumos : Subject<any> = new Subject<any>();
+  dtOptionsMedicamentos: any = {};
+  dtTriggerMedicamentos : Subject<any> = new Subject<any>();
 
-  insumos: InsumoMedicoModelo[] = [];
-  buscador: InsumoMedicoModelo = new InsumoMedicoModelo();
+  medicamentos: MedicamentoModelo[] = [];
   buscadorForm: FormGroup;
+  buscadorMedicamentosForm: FormGroup;
   cargando = false;  
+  opcion = "";
 
-  constructor( private insumosMedicosService: InsumosMedicosService,
+  constructor( private medicamentosService: MedicamentosService,
                private comunes: ComunesService,
                private fb: FormBuilder) {    
   }
 
   ngOnInit() {    
     this.crearFormulario();
-    this.crearTabla();
+    this.crearTablaMedicamentos();
   }
-
-  crearTabla(){
-    this.dtOptionsInsumos = {
+  
+  crearTablaMedicamentos(){
+    this.dtOptionsMedicamentos = {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu: [[5,10,15,20,50,-1],[5,10,15,20,50,"Todos"]],
@@ -58,9 +59,9 @@ export class InsumosComponent implements OnInit {
       },
       processing: true,
       columns: [
-        {data:'#'}, {data:'insumoMedicoId'},
-        {data:'codigo'}, {data:'nombre'}, {data:'caracteristicas'},
-        {data:'presentacion'}, {data:'unidadMedida'},
+        {data:'#'}, {data:'medicamentoId'},
+        {data:'codigo'}, {data:'medicamento'}, {data:'concentracion'},
+        {data:'forma'}, {data:'viaAdmin'}, {data:'presentacion'},
         {data:'Editar'},
       ],
       dom: 'lBfrtip',
@@ -70,44 +71,44 @@ export class InsumosComponent implements OnInit {
           text:      '<i class="far fa-copy"></i>',
           titleAttr: 'Copiar',
           className: 'btn btn-light',
-          title:     'Listado de insumos',
+          title:     'Listado de medicamentos',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6]
+            columns: [ 0, 1, 2, 3, 4, 5]
           },
         },
         {
           extend:    'csv',
-          title:     'Listado de insumos',
+          title:     'Listado de medicamentos',
           text:      '<i class="fas fa-file-csv"></i>',
           titleAttr: 'Exportar a CSV',
           className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6]
+            columns: [ 0, 1, 2, 3, 4, 5]
           },
         },
         {
           extend:    'excelHtml5',
-          title:     'Listado de insumos',
+          title:     'Listado de medicamentos',
           text:      '<i class="fas fa-file-excel"></i> ',
           titleAttr: 'Exportar a Excel',
           className: 'btn btn-light',
           autoFilter: true,
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6]
+            columns: [ 0, 1, 2, 3, 4, 5]
           }
         },          
         {
           extend:    'print',
-          title:     'Listado de insumos',
+          title:     'Listado de medicamentos',
           text:      '<i class="fa fa-print"></i> ',
           titleAttr: 'Imprimir',
           className: 'btn btn-light',
           messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6]
+            columns: [ 0, 1, 2, 3, 4, 5]
           },
           customize: function ( win ) {
             $(win.document.body)
@@ -125,17 +126,17 @@ export class InsumosComponent implements OnInit {
     };
   }
 
-  buscadorInsumos(event) {
+  buscadorMedicamentos(event) {
     event.preventDefault();
     this.cargando = true;
-    this.insumos = [];
+    this.medicamentos = [];
     this.rerender();
-    var buscador: InsumoMedicoModelo = new InsumoMedicoModelo();
-    buscador = this.buscadorForm.getRawValue();
-    this.insumosMedicosService.buscarInsumosMedicosFiltrosTabla(buscador)
+    var buscador: MedicamentoModelo = new MedicamentoModelo();
+    buscador = this.buscadorMedicamentosForm.getRawValue();
+    this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
     .subscribe( resp => {      
-      this.insumos = resp;
-      this.dtTriggerInsumos.next();
+      this.medicamentos = resp;
+      this.dtTriggerMedicamentos.next();
       this.cargando = false;
     }, e => {
       Swal.fire({
@@ -144,23 +145,24 @@ export class InsumosComponent implements OnInit {
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
-      this.dtTriggerInsumos.next();
+      this.dtTriggerMedicamentos.next();
     });
   }
 
-  limpiar(event) {
+  limpiarMedicamentos(event) {
     event.preventDefault();
-    this.buscadorForm.reset();
-    this.insumos = [];
+    this.buscadorMedicamentosForm.reset();
+    this.medicamentos = [];
     this.rerender();
-    this.dtTriggerInsumos.next();
+    this.dtTriggerMedicamentos.next();
+
   }
 
-  borrarInsumo(event, insumo: InsumoMedicoModelo ) {
+  borrarMedicamento(event, medicamento: MedicamentoModelo ) {
 
     Swal.fire({
       title: '¿Está seguro?',
-      text: `Está seguro que desea borrar ${ insumo.codigo }`,
+      text: `Está seguro que desea borrar ${ medicamento.codigo }`,
       icon: 'question',
       showConfirmButton: true,
       showCancelButton: true
@@ -168,16 +170,16 @@ export class InsumosComponent implements OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        peticion = this.insumosMedicosService.borrarInsumo( insumo.insumoMedicoId );
+        peticion = this.medicamentosService.borrarMedicamento( medicamento.medicamentoId );
 
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: insumo.codigo,
+                    title: medicamento.codigo,
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.buscadorInsumos(event);
+              this.buscadorMedicamentos(event);
             }
           });
         }, e => {            
@@ -211,16 +213,15 @@ export class InsumosComponent implements OnInit {
 
   crearFormulario() {
 
-    this.buscadorForm = this.fb.group({
-      insumoMedicoId  : [null, [] ],
+    this.buscadorMedicamentosForm = this.fb.group({
+      medicamentoId  : [null, [] ],
       codigo  : [null, [] ],
-      nombre  : [null, [] ],
-      caracteristicas : [null, [] ]
+      medicamento : [null, [] ]
     });
   }
 
   ngAfterViewInit(): void {
-    this.dtTriggerInsumos.next();
+    this.dtTriggerMedicamentos.next();
   }
 
   rerender(): void {
@@ -231,6 +232,6 @@ export class InsumosComponent implements OnInit {
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
-    this.dtTriggerInsumos.unsubscribe();
+    this.dtTriggerMedicamentos.unsubscribe();
   }
 }

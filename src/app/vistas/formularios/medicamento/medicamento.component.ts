@@ -4,26 +4,26 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ComunesService } from 'src/app/servicios/comunes.service';
-import { InsumosMedicosService } from '../../../servicios/insumosMedicos.service';
+import { MedicamentosService } from '../../../servicios/medicamentos.service';
 
 import Swal from 'sweetalert2';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
-import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
-
+import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 
 @Component({
-  selector: 'app-insumo',
-  templateUrl: './insumo.component.html',
-  styleUrls: ['./insumo.component.css']
+  selector: 'app-medicamento',
+  templateUrl: './medicamento.component.html',
+  styleUrls: ['./medicamento.component.css']
 })
-export class InsumoComponent implements OnInit {
+export class MedicamentoComponent implements OnInit {
   crear = false;
-  insumoForm: FormGroup
+  medicamentoForm: FormGroup;
   alertGuardar:boolean=false;
   listaUnidadMedida: ParametroModelo;
+  opcion = "";
 
-  constructor( private insumosService: InsumosMedicosService,
+  constructor( private medicamentosService: MedicamentosService,
                private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private router: Router,
@@ -37,20 +37,21 @@ export class InsumoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if ( id !== 'nuevo' ) {
       
-      this.insumosService.getInsumo( Number(id) )
-        .subscribe( (resp: InsumoMedicoModelo) => {
-          this.insumoForm.patchValue(resp);
+      this.medicamentosService.getMedicamento( Number(id) )
+        .subscribe( (resp: MedicamentoModelo) => {
+          this.medicamentoForm.patchValue(resp);
         });
     }else{
       this.crear = true;
+      this.opcion = 'med';
     }
   }  
 
-  guardar( ) {
+  guardarMedicamento( ) {
 
-    if ( this.insumoForm.invalid ) {
+    if ( this.medicamentoForm.invalid ) {
       this.alertGuardar = true;
-      return Object.values( this.insumoForm.controls ).forEach( control => {
+      return Object.values( this.medicamentoForm.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
           Object.values( control.controls ).forEach( control => control.markAsTouched() );
@@ -70,30 +71,30 @@ export class InsumoComponent implements OnInit {
 
 
     let peticion: Observable<any>;
-    var insumoMedico: InsumoMedicoModelo = new InsumoMedicoModelo();
-    insumoMedico = this.insumoForm.getRawValue();
+    var medicamento: MedicamentoModelo = new MedicamentoModelo();
+    medicamento = this.medicamentoForm.getRawValue();
 
-    if ( insumoMedico.insumoMedicoId ) {
+    if ( medicamento.medicamentoId ) {
       //Modificar
-      insumoMedico.usuarioModificacion = 'admin';
-      peticion = this.insumosService.actualizarInsumoMedico( insumoMedico );
+      medicamento.usuarioModificacion = 'admin';
+      peticion = this.medicamentosService.actualizarMedicamento( medicamento );
     } else {
       //Agregar
-      insumoMedico.usuarioCreacion = 'admin';
-      peticion = this.insumosService.crearInsumoMedico( insumoMedico);
+      medicamento.usuarioCreacion = 'admin';
+      peticion = this.medicamentosService.crearMedicamento( medicamento);
     }
 
     peticion.subscribe( resp => {
 
       Swal.fire({
                 icon: 'success',
-                title: insumoMedico.nombre,
+                title: medicamento.medicamento,
                 text: resp.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( insumoMedico.insumoMedicoId ) {
-            this.router.navigate(['/insumos']);
+          if ( resp.value.medicamentoId ) {
+            this.router.navigate(['/medicamentos']);
           }else{
             this.limpiar();
           }
@@ -126,7 +127,7 @@ export class InsumoComponent implements OnInit {
   }
 
   limpiar(){
-    this.insumoForm.reset();
+    this.medicamentoForm.reset();
   }
 
   obtenerError(e : any){
@@ -146,39 +147,48 @@ export class InsumoComponent implements OnInit {
     return mensaje;  
   }
 
-  get nombreNoValido() {
-    return this.insumoForm.get('nombre').invalid && this.insumoForm.get('nombre').touched
+  get medicamentoNoValido() {
+    return this.medicamentoForm.get('medicamento').invalid && this.medicamentoForm.get('medicamento').touched
   }
 
-  get presentacionNoValido() {
-    return this.insumoForm.get('presentacion').invalid && this.insumoForm.get('presentacion').touched
+  get concentracionNoValido() {
+    return this.medicamentoForm.get('concentracion').invalid && this.medicamentoForm.get('concentracion').touched
   }
 
-  get unidadMedidaNoValido() {
-    return this.insumoForm.get('unidadMedida').invalid && this.insumoForm.get('unidadMedida').touched
+  get formaNoValido() {
+    return this.medicamentoForm.get('forma').invalid && this.medicamentoForm.get('forma').touched
+  }
+
+  get viaAdminNoValido() {
+    return this.medicamentoForm.get('viaAdmin').invalid && this.medicamentoForm.get('viaAdmin').touched
+  }
+
+  get presentacionMedicamentoNoValido() {
+    return this.medicamentoForm.get('presentacion').invalid && this.medicamentoForm.get('presentacion').touched
   }
 
   crearFormulario() {
-
-    this.insumoForm = this.fb.group({
-      insumoMedicoId  : [null, [] ],
+   
+    this.medicamentoForm = this.fb.group({
+      medicamentoId  : [null, [] ],
       codigo  : [null, []  ],
-      nombre  : [null, [ Validators.required ]  ],
-      caracteristicas  : [null, [ ]  ],
-      compatible  : [null, [ ]  ],
+      medicamento  : [null, [ Validators.required ]  ],
+      concentracion  : [null, [Validators.required ]  ],
+      forma  : [null, [Validators.required ]  ],
+      viaAdmin  : [null, [ Validators.required]  ],
       presentacion  : [null, [ Validators.required]  ],
-      unidadMedida  : [null, [ Validators.required]  ],
+      clasifATQ: [null, [ ]  ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
       usuarioModificacion: [null, [] ],     
     });
 
-    this.insumoForm.get('insumoMedicoId').disable();
-    this.insumoForm.get('fechaCreacion').disable();
-    this.insumoForm.get('fechaModificacion').disable();
-    this.insumoForm.get('usuarioCreacion').disable();
-    this.insumoForm.get('usuarioModificacion').disable();
+    this.medicamentoForm.get('medicamentoId').disable();
+    this.medicamentoForm.get('fechaCreacion').disable();
+    this.medicamentoForm.get('fechaModificacion').disable();
+    this.medicamentoForm.get('usuarioCreacion').disable();
+    this.medicamentoForm.get('usuarioModificacion').disable();
   }
   cerrarAlertGuardar(){
     this.alertGuardar=false;

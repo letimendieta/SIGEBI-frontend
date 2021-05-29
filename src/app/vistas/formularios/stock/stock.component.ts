@@ -6,12 +6,13 @@ import { Router } from '@angular/router';
 import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { StockModelo } from '../../../modelos/stock.modelo';
 import { StocksService } from '../../../servicios/stocks.service';
-import { ParametrosService } from '../../../servicios/parametros.service';
-import { InsumosService } from '../../../servicios/insumos.service';
-import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
+import { InsumosMedicosService } from '../../../servicios/insumosMedicos.service';
 import Swal from 'sweetalert2';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
+import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
 
 @Component({
   selector: 'app-stock',
@@ -20,33 +21,38 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class StockComponent implements OnInit {
   crear = false;
-  insumos: InsumoModelo[] = [];
+  insumos: InsumoMedicoModelo[] = [];
+  medicamentos: MedicamentoModelo[] = [];
   stockForm: FormGroup;
   listaUnidadMedida: ParametroModelo;
   cargando = false;
   alert:boolean=false;
   alertGuardar:boolean=false;
   dtOptions: any = {};
-  buscadorForm: FormGroup;
+  dtOptionsInsumos: any = {};
+  dtOptionsMedicamentos: any = {};
+  buscadorInsumoForm: FormGroup;
+  buscadorMedicamentoForm: FormGroup;
   stock: StockModelo = new StockModelo();
+  alertMedicamento:boolean=false;
 
   constructor( private stocksService: StocksService,
-               private parametrosService: ParametrosService,
-               private insumosService: InsumosService,
+               private medicamentosService: MedicamentosService,
+               private insumosMedicosService: InsumosMedicosService,
                private comunes: ComunesService,
                private route: ActivatedRoute,
                private router: Router,
                private fb: FormBuilder,
                private fb2: FormBuilder,
+               private fb3: FormBuilder,
                private modalService: NgbModal ) { 
     this.crearFormulario();
   }              
 
   ngOnInit() {
-    this.obtenerParametros();
     const id = this.route.snapshot.paramMap.get('id');
     if ( id !== 'nuevo' ) {
-      
+      this.deshabilitar();
       this.stocksService.getStock( Number(id) )
         .subscribe( (resp: StockModelo) => {
           this.stockForm.patchValue(resp);
@@ -55,35 +61,86 @@ export class StockComponent implements OnInit {
       this.crear = true;
     }
   } 
-
-  obtenerParametros() {
-    var unidadMedidaParam = new ParametroModelo();
-    unidadMedidaParam.codigoParametro = "UNI_MEDIDA_STOCK";
-    unidadMedidaParam.estado = "A";
-    var orderBy = "descripcionValor";
-    var orderDir = "asc";
-
-    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaUnidadMedida = resp;
-    });
-  }
-
+  
   obtenerInsumo(event) {
     event.preventDefault();
-    var id = this.stockForm.get('insumos').get('insumoId').value;
+    var id = this.stockForm.get('insumosMedicos').get('insumoMedicoId').value;
     if(!id){
       return null;
     }
-    this.insumosService.getInsumo( id )
-    .subscribe( (resp: InsumoModelo) => {
-        this.stockForm.get('insumos').patchValue(resp);
+    this.insumosMedicosService.getInsumo( id )
+    .subscribe( (resp: InsumoMedicoModelo) => {
+        this.stockForm.reset();
+        this.stockForm.get('insumosMedicos').patchValue(resp);
+        this.buscadorStock('isumo médico');
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
-          this.stockForm.get('insumos').get('insumoId').setValue(null);
+          this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(null);
+        }
+      );
+  }
+
+  obtenerMedicamento(event) {
+    event.preventDefault();
+    var id = this.stockForm.get('medicamentos').get('medicamentoId').value;
+    if(!id){
+      return null;
+    }
+    this.medicamentosService.getMedicamento( id )
+    .subscribe( (resp: MedicamentoModelo) => {
+        this.stockForm.reset();
+        this.stockForm.get('medicamentos').patchValue(resp);
+        this.buscadorStock('medicamento');
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: this.comunes.obtenerError(e),
+          })
+          this.stockForm.get('medicamentos').get('medicamentosId').setValue(null);
+        }
+      );
+  }
+
+
+  selectInsumo(event, insumo: InsumoMedicoModelo){
+    this.modalService.dismissAll();
+    /*if(insumo.insumoMedicoId){
+      this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(insumo.insumoMedicoId);
+    }*/
+    this.insumosMedicosService.getInsumo( insumo.insumoMedicoId )
+      .subscribe( (resp: InsumoMedicoModelo) => {
+        this.stockForm.reset();
+        this.stockForm.get('insumosMedicos').patchValue(resp);
+        this.buscadorStock('insumo médico');
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: this.comunes.obtenerError(e)
+          })
+          this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(null);
+        }
+      );
+  }
+
+  selectMedicamento(event, medicamento: MedicamentoModelo){
+    this.modalService.dismissAll();
+    /*if(insumo.insumoMedicoId){
+      this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(insumo.insumoMedicoId);
+    }*/
+    this.medicamentosService.getMedicamento( medicamento.medicamentoId )
+      .subscribe( (resp: MedicamentoModelo) => {
+        this.stockForm.reset();
+        this.stockForm.get('medicamentos').patchValue(resp);
+        this.buscadorStock('medicamento');
+      }, e => {
+          Swal.fire({
+            icon: 'info',
+            text: this.comunes.obtenerError(e)
+          })
+          this.stockForm.get('medicamentos').get('medicamentoId').setValue(null);
         }
       );
   }
@@ -101,6 +158,20 @@ export class StockComponent implements OnInit {
         }
       });
     }
+
+    this.stock = this.stockForm.getRawValue();
+
+    var cantidadModificar = Number(document.getElementById('cantidadModificar').innerHTML);//document.getElementById('cantidadModificar'));
+
+    this.stock.cantidad = cantidadModificar;
+
+    if(!this.stock.insumosMedicos.insumoMedicoId && !this.stock.medicamentos.medicamentoId ){
+      Swal.fire({
+        icon: 'info',
+        text: 'Debe ingresar un insumo o un medicamento'
+      })
+      return;
+    }
     
     Swal.fire({
       title: 'Espere',
@@ -110,10 +181,7 @@ export class StockComponent implements OnInit {
     });
     Swal.showLoading();
 
-
     let peticion: Observable<any>;
-
-    this.stock = this.stockForm.getRawValue();
 
     if ( this.stock.stockId ) {
       //Modificar
@@ -137,7 +205,7 @@ export class StockComponent implements OnInit {
           if ( this.stock.stockId ) {
             this.router.navigate(['/stocks']);
           }else{
-            this.limpiar();
+            this.limpiar(event);
           }
         }
 
@@ -145,16 +213,23 @@ export class StockComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );
   }
 
-  limpiar(){
+  limpiar(event){
+    event.preventDefault();
     this.stock = new StockModelo();
     this.stockForm.reset();
-    this.stockForm.get('estado').setValue('A');
+    this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(null);
+  }
+
+  limpiarModalMedicamento(event) {
+    event.preventDefault();
+    this.buscadorMedicamentoForm.reset();
+    this.medicamentos = [];
   }
 
   obtenerError(e : any){
@@ -178,74 +253,104 @@ export class StockComponent implements OnInit {
     return this.stockForm.get('cantidad').invalid && this.stockForm.get('cantidad').touched
   }
 
-  get insumoIdNoValido() {
-    return this.stockForm.get('insumos').get('insumoId').invalid 
-      && this.stockForm.get('insumos').get('insumoId').touched
-  }
-
-  get unidadMedidaNoValido() {
-    return this.stockForm.get('unidadMedida').invalid 
-      && this.stockForm.get('unidadMedida').touched
-  }
-
   crearFormulario() {
 
     this.stockForm = this.fb.group({
       stockId  : [null, [] ],
-      insumos : this.fb.group({
-        insumoId  : [null, [ Validators.required] ],
-        codigo  : [null, [ Validators.required] ],
-        descripcion  : [null, [ Validators.required] ]
+      insumosMedicos : this.fb.group({
+        insumoMedicoId  : [null ],
+        codigo  : [null, [] ],
+        nombre  : [null, [] ],
+        presentacion  : [null, [] ],
+        unidadMedida  : [null, [] ],
+      }),
+      medicamentos : this.fb.group({
+        medicamentoId  : [null ],
+        codigo  : [null, [] ],
+        medicamento  : [null, [] ],
+        forma : [null, [] ],
+        presentacion  : [null, [] ],
+        concentracion  : [null, [] ]
       }),
       cantidad  : [null, [ Validators.required] ],
-      unidadMedida: [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
       usuarioModificacion: [null, [] ]  
     });
 
-    this.buscadorForm = this.fb2.group({
-      insumoId  : [null, [] ],
+    this.buscadorInsumoForm = this.fb2.group({
+      insumoMedicoId  : [null, [] ],
       codigo  : [null, [] ],
-      descripcion  : [null, [] ]
+      nombre  : [null, [] ]
+    });
+
+    this.buscadorMedicamentoForm = this.fb3.group({
+      medicamentoId  : [null, [] ],
+      medicamento  : [null, [] ]
     });
 
     this.stockForm.get('stockId').disable();
-    this.stockForm.get('insumos').get('codigo').disable();
-    this.stockForm.get('insumos').get('descripcion').disable();
+   
     this.stockForm.get('fechaCreacion').disable();
     this.stockForm.get('fechaModificacion').disable();
     this.stockForm.get('usuarioCreacion').disable();
     this.stockForm.get('usuarioModificacion').disable();
   }
  
+  deshabilitar(){
+    this.stockForm.get('medicamentos').get('medicamentoId').disable();
+    this.stockForm.get('insumosMedicos').get('insumoMedicoId').disable();
+    this.stockForm.get('cantidad').disable();
+
+  }
 
   buscadorInsumos(event) {
     event.preventDefault();
-    var buscador = new InsumoModelo();
-    buscador = this.buscadorForm.getRawValue();
+    var buscador = new InsumoMedicoModelo();
+    buscador = this.buscadorInsumoForm.getRawValue();
 
-    if(!buscador.insumoId && !buscador.codigo
-      && !buscador.descripcion){
+    if(!buscador.insumoMedicoId && !buscador.codigo
+      && !buscador.nombre){
       this.alert=true;
       return;
     }
-    this.insumosService.buscarInsumosFiltrosTabla(buscador)
+    this.insumosMedicosService.buscarInsumosMedicosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.insumos = resp;
     }, e => {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  buscadorMedicamentos(event) {
+    event.preventDefault();
+    var buscador = new MedicamentoModelo();
+    buscador = this.buscadorMedicamentoForm.getRawValue();
+
+    if(!buscador.medicamentoId && !buscador.medicamento){
+      this.alertMedicamento=true;
+      return;
+    }
+    this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
+    .subscribe( resp => {
+      this.medicamentos = resp;
+    }, e => {
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: this.comunes.obtenerError(e)
       })
     });
   }
 
   limpiarModal(event) {
     event.preventDefault();
-    this.buscadorForm.reset();
+    this.buscadorInsumoForm.reset();
     this.insumos = [];
   }
 
@@ -287,31 +392,59 @@ export class StockComponent implements OnInit {
      size: 'lg'
     });
    
-    this.buscadorForm.patchValue({
-      insumoId: null,
+    this.buscadorInsumoForm.patchValue({
+      insumoMedicoId: null,
       codigo: null,
-      descripcion: null
+      nombre: null
     });
     this.insumos = [];
     this.alert=false;
   }
 
-  selectInsumo(event, insumo: InsumoModelo){
-    this.modalService.dismissAll();
-    if(insumo.insumoId){
-      this.stockForm.get('insumos').get('insumoId').setValue(insumo.insumoId);
-    }
-    this.insumosService.getInsumo( insumo.insumoId )
-      .subscribe( (resp: InsumoModelo) => {
-        this.stockForm.get('insumos').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.stockForm.get('insumos').get('insumoId').setValue(null);
-        }
-      );
+  openModalMedicamento(targetModal) {
+    this.modalService.open(targetModal, {
+     centered: true,
+     backdrop: 'static',
+     size: 'lg'
+    });
+   
+    this.buscadorMedicamentoForm.patchValue({
+      medicamentoId: null,
+      medicamento: null
+    });
+    this.medicamentos = [];
+    this.alertMedicamento=false;
+  }
+
+  buscadorStock(info) {
+   
+    var buscador: StockModelo = new StockModelo();
+    var insumos = new InsumoMedicoModelo();
+    var medicamentos = new MedicamentoModelo();
+
+    insumos.insumoMedicoId = this.stockForm.get('insumosMedicos').get('insumoMedicoId').value;
+
+    medicamentos.medicamentoId = this.stockForm.get('medicamentos').get('medicamentoId').value;
+
+    buscador.insumosMedicos = insumos;
+    buscador.medicamentos = medicamentos;
+
+    if(!buscador.insumosMedicos.insumoMedicoId){
+      buscador.insumosMedicos = null;
+    } 
+
+    if(!buscador.medicamentos.medicamentoId){
+      buscador.medicamentos = null;
+    } 
+    this.stocksService.buscarStocksFiltrosTabla(buscador)
+    .subscribe( resp => {      
+      if( resp.length > 0){
+        Swal.fire({
+          icon: 'info',
+          text: 'El ' + info + ' ya existe en el stock'
+        })
+      }
+    });
   }
 
   onSubmit() {
@@ -320,5 +453,9 @@ export class StockComponent implements OnInit {
   
   cerrarAlertGuardar(){
     this.alertGuardar=false;
+  }
+
+  cerrarAlertMedicamento(){
+    this.alertMedicamento=false;
   }
 }

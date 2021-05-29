@@ -200,25 +200,25 @@
               <div class="col-lg-5">
                 <div class="container">              
                   <div class="row">                
-                    <div class="col"><b>Persona id:</b></div>
+                    <div class="col-lg-5"><b>Persona id:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('personaId').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Nombres:</b></div>
+                    <div class="col-lg-5"><b>Nombres:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('nombres').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Apellidos:</b></div>
+                    <div class="col-lg-5"><b>Apellidos:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('apellidos').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Fecha nacimiento:</b></div>
+                    <div class="col-lg-5"><b>Fecha nacimiento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Lugar nacimiento:</b></div>
+                    <div class="col-lg-5"><b>Lugar nacimiento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('lugarNacimiento').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Edad:</b></div>
+                    <div class="col-lg-5"><b>Edad:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('edad').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Sexo:</b></div>
+                    <div class="col-lg-5"><b>Sexo:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('sexo').value}}</div>                
                   </div>
                 </div>              
@@ -227,22 +227,22 @@
               <div class="col-lg-5">
                 <div class="container">
                   <div class="row">                
-                    <div class="col"><b>Estado Civil:</b></div>
+                    <div class="col-lg-5"><b>Estado Civil:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('estadoCivil').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Nacionalidad:</b></div>
+                    <div class="col-lg-5"><b>Nacionalidad:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('nacionalidad').value}}</div>
                     <div class="w-100"></div>                
-                    <div class="col"><b>Carrera:</b></div>
+                    <div class="col-lg-5"><b>Carrera:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('carreras').get('descripcion').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Departamento:</b></div>
+                    <div class="col-lg-5"><b>Departamento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('departamentos').get('descripcion').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Dependencia:</b></div>
+                    <div class="col-lg-5"><b>Dependencia:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('dependencias').get('descripcion').value}}</div>
                     <div class="w-100"></div>
-                    <div class="col"><b>Estamento:</b></div>
+                    <div class="col-lg-5"><b>Estamento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('estamentos').get('descripcion').value}}</div>                
                   </div>   
                 </div>         
@@ -280,24 +280,32 @@
                 &nbsp;<i class="fas fa-angle-double-up"></i></h3>  
             <div class="card-body collapse show" id="collapseBuscador">
               <div class="row justify-content-center">
-                <div class="col-lg-6">
-                  <div class="col"><b>Direcci&oacute;n:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('direccion').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Tel&eacute;fono:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('telefono').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Celular:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('celular').value}}</div>
-                  <div class="w-100"></div>
-                  <div class="col"><b>Email:</b></div>
-                  <div class="col">{{pacienteForm.get('personas').get('email').value}}</div>
+                <div class="col-lg-6">                 
+                  <div class="container"> 
+                    <div class="row">  
+                      <div class="col-lg-3"><b>Direcci&oacute;n:</b></div>
+                      <div class="col">{{pacienteForm.get('personas').get('direccion').value}}</div>
+                      <div class="w-100"></div>
+                      <div class="col-lg-3"><b>Tel&eacute;fono:</b></div>
+                      <div class="col">{{pacienteForm.get('personas').get('telefono').value}}</div>
+                      <div class="w-100"></div>
+                      <div class="col-lg-3"><b>Celular:</b></div>
+                      <div class="col">{{pacienteForm.get('personas').get('celular').value}}</div>
+                      <div class="w-100"></div>
+                      <div class="col-lg-3"><b>Email:</b></div>
+                      <div class="col">{{pacienteForm.get('personas').get('email').value}}</div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="col-lg-6">
-                  <div class="form-group">
-                    <label><b>Observaciones: </b></label>
-                    <div>{{pacienteForm.get('personas').get('observacion').value}}</div>
+                  <div class="container"> 
+                    <div class="row">  
+                      <div class="form-group">
+                        <label><b>Observaciones: </b></label>
+                        <div>{{pacienteForm.get('personas').get('observacion').value}}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -316,16 +324,16 @@
             <div class="col-lg-5">
               <div class="container">              
                 <div class="row">                
-                  <div class="col"><b>Historial cl&iacute;nico id:</b></div>
+                  <div class="col-lg-5"><b>Historial cl&iacute;nico id:</b></div>
                   <div class="col">{{historialClinicoForm.get('historialClinicoId').value}}</div>
                   <div class="w-100"></div>
-                  <div class="col"><b>&Aacute;rea:</b></div>
+                  <div class="col-lg-5"><b>&Aacute;rea:</b></div>
                   <div class="col">{{historialClinicoForm.get('areas').get('descripcion').value}}</div>  
                   <div class="w-100"></div>                                             
-                  <div class="col"><b>Grupo Sangu&iacute;neo:</b></div>
+                  <div class="col-lg-5"><b>Grupo Sangu&iacute;neo:</b></div>
                   <div class="col">{{pacienteForm.get('grupoSanguineo').value}}</div>
                   <div class="w-100"></div>
-                  <div class="col"><b>Seguro m&eacute;dico:</b></div>
+                  <div class="col-lg-5"><b>Seguro m&eacute;dico:</b></div>
                   <div class="col">{{pacienteForm.get('seguroMedico').value}}</div> 
                   <div class="w-100"></div>                  
                 </div>                
@@ -1254,18 +1262,20 @@
                                   <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
                                         <div class="form-row justify-content-center">
                                               <div>                                           
-                                                <div>                                                   
+                                                <div>
                                                   <mat-form-field appearance="legacy">
-                                                    <mat-label>C&oacute;digo</mat-label>
-                                                    <input matInput type="text" placeholder="C&oacute;digo" 
-                                                          formControlName="codigo" id="codigo">
-                                                  </mat-form-field>  
+                                                        <mat-label>Medicamento id</mat-label>
+                                                        <input matInput type="number" placeholder="Medicamento id" 
+                                                              formControlName="medicamentoId" id="medicamentoId">
+                                                  </mat-form-field>   
+                                                  &nbsp; &nbsp; &nbsp; 
                                                   <mat-form-field appearance="legacy">
-                                                    <mat-label>Descripci&oacute;n</mat-label>
-                                                    <input matInput type="text" placeholder="Descripci&oacute;n" 
-                                                          formControlName="descripcion" id="descripcion">
+                                                    <mat-label>Medicamento</mat-label>
+                                                    <input matInput type="text" placeholder="Medicamento" 
+                                                          formControlName="medicamento" id="medicamento">
                                                   </mat-form-field>
-                                                </div>                                                
+                                                
+                                                </div>                                                 
                                               </div>
                                               &nbsp; &nbsp; &nbsp;                                                                           
                                               <div class="align-self-center">
@@ -1282,13 +1292,13 @@
                                         *ngIf="stocks.length === 0">
                                               <thead>
                                                     <tr class="table-primary">
-                                                      <th>Id</th>
-                                                      <th>C&oacute;digo</th>
-                                                      <th>Descripci&oacute;n</th>
-                                                      <th>Tipo</th>
-                                                      <th>Cantidad</th>
-                                                      <th>Fecha Vencimiento</th>                                                  
-                                                      <th>Unidad medida</th>                                                  
+                                                      <th scope="col">Id</th>
+                                                      <th scope="col">C&oacute;digo</th>
+                                                      <th scope="col">Medicamento</th>
+                                                      <th scope="col">Concentraci&oacute;n</th>
+                                                      <th scope="col">Forma</th>
+                                                      <th scope="col">Presentaci&oacute;n</th>
+                                                      <th scope="col">Cantidad disponible</th>                                               
                                                     </tr>
                                               </thead>                                                                                    
                                         </table>
@@ -1298,25 +1308,25 @@
                                               *ngIf="stocks.length > 0">
                                               <thead>
                                                     <tr  class="table-primary">
-                                                      <th>Id</th>
-                                                      <th>C&oacute;digo</th>
-                                                      <th>Descripci&oacute;n</th>
-                                                      <th>Tipo</th>
-                                                      <th>Stock</th>
-                                                      <th>Fecha Vencimiento</th>                                                  
-                                                      <th>Unidad medida</th>
+                                                      <th scope="col">Id</th>
+                                                      <th scope="col">C&oacute;digo</th>
+                                                      <th scope="col">Medicamento</th>
+                                                      <th scope="col">Concentraci&oacute;n</th>
+                                                      <th scope="col">Forma</th>
+                                                      <th scope="col">Presentaci&oacute;n</th>
+                                                      <th scope="col">Cantidad disponible</th> 
                                                     </tr>
                                               </thead>
                                               <tbody *ngIf="stocks?.length != 0">
                                                     <tr *ngFor="let stock of stocks" 
                                                           (click)="selectStock($event, stock)">                                                                                                
-                                                          <td>{{ stock.stockId }}</td>
-                                                          <td>{{ stock.insumos.codigo }}</td>
-                                                          <td>{{ stock.insumos.descripcion }}</td>
-                                                          <td>{{ stock.insumos.tipo }}</td>
-                                                          <td>{{ stock.cantidad }}</td>
-                                                          <td>{{ stock.insumos.fechaVencimiento| date : 'dd-MM-yyyy' }}</td>
-                                                          <td>{{ stock.unidadMedida }}</td>                                                      
+                                                          <td>{{ stock.medicamentos.medicamentoId }}</td>
+                                                          <td>{{ stock.medicamentos.codigo }}</td>
+                                                          <td>{{ stock.medicamentos.medicamento }}</td>
+                                                          <td>{{ stock.medicamentos.concentracion }}</td>
+                                                          <td>{{ stock.medicamentos.forma }}</td>
+                                                          <td>{{ stock.medicamentos.presentacion }}</td>
+                                                          <td>{{ stock.cantidad }}</td>                                                    
                                                     </tr>
                                               </tbody>
                                               <tbody *ngIf="cargando">
@@ -1359,22 +1369,25 @@
                               <th scope="col">#</th>
                               <th scope="col">Id</th>
                               <th scope="col">C&oacute;digo</th>
-                              <th scope="col">Descripci&oacute;n</th>
-                              <th scope="col">Fecha vencimiento</th>
+                              <th scope="col">Medicamento</th>
+                              <th scope="col">Concentraci&oacute;n</th>
+                              <th scope="col">Forma</th>
+                              <th scope="col">Presentaci&oacute;n</th>
                               <th scope="col">Cantidad</th>
-                              <th scope="col">Medida</th>
                               <th scope="col">Quitar</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr *ngFor="let tratamientoInsumo of tratamientosInsumos; let i = index">
                               <th scope="row">{{ i + 1 }}</th>
-                              <td>{{ tratamientoInsumo.insumos.insumoId }}</td>
-                              <td>{{ tratamientoInsumo.insumos.codigo }}</td>
-                              <td>{{ tratamientoInsumo.insumos.descripcion }}</td>
-                              <td>{{ tratamientoInsumo.insumos.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.medicamentoId }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.codigo }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.medicamento }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.concentracion }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.forma }}</td>
+                              <td>{{ tratamientoInsumo.medicamentos.presentacion }}</td>
                               <td><input type="number" id="cantidad" name="cantidad" value="1"></td>
-                              <td>
+                              <!--td>
                                 <select class="form-control input-sm" name="medida" id="medida">
                                   <option value=null>Seleccionar</option>
                                   <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
@@ -1382,7 +1395,7 @@
                                     {{medida.descripcionValor}}
                                   </option>
                                 </select>
-                              </td>                              
+                              </td-->                              
                               <td (click)="quitarMedicamento($event, tratamientoInsumo)">  
                                 <button class="btn btn-danger">
                                   <i class="fas fa-minus-circle"></i></button>
@@ -1523,7 +1536,7 @@
             <div class="w-100"></div>
             <div *ngFor="let tratamientoInsumo of procesoDiagnosticoTratamiento.tratamientoInsumoList; let i=index">
               
-              <div class="col">{{tratamientoInsumo.insumos.descripcion}} - {{tratamientoInsumo.cantidad}} {{tratamientoInsumo.medida}}</div>
+              <div class="col">{{tratamientoInsumo.medicamentos.medicamento}} - {{tratamientoInsumo.cantidad}} </div>
               <div class="w-100"></div>
               
             </div>            

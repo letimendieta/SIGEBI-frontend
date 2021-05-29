@@ -15,6 +15,8 @@ import { AreasService } from '../../../servicios/areas.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
+import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
+import { ParametrosService } from 'src/app/servicios/parametros.service';
 
 @Component({
   selector: 'app-cita',
@@ -30,6 +32,7 @@ export class CitaComponent implements OnInit {
   paciente: PacienteModelo = new PacienteModelo();
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   listaAreas: AreaModelo;
+  listaEstados: ParametroModelo;
   citaForm: FormGroup;
   modificar: boolean = false;
   pacientes: PacienteModelo[] = [];
@@ -43,6 +46,7 @@ export class CitaComponent implements OnInit {
 
   constructor( private citasService: CitasService,
                private pacientesService: PacientesService,
+               private parametrosService: ParametrosService,
                private funcionariosService: FuncionariosService,
                private areasService: AreasService,
                private route: ActivatedRoute,
@@ -56,6 +60,7 @@ export class CitaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerParametros();
     this.listarAreas();
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -69,6 +74,19 @@ export class CitaComponent implements OnInit {
     }
   }  
 
+  obtenerParametros() {
+    var estadoCivilParam = new ParametroModelo();
+    estadoCivilParam.codigoParametro = "ESTADO_CITA";
+    estadoCivilParam.estado = "A";
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
+
+    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaEstados = resp;
+    });
+  }
+
   obtenerPaciente(event){
     event.preventDefault();
     var id = this.citaForm.get('pacientes').get('pacienteId').value;
@@ -81,7 +99,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e)
           })
         }
       );
@@ -100,7 +118,7 @@ export class CitaComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salio mal',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e)
           })
         }
       );
@@ -156,7 +174,7 @@ export class CitaComponent implements OnInit {
       Swal.fire({
                 icon: 'success',
                 title: this.cita.citaId ? this.cita.citaId.toString() : '',
-                text: resp.mensaje,
+                text: resp.mensaje
               }).then( resp => {
 
         if ( resp.value ) {
@@ -171,7 +189,7 @@ export class CitaComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e)
             })          
        }
     );
@@ -247,7 +265,8 @@ export class CitaComponent implements OnInit {
       }),
       fecha  : [null, [Validators.required] ],
       hora  : [null, [Validators.required] ],
-      estado  : ['A', [] ],
+      estado  : [null, [Validators.required] ],
+      notas: [null, []],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
@@ -308,7 +327,7 @@ export class CitaComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -332,7 +351,7 @@ export class CitaComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -453,7 +472,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.citaForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -471,7 +490,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.citaForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

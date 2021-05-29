@@ -10,6 +10,7 @@ export class CitaModelo {
     hora: Time;
     areaId: number;
     estado:string;
+    notas:string;
     fechaCreacion: Date;
     usuarioCreacion: string;
     fechaModificacion: Date;

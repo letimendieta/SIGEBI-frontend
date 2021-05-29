@@ -1,15 +1,15 @@
 <head>
-  <link rel="stylesheet" href="insumo.component.css">
+  <link rel="stylesheet" href="medicamento.component.css">
 </head>
 
 <body>
-  <h1>Insumo </h1>
+  <h1>Medicamento </h1>
   <hr>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/insumos">
+              routerLink="/medicamentos">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -20,23 +20,23 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-                Datos Insumo
+                Datos Medicamento
         </div>
-        <div class="card-body">
+        <div class="card-body">          
           
-          <form [formGroup]="insumoForm" (ngSubmit)="guardar( )">
+          <form [formGroup]="medicamentoForm" (ngSubmit)="guardarMedicamento( )">
             
-            <!-- Datos Insumo Medico-->
+            <!-- Datos Medicamento-->
             <div class="row justify-content-center">
               <div class="col-lg-5">
                 <div class="form-group" [hidden]="crear">
-                  <label><b>Id</b></label>
+                  <label><b>Medicamento id</b></label>
                   <input type="text"
                         class="form-control"
                         placeholder="Id"
-                        placeholder="insumoMedicoId"
-                        formControlName="insumoMedicoId" 
-                        name="id">
+                        placeholder="medicamentoId"
+                        formControlName="medicamentoId" 
+                        name="medicamentoId">
                   <small class="form-text text-muted">Este campo es autogenerado</small>
                 </div>
               </div>
@@ -47,7 +47,7 @@
                 <div>
                   <div class="form-group">
 
-                    <label><b>C&oacute;digo ECRI</b></label>
+                    <label><b>C&oacute;digo</b></label>
                     <input type="text"
                           class="form-control"
                           placeholder="C&oacute;digo"                      
@@ -58,50 +58,61 @@
 
                 <div>
                   <div class="form-group">
-                    <label><b>Nombre Gen&eacute;rico</b><span class="requerido"> *</span></label>
-                    <!--input type="text" rows="3"
-                          class="form-control"
-                          placeholder="Nombre Gen&eacute;rico"
-                          formControlName="nombre"
-                          name="nombre"
-                          [class.is-invalid]="nombreNoValido"-->
-                      <textarea class="form-control" 
-                        name="nombre" placeholder="Nombre Gen&eacute;rico"
-                        formControlName="nombre"
-                        [class.is-invalid]="nombreNoValido" rows="5">
-                      </textarea>
-                      <small *ngIf="nombreNoValido" class="text-danger">
-                        Ingrese descripci&oacute;n
-                      </small>
-                      <!--textarea name="nombre" rows="5" formControlName="nombre" cols="50"></textarea-->
-
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-group">
-                    <label><b>Caracter&iacute;sticas t&eacute;cnicas</b></label>
-                    <!--input type="text"
-                          class="form-control"
-                          placeholder="Caracter&iacute;sticas t&eacute;cnicas"
-                          formControlName="caracteristicas"
-                          name="caracteristicas"-->
-                        <textarea class="form-control" 
-                          name="nombre" placeholder="Caracter&iacute;sticas t&eacute;cnicas"
-                          formControlName="caracteristicas" rows="5">
-                        </textarea>
-                    <!--textarea name="caracteristicas" rows="5" formControlName="caracteristicas" cols="50"></textarea-->
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-group">
-                    <label><b>Compatible con Equipo</b></label>
+                    <label><b>Medicamento</b><span class="requerido"> *</span></label>
                     <input type="text"
                           class="form-control"
-                          placeholder="Compatible con Equipo"
-                          formControlName="compatible"
-                          name="compatible">                      
+                          placeholder="Medicamento"
+                          formControlName="medicamento"
+                          name="medicamento"
+                          [class.is-invalid]="medicamentoNoValido">
+                      <small *ngIf="medicamentoNoValido" class="text-danger">
+                        Ingrese el nombre del medicamento
+                      </small>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-group">
+                    <label><b>Concentraci&oacute;n</b><span class="requerido"> *</span></label>
+                    <input type="text"
+                          class="form-control"
+                          placeholder="Concentraci&oacute;n"
+                          formControlName="concentracion"
+                          name="concentracion"
+                          [class.is-invalid]="concentracionNoValido">
+                      <small *ngIf="concentracionNoValido" class="text-danger">
+                        Ingrese la concentraci&oacute;n del medicamento
+                      </small>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-group">
+                    <label><b>Forma farmac&eacute;utica</b><span class="requerido"> *</span></label>
+                    <input type="text"
+                          class="form-control"
+                          placeholder="Forma farmac&eacute;utica"
+                          formControlName="forma"
+                          name="forma"
+                          [class.is-invalid]="formaNoValido">
+                      <small *ngIf="formaNoValido" class="text-danger">
+                        Ingrese la forma farmac&eacute;utica
+                      </small>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-group">
+                    <label><b>V&iacute;a administrac&oacute;n</b><span class="requerido"> *</span></label>
+                    <input type="text"
+                          class="form-control"
+                          placeholder="V&iacute;a administrac&oacute;n"
+                          formControlName="viaAdmin"
+                          name="viaAdmin"
+                          [class.is-invalid]="viaAdminNoValido">
+                      <small *ngIf="viaAdminNoValido" class="text-danger">
+                        Ingrese la v&iacute;a de administrac&oacute;n
+                      </small>
                   </div>
                 </div>
 
@@ -113,33 +124,26 @@
                           placeholder="Presentaci&oacute;n"
                           formControlName="presentacion"
                           name="presentacion"
-                          [class.is-invalid]="presentacionNoValido">
-                      <small *ngIf="presentacionNoValido" class="text-danger">
-                        Ingrese presentaci&oacute;n
+                          [class.is-invalid]="presentacionMedicamentoNoValido">
+                      <small *ngIf="presentacionMedicamentoNoValido" class="text-danger">
+                        Ingrese la presentaci&oacute;n
                       </small>
                   </div>
                 </div>
 
                 <div>
                   <div class="form-group">
-                    <label><b>Unidad de medida</b><span class="requerido"> *</span></label>
-                    <select ui-select2 class="form-control input-sm"
-                      [class.is-invalid]="unidadMedidaNoValido"
-                      formControlName="unidadMedida"
-                      uppercase>
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaUnidadMedida; let i = index"
-                        value="{{item.valor}}">
-                          {{item.descripcionValor}}
-                      </option>
-                    </select>
-                    <small *ngIf="unidadMedidaNoValido" class="text-danger">
-                      Ingrese la unidad de medida
-                    </small>
+                    <label><b>Clasificaci&oacute;n A.T.Q.</b></label>
+                    <input type="text"
+                          class="form-control"
+                          placeholder="clasifATQ"
+                          formControlName="clasifATQ"
+                          name="clasifATQ">
                   </div>
-                </div>   
+                </div>                
               </div>
             </div>
+
             <div class="form-row justify-content-center" [hidden]="crear">
               <div class="col-lg-5">
                 <div class="form-group">
@@ -197,7 +201,7 @@
                     class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
             </div>
 
-          </form>         
+          </form>
 
         </div>
       </div>

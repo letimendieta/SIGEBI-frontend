@@ -1,9 +1,9 @@
 <head>
-  <link rel="stylesheet" href="insumos.component.css">
+  <link rel="stylesheet" href="medicamentos.component.css">
 </head>
 
 <body>
- <h1>Listado de insumos m&eacute;dicos</h1>
+ <h1>Listado de medicamentos</h1>
   <hr>
 
   <div class="card">
@@ -11,55 +11,50 @@
         aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
     <div class="card-body collapse show" id="collapseBuscador">
 
-      <form [formGroup]="buscadorForm">      
+      <form [formGroup]="buscadorMedicamentosForm">      
         <div class="form-row justify-content-center" >
           <div>
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>Insumo m&eacute;dico id</mat-label>
-                <input matInput matInput type="number" placeholder="Insumo m&eacute;dico id" 
-                  formControlName="insumoMedicoId" name="insumoMedicoId" id="insumoMedicoId">
+                <mat-label>Medicamento id</mat-label>
+                <input matInput matInput type="number" placeholder="Medicamento id" 
+                  formControlName="medicamentoId" name="medicamentoId" id="medicamentoId">
               </mat-form-field>
             </p>
             <p>
               <mat-form-field appearance="fill">
                 <mat-label>C&oacute;digo</mat-label>
                 <input matInput matInput type="text" placeholder="C&oacute;digo" 
-                  formControlName="codigo" name="codigo" id="codigoInsumo">
+                  formControlName="codigo" name="codigo" id="codigoMedicamento">
               </mat-form-field>
-            </p>             
+            </p> 
+            
           </div>
           &nbsp; &nbsp; &nbsp;
           <div>
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>Nombre</mat-label>
-                <input matInput matInput type="text" placeholder="Nombre" 
-                  formControlName="nombre" name="nombre" id="nombre">
+                <mat-label>Medicamento</mat-label>
+                <input matInput matInput type="text" placeholder="Medicamento" 
+                  formControlName="medicamento" name="medicamento" id="medicamento">
               </mat-form-field>
-            </p> 
-            <p>
-              <mat-form-field appearance="fill">
-                <mat-label>Caracter&iacute;stica</mat-label>
-                <input matInput matInput type="text" placeholder="Caracter&iacute;sticas" 
-                  formControlName="caracteristicas" name="caracteristicas" id="caracteristicas">
-              </mat-form-field>
-            </p>    
+            </p>   
           </div>
           &nbsp; &nbsp; &nbsp;          
           <div class="align-self-center">
-            <button type="submit" (click)="buscadorInsumos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+            <button type="submit" (click)="buscadorMedicamentos($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
             &nbsp;
-            <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
+            <button (click)="limpiarMedicamentos($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
           </div>       
         </div>
       </form>
+
     </div>
   </div>
 
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/insumo/nuevo"
+      <button routerLink="/medicamento/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -67,44 +62,51 @@
     </div>
   </div>
 
-  <!--Tabla Insumos Medicos-->
+  <!--Tabla Medicamentos-->
   <div class="card">
     <div class="table-responsive table-hover">
-      <table datatable [dtOptions]="dtOptionsInsumos" [dtTrigger]="dtTriggerInsumos"  
-        id = "tableInsumos" class="table table-sm">
+      <table datatable [dtOptions]="dtOptionsMedicamentos" [dtTrigger]="dtTriggerMedicamentos" 
+        id = "tableMedicamentos" class="table table-sm">
         <thead>
           <tr class="table-primary">
             <th scope="col">#</th>
             <th scope="col">Id</th>
             <th scope="col">C&oacute;digo</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Caracter&iacute;sticas</th>
+            <th scope="col">Medicamento</th>
+            <th scope="col">Concentraci&oacute;n</th>
+            <th scope="col">Forma</th> 
+            <th scope="col">Via administraci&oacute;n</th> 
             <th scope="col">Presentaci&oacute;n</th> 
-            <th scope="col">Unidad medida</th> 
             <th scope="col">Editar</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let insumo of insumos; let i = index">
+          <tr *ngFor="let medicamento of medicamentos; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ insumo.insumoMedicoId }}</td>
-            <td>{{ insumo.codigo }}</td>
-            <td>{{ insumo.nombre }}</td>
-            <td>{{ insumo.caracteristicas }}</td>
-            <td>{{ insumo.presentacion }}</td>
-            <td>{{ insumo.unidadMedida }}</td>
+            <td>{{ medicamento.medicamentoId }}</td>
+            <td>{{ medicamento.codigo }}</td>
+            <td>{{ medicamento.medicamento }}</td>
+            <td>{{ medicamento.concentracion }}</td>
+            <td>{{ medicamento.forma }}</td>
+            <td>{{ medicamento.viaAdmin }}</td>
+            <td>{{ medicamento.presentacion }}</td>
             <td>
               <a class="btn btn-info"
-                      [routerLink]="['/insumo', insumo.insumoMedicoId ]">
+                      [routerLink]="['/medicamento', medicamento.medicamentoId ]">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
+            <!--td (click)="borrarInsumo($event, insumo)">  
+              <button class="btn btn-danger">
+              <i class="fa fa-trash"></i></button>
+            </td-->
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
           <td></td>
           <td></td>   
-          <td></td>      
+          <td></td>
+          <td></td>       
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>
@@ -121,6 +123,6 @@
         </tbody>
       </table>
     </div>
-  </div>  
+  </div>
   <br><br>
 </body>

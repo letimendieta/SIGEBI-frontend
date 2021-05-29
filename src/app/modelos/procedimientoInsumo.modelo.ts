@@ -1,13 +1,14 @@
-import { InsumoModelo } from './insumo.modelo';
+import { InsumoMedicoModelo } from './insumoMedico.modelo';
+import { MedicamentoModelo } from './medicamento.modelo';
 import { ProcedimientoModelo } from './procedimiento.modelo';
 
 export class ProcedimientoInsumoModelo {
 
     procedimientoInsumoId: number;
     cantidad: number;
-    medida: string;
     procedimientos: ProcedimientoModelo;
-    insumos: InsumoModelo;    
+    insumosMedicos: InsumoMedicoModelo;
+    medicamentos: MedicamentoModelo;    
     estado: string;
     fechaCreacion: Date;
     fechaModificacion: Date;

@@ -209,7 +209,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -231,7 +231,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -254,7 +254,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -275,7 +275,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -299,7 +299,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -363,7 +363,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -383,7 +383,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -404,7 +404,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -423,7 +423,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -442,7 +442,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -574,7 +574,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }
@@ -599,7 +599,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }
@@ -784,7 +784,7 @@ export class PacienteComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text:e.status +'. '+ this.comunes.obtenerError(e)
+              text: this.comunes.obtenerError(e)
             })          
         }
       );
@@ -792,8 +792,7 @@ export class PacienteComponent implements OnInit {
       Swal.close();
       Swal.fire({
         icon: 'error',
-        title: 'Algo salio mal',
-        text:'verifique la consola...'
+        title: 'Algo salio mal'
       })  
     }
   }
@@ -980,7 +979,7 @@ export class PacienteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -1100,7 +1099,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }

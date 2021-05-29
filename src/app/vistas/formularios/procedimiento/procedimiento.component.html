@@ -111,7 +111,7 @@
 
                                                                   <!--Tabla vacia-->
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        <table datatable [dtOptions]="dtOptionsPacientes" class="table-bordered"
                                                                         *ngIf="!cargando && pacientes.length === 0">
                                                                               <thead>
                                                                                     <tr class="table-primary">
@@ -124,7 +124,7 @@
                                                                         </table>
                                                                   </div>
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        <table datatable [dtOptions]="dtOptionsPacientes" class="table-bordered"
                                                                               *ngIf="pacientes.length > 0">
                                                                               <thead>
                                                                                     <tr  class="table-primary">
@@ -262,7 +262,7 @@
 
                                                                   <!--Tabla vacia-->
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        <table datatable [dtOptions]="dtOptionsFuncionarios" class="table-bordered"
                                                                         *ngIf="!cargando && funcionarios.length === 0">
                                                                               <thead>
                                                                                     <tr class="table-primary">
@@ -275,7 +275,7 @@
                                                                         </table>
                                                                   </div>
                                                                   <div class="table-responsive table-hover">
-                                                                        <table datatable [dtOptions]="dtOptions" class="table-bordered"
+                                                                        <table datatable [dtOptions]="dtOptionsFuncionarios" class="table-bordered"
                                                                               *ngIf="funcionarios.length > 0">
                                                                               <thead>
                                                                                     <tr  class="table-primary">
@@ -398,7 +398,7 @@
                                                       </small>
                                                 </div>
                                           </div>
-                                          <div class="col-lg-5">
+                                          <div class="col-lg-5" [hidden]="crear">
                                                 <div class="form-group">
                                                       <label><b>Estado</b></label>
                                                       <input type="text" id="estado"
@@ -406,16 +406,33 @@
                                                             formControlName="estado"
                                                             name="estado">   
                                                 </div> 
-                                          </div> 
+                                          </div>                                                          
+                                    </div>
+
+                                    <div class="form-row justify-content-center">
                                           <div class="col-lg-5">
                                                 <div class="form-group">
-                                                      <label><b>Insumo id</b></label>
+                                                      <label><b>Insumo m&eacute;dico id</b></label>
                                                       <div class="input-group mb-3">
                                                             <input type="text"
                                                                   class="form-control"
-                                                                  formControlName="insumoId"
                                                                   name="insumoId"                                     
                                                                   placeholder="Insumo id">
+                                                                  
+                                                                  <div class="input-group-append">
+                                                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                                              <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
+                                                                                    (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
+                                                                  </div>
+                                                      </div>
+
+                                                      <label><b>Medicamento id</b></label>
+                                                      <div class="input-group mb-3">
+                                                            <input type="text"
+                                                                  class="form-control"
+                                                                  name="medicamentoId"                                     
+                                                                  placeholder="Medicamento id">
+                                                                  
                                                                   <div class="input-group-append">
                                                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                                               <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
@@ -423,16 +440,16 @@
                                                                   </div>
                                                       </div>
                                                 </div>
-                                          </div>                
+                                          </div>
                                     </div>
 
                                     <div class="form-row justify-content-center">
                                           
                                           <div>                                                                              
-                                                <!--Modal buscador de Medicamentos (Stock)-->
+                                                <!--Modal buscador de Insumos medicos y  Medicamentos en el Stock-->
                                                 <ng-template #editProfileModalStock let-modal>
                                                       <div class="modal-header">
-                                                            <h3 class="modal-title" id="editProfileLabelStock">Buscador Medicamentos</h3>
+                                                            <h3 class="modal-title" id="editProfileLabelStock">Buscador de Insumos m&eacute;dicos / Medicamentos</h3>
                                                             <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span> 
                                                             </button>
@@ -447,18 +464,48 @@
                                                             <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
                                                                   <div class="form-row justify-content-center">
                                                                         <div>                                           
-                                                                        <div>                                                   
-                                                                        <mat-form-field appearance="legacy">
-                                                                              <mat-label>C&oacute;digo</mat-label>
-                                                                              <input matInput type="text" placeholder="C&oacute;digo" 
-                                                                                    formControlName="codigo" id="codigo">
-                                                                        </mat-form-field>  
-                                                                        <mat-form-field appearance="legacy">
-                                                                              <mat-label>Descripci&oacute;n</mat-label>
-                                                                              <input matInput type="text" placeholder="Descripci&oacute;n" 
-                                                                                    formControlName="descripcion" id="descripcion">
-                                                                        </mat-form-field>
-                                                                        </div>                                                
+                                                                              <div>
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Medicamento id</mat-label>
+                                                                                          <input matInput type="number" placeholder="Medicamento id" 
+                                                                                                formControlName="medicamentoId" id="medicamentoId">
+                                                                                    </mat-form-field>  
+                                                                                    &nbsp; &nbsp; 
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>C&oacute;digo medicamento</mat-label>
+                                                                                          <input matInput type="text" placeholder="C&oacute;digo" 
+                                                                                                formControlName="codigoMedicamento" id="codigoMedicamento">
+                                                                                    </mat-form-field> 
+                                                                                    &nbsp; &nbsp;
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                      <mat-label>Medicamento</mat-label>
+                                                                                      <input matInput type="text" placeholder="Medicamento" 
+                                                                                            formControlName="medicamento" id="medicamento">
+                                                                                    </mat-form-field>
+                                                                                  
+                                                                              </div>                                                
+                                                                        </div>
+                                                                        &nbsp; &nbsp; &nbsp; 
+                                                                        <div> 
+                                                                              <div>
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Insumo Medico id</mat-label>
+                                                                                          <input matInput type="number" placeholder="Insumo medico id" 
+                                                                                                formControlName="insumoMedicoId" id="insumoMedicoId">
+                                                                                    </mat-form-field>   
+                                                                                    &nbsp; &nbsp;           
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>C&oacute;digo insumo</mat-label>
+                                                                                          <input matInput type="text" placeholder="C&oacute;digo" 
+                                                                                                formControlName="codigoInsumo" id="codigoInsumo">
+                                                                                    </mat-form-field> 
+                                                                                    &nbsp; &nbsp;
+                                                                                    <mat-form-field appearance="legacy">
+                                                                                          <mat-label>Nombre</mat-label>
+                                                                                          <input matInput type="text" placeholder="Nombre" 
+                                                                                                formControlName="nombre" id="nombre">
+                                                                                    </mat-form-field>
+                                                                              </div>                                                
                                                                         </div>
                                                                         &nbsp; &nbsp; &nbsp;                                                                           
                                                                         <div class="align-self-center">
@@ -468,64 +515,131 @@
                                                                   </div>
                                                             </form>
                                                             <br>
-                        
-                                                            <!--Tabla vacia-->
-                                                            <div class="table-responsive table-hover">
-                                                                  <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
-                                                                  *ngIf="stocks.length === 0">
-                                                                        <thead>
-                                                                              <tr class="table-primary">
-                                                                              <th>Id</th>
-                                                                              <th>C&oacute;digo</th>
-                                                                              <th>Descripcion</th>
-                                                                              <th>Tipo</th>
-                                                                              <th>Cantidad</th>
-                                                                              <th>Unidad medida</th>                                                  
-                                                                              </tr>
-                                                                        </thead>                                                                                    
-                                                                  </table>
+                                                            <div [hidden]="busquedaMedicamento == false">
+                                                                  <!--Tabla vacia-->
+                                                                  <div class="table-responsive table-hover">
+                                                                        <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                                                        *ngIf="stocksMedicamentos.length === 0">
+                                                                              <thead>
+                                                                                    <tr class="table-primary">
+                                                                                          <th scope="col">Id</th>
+                                                                                          <th scope="col">C&oacute;digo</th>
+                                                                                          <th scope="col">Medicamento</th>
+                                                                                          <th scope="col">Concentraci&oacute;n</th>
+                                                                                          <th scope="col">Forma</th>
+                                                                                          <th scope="col">Presentaci&oacute;n</th>
+                                                                                          <th scope="col">Cantidad disponible</th>                                               
+                                                                                                                                          
+                                                                                    </tr>
+                                                                              </thead>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="table-responsive table-hover">
+                                                                        <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
+                                                                              *ngIf="stocksMedicamentos.length > 0">
+                                                                              <thead>
+                                                                                    <tr  class="table-primary">
+                                                                                          <th scope="col">Id</th>
+                                                                                          <th scope="col">C&oacute;digo</th>
+                                                                                          <th scope="col">Medicamento</th>
+                                                                                          <th scope="col">Concentraci&oacute;n</th>
+                                                                                          <th scope="col">Forma</th>
+                                                                                          <th scope="col">Presentaci&oacute;n</th>
+                                                                                          <th scope="col">Cantidad disponible</th>
+                                                                                    </tr>
+                                                                              </thead>
+                                                                              <tbody *ngIf="stocksMedicamentos?.length != 0">
+                                                                                    <tr *ngFor="let stock of stocksMedicamentos" 
+                                                                                          (click)="selectStock($event, stock)">                                                                                                
+                                                                                          <td>{{ stock.medicamentos.medicamentoId }}</td>
+                                                                                          <td>{{ stock.medicamentos.codigo }}</td>
+                                                                                          <td>{{ stock.medicamentos.medicamento }}</td>
+                                                                                          <td>{{ stock.medicamentos.concentracion }}</td>
+                                                                                          <td>{{ stock.medicamentos.forma }}</td>
+                                                                                          <td>{{ stock.medicamentos.presentacion }}</td>
+                                                                                          <td>{{ stock.cantidad }}</td>                                                       
+                                                                                    </tr>
+                                                                              </tbody>
+                                                                              <tbody *ngIf="cargando">
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                                                          <p>
+                                                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                          </p>
+                                                                                          <p class="mb-0">
+                                                                                                Espere por favor
+                                                                                          </p>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                              </tbody>                                                                                    
+                                                                        </table>
+                                                                  </div>
                                                             </div>
-                                                            <div class="table-responsive table-hover">
-                                                                  <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
-                                                                        *ngIf="stocks.length > 0">
-                                                                        <thead>
-                                                                              <tr  class="table-primary">
-                                                                              <th>Id</th>
-                                                                              <th>C&oacute;digo</th>
-                                                                              <th>Descripcion</th>
-                                                                              <th>Tipo</th>
-                                                                              <th>Stock</th>
-                                                                              <th>Unidad medida</th>
-                                                                              </tr>
-                                                                        </thead>
-                                                                        <tbody *ngIf="stocks?.length != 0">
-                                                                              <tr *ngFor="let stock of stocks" 
-                                                                                    (click)="selectStock($event, stock)">                                                                                                
-                                                                                    <td>{{ stock.stockId }}</td>
-                                                                                    <td>{{ stock.insumos.codigo }}</td>
-                                                                                    <td>{{ stock.insumos.descripcion }}</td>
-                                                                                    <td>{{ stock.insumos.tipo }}</td>
-                                                                                    <td>{{ stock.cantidad }}</td>
-                                                                                    <td>{{ stock.unidadMedida }}</td>                                                      
-                                                                              </tr>
-                                                                        </tbody>
-                                                                        <tbody *ngIf="cargando">
-                                                                              <td></td>
-                                                                              <td></td>
-                                                                              <td></td>
-                                                                              <td><h4 class="alert-heading">Cargando</h4>
-                                                                                    <p>
-                                                                                          <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                                                                                    </p>
-                                                                                    <p class="mb-0">
-                                                                                          Espere por favor
-                                                                                    </p>
-                                                                              </td>
-                                                                              <td></td>
-                                                                              <td></td>
-                                                                        </tbody>                                                                                    
-                                                                  </table>
+
+                                                            <div [hidden]="busquedaInsumoMedico == false">
+                                                                  <!--Tabla vacia-->
+                                                                  <div class="table-responsive table-hover">
+                                                                        <table datatable [dtOptions]="dtOptionsStockInsumoMedico" class="table-bordered"
+                                                                        *ngIf="stocksInsumoMedico.length === 0">
+                                                                              <thead>
+                                                                                    <tr class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&oacute;digo</th>
+                                                                                          <th>Nombre</th>
+                                                                                          <th>Presentaci&oacute;n</th>
+                                                                                          <th>Unidad medida</th>                                              
+                                                                                          <th>Cantidad disponible</th>                                                     
+                                                                                    </tr>
+                                                                              </thead>                                                                                    
+                                                                        </table>
+                                                                  </div>
+                                                                  <div class="table-responsive table-hover">
+                                                                        <table datatable [dtOptions]="dtOptionsStockInsumoMedico" class="table-bordered"
+                                                                              *ngIf="stocksInsumoMedico.length > 0">
+                                                                              <thead>
+                                                                                    <tr  class="table-primary">
+                                                                                          <th>Id</th>
+                                                                                          <th>C&oacute;digo</th>
+                                                                                          <th>Nombre</th>
+                                                                                          <th>Presentaci&oacute;n</th>
+                                                                                          <th>Unidad medida</th>
+                                                                                          <th>Cantidad disponible</th>
+                                                                                    </tr>
+                                                                              </thead>
+                                                                              <tbody *ngIf="stocksInsumoMedico?.length != 0">
+                                                                                    <tr *ngFor="let stock of stocksInsumoMedico" 
+                                                                                          (click)="selectStock($event, stock)">                                                                                                
+                                                                                          <td>{{ stock.insumosMedicos.insumoMedicoId }}</td>
+                                                                                          <td>{{ stock.insumosMedicos.codigo  }}</td>
+                                                                                          <td>{{ stock.insumosMedicos.nombre }}</td>
+                                                                                          <td>{{ stock.insumosMedicos.presentacion  }}</td>
+                                                                                          <td>{{ stock.insumosMedicos.unidadMedida  }}</td>
+                                                                                          <td>{{ stock.cantidad }}</td>                                                       
+                                                                                    </tr>
+                                                                              </tbody>
+                                                                              <tbody *ngIf="cargando">
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td><h4 class="alert-heading">Cargando</h4>
+                                                                                          <p>
+                                                                                                <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                                                          </p>
+                                                                                          <p class="mb-0">
+                                                                                                Espere por favor
+                                                                                          </p>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                              </tbody>                                                                                    
+                                                                        </table>
+                                                                  </div>
                                                             </div>
+
                                                             <div class="modal-footer">
                                                                   <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
                                                             </div>
@@ -538,70 +652,136 @@
                                                       <span aria-hidden="true">&times;</span>
                                                 </button>
                                           </div>
-                                          <!--Tabla medicamentos (Tratamientos insumos)-->
+                                          <!--Tabla medicamentos (Procedimientos insumos)-->
                                           <div class="card">
                                                 <div class="table-responsive table-hover">
                                                       <table datatable [dtOptions]="dtOptionsMedicamentos" [dtTrigger]="dtTriggerMedicamentos"
                                                       id="tableMedicamentos" class="table table-sm">
                                                             <thead>
                                                                   <tr class="table-primary">
-                                                                  <th scope="col">#</th>
-                                                                  <th scope="col">Id</th>
-                                                                  <th scope="col">C&oacute;digo</th>
-                                                                  <th scope="col">Descripci&oacute;n</th>
-                                                                  <th scope="col">Tipo</th>
-                                                                  <th scope="col">Cantidad</th>
-                                                                  <th scope="col">Medida</th>
-                                                                  <th scope="col">Estado</th>
-                                                                  <th scope="col">Quitar</th>
+                                                                        <th scope="col">#</th>
+                                                                        <th scope="col">Id</th>
+                                                                        <th scope="col">C&oacute;digo</th>
+                                                                        <th scope="col">Medicamento</th>
+                                                                        <th scope="col">Concentraci&oacute;n</th>
+                                                                        <th scope="col">Forma</th>
+                                                                        <th scope="col">Presentaci&oacute;n</th>
+                                                                        <th scope="col">Cantidad</th>
+                                                                        <th scope="col">Estado</th>
+                                                                        <th scope="col">Quitar</th>
                                                                   </tr>
                                                             </thead>
                                                             <tbody>
-                                                                  <tr *ngFor="let procedimientoInsumo of procedimientosInsumos; let i = index">
-                                                                  <th scope="row">{{ i + 1 }}</th>
-                                                                  <td>{{ procedimientoInsumo.insumos.insumoId }}</td>
-                                                                  <td>{{ procedimientoInsumo.insumos.codigo }}</td>
-                                                                  <td>{{ procedimientoInsumo.insumos.descripcion }}</td>
-                                                                  <td>{{ procedimientoInsumo.insumos.tipo }}</td>
-                                                                  <td>
-                                                                        <div [hidden]="!crear">
-                                                                              <input type="number" id="cantidad" name="cantidad" value="1" [disabled]="!crear">
-                                                                        </div>
-                                                                        <div [hidden]="crear">
-                                                                              {{ procedimientoInsumo.cantidad }}
-                                                                        </div>
-                                                                  </td>
-                                                                  <td>
-                                                                        <div [hidden]="!crear">
-                                                                              <select class="form-control input-sm" name="medida" id="medida">
-                                                                                    <option value=null>Seleccionar</option>
-                                                                                    <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
-                                                                                      value="{{medida.valor}}">
-                                                                                      {{medida.descripcionValor}}
-                                                                                    </option>
-                                                                              </select>
-                                                                        </div>
-                                                                        <div [hidden]="crear">
-                                                                              {{ procedimientoInsumo.medida }}
-                                                                        </div>
-                                                                  </td>
-                                                                  <td>
-                                                                        <div [hidden]="crear == false && procedimientoPendiente == false">
-                                                                              <select size="1" id="estado" name="estado">                                                                             
-                                                                                    <option *ngFor="let item of listaEstadosEntrega; let i = index"
-                                                                                          value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
-                                                                                          {{item.descripcionValor}}
-                                                                                    </option>
-                                                                              </select>
-                                                                        </div>
-                                                                        <div [hidden]="crear == false && procedimientoPendiente == true ">
-                                                                              {{ procedimientoInsumo.estado }}
-                                                                        </div>
-                                                                  </td>
-                                                                  <td (click)="quitarMedicamento($event, procedimientoInsumo)">  
-                                                                  <button class="btn btn-danger" [hidden]="!crear">
-                                                                        <i class="fas fa-minus-circle"></i></button>
-                                                                  </td>
+                                                                  <tr *ngFor="let procedimientoInsumo of procedimientosMedicamentos; let i = index">
+                                                                        <th scope="row">{{ i + 1 }}</th>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.medicamentoId }}</td>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.codigo }}</td>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.medicamento }}</td>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.concentracion }}</td>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.forma }}</td>
+                                                                        <td>{{ procedimientoInsumo.medicamentos.presentacion }}</td>
+                                                                        <td>
+                                                                              <div [hidden]="!crear">
+                                                                                    <input type="number" id="cantidad" name="cantidad" value="1" [disabled]="!crear">
+                                                                              </div>
+                                                                              <div [hidden]="crear">
+                                                                                    {{ procedimientoInsumo.cantidad }}
+                                                                              </div>
+                                                                        </td>
+                                                                        <td>
+                                                                              <div [hidden]="crear == false && procedimientoPendiente == false">
+                                                                                    <select size="1" id="estado" name="estado">                                                                             
+                                                                                          <option *ngFor="let item of listaEstadosEntrega; let i = index"
+                                                                                                value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
+                                                                                                {{item.descripcionValor}}
+                                                                                          </option>
+                                                                                    </select>
+                                                                              </div>
+                                                                              <div [hidden]="crear == false && procedimientoPendiente == true ">
+                                                                                    {{ procedimientoInsumo.estado }}
+                                                                              </div>
+                                                                        </td>                                                                        
+                                                                        <td (click)="quitarMedicamento($event, procedimientoInsumo)">  
+                                                                        <button class="btn btn-danger" [hidden]="!crear">
+                                                                              <i class="fas fa-minus-circle"></i></button>
+                                                                        </td>
+                                                                  </tr>
+                                                            </tbody>                      
+                                                      </table>
+                                                </div>
+                                          </div>
+                                          <br>
+                                          <div *ngIf="alertInsumosMedicos" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                El insumo m&eacute;dico ya existe
+                                                <button type="button" (click)="cerrarAlertInsumoMedico()" class="close" data-dismiss="alert" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                </button>
+                                          </div>
+                                          <!--Tabla insumosmedicos (Procedimientos insumos)-->
+                                          <div class="card">
+                                                <div class="table-responsive table-hover">
+                                                      <table datatable [dtOptions]="dtOptionsInsumosMedicos" [dtTrigger]="dtTriggerInsumosMedicos"
+                                                      id="tableInsumosMedicos" class="table table-sm">
+                                                            <thead>
+                                                                  <tr class="table-primary">
+                                                                        <th scope="col">#</th>
+                                                                        <th>Id</th>
+                                                                        <th>C&oacute;digo</th>
+                                                                        <th>Nombre</th>
+                                                                        <th>Presentaci&oacute;n</th>
+                                                                        <th>Unidad medida</th>
+                                                                        <th>Cantidad</th>
+                                                                        <th>Estado</th>
+                                                                        <th>Quitar</th>
+                                                                  </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                  <tr *ngFor="let procedimientoInsumo of procedimientosInsumosMedicos; let i = index">
+                                                                        <th scope="row">{{ i + 1 }}</th>
+                                                                        <td>{{ procedimientoInsumo.insumosMedicos.insumoMedicoId }}</td>
+                                                                        <td>{{ procedimientoInsumo.insumosMedicos.codigo }}</td>
+                                                                        <td>{{ procedimientoInsumo.insumosMedicos.nombre }}</td>
+                                                                        <td>{{ procedimientoInsumo.insumosMedicos.presentacion }}</td>
+                                                                        <td>{{ procedimientoInsumo.insumosMedicos.unidadMedida }}</td>
+                                                                        <td>
+                                                                              <div [hidden]="!crear">
+                                                                                    <input type="number" id="cantidad" name="cantidad" value="1" [disabled]="!crear">
+                                                                              </div>
+                                                                              <div [hidden]="crear">
+                                                                                    {{ procedimientoInsumo.cantidad }}
+                                                                              </div>
+                                                                        </td>
+                                                                        <!--td>
+                                                                              <div [hidden]="!crear">
+                                                                                    <select class="form-control input-sm" name="medida" id="medida">
+                                                                                          <option value=null>Seleccionar</option>
+                                                                                          <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
+                                                                                          value="{{medida.valor}}">
+                                                                                          {{medida.descripcionValor}}
+                                                                                          </option>
+                                                                                    </select>
+                                                                              </div>
+                                                                              <div [hidden]="crear">
+                                                                                    {{ procedimientoInsumo.medida }}
+                                                                              </div>
+                                                                        </td-->
+                                                                        <td>
+                                                                              <div [hidden]="crear == false && procedimientoPendiente == false">
+                                                                                    <select size="1" id="estado" name="estado">                                                                             
+                                                                                          <option *ngFor="let item of listaEstadosEntrega; let i = index"
+                                                                                                value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
+                                                                                                {{item.descripcionValor}}
+                                                                                          </option>
+                                                                                    </select>
+                                                                              </div>
+                                                                              <div [hidden]="crear == false && procedimientoPendiente == true ">
+                                                                                    {{ procedimientoInsumo.estado }}
+                                                                              </div>
+                                                                        </td>
+                                                                        <td (click)="quitarInsumoMedico($event, procedimientoInsumo)">  
+                                                                        <button class="btn btn-danger" [hidden]="!crear">
+                                                                              <i class="fas fa-minus-circle"></i></button>
+                                                                        </td>
                                                                   </tr>
                                                             </tbody>                      
                                                       </table>
@@ -609,6 +789,8 @@
                                           </div>
               
                                     </div>
+
+
 
                                     <div class="form-row justify-content-center">
                                           <div class="col-lg-10">

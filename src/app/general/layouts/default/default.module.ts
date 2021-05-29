@@ -31,6 +31,8 @@ import { StocksComponent } from 'src/app/vistas/listas/stocks/stocks.component';
 import { StockComponent } from 'src/app/vistas/formularios/stock/stock.component';
 import { InsumosComponent } from 'src/app/vistas/listas/insumos/insumos.component';
 import { InsumoComponent } from 'src/app/vistas/formularios/insumo/insumo.component';
+import { MedicamentosComponent } from 'src/app/vistas/listas/medicamentos/medicamentos.component';
+import { MedicamentoComponent } from 'src/app/vistas/formularios/medicamento/medicamento.component';
 import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { FichaClinicaComponent } from 'src/app/vistas/formularios/fichaClinica/fichaClinica.component';
@@ -94,6 +96,8 @@ import {FileUploadModule} from 'primeng/fileupload';
     StockComponent,
     InsumosComponent,
     InsumoComponent,
+    MedicamentosComponent,
+    MedicamentoComponent,
     HistorialesClinicosComponent,
     HistorialClinicoComponent,
     FichaClinicaComponent,

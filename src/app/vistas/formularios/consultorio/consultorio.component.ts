@@ -9,7 +9,7 @@ import { PacientesService } from '../../../servicios/pacientes.service';
 import { AntecedentesService } from '../../../servicios/antecedentes.service';
 import { AlergiasService } from '../../../servicios/alergias.service';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
-import { InsumosService } from '../../../servicios/insumos.service';
+import { InsumosMedicosService } from '../../../servicios/insumosMedicos.service';
 import { StocksService } from '../../../servicios/stocks.service';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +17,6 @@ import { PersonaModelo } from 'src/app/modelos/persona.modelo';
 import { AntecedenteModelo } from 'src/app/modelos/antecedente.modelo';
 import { AlergiaModelo } from 'src/app/modelos/alergia.modelo';
 import { HistorialClinicoModelo } from 'src/app/modelos/historialClinico.modelo';
-import { InsumoModelo } from 'src/app/modelos/insumo.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { AnamnesisModelo } from 'src/app/modelos/anamnesis.modelo';
 import { Observable, Subject } from 'rxjs';
@@ -48,6 +47,9 @@ import { PreguntaModelo } from 'src/app/modelos/pregunta.modelo';
 import { PreguntaHistorialModelo } from 'src/app/modelos/preguntaHistorial.modelo';
 import { PreguntasService } from 'src/app/servicios/preguntas.service';
 import { PreguntasHistorialService } from 'src/app/servicios/preguntasHistorial.service';
+import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
+import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
 
 @Component({
   selector: 'app-consultorio',
@@ -154,12 +156,13 @@ export class ConsultorioComponent implements OnInit {
                private alergenosService: AlergenosService,
                private patologiasProcedimientosService: PatologiasProcedimientosService,
                private modalService: NgbModal,
-               private insumosService: InsumosService,
+               private insumosService: InsumosMedicosService,
                private stockService: StocksService,
                private enfermedadesCie10Service: EnfermedadesCie10Service,
                private consultasService: ConsultasService,
                private signosVitalesService: SignosVitalesService,
                private uploadService: UploadFileService,
+               private medicamentosService: MedicamentosService,
                private motivosConsultaService: MotivosConsultaService,
                private procesoDiagnosticoTratamientoService: ProcesoDiagnosticoTratamientosService,
                private tratamientosInsumosService: TratamientosInsumosService,
@@ -650,7 +653,7 @@ export class ConsultorioComponent implements OnInit {
     event.preventDefault();
     var id = this.stockForm.get('insumos').get('insumoId').value;
     this.insumosService.getInsumo( id )
-    .subscribe( (resp: InsumoModelo) => {
+    .subscribe( (resp: InsumoMedicoModelo) => {
 
         //this.stockForm.get('insumos').patchValue(resp);
 
@@ -780,10 +783,8 @@ export class ConsultorioComponent implements OnInit {
     });
 
     this.buscadorStockForm = this.fb6.group({
-      insumoId  : [null, [] ],
-      codigo  : [null, [] ],
-      descripcion  : [null, [] ],
-      fechaVencimiento: [null, [] ]
+      medicamentoId  : [null, [] ],
+      medicamento  : [null, [] ]
     });
     
     this.buscadorEnfermedadesCie10Form = this.fb7.group({      
@@ -1093,10 +1094,13 @@ export class ConsultorioComponent implements OnInit {
       },     
       searching: false,
       processing: true,
-      columns: [ {data:'stockId'}, {data:'insumos.codigo'}, 
-      {data:'insumos.descripcion'}, {data:'insumos.tipo'},
-      {data:'cantidad'}, {data:'insumo.fechaVencimiento'}, 
-      {data:'unidadMedida'}]      
+      columns: [ {data:'medicamentos.medicamentoId'}, 
+      {data:'medicamentos.codigo'},
+      {data:'medicamentos.medicamento'},
+      {data:'medicamentos.concentracion'},
+      {data:'medicamentos.forma'},
+      {data:'medicamentos.presentacion'},
+      {data:'cantidad'}]      
     };
   }
 
@@ -1248,10 +1252,13 @@ export class ConsultorioComponent implements OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'insumoId'}, {data:'codigo'}, {data:'descripcion'},
-        {data:'fechaVencimiento'}, 
-        {data:'cantidad'}, 
-        {data:'medida'}, 
+        {data:'medicamentos.medicamentoId'}, 
+        {data:'medicamentos.codigo'}, 
+        {data:'medicamentos.medicamento'},
+        {data:'medicamentos.concentracion'}, 
+        {data:'medicamentos.forma'}, 
+        {data:'medicamentos.presentacion'}, 
+        {data:'cantidad'},
         {data:'quitar'}
       ]      
     };
@@ -1291,7 +1298,7 @@ export class ConsultorioComponent implements OnInit {
   quitarMedicamento(event, tratamientoInsumo: TratamientoInsumoModelo ) {
 
     for (let i = 0; i < this.tratamientosInsumos.length; i++) {
-      if( this.tratamientosInsumos[i].insumos.insumoId == tratamientoInsumo.insumos.insumoId ){
+      if( this.tratamientosInsumos[i].medicamentos.medicamentoId == tratamientoInsumo.medicamentos.medicamentoId ){
         $('#tableMedicamentos').DataTable().destroy();
         this.tratamientosInsumos.splice(i, 1);        
         this.dtTriggerMedicamentos.next();
@@ -1314,14 +1321,14 @@ export class ConsultorioComponent implements OnInit {
   buscadorStock(event) {
     event.preventDefault();
     var buscador = new StockModelo();
-    var insumo = new InsumoModelo();
-    insumo = this.buscadorStockForm.getRawValue();
+    var medicamento = new MedicamentoModelo();
+    medicamento = this.buscadorStockForm.getRawValue();
 
-    if( !insumo.codigo && !insumo.descripcion ){
+    if(!medicamento.medicamentoId && !medicamento.medicamento){
       this.alert=true;
       return;
     }
-    buscador.insumos = insumo;
+    buscador.medicamentos = medicamento;
     this.stockService.buscarStocksFiltrosTabla(buscador)
     .subscribe( resp => {
       this.stocks = resp;
@@ -1359,15 +1366,15 @@ export class ConsultorioComponent implements OnInit {
   selectStock(event, stock: StockModelo){
     this.modalService.dismissAll();
    
-    this.insumosService.getInsumo( stock.insumos.insumoId )
-      .subscribe( (resp: InsumoModelo) => {
+    this.medicamentosService.getMedicamento( stock.medicamentos.medicamentoId )
+      .subscribe( (resp: MedicamentoModelo) => {
 
         var tratamientoInsumo: TratamientoInsumoModelo  = new TratamientoInsumoModelo();
-        tratamientoInsumo.insumos = resp;
+        tratamientoInsumo.medicamentos = resp;
 
         if(this.tratamientosInsumos.length > 0){
           for (let i = 0; i < this.tratamientosInsumos.length; i++) {
-            if(this.tratamientosInsumos[i].insumos.insumoId == resp.insumoId){
+            if(this.tratamientosInsumos[i].medicamentos.medicamentoId == resp.medicamentoId){
               this.alertMedicamentos=true;
               return null;
             }
@@ -1518,10 +1525,8 @@ export class ConsultorioComponent implements OnInit {
     });
    
     this.buscadorStockForm.patchValue({
-      insumoId: null,
-      codigo: null,
-      descripcion: null,
-      fechaVencimiento: null
+      medicamentoId: null,
+      medicamento: null
     });
     this.stocks = [];
     this.alert=false;
@@ -1542,9 +1547,8 @@ export class ConsultorioComponent implements OnInit {
       var medicamentos = "";
       for (let i = 0; i < tratamientosInsumos.length; i++) {
         medicamentos = medicamentos 
-          + tratamientosInsumos[i].insumos.descripcion + "  -  "
-          + tratamientosInsumos[i].cantidad
-          + tratamientosInsumos[i].medida + "    ";
+          + tratamientosInsumos[i].medicamentos.medicamento + "  -  "
+          + tratamientosInsumos[i].cantidad + "    ";
       }
       this.detalleConsultaForm.get('medicamentos').setValue(medicamentos);
   });
@@ -1711,12 +1715,12 @@ export class ConsultorioComponent implements OnInit {
 
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
-    var medidas = rows.$('select').serializeArray();
+    //var medidas = rows.$('select').serializeArray();
 
     for (let i = 0; i < cantidades.length; i++) {
       this.tratamientosInsumos[i].cantidad = Number(cantidades[i].value);
     }   
-    for (let i = 0; i < medidas.length; i++) {
+    /*for (let i = 0; i < medidas.length; i++) {
       if(medidas[i].value == "null"){
         this.alertGuardar = true;
         Swal.close();
@@ -1724,7 +1728,7 @@ export class ConsultorioComponent implements OnInit {
         return;
       }
       this.tratamientosInsumos[i].medida = medidas[i].value;
-    }   
+    }   */
 
     tratamientoInsumoList = this.tratamientosInsumos;
     fichaMedicaList = this.fichaMedica;

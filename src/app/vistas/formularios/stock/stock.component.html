@@ -43,185 +43,305 @@
             </div>
 
             <div class="row justify-content-center">
-              <div class="col-lg-5">
-                <div formGroupName="insumos" >
-                  <label><b>Insumo id </b><span class="requerido"> *</span></label>
-                  <div class="input-group mb-3">  
-                      <input type="number"
-                          class="form-control"
-                          placeholder="Insumo id"                      
-                          name="insumoId"
-                          formControlName="insumoId"
-                          [class.is-invalid]="insumoIdNoValido">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-info" 
-                              (click)="obtenerInsumo($event)">
-                              Buscar
-                        </button>
-                      </div>
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        <button type="button" class="btn btn-primary" 
-                              (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
-                  </div>
-                  <small *ngIf="insumoIdNoValido" class="text-danger">
-                    Ingrese el insumo id
-                  </small>
-
-                  <!--Modal buscador de insumos-->
-                  <ng-template #editProfileModal let-modal>
-                        <div class="modal-header">
-                              <h3 class="modal-title" id="editProfileLabel">Buscador Insumos</h3>
-                              <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
-                              <span aria-hidden="true">&times;</span> 
+              
+                <div formGroupName="insumosMedicos" class="col-lg-6">
+                        <label><b>Insumo m&eacute;dico id </b></label>
+                        <div class="input-group mb-3">  
+                        <input type="number"
+                              class="form-control"
+                              placeholder="Insumo medico id"                      
+                              name="insumoMedicoId"
+                              formControlName="insumoMedicoId">
+                        <div class="input-group-append">
+                              <button class="btn btn-outline-info" [disabled]="crear == false"
+                                    (click)="obtenerInsumo($event)">
+                                    Buscar
                               </button>
                         </div>
-                        <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
-                              Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
-                              <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                              </button>
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                              <button type="button" class="btn btn-primary" [disabled]="crear == false"
+                                    (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
+                        </div>
+                        
+                        <!--Modal buscador de insumos-->
+                        <ng-template #editProfileModal let-modal>
+                              <div class="modal-header">
+                                    <h3 class="modal-title" id="editProfileLabel">Buscador Insumos M&eacute;dicos</h3>
+                                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span> 
+                                    </button>
                               </div>
-                        <div class="modal-body">
-                              <form [formGroup]="buscadorForm" (ngSubmit)="buscadorInsumos($event)">
-                                    <div class="form-row justify-content-center">
-                                          <div> 
-                                            <div>
-                                              <mat-form-field appearance="legacy">
-                                                    <mat-label>Insumo id</mat-label>
-                                                    <input matInput type="number" placeholder="Insumo id" 
-                                                          formControlName="insumoId" id="insumoId">
-                                              </mat-form-field>   
-                                              <!--mat-form-field appearance="legacy">
-                                                <mat-label>Fecha vencimiento</mat-label>
-                                                <input matInput type="date" placeholder="Fecha vencimiento" 
-                                                      formControlName="fechaVencimiento" id="fechaVencimiento">
-                                              </mat-form-field-->
-                                            </div>                                            
-                                            <div>                                                   
-                                              <mat-form-field appearance="legacy">
-                                                <mat-label>C&oacute;digo</mat-label>
-                                                <input matInput type="text" placeholder="C&oacute;digo" 
-                                                      formControlName="codigo" id="codigo">
-                                              </mat-form-field>  
-                                              <mat-form-field appearance="legacy">
-                                                <mat-label>Descripci&oacute;n</mat-label>
-                                                <input matInput type="text" placeholder="Descripci&oacute;n" 
-                                                      formControlName="descripcion" id="descripcion">
-                                              </mat-form-field>
-                                            </div>                                                
-                                          </div>
-                                          &nbsp; &nbsp; &nbsp;                                                                           
-                                          <div class="align-self-center">
-                                                <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                                <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                          </div>
+                              <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                                    <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                    </button>
                                     </div>
-                              </form>
-                              <br>
+                              <div class="modal-body">
+                                    <form [formGroup]="buscadorInsumoForm" (ngSubmit)="buscadorInsumos($event)">
+                                          <div class="form-row justify-content-center">
+                                                <div> 
+                                                      <div>
+                                                            <mat-form-field appearance="legacy">
+                                                                  <mat-label>Insumo Medico id</mat-label>
+                                                                  <input matInput type="number" placeholder="Insumo medico id" 
+                                                                        formControlName="insumoMedicoId" id="insumoMedicoId">
+                                                            </mat-form-field>   
+                                                      
+                                                      </div>                                            
+                                                      <div>                                                   
+                                                            <mat-form-field appearance="legacy">
+                                                                  <mat-label>C&oacute;digo</mat-label>
+                                                                  <input matInput type="text" placeholder="C&oacute;digo" 
+                                                                        formControlName="codigo" id="codigo">
+                                                            </mat-form-field>  
+                                                            <mat-form-field appearance="legacy">
+                                                                  <mat-label>Nombre</mat-label>
+                                                                  <input matInput type="text" placeholder="Nombre" 
+                                                                        formControlName="nombre" id="nombre">
+                                                            </mat-form-field>
+                                                      </div>                                                
+                                                </div>
+                                                &nbsp; &nbsp; &nbsp;                                                                           
+                                                <div class="align-self-center">
+                                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                                      <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                                </div>
+                                          </div>
+                                    </form>
+                                    <br>
 
-                              <!--Tabla vacia-->
-                              <div class="table-responsive table-hover">
-                                    <table datatable [dtOptions]="dtOptions" class="table-bordered"
-                                    *ngIf="!cargando && insumos.length === 0">
-                                          <thead>
-                                                <tr class="table-primary">
-                                                  <th>Id</th>
-                                                  <th>C&oacute;digo</th>
-                                                  <th>Descripcion</th>
-                                                  <th>Tipo</th>
-                                                </tr>
-                                          </thead>                                                                                    
-                                    </table>
+                                    <!--Tabla vacia-->
+                                    <div class="table-responsive table-hover">
+                                          <table datatable [dtOptions]="dtOptionsInsumos" class="table-bordered"
+                                          *ngIf="!cargando && insumos.length === 0">
+                                                <thead>
+                                                      <tr class="table-primary">
+                                                            <th>Id</th>
+                                                            <th>C&oacute;digo</th>
+                                                            <th>Nombre</th>
+                                                            <th>Presentaci&oacute;n</th>
+                                                            <th>Unidad medida</th>
+                                                      </tr>
+                                                </thead>                                                                                    
+                                          </table>
+                                    </div>
+                                    <div class="table-responsive table-hover">
+                                          <table datatable [dtOptions]="dtOptionsInsumos" class="table-bordered"
+                                                *ngIf="insumos.length > 0">
+                                                <thead>
+                                                      <tr  class="table-primary">
+                                                            <th>Id</th>
+                                                            <th>C&oacute;digo</th>
+                                                            <th>Nombre</th>
+                                                            <th>Presentaci&oacute;n</th>
+                                                            <th>Unidad medida</th>
+                                                      </tr>
+                                                </thead>
+                                                <tbody *ngIf="insumos?.length != 0">
+                                                      <tr *ngFor="let insumo of insumos" 
+                                                            (click)="selectInsumo($event, insumo)">                                                                                                
+                                                            <td>{{ insumo.insumoMedicoId }}</td>
+                                                            <td>{{ insumo.codigo }}</td>
+                                                            <td>{{ insumo.nombre }}</td>
+                                                            <td>{{ insumo.presentacion }}</td>
+                                                            <td>{{ insumo.unidadMedida }}</td>
+                                                      </tr>
+                                                </tbody>
+                                                <tbody *ngIf="cargando">
+                                                      <td></td>
+                                                      <td></td>
+                                                      <td><h4 class="alert-heading">Cargando</h4>
+                                                            <p>
+                                                                  <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                            </p>
+                                                            <p class="mb-0">
+                                                                  Espere por favor
+                                                            </p>
+                                                      </td>
+                                                      <td></td>
+                                                      <td></td>
+                                                </tbody>                                                                                    
+                                          </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                                    </div>
                               </div>
-                              <div class="table-responsive table-hover">
-                                    <table datatable [dtOptions]="dtOptions" class="table-bordered"
-                                          *ngIf="insumos.length > 0">
-                                          <thead>
-                                                <tr  class="table-primary">
-                                                  <th>Id</th>
-                                                  <th>C&oacute;digo</th>
-                                                  <th>Descripcion</th>
-                                                  <th>Tipo</th>
-                                                </tr>
-                                          </thead>
-                                          <tbody *ngIf="insumos?.length != 0">
-                                                <tr *ngFor="let insumo of insumos" 
-                                                      (click)="selectInsumo($event, insumo)">                                                                                                
-                                                      <td>{{ insumo.insumoId }}</td>
-                                                      <td>{{ insumo.codigo }}</td>
-                                                      <td>{{ insumo.descripcion }}</td>
-                                                      <td>{{ insumo.tipo }}</td>
-                                                </tr>
-                                          </tbody>
-                                          <tbody *ngIf="cargando">
-                                                <td></td>
-                                                <td></td>
-                                                <td><h4 class="alert-heading">Cargando</h4>
-                                                      <p>
-                                                            <i class="fa fa-sync-alt fa-spin fa-2x"></i>
-                                                      </p>
-                                                      <p class="mb-0">
-                                                            Espere por favor
-                                                      </p>
-                                                </td>
-                                                <td></td>
-                                          </tbody>                                                                                    
-                                    </table>
-                              </div>
-                              <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
-                              </div>
+                        </ng-template>
+
+                        <div class="row"> 
+                        <div class="col-lg-3"><b>C&oacute;digo:</b></div>
+                        <div class="col">{{stockForm.get('insumosMedicos').get('codigo').value}}</div>
+                        <div class="w-100"></div>               
+                        <div class="col-lg-3"><b>Nombre:</b></div>
+                        <div class="col">{{stockForm.get('insumosMedicos').get('nombre').value}}</div>
+                        <div class="w-100"></div>
+                        <div class="col-lg-3"><b>Presentaci&oacute;n:</b></div>
+                        <div class="col">{{stockForm.get('insumosMedicos').get('presentacion').value}}</div>
+                        <div class="w-100"></div>
+                        <div class="col-lg-3"><b>Unidad medida:</b></div>
+                        <div class="col">{{stockForm.get('insumosMedicos').get('unidadMedida').value}}</div>
                         </div>
-                  </ng-template>
 
-                  <div class="form-group">
-                    <label><b>C&oacute;digo</b></label>
-                      <input type="text"
-                            class="form-control"
-                            placeholder="C&oacute;digo"                      
-                            name="codigo"
-                            formControlName="codigo">                      
-                  </div>
-
-                  <div class="form-group">
-                    <label><b>Descripci&oacute;n</b></label>
-                    <input type="text"
-                          class="form-control"
-                          placeholder="Descripci&oacute;n"
-                          formControlName="descripcion"
-                          name="descripcion">                    
-                  </div>
                 </div>
 
-                <div class="form-group">
-                  <label><b>Cantidad</b><span class="requerido"> *</span></label>
-                  <input type="number"
+                <div formGroupName="medicamentos" class="col-lg-6">
+                  <label><b>Medicamento id</b></label>
+                    <div class="input-group mb-3">  
+                        <input type="number"
+                            class="form-control"
+                            placeholder="Medicamento id"
+                            name="medicamentoId"
+                            formControlName="medicamentoId">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-info" [disabled]="crear == false"
+                                (click)="obtenerMedicamento($event)">
+                                Buscar
+                          </button>
+                        </div>
+                      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                          <button type="button" class="btn btn-primary" [disabled]="crear == false"
+                                (click)="openModalMedicamento(editProfileModalMedicamento)"><i class="fas fa-search"></i></button>
+                    </div>
+                    
+                  <!--Modal buscador de medicamentos-->
+                  <ng-template #editProfileModalMedicamento let-modal>
+                    <div class="modal-header">
+                          <h3 class="modal-title" id="editProfileLabel">Buscador Medicamentos</h3>
+                          <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                          <span aria-hidden="true">&times;</span> 
+                          </button>
+                    </div>
+                    <div *ngIf="alertMedicamento" class="alert alert-danger alert-dismissible fade show" role="alert">
+                          Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                          <button type="button" (click)="cerrarAlertMedicamento()" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                          </button>
+                          </div>
+                    <div class="modal-body">
+                          <form [formGroup]="buscadorMedicamentoForm" (ngSubmit)="buscadorMedicamentos($event)">
+                                <div class="form-row justify-content-center">
+                                    <div> 
+                                      <div>
+                                        <mat-form-field appearance="legacy">
+                                              <mat-label>Medicamento id</mat-label>
+                                              <input matInput type="number" placeholder="Medicamento id" 
+                                                    formControlName="medicamentoId" id="medicamentoId">
+                                        </mat-form-field>   
+                                        &nbsp; &nbsp; &nbsp; 
+                                        <mat-form-field appearance="legacy">
+                                          <mat-label>Medicamento</mat-label>
+                                          <input matInput type="text" placeholder="Medicamento" 
+                                                formControlName="medicamento" id="medicamento">
+                                        </mat-form-field>
+                                      
+                                      </div>                                            
+                                                                                 
+                                    </div>
+                                      &nbsp; &nbsp; &nbsp;                                                                           
+                                      <div class="align-self-center">
+                                            <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                            <button (click)="limpiarModalMedicamento($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                      </div>
+                                </div>
+                          </form>
+                          <br>
+
+                          <!--Tabla vacia-->
+                          <div class="table-responsive table-hover">
+                                <table datatable [dtOptions]="dtOptionsMedicamentos" class="table-bordered"
+                                *ngIf="!cargando && medicamentos.length === 0">
+                                      <thead>
+                                        <tr class="table-primary">
+                                          <th>Id</th>
+                                          <th>Medicamento/th>
+                                          <th>Concentraci&oacute;n</th>
+                                          <th>Forma</th>
+                                          <th>Presentaci&oacute;n</th>
+                                        </tr>
+                                      </thead>                                                                                    
+                                </table>
+                          </div>
+                          <div class="table-responsive table-hover">
+                                <table datatable [dtOptions]="dtOptionsMedicamentos" class="table-bordered"
+                                      *ngIf="medicamentos.length > 0">
+                                      <thead>
+                                        <tr class="table-primary">
+                                          <th>Id</th>
+                                          <th>Medicamento/th>
+                                          <th>Concentraci&oacute;n</th>
+                                          <th>Forma</th>
+                                          <th>Presentaci&oacute;n</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody *ngIf="medicamentos?.length != 0">
+                                            <tr *ngFor="let medicamento of medicamentos" 
+                                                  (click)="selectMedicamento($event, medicamento)">                                                                                                
+                                                  <td>{{ medicamento.medicamentoId }}</td>
+                                                  <td>{{ medicamento.medicamento }}</td>
+                                                  <td>{{ medicamento.concentracion }}</td>
+                                                  <td>{{ medicamento.forma }}</td>
+                                                  <td>{{ medicamento.presentacion }}</td>
+                                            </tr>
+                                      </tbody>
+                                      <tbody *ngIf="cargando">
+                                            <td></td>
+                                            <td></td>
+                                            <td><h4 class="alert-heading">Cargando</h4>
+                                                  <p>
+                                                        <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                                  </p>
+                                                  <p class="mb-0">
+                                                        Espere por favor
+                                                  </p>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                      </tbody>                                                                                    
+                                </table>
+                          </div>
+                          <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                          </div>
+                    </div>
+                  </ng-template>
+
+                  <div class="row">                
+                    <div class="col-lg-3"><b>C&oacute;digo:</b></div>
+                    <div class="col">{{stockForm.get('medicamentos').get('codigo').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col-lg-3"><b>Medicamento:</b></div>
+                    <div class="col">{{stockForm.get('medicamentos').get('medicamento').value}}</div>
+                    <div class="w-100"></div>
+                    <div class="col-lg-3"><b>Presentaci&oacute;n:</b></div>
+                    <div class="col">{{stockForm.get('medicamentos').get('presentacion').value}}</div>
+                  </div>
+                  
+                </div>
+              <div class="col-lg-5">
+                <div class="form-group" [hidden]="crear">
+                  <label><b>Stock actual</b></label>
+                  <input type="number" 
                         class="form-control"
                         placeholder="Cantidad"                      
                         name="cantidad"
-                        formControlName="cantidad"
-                        [class.is-invalid]="cantidadNoValido">
-                    <small *ngIf="cantidadNoValido" class="text-danger">
-                      Ingrese la cantidad
-                    </small>
+                        formControlName="cantidad">                   
+                </div>                                      
+            
+                  <div class="form-group">
+                    <label><b>Cantidad a Agregar/Disminuir</b><span class="requerido"> *</span></label>
+                    <input type="number"
+                          class="form-control"
+                          placeholder="Cantidad"                      
+                          name="cantidadModificar" id="cantidadModificar"
+                          [class.is-invalid]="cantidadNoValido">
+                      <small *ngIf="cantidadNoValido" class="text-danger">
+                        Ingrese la cantidad
+                      </small>
+                  </div>                                      
                 </div>
 
-                <div class="form-group">
-                  <label><b>Unidad Medida</b><span class="requerido"> *</span></label>
-                  <select class="custom-select" [class.is-invalid]="unidadMedidaNoValido"
-                        formControlName="unidadMedida" name="unidadMedida">
-                      <option value=null>Seleccione</option>
-                      <option *ngFor="let item of listaUnidadMedida; let i = index"
-                        value="{{item.valor}}">
-                          {{item.descripcionValor}}
-                      </option>
-                  </select>
-                  <small *ngIf="unidadMedidaNoValido" class="text-danger">
-                    Seleccione la unidad de medida
-                  </small>
-                </div>
-                      
-              </div>
             </div>
             <div class="form-row justify-content-center" [hidden]="crear">
               <div class="col-lg-5">
@@ -276,7 +396,7 @@
                 Guardar
               </button>
               &nbsp;&nbsp;
-              <button (click)="limpiar()" [hidden]="!crear" 
+              <button (click)="limpiar($event)" [hidden]="!crear" 
                     class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
             </div>
 

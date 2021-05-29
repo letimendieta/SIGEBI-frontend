@@ -20,12 +20,132 @@
                   formControlName="stockId" name="stockId" id="stockId">
               </mat-form-field>
             </p>
-
+          </div>
+          &nbsp; &nbsp; &nbsp;
+          <!--insumos-->
+          <div>           
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>Insumo id</mat-label>
-                <input matInput matInput type="number" placeholder="Insumo id" 
-                  formControlName="insumoId" name="insumoId" id="insumoId">
+                <mat-label>Insumo medico id</mat-label>
+                <input matInput matInput type="number" placeholder="Insumo medico id" 
+                  formControlName="insumoMedicoId" name="insumoMedicoId" id="insumoMedicoId">
+              </mat-form-field>
+              &nbsp;
+              <button type="button" class="btn btn-primary" 
+                        (click)="openModal(editProfileModal)"><i class="fas fa-search"></i></button>
+            </p>
+           
+            <!--Modal buscador de insumos-->
+            <ng-template #editProfileModal let-modal>
+              <div class="modal-header">
+                    <h3 class="modal-title" id="editProfileLabel">Buscador Insumos M&eacute;dicos</h3>
+                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span> 
+                    </button>
+              </div>
+              <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                    <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+              <div class="modal-body">
+                    <form [formGroup]="buscadorInsumoForm" (ngSubmit)="buscadorInsumos($event)">
+                          <div class="form-row justify-content-center">
+                              <div> 
+                                <div>
+                                  <mat-form-field appearance="legacy">
+                                        <mat-label>Insumo Medico id</mat-label>
+                                        <input matInput type="number" placeholder="Insumo medico id" 
+                                              formControlName="insumoMedicoId" id="insumoMedicoId">
+                                  </mat-form-field>   
+                                
+                                </div>                                            
+                                <div>                                                   
+                                  <mat-form-field appearance="legacy">
+                                    <mat-label>C&oacute;digo</mat-label>
+                                    <input matInput type="text" placeholder="C&oacute;digo" 
+                                          formControlName="codigo" id="codigo">
+                                  </mat-form-field>  
+                                  <mat-form-field appearance="legacy">
+                                    <mat-label>Nombre</mat-label>
+                                    <input matInput type="text" placeholder="Nombre" 
+                                          formControlName="nombre" id="nombre">
+                                  </mat-form-field>
+                                </div>                                                
+                              </div>
+                                &nbsp; &nbsp; &nbsp;                                                                           
+                                <div class="align-self-center">
+                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                      <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                </div>
+                          </div>
+                    </form>
+                    <br>
+
+                    <!--Tabla vacia-->
+                    <div class="table-responsive table-hover">
+                          <table datatable [dtOptions]="dtOptionsInsumos" class="table-bordered"
+                          *ngIf="!cargando && insumos.length === 0">
+                                <thead>
+                                  <tr class="table-primary">
+                                    <th>Id</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Nombre</th>
+                                    <th>Presentaci&oacute;n</th>
+                                    <th>Unidad medida</th>
+                                  </tr>
+                                </thead>                                                                                    
+                          </table>
+                    </div>
+                    <div class="table-responsive table-hover">
+                          <table datatable [dtOptions]="dtOptionsInsumos" class="table-bordered"
+                                *ngIf="insumos.length > 0">
+                                <thead>
+                                  <tr class="table-primary">
+                                    <th>Id</th>
+                                    <th>C&oacute;digo</th>
+                                    <th>Nombre</th>
+                                    <th>Presentaci&oacute;n</th>
+                                    <th>Unidad medida</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="insumos?.length != 0">
+                                      <tr *ngFor="let insumo of insumos" 
+                                            (click)="selectInsumo($event, insumo)">                                                                                                
+                                            <td>{{ insumo.insumoMedicoId }}</td>
+                                            <td>{{ insumo.codigo }}</td>
+                                            <td>{{ insumo.nombre }}</td>
+                                            <td>{{ insumo.presentacion }}</td>
+                                            <td>{{ insumo.unidadMedida }}</td>
+                                      </tr>
+                                </tbody>
+                                <tbody *ngIf="cargando">
+                                      <td></td>
+                                      <td></td>
+                                      <td><h4 class="alert-heading">Cargando</h4>
+                                            <p>
+                                                  <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                            </p>
+                                            <p class="mb-0">
+                                                  Espere por favor
+                                            </p>
+                                      </td>
+                                      <td></td>
+                                      <td></td>
+                                </tbody>                                                                                    
+                          </table>
+                    </div>
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                    </div>
+              </div>
+            </ng-template>
+            <p>
+              <mat-form-field appearance="fill">
+                <mat-label>Nombre</mat-label>
+                <input matInput matInput type="text" placeholder="Nombre" 
+                  formControlName="nombre" name="nombre" id="nombre">
               </mat-form-field>
             </p>
           </div>
@@ -33,16 +153,121 @@
           <div>          
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>C&oacute;digo</mat-label>
-                <input matInput matInput type="text" placeholder="C&oacute;digo" 
-                  formControlName="codigo" name="codigo" id="codigo">
+                <mat-label>Medicamento id</mat-label>
+                <input matInput matInput type="number" placeholder="Medicamento id" 
+                  formControlName="medicamentoId" name="medicamentoId" id="medicamentoId">
               </mat-form-field>
+              &nbsp;
+              <button type="button" class="btn btn-primary" 
+                        (click)="openModalMedicamento(editProfileModalMedicamento)"><i class="fas fa-search"></i></button>
             </p>
+           
+            <!--Modal buscador de medicamentos-->
+            <ng-template #editProfileModalMedicamento let-modal>
+              <div class="modal-header">
+                    <h3 class="modal-title" id="editProfileLabel">Buscador Medicamentos</h3>
+                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span> 
+                    </button>
+              </div>
+              <div *ngIf="alertMedicamento" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                    <button type="button" (click)="cerrarAlertMedicamento()" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+              <div class="modal-body">
+                    <form [formGroup]="buscadorMedicamentoForm" (ngSubmit)="buscadorMedicamentos($event)">
+                          <div class="form-row justify-content-center">
+                              <div> 
+                                <div>
+                                  <mat-form-field appearance="legacy">
+                                        <mat-label>Medicamento id</mat-label>
+                                        <input matInput type="number" placeholder="Medicamento id" 
+                                              formControlName="medicamentoId" id="medicamentoId">
+                                  </mat-form-field> 
+                                
+                                  &nbsp; &nbsp; &nbsp;                                                
+                                   
+                                  <mat-form-field appearance="legacy">
+                                    <mat-label>Medicamento</mat-label>
+                                    <input matInput type="text" placeholder="Medicamento" 
+                                          formControlName="medicamento" id="medicamento">
+                                  </mat-form-field>
+                                </div>                                                
+                              </div>
+                                &nbsp; &nbsp; &nbsp;                                                                           
+                                <div class="align-self-center">
+                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                      <button (click)="limpiarModalMedicamento($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                </div>
+                          </div>
+                    </form>
+                    <br>
+
+                    <!--Tabla vacia-->
+                    <div class="table-responsive table-hover">
+                          <table datatable [dtOptions]="dtOptionsMedicamentos" class="table-bordered"
+                          *ngIf="!cargando && medicamentos.length === 0">
+                                <thead>
+                                  <tr class="table-primary">
+                                    <th>Id</th>
+                                    <th>Medicamento</th>
+                                    <th>Concentraci&oacute;n</th>
+                                    <th>Forma</th>
+                                    <th>Presentaci&oacute;n</th>
+                                  </tr>
+                                </thead>                                                                                    
+                          </table>
+                    </div>
+                    <div class="table-responsive table-hover">
+                          <table datatable [dtOptions]="dtOptionsMedicamentos" class="table-bordered"
+                                *ngIf="medicamentos.length > 0">
+                                <thead>
+                                  <tr class="table-primary">
+                                    <th>Id</th>
+                                    <th>Medicamento/th>
+                                    <th>Concentraci&oacute;n</th>
+                                    <th>Forma</th>
+                                    <th>Presentaci&oacute;n</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="medicamentos?.length != 0">
+                                      <tr *ngFor="let medicamento of medicamentos" 
+                                            (click)="selectMedicamento($event, medicamento)">                                                                                                
+                                            <td>{{ medicamento.medicamentoId }}</td>
+                                            <td>{{ medicamento.medicamento }}</td>
+                                            <td>{{ medicamento.concentracion }}</td>
+                                            <td>{{ medicamento.forma }}</td>
+                                            <td>{{ medicamento.presentacion }}</td>
+                                      </tr>
+                                </tbody>
+                                <tbody *ngIf="cargando">
+                                      <td></td>
+                                      <td></td>
+                                      <td><h4 class="alert-heading">Cargando</h4>
+                                            <p>
+                                                  <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                            </p>
+                                            <p class="mb-0">
+                                                  Espere por favor
+                                            </p>
+                                      </td>
+                                      <td></td>
+                                      <td></td>
+                                </tbody>                                                                                    
+                          </table>
+                    </div>
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                    </div>
+              </div>
+            </ng-template>
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>Descripci&oacute;n</mat-label>
-                <input matInput matInput type="text" placeholder="Nombres" 
-                  formControlName="descripcion" name="descripcion" id="descripcion">
+                <mat-label>Medicamento</mat-label>
+                <input matInput matInput type="text" placeholder="Medicamento" 
+                  formControlName="medicamento" name="medicamento" id="medicamento">
               </mat-form-field>
             </p>
           </div>
@@ -75,26 +300,30 @@
             <th scope="col">Id</th>
             <th scope="col">Insumo id</th>
             <th scope="col">C&oacute;digo</th>
-            <th scope="col">Descripci&oacute;n</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Medicamento id</th>
+            <th scope="col">C&oacute;digo</th>
+            <th scope="col">Medicamento</th>
             <th scope="col">Cantidad</th>
-            <th scope="col">Unidad medida</th>
             <th scope="col">Fecha creaci&oacute;n</th>
             <th scope="col">Usuario creaci&oacute;n</th>
             <th scope="col">Fecha modificaci&oacute;n</th>
             <th scope="col">Usuario modificaci&oacute;n</th>     
             <th scope="col">Editar</th>
-            <th scope="col">Borrar</th>
+            <!--th scope="col">Borrar</th-->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let stock of stocks; let i = index">
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ stock.stockId }}</td>
-            <td>{{ stock.insumos.insumoId }}</td>
-            <td>{{ stock.insumos.codigo }}</td>
-            <td>{{ stock.insumos.descripcion }}</td>
+            <td>{{ stock.insumosMedicos.insumoMedicoId }}</td>
+            <td>{{ stock.insumosMedicos.codigo }}</td>
+            <td>{{ stock.insumosMedicos.nombre }}</td>
+            <td>{{ stock.medicamentos.medicamentoId }}</td>
+            <td>{{ stock.medicamentos.codigo }}</td>
+            <td>{{ stock.medicamentos.medicamento }}</td>
             <td>{{ stock.cantidad }}</td>
-            <td>{{ stock.unidadMedida }}</td>
             <td>{{ stock.fechaCreacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ stock.usuarioCreacion }}</td>
             <td>{{ stock.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
@@ -106,10 +335,10 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <td (click)="borrarStock($event, stock)">  
+            <!--td (click)="borrarStock($event, stock)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
-            </td>
+            </td-->
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
@@ -117,7 +346,9 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>       
+          <td></td>      
+          <td></td>  
+          <td></td>
           <td>
             <h4 class="alert-heading">Cargando</h4>
             <p>
@@ -126,14 +357,13 @@
             <p class="mb-0">
               Espere por favor
             </p>
-          </td>
+          </td>       
+          <td></td>     
           <td></td>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>        
         </tbody>
       </table>
     </div>
