@@ -24,8 +24,7 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   funcionarios: FuncionarioModelo[] = [];
-  listaAreas: AreaModelo;
-  buscador: FuncionarioModelo = new FuncionarioModelo();
+  listaAreas: AreaModelo;  
   buscadorForm: FormGroup;
   cargando = false;
 
@@ -151,18 +150,19 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
     this.funcionarios = [];
     this.rerender();
     var persona: PersonaModelo = new PersonaModelo();
+    var buscador = new FuncionarioModelo();
     persona.cedula = this.buscadorForm.get('cedula').value;
     persona.nombres = this.buscadorForm.get('nombres').value;
     persona.apellidos = this.buscadorForm.get('apellidos').value;
     if( !persona.cedula && !persona.nombres && !persona.apellidos ){
-      this.buscador.personas = null;
+      buscador.personas = null;
     }else{
-      this.buscador.personas = persona;
+      buscador.personas = persona;
     }    
-    this.buscador.estado = this.buscadorForm.get('estado').value;    
-    this.buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value; 
-    this.buscador.areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
-    this.funcionariosService.buscarFuncionariosFiltros(this.buscador)
+    buscador.estado = this.buscadorForm.get('estado').value;    
+    buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value; 
+    buscador.areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
+    this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {      
       this.funcionarios = resp;
       this.dtTrigger.next();
@@ -171,7 +171,7 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
       this.dtTrigger.next();
@@ -181,7 +181,6 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new FuncionarioModelo();
     this.funcionarios = [];
     this.rerender();
     this.dtTrigger.next();
@@ -215,7 +214,7 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );

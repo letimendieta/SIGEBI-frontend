@@ -64,8 +64,7 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
         {data:'enfermedadCie10Id'}, {data:'codigo'}, {data:'descripcion'},
         {data:'estado'}, {data:'fechaCreacion'}, {data:'usuarioCreacion'},
         {data:'fechaModificacion'}, {data:'usuarioModificacion'},
-        {data:'Editar'},
-        {data:'Borrar'}
+        {data:'Editar'}
       ],      
       dom: 'lBfrtip',
       buttons: [

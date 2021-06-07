@@ -26,6 +26,7 @@ import { MotivosConsultaService } from 'src/app/servicios/motivosConsulta.servic
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-procedimiento',
@@ -33,6 +34,7 @@ import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
   styleUrls: ['./procedimiento.component.css']
 })
 export class ProcedimientoComponent implements OnInit {
+  dtElement: DataTableDirective;
   crear = false;  
   pacientePersona: PersonaModelo = new PersonaModelo();  
   funcionarioPersona: PersonaModelo = new PersonaModelo();
@@ -95,7 +97,7 @@ export class ProcedimientoComponent implements OnInit {
 
   ngOnInit() {
     this.listarMotivosConsultas();
-    this.listarMedidasMedicamentos();
+    //this.listarMedidasMedicamentos();
     this.crearTablaInsumosMedicos();
     this.crearTablaMedicamentos();
     this.crearTablaModelFuncionarios();
@@ -169,7 +171,7 @@ export class ProcedimientoComponent implements OnInit {
     procedimientoInsumo.procedimientos = procedimiento;    
 
     this.procedimientosService.obtenerProcedimientosInsumos(procedimientoInsumo)
-    .subscribe( resp => {
+    .subscribe( ( resp : ProcedimientoInsumoModelo[] )=> {
       var procedimientosInsumos = resp;      
       
       for (let i = 0; i < procedimientosInsumos.length; i++) {
@@ -189,7 +191,7 @@ export class ProcedimientoComponent implements OnInit {
     });
   }
 
-  obtenerProcedimientoPorPaciente(pacienteId) {
+  /*obtenerProcedimientoPorPaciente(pacienteId) {
     
     this.procedimientosService.obtenerProcedimientoPaciente(pacienteId)
     .subscribe( resp => {
@@ -209,7 +211,7 @@ export class ProcedimientoComponent implements OnInit {
         text: this.comunes.obtenerError(e)
       })
     });
-  }
+  }*/
 
   listarEstadosEntrega() {
     var orderBy = "descripcion";
@@ -225,7 +227,7 @@ export class ProcedimientoComponent implements OnInit {
     });
   }
 
-  listarMedidasMedicamentos() {
+  /*listarMedidasMedicamentos() {
     var unidadMedidaParam = new ParametroModelo();
     unidadMedidaParam.codigoParametro = "UNI_MEDIDA_MEDICAMENTOS";
     unidadMedidaParam.estado = "A";
@@ -236,7 +238,7 @@ export class ProcedimientoComponent implements OnInit {
       .subscribe( (resp: ParametroModelo) => {
         this.listaMedidasMedicamentos = resp;
     });
-  }
+  }*/
 
   listarMotivosConsultas() {
     var orderBy = "descripcion";
@@ -549,7 +551,7 @@ export class ProcedimientoComponent implements OnInit {
     }
     this.cargando = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
-    .subscribe( resp => {
+    .subscribe( ( resp : PacienteModelo[] )=> {
       this.pacientes = resp;
       this.cargando = false;
     }, e => {
@@ -573,7 +575,7 @@ export class ProcedimientoComponent implements OnInit {
     buscador.personas = persona;
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : FuncionarioModelo[] )=> {
       this.funcionarios = resp;
       this.cargando = false;
     }, e => {
@@ -617,7 +619,7 @@ export class ProcedimientoComponent implements OnInit {
     buscador.insumosMedicos = insumoMedico;
 
     this.stockService.buscarStocksFiltrosTabla(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : StockModelo[] ) => {
       var stocks = resp;
 
       for (let i = 0; i < stocks.length; i++) {
@@ -990,8 +992,7 @@ export class ProcedimientoComponent implements OnInit {
       }else{
         $('#tableInsumosMedicos').DataTable().destroy();
         this.procedimientosInsumosMedicos.push(procedimientoInsumo);
-        this.dtTriggerInsumosMedicos.next();
-        
+        this.dtTriggerInsumosMedicos.next();        
       }
      
     }else if(stock.medicamentos && stock.medicamentos.medicamentoId){
@@ -1023,5 +1024,11 @@ export class ProcedimientoComponent implements OnInit {
 
   cerrarAlertGuardar(){
     this.alertGuardar=false;
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+    });
   }
 }

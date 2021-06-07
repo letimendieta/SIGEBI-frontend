@@ -366,7 +366,7 @@ export class ConsultorioComponent implements OnInit {
     historialClinico.pacienteId = this.paciente.pacienteId;
     
     this.historialClinicosService.buscarHistorialClinicosFiltros(historialClinico)
-    .subscribe( resp => {
+    .subscribe( ( resp : HistorialClinicoModelo[] )=> {
       if(resp.length > 0){
         this.historialClinicoForm.patchValue(resp[0]);
         if(this.historialClinicoForm.get('patologiaActual').value
@@ -408,7 +408,7 @@ export class ConsultorioComponent implements OnInit {
     antecedente.pacienteId = this.paciente.pacienteId;
     antecedente.tipo = "P";//antecedentes personales
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
-    .subscribe( resp => {
+    .subscribe( ( resp : AntecedenteModelo[] ) => {
 
       this.antecedentes = resp;
       this.dtTriggerAntecedentes.next();
@@ -431,7 +431,7 @@ export class ConsultorioComponent implements OnInit {
     antecedente.pacienteId = this.paciente.pacienteId;
     antecedente.tipo = "F";//antecedentes familiares
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
-    .subscribe( resp => {
+    .subscribe( ( resp : AntecedenteModelo[] ) => {
 
       this.antecedentesFamiliares = resp;
       this.dtTriggerAntecedentesFamiliares.next();
@@ -453,7 +453,7 @@ export class ConsultorioComponent implements OnInit {
     alergias.pacienteId = this.paciente.pacienteId;
 
     this.alergiaService.buscarAlergiasFiltros(alergias)
-    .subscribe( resp => {
+    .subscribe( ( resp : AlergiaModelo[] ) => {
 
       this.alergias = resp;
       this.dtTriggerAlergias.next();
@@ -476,7 +476,7 @@ export class ConsultorioComponent implements OnInit {
     vacunacion.pacienteId = this.paciente.pacienteId;
 
     this.vacunacionesService.buscarVacunacionesFiltrosTabla(vacunacion)
-    .subscribe( resp => {
+    .subscribe( ( resp : VacunacionModelo[] ) => {
 
       this.vacunaciones = resp;
       this.dtTriggerVacunaciones.next();
@@ -497,11 +497,11 @@ export class ConsultorioComponent implements OnInit {
 
     preguntaHistorial.historialClinicoId = this.hcid;
     this.preguntasHistorialService.buscarPreguntasHistorialFiltrosTabla(preguntaHistorial)
-    .subscribe( resp => {
-      this.preguntasHistorial = resp;
-      for (let i = 0; i < this.preguntasHistorial.length; i++) {
-        this.preguntasSeleccionadas.push(this.preguntasHistorial[i].preguntas);
-      }
+    .subscribe(( resp : PreguntaHistorialModelo[] ) => {
+        this.preguntasHistorial = resp;
+        for (let i = 0; i < this.preguntasHistorial.length; i++) {
+          this.preguntasSeleccionadas.push(this.preguntasHistorial[i].preguntas);
+        }
 
       this.listarPreguntas();
 
@@ -523,7 +523,14 @@ export class ConsultorioComponent implements OnInit {
     this.preguntasService.buscarPreguntasFiltrosTablaOrder(pregunta, orderBy, orderDir)
     .subscribe( (resp: PreguntaModelo[]) => {
 
-      this.preguntas = resp;
+        for ( let i = 0; i <resp.length ; i++){
+          for ( let j = 0; j <this.preguntasSeleccionadas.length ; j++){
+            if( resp[i].preguntaId == this.preguntasSeleccionadas[j].preguntaId ){
+              this.preguntas.push(resp[i]);
+              break;
+            }
+          }
+        }      
     }, e => {      
       Swal.fire({
         icon: 'info',
@@ -536,7 +543,7 @@ export class ConsultorioComponent implements OnInit {
   listarAlergenos() {
    
     this.alergenosService.getAlergenos()
-    .subscribe( resp => {
+    .subscribe( ( resp : AlergenoModelo[] ) => {
 
       this.diagnosticoAlergias = resp;
     }, e => {      
@@ -551,7 +558,7 @@ export class ConsultorioComponent implements OnInit {
   listarPatologiasProcedimientos() {
    
     this.patologiasProcedimientosService.getPatologiasProcedimientos()
-    .subscribe( resp => {
+    .subscribe( ( resp : PatologiaProcedimientoModelo[] )=> {
 
       this.diagnosticoAntecPatolProc = resp;
     }, e => {      
@@ -609,7 +616,7 @@ export class ConsultorioComponent implements OnInit {
     $('#tableConsultas').DataTable().destroy();
 
     this.consultasService.buscarConsultasFiltrosTabla(consultas)
-    .subscribe( resp => {     
+    .subscribe( ( resp : ConsultaModelo[] )=> {     
 
       this.consultas = resp;
       this.dtTriggerConsultas.next();
@@ -634,7 +641,7 @@ export class ConsultorioComponent implements OnInit {
     $('#tableSignosVitales').DataTable().destroy();
 
     this.signosVitalesService.buscarSignosVitalesFiltros(signoVital)
-    .subscribe( resp => {     
+    .subscribe( (resp : SignoVitalModelo[] )=> {     
 
       this.signosVitales = resp;
       this.dtTriggerSignosVitales.next();
@@ -647,24 +654,6 @@ export class ConsultorioComponent implements OnInit {
       })
       this.cargando = false;
     });
-  }
-
-  obtenerInsumo(event) {
-    event.preventDefault();
-    var id = this.stockForm.get('insumos').get('insumoId').value;
-    this.insumosService.getInsumo( id )
-    .subscribe( (resp: InsumoMedicoModelo) => {
-
-        //this.stockForm.get('insumos').patchValue(resp);
-
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: this.comunes.obtenerError(e),
-          })
-          this.stockForm.get('insumos').get('insumoId').setValue(null);
-        }
-      );
   }
 
   getCheckedPreguntas(pregunta) {
@@ -1282,7 +1271,7 @@ export class ConsultorioComponent implements OnInit {
     }
     this.cargando = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
-    .subscribe( resp => {
+    .subscribe( ( resp : PacienteModelo[] ) => {
       this.pacientes = resp;
       this.cargando = false;
     }, e => {
@@ -1330,7 +1319,7 @@ export class ConsultorioComponent implements OnInit {
     }
     buscador.medicamentos = medicamento;
     this.stockService.buscarStocksFiltrosTabla(buscador)
-    .subscribe( resp => {
+    .subscribe( (resp : StockModelo[] )=> {
       this.stocks = resp;
     }, e => {
       Swal.fire({
@@ -1352,7 +1341,7 @@ export class ConsultorioComponent implements OnInit {
       return;
     }
     this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : EnfermedadCie10Modelo[] )=> {
       this.enfermedadesCie10 = resp;
     }, e => {
       Swal.fire({

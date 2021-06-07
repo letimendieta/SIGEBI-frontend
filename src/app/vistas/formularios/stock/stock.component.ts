@@ -99,7 +99,7 @@ export class StockComponent implements OnInit {
             icon: 'info',
             text: this.comunes.obtenerError(e),
           })
-          this.stockForm.get('medicamentos').get('medicamentosId').setValue(null);
+          this.stockForm.get('medicamentos').get('medicamentoId').setValue(null);
         }
       );
   }
@@ -127,9 +127,7 @@ export class StockComponent implements OnInit {
 
   selectMedicamento(event, medicamento: MedicamentoModelo){
     this.modalService.dismissAll();
-    /*if(insumo.insumoMedicoId){
-      this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(insumo.insumoMedicoId);
-    }*/
+
     this.medicamentosService.getMedicamento( medicamento.medicamentoId )
       .subscribe( (resp: MedicamentoModelo) => {
         this.stockForm.reset();
@@ -161,9 +159,14 @@ export class StockComponent implements OnInit {
 
     this.stock = this.stockForm.getRawValue();
 
-    var cantidadModificar = Number(document.getElementById('cantidadModificar').innerHTML);//document.getElementById('cantidadModificar'));
+    var cantidadModificar = ((document.getElementById("cantidadModificar") as HTMLInputElement).value);//Number(document.getElementById('cantidadModificar').innerHTML);//document.getElementById('cantidadModificar'));
 
-    this.stock.cantidad = cantidadModificar;
+    if( !cantidadModificar ){
+      this.alertGuardar = true;
+      return;
+    }
+
+    this.stock.cantidad = Number(cantidadModificar);
 
     if(!this.stock.insumosMedicos.insumoMedicoId && !this.stock.medicamentos.medicamentoId ){
       Swal.fire({
@@ -224,6 +227,8 @@ export class StockComponent implements OnInit {
     this.stock = new StockModelo();
     this.stockForm.reset();
     this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(null);
+    this.stockForm.get('medicamentos').get('medicamentoId').setValue(null);
+    document.getElementById("cantidadModificar").innerHTML = null;
   }
 
   limpiarModalMedicamento(event) {
@@ -249,9 +254,9 @@ export class StockComponent implements OnInit {
     return mensaje;  
   }
 
-  get cantidadNoValido() {
-    return this.stockForm.get('cantidad').invalid && this.stockForm.get('cantidad').touched
-  }
+  /*get cantidadNoValido() {
+    return ((document.getElementById("cantidadModificar") as HTMLInputElement)).oninvalid
+  }*/
 
   crearFormulario() {
 
@@ -272,7 +277,7 @@ export class StockComponent implements OnInit {
         presentacion  : [null, [] ],
         concentracion  : [null, [] ]
       }),
-      cantidad  : [null, [ Validators.required] ],
+      cantidad  : [null, [ ] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],
@@ -301,7 +306,7 @@ export class StockComponent implements OnInit {
   deshabilitar(){
     this.stockForm.get('medicamentos').get('medicamentoId').disable();
     this.stockForm.get('insumosMedicos').get('insumoMedicoId').disable();
-    this.stockForm.get('cantidad').disable();
+    //this.stockForm.get('cantidad').disable();
 
   }
 
@@ -316,7 +321,7 @@ export class StockComponent implements OnInit {
       return;
     }
     this.insumosMedicosService.buscarInsumosMedicosFiltrosTabla(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : InsumoMedicoModelo[] ) => {
       this.insumos = resp;
     }, e => {
       Swal.fire({
@@ -337,7 +342,7 @@ export class StockComponent implements OnInit {
       return;
     }
     this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : MedicamentoModelo[] ) => {
       this.medicamentos = resp;
     }, e => {
       Swal.fire({
@@ -437,7 +442,7 @@ export class StockComponent implements OnInit {
       buscador.medicamentos = null;
     } 
     this.stocksService.buscarStocksFiltrosTabla(buscador)
-    .subscribe( resp => {      
+    .subscribe( ( resp : StockModelo[] ) => {      
       if( resp.length > 0){
         Swal.fire({
           icon: 'info',

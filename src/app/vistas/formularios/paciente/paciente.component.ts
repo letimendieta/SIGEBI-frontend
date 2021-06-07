@@ -160,7 +160,7 @@ export class PacienteComponent implements OnInit {
       historialClinico.pacienteId = Number(id);
   
       this.historialClinicosService.buscarHistorialClinicosFiltros( historialClinico )
-        .subscribe( resp  => {
+        .subscribe( ( resp : HistorialClinicoModelo[] )  => {
           if( resp.length > 0 ){      
             this.historialClinicoForm.patchValue(resp[0]);
             if( resp[0].pacienteId &&  resp[0].pacienteId ){
@@ -200,7 +200,7 @@ export class PacienteComponent implements OnInit {
     antecedente.pacienteId = pacienteId;
     antecedente.tipo = "P";//antecedentes personales
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
-    .subscribe( resp => {
+    .subscribe( (resp : AntecedenteModelo[] ) => {
       this.antecedentes = resp;
       for (let i = 0; i < this.antecedentes.length; i++) {
         this.patologiasProcedimientosSeleccionados.push(this.antecedentes[i].patologiasProcedimientos.patologiaProcedimientoId);
@@ -222,8 +222,8 @@ export class PacienteComponent implements OnInit {
     alergias.pacienteId = pacienteId;
 
     this.alergiaService.buscarAlergiasFiltros(alergias)
-    .subscribe( resp => {
-      this.alergias = resp;
+    .subscribe( ( resp : AlergiaModelo[] ) => {
+      this.alergias = resp; 
       for (let i = 0; i < this.alergias.length; i++) {
         this.alergenosSeleccionados.push(this.alergias[i].alergenos.alergenoId);
       }
@@ -245,7 +245,7 @@ export class PacienteComponent implements OnInit {
     antecedente.pacienteId = pacienteId;
     antecedente.tipo = "F";//antecedentes familiares
     this.antecedentesService.buscarAntecedentesFiltros(antecedente)
-    .subscribe( resp => {
+    .subscribe( ( resp : AntecedenteModelo[] ) => {
       this.antecedentesFamiliares = resp;
       for (let i = 0; i < this.antecedentesFamiliares.length; i++) {
         this.patologiasFamiliaresSeleccionados.push(this.antecedentesFamiliares[i].patologiasProcedimientos.patologiaProcedimientoId);
@@ -266,7 +266,7 @@ export class PacienteComponent implements OnInit {
 
     vacunacion.pacienteId = pacienteId;
     this.vacunacionesService.buscarVacunacionesFiltrosTabla(vacunacion)
-    .subscribe( resp => {
+    .subscribe( ( resp : VacunacionModelo[] ) => {
       this.vacunaciones = resp;
       for (let i = 0; i < this.vacunaciones.length; i++) {
         this.vacunasSeleccionadas.push(this.vacunaciones[i].vacunas.vacunaId);
@@ -287,7 +287,7 @@ export class PacienteComponent implements OnInit {
 
     preguntaHistorial.historialClinicoId = this.hcid;
     this.preguntasHistorialService.buscarPreguntasHistorialFiltrosTabla(preguntaHistorial)
-    .subscribe( resp => {
+    .subscribe( ( resp : PreguntaHistorialModelo[] ) => {
       this.preguntasHistorial = resp;
       for (let i = 0; i < this.preguntasHistorial.length; i++) {
         this.preguntasSeleccionadas.push(this.preguntasHistorial[i].preguntas);
@@ -590,7 +590,7 @@ export class PacienteComponent implements OnInit {
     var persona: PersonaModelo = new PersonaModelo();
     persona.cedula = cedula;
     this.personasService.buscarPersonasFiltros( persona )
-      .subscribe( resp => {
+      .subscribe( (resp : PersonaModelo[] ) => {
         if(resp.length > 0 ){
           this.pacienteForm.get('personas').patchValue(resp[0]);
           this.pacienteForm.get('personas').disable();
@@ -719,26 +719,7 @@ export class PacienteComponent implements OnInit {
       }
 
       peticion.subscribe( resp => {
-        //guardar la imagen del paciente
-        /*var mensajeUpload = '';
-        if(this.selectedFiles){
-          var cedula = resp.paciente.personas.cedula;
-          this.currentFile = this.selectedFiles.item(0);
-          var nombre = resp.paciente.personas.nombres;
-          var filename = cedula + '_' + nombre;
-          
-          var renameFile = new File([this.currentFile], filename, {type:this.currentFile.type});
-
-          this.uploadService.upload2(renameFile, "I").subscribe(
-            event => {
-              mensajeUpload
-            },
-            err => {
-              mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
-          });
-
-          this.selectedFiles = undefined;
-        }*/
+        
         //guardar el historial clinico digitalizado
         var mensajeUploadHistorialClinico = '';
         if(this.selectedFilesHistorialClinico){
@@ -972,7 +953,7 @@ export class PacienteComponent implements OnInit {
     }
     this.cargando = true;
     this.personasService.buscarPersonasFiltros(buscador)
-    .subscribe( resp => {
+    .subscribe( ( resp : PersonaModelo[] ) => {
       this.personas = resp;
       this.cargando = false;
     }, e => {

@@ -463,8 +463,11 @@
                                                       <div class="modal-body">
                                                             <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
                                                                   <div class="form-row justify-content-center">
-                                                                        <div>                                           
-                                                                              <div>
+                                                                        <div>      
+                                                                              <div>                                                                                    
+                                                                                    <label><b>Medicamentos</b></label>
+                                                                              </div>
+                                                                              <div>                                                                                    
                                                                                     <mat-form-field appearance="legacy">
                                                                                           <mat-label>Medicamento id</mat-label>
                                                                                           <input matInput type="number" placeholder="Medicamento id" 
@@ -485,8 +488,10 @@
                                                                                   
                                                                               </div>                                                
                                                                         </div>
-                                                                        &nbsp; &nbsp; &nbsp; 
                                                                         <div> 
+                                                                              <div>
+                                                                                    <label><b>Insumos m&eacute;dicos</b></label>                                                                                    
+                                                                              </div>
                                                                               <div>
                                                                                     <mat-form-field appearance="legacy">
                                                                                           <mat-label>Insumo Medico id</mat-label>
@@ -507,9 +512,13 @@
                                                                                     </mat-form-field>
                                                                               </div>                                                
                                                                         </div>
-                                                                        &nbsp; &nbsp; &nbsp;                                                                           
+                                                                                                                                                  
+                                                                        
+                                                                  </div>
+                                                                  <div class="form-row justify-content-center">
                                                                         <div class="align-self-center">
-                                                                              <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
+                                                                              <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                                                              &nbsp; &nbsp;
                                                                               <button (click)="limpiarModalStock($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
                                                                         </div>
                                                                   </div>
@@ -779,8 +788,8 @@
                                                                               </div>
                                                                         </td>
                                                                         <td (click)="quitarInsumoMedico($event, procedimientoInsumo)">  
-                                                                        <button class="btn btn-danger" [hidden]="!crear">
-                                                                              <i class="fas fa-minus-circle"></i></button>
+                                                                              <button class="btn btn-danger" [hidden]="!crear">
+                                                                                    <i class="fas fa-minus-circle"></i></button>
                                                                         </td>
                                                                   </tr>
                                                             </tbody>                      

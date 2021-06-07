@@ -55,6 +55,7 @@ export class FuncionarioComponent implements OnInit {
         });
     }else{
       this.crear = true;
+      this.funcionarioForm.get('estado').setValue('A');
     }
     this.crearTablaModel();
   }
@@ -80,14 +81,40 @@ export class FuncionarioComponent implements OnInit {
     this.funcionariosService.getPersona( id )
       .subscribe( (resp: PersonaModelo) => {
         this.funcionarioForm.get('personas').patchValue(resp);
+        this.buscadorFuncionarios();
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
           this.funcionarioForm.get('personas').get('personaId').setValue(null);
         }
       );
+  }
+
+  buscadorFuncionarios() {
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscador = new FuncionarioModelo();
+    //persona.cedula = this.funcionarioForm.get('personas').get('cedula').value;
+    //persona.nombres = this.funcionarioForm.get('personas').get('cedula').value;
+    //persona.apellidos = this.funcionarioForm.get('personas').get('cedula').value;
+    persona.personaId = this.funcionarioForm.get('personas').get('personaId').value;
+    /*if( !persona.cedula && !persona.nombres && !persona.apellidos ){
+      buscador.personas = null;
+    }else{
+      buscador.personas = persona;
+    }  */  
+    buscador.personas = persona;
+    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    .subscribe( ( resp : FuncionarioModelo[] ) => {   
+      if(resp.length > 0){
+        Swal.fire({
+          icon: 'info',
+          //title: 'Algo salio mal',
+          text: 'La persona ya existe como funcionario'
+        })
+      }   
+    });
   }
   
   guardar( ) {
@@ -138,7 +165,7 @@ export class FuncionarioComponent implements OnInit {
           if ( this.funcionario.funcionarioId ) {
             this.router.navigate(['/funcionarios']);
           }else{
-            this.limpiar();
+            this.limpiar(event);
           }
         }
       });
@@ -146,13 +173,14 @@ export class FuncionarioComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salio mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e),
+          text: this.comunes.obtenerError(e),
         })          
        }
     );
   }
 
-  limpiar(){
+  limpiar(event){
+    event.preventDefault();
     this.funcionario = new FuncionarioModelo();
     this.funcionarioForm.reset();
     this.funcionarioForm.get('estado').setValue('A');
@@ -249,7 +277,7 @@ export class FuncionarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -319,7 +347,7 @@ export class FuncionarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
           this.funcionarioForm.get('personas').get('personaId').setValue(null);
         }

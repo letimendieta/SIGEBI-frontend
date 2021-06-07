@@ -229,7 +229,7 @@ export class PersonaComponent implements OnInit {
             mensajeUpload
           },
           err => {
-            mensajeUpload = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
+            mensajeUpload = 'No se pudo subir el archivo!' + this.comunes.obtenerError(err);
             console.log(mensajeUpload);
         });
 
@@ -246,14 +246,14 @@ export class PersonaComponent implements OnInit {
           if ( persona.personaId ) {
             this.router.navigate(['/personas']);
           }else{
-            this.limpiar();
+            this.limpiar(event);
           }
         }
       });
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salio mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e)
+              text: this.comunes.obtenerError(e)
             })
        }
     );
@@ -282,7 +282,8 @@ export class PersonaComponent implements OnInit {
     }
   }
 
-  limpiar(){
+  limpiar(event){
+    event.preventDefault();
     this.personaForm.reset();
   }
 
