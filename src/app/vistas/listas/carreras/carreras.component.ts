@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-carreras',
@@ -26,6 +27,7 @@ export class CarrerasComponent implements OnDestroy, OnInit {
   cargando = false;  
 
   constructor( private carrerasService: CarrerasService,
+               public router: Router,
                private comunes: ComunesService,
                private fb: FormBuilder ) {    
   }
@@ -160,6 +162,11 @@ export class CarrerasComponent implements OnDestroy, OnInit {
     this.carreras = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['carrera', id]);
   }
 
   borrarCarrera(event, carrera: CarreraModelo ) {

@@ -100,9 +100,8 @@
             <td>{{ area.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ area.usuarioModificacion }}</td>     
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/area', area.areaId ]">
+            <td (click)="editar($event, area.areaId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

@@ -10,6 +10,7 @@ import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { AreaModelo } from 'src/app/modelos/area.modelo';
 import { AreasService } from 'src/app/servicios/areas.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-funcionarios',
@@ -30,6 +31,7 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
 
 
   constructor( private funcionariosService: FuncionariosService,
+              public router: Router,
               private comunes: ComunesService,
               private areasService: AreasService,
               private fb: FormBuilder ) {    
@@ -186,8 +188,13 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
     this.dtTrigger.next();
   }
 
-  borrarFuncionario(event, funcionario: FuncionarioModelo ) {
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['funcionario', id]);
+  }
 
+  borrarFuncionario(event, funcionario: FuncionarioModelo ) {
+    event.preventDefault();
     Swal.fire({
       title: '¿Está seguro?',
       text: `Está seguro que desea borrar a ${ funcionario.personas.nombres }`,

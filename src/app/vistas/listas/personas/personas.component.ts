@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-personas',
@@ -27,6 +28,7 @@ export class PersonasComponent implements OnDestroy, OnInit {
 
   constructor( private personasService: PersonasService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder ) { 
     
   }
@@ -157,6 +159,11 @@ export class PersonasComponent implements OnDestroy, OnInit {
     this.personas = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['persona', id]);
   }
 
   borrarPersona(event, persona: PersonaModelo ) {

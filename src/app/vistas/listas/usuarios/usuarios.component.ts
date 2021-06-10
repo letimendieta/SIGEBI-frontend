@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios',
@@ -30,6 +31,7 @@ export class UsuariosComponent implements OnDestroy, OnInit {
 
   constructor( private usuariosService: UsuariosService,
     private comunes: ComunesService,
+    public router: Router,
     private fb: FormBuilder ) {    
   }
   ngOnInit() {
@@ -164,6 +166,11 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     this.usuarios = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['usuario', id]);
   }
 
   borrarUsuario(event, usuario: Usuario2Modelo ) {

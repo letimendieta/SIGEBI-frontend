@@ -119,9 +119,8 @@
             <td>{{ usuario.personas.apellidos }}</td>      
             <td>{{ usuario.estado }}</td>   
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/usuario', usuario.usuarioId ]">
+            <td (click)="editar($event, usuario.usuarioId )">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

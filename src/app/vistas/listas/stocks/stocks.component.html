@@ -329,9 +329,8 @@
             <td>{{ stock.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ stock.usuarioModificacion }}</td>     
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/stock', stock.stockId ]">
+            <td (click)="editar($event, stock.stockId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

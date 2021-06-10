@@ -116,9 +116,8 @@
             <td>{{ funcionario.personas.apellidos }}</td>
             <td>{{ funcionario.areas.codigo }}</td>  
             <td>{{ funcionario.estado }}</td>
-            <td>
-              <a class="btn btn-info"
-                      (click)="['/funcionario', funcionario.funcionarioId ]">
+            <td (click)="editar($event, funcionario.funcionarioId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

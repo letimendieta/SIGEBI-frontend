@@ -89,9 +89,8 @@
             <td>{{ paciente.personas.cedula }}</td>
             <td>{{ paciente.personas.nombres }}</td>
             <td>{{ paciente.personas.apellidos }}</td>
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/paciente', paciente.pacienteId ]">
+            <td (click)="editar($event, paciente.pacienteId )">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

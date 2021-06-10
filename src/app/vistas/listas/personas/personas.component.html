@@ -95,9 +95,8 @@
             <td>{{ persona.sexo }}</td>            
             <td>{{ persona.fechaNacimiento | date : 'dd-MM-yyyy'  }}</td>
             <td>{{ persona.nacionalidad }}</td>
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/persona', persona.personaId ]">
+            <td (click)="editar($event, persona.personaId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

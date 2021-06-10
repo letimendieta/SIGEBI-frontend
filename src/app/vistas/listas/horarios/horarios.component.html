@@ -133,9 +133,8 @@
             <td>{{ horario.funcionarios.personas.nombres }}</td>
             <td>{{ horario.funcionarios.personas.apellidos }}</td>
             <td>{{ horario.estado }}</td>
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/horario', horario.horarioDisponibleId ]">
+            <td (click)="editar($event, horario.horarioDisponibleId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pacientes',
@@ -28,6 +29,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
 
   constructor( private pacientesService: PacientesService,
     private comunes: ComunesService,
+    public router: Router,
     private fb: FormBuilder ) {    
   }
 
@@ -164,6 +166,11 @@ export class PacientesComponent implements OnDestroy, OnInit {
     this.pacientes = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['paciente', id]);
   }
 
   borrarPaciente(event, paciente: PacienteModelo ) {

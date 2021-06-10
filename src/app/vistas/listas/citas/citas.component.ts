@@ -17,6 +17,7 @@ import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-citas',
@@ -49,6 +50,7 @@ export class CitasComponent implements OnDestroy, OnInit {
 
 
   constructor( private citasService: CitasService,
+              public router: Router,
               private parametrosService: ParametrosService,
               private funcionariosService: FuncionariosService,
               private comunes: ComunesService,
@@ -524,6 +526,11 @@ export class CitasComponent implements OnDestroy, OnInit {
       this.buscadorForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
       this.buscadorForm.get('funcionarios').get('funcionarioCedula').setValue(funcionario.personas.cedula);
     }
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['cita', id]);
   }
 
   ngAfterViewInit(): void {

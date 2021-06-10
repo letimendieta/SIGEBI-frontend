@@ -99,9 +99,8 @@
             <td>{{ estamento.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ estamento.usuarioModificacion }}</td>      
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/estamento', estamento.estamentoId ]">
+            <td (click)="editar($event, estamento.estamentoId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

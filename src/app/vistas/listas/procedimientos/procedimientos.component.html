@@ -325,9 +325,8 @@
             <td>{{ procedimiento.estado }}</td>
             <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/procedimiento', procedimiento.procedimientoId ]">
+            <td (click)="editar($event, procedimiento.procedimientoId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

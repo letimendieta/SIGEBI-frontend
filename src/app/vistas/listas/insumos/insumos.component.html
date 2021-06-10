@@ -93,9 +93,8 @@
             <td>{{ insumo.caracteristicas }}</td>
             <td>{{ insumo.presentacion }}</td>
             <td>{{ insumo.unidadMedida }}</td>
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/insumo', insumo.insumoMedicoId ]">
+            <td (click)="editar($event, insumo.insumoMedicoId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

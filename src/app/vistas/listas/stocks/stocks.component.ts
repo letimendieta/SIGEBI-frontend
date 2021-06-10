@@ -12,6 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InsumosMedicosService } from 'src/app/servicios/insumosMedicos.service';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stocks',
@@ -42,6 +43,7 @@ export class StocksComponent implements OnDestroy, OnInit {
                private insumosService: InsumosMedicosService,
                private medicamentosService: MedicamentosService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder,
                private fb2: FormBuilder,
                private fb3: FormBuilder,
@@ -389,6 +391,11 @@ export class StocksComponent implements OnDestroy, OnInit {
         text: this.comunes.obtenerError(e)
       })
     });
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['stock', id]);
   }
 
   ngAfterViewInit(): void {

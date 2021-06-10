@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-areas',
@@ -26,6 +27,7 @@ export class AreasComponent implements OnDestroy, OnInit {
 
   constructor( private areasService: AreasService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder) {      
   }
 
@@ -169,6 +171,11 @@ export class AreasComponent implements OnDestroy, OnInit {
     this.rerender();
     this.dtTrigger.next();
     
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['area', id]);
   }
 
   borrarArea(event,area: AreaModelo ) {

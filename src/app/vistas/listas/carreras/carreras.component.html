@@ -99,9 +99,8 @@
             <td>{{ carrera.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ carrera.usuarioModificacion }}</td>    
 
-            <td>
-              <a class="btn btn-info"
-                [routerLink]="['/carrera', carrera.carreraId ]">
+            <td (click)="editar($event, carrera.carreraId )">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

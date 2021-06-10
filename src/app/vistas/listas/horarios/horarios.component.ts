@@ -11,6 +11,7 @@ import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { AreaModelo } from 'src/app/modelos/area.modelo';
 import { AreasService } from 'src/app/servicios/areas.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-horarios',
@@ -32,6 +33,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
   constructor( private horariosService: HorariosService,
+               public router: Router,
                private areasService: AreasService,
                private comunes: ComunesService,
                private fb: FormBuilder ) {    
@@ -217,6 +219,11 @@ export class HorariosComponent implements OnDestroy, OnInit {
     this.horarios = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['horario', id]);
   }
 
   borrarHorario(event, horario: HorarioModelo ) {

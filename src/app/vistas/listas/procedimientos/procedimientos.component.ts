@@ -13,6 +13,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-procedimientos',
@@ -45,6 +46,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
   constructor( private procedimientosService: ProcedimientosService,
               private pacientesService: PacientesService,
               private funcionariosService: FuncionariosService,
+              public router: Router,
               private comunes: ComunesService,
               private fb: FormBuilder,
               private fb2: FormBuilder,
@@ -481,6 +483,11 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       this.buscadorForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
       this.buscadorForm.get('funcionarios').get('funcionarioCedula').setValue(funcionario.personas.cedula);
     }
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['procedimiento', id]);
   }
 
   onSubmit() {

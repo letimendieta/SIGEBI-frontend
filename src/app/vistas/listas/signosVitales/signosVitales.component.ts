@@ -13,6 +13,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signosVitales',
@@ -46,6 +47,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
               private pacientesService: PacientesService,
               private funcionariosService: FuncionariosService,
               private comunes: ComunesService,
+              public router: Router,
               private fb: FormBuilder,
               private fb2: FormBuilder,
               private fb3: FormBuilder,
@@ -501,6 +503,11 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
           this.signoVitalForm.get('funcionarios').get('funcionarioId').setValue(null);
         }
       );*/
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['signoVital', id]);
   }
 
   onSubmit() {

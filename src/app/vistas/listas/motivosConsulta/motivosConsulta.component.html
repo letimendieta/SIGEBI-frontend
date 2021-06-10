@@ -100,9 +100,8 @@
             <td>{{ motivoConsulta.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ motivoConsulta.usuarioModificacion }}</td>     
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/motivoConsulta', motivoConsulta.motivoConsultaId ]">
+            <td (click)="editar($event, motivoConsulta.motivoConsultaId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

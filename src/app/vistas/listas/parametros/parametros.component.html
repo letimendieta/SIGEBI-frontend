@@ -115,9 +115,8 @@
             <td>{{ parametro.descripcionValor }}</td>
             <td>{{ parametro.estado }}</td>    
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/parametro', parametro.parametroId ]">
+            <td (click)="editar($event, parametro.parametroId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

@@ -90,9 +90,8 @@
             <td>{{ medicamento.forma }}</td>
             <td>{{ medicamento.viaAdmin }}</td>
             <td>{{ medicamento.presentacion }}</td>
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/medicamento', medicamento.medicamentoId ]">
+            <td (click)="editar($event, medicamento.medicamentoId)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

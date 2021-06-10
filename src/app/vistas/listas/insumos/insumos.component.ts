@@ -7,6 +7,7 @@ import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-insumos',
@@ -27,6 +28,7 @@ export class InsumosComponent implements OnInit {
 
   constructor( private insumosMedicosService: InsumosMedicosService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder) {    
   }
 
@@ -154,6 +156,11 @@ export class InsumosComponent implements OnInit {
     this.insumos = [];
     this.rerender();
     this.dtTriggerInsumos.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['insumo', id]);
   }
 
   borrarInsumo(event, insumo: InsumoMedicoModelo ) {

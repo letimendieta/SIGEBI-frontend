@@ -7,6 +7,7 @@ import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-medicamentos',
@@ -28,6 +29,7 @@ export class MedicamentosComponent implements OnInit {
 
   constructor( private medicamentosService: MedicamentosService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder) {    
   }
 
@@ -156,6 +158,11 @@ export class MedicamentosComponent implements OnInit {
     this.rerender();
     this.dtTriggerMedicamentos.next();
 
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['medicamento', id]);
   }
 
   borrarMedicamento(event, medicamento: MedicamentoModelo ) {

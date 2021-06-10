@@ -110,9 +110,8 @@
             <td>{{ enfermedadCie10.fechaModificacion | date : 'dd-MM-yyyy HH:mm:ss' }}</td>
             <td>{{ enfermedadCie10.usuarioModificacion }}</td>     
 
-            <td>
-              <a class="btn btn-info"
-                      [routerLink]="['/enfermedadCie10', enfermedadCie10.enfermedadCie10Id ]">
+            <td (click)="editar($event, enfermedadCie10.enfermedadCie10Id)">
+              <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>
             </td>

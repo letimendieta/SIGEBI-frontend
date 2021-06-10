@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dependencias',
@@ -27,6 +28,7 @@ export class DependenciasComponent implements OnDestroy, OnInit {
 
   constructor( private dependenciasService: DependenciasService,
                private comunes: ComunesService,
+               public router: Router,
                private fb: FormBuilder ) {       
   }
 
@@ -157,6 +159,11 @@ export class DependenciasComponent implements OnDestroy, OnInit {
     this.dependencias = [];
     this.rerender();
     this.dtTrigger.next();
+  }
+
+  editar(event, id: number) {
+    event.preventDefault();
+    this.router.navigate(['dependencia', id]);
   }
 
   borrarDependencia(event, dependencia: DependenciaModelo ) {
