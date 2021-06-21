@@ -357,7 +357,7 @@
                                                             <option value=null>Seleccionar</option>
                                                             <option *ngFor="let item of listaAreas; let i = index"
                                                                   value="{{item.areaId}}">
-                                                                  {{item.areaId}} - {{item.codigo}} - {{item.descripcion}}
+                                                                  {{item.codigo}} - {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                       <small *ngIf="areaNoValido" class="text-danger">
@@ -390,7 +390,7 @@
                                                             <option value=null>Seleccionar</option>
                                                             <option *ngFor="let item of listaMotivosConsulta; let i = index"
                                                                   value="{{item.motivoConsultaId}}">
-                                                                  {{item.motivoConsultaId}} - {{item.codigo}} - {{item.descripcion}}
+                                                                  {{item.codigo}} - {{item.descripcion}}
                                                             </option>
                                                       </select>
                                                       <small *ngIf="motivoNoValido" class="text-danger">
@@ -654,7 +654,8 @@
                                                             </div>
                                                       </div>
                                                 </ng-template>
-                                          </div>                      
+                                          </div>  
+
                                           <div *ngIf="alertMedicamentos" class="alert alert-danger alert-dismissible fade show" role="alert">
                                                 El medicamento ya existe
                                                 <button type="button" (click)="cerrarAlertMedicamento()" class="close" data-dismiss="alert" aria-label="Close">
@@ -719,7 +720,9 @@
                                                       </table>
                                                 </div>
                                           </div>
-                                          <br>
+                                    </div>
+                                    <div class="form-row justify-content-center">
+
                                           <div *ngIf="alertInsumosMedicos" class="alert alert-danger alert-dismissible fade show" role="alert">
                                                 El insumo m&eacute;dico ya existe
                                                 <button type="button" (click)="cerrarAlertInsumoMedico()" class="close" data-dismiss="alert" aria-label="Close">

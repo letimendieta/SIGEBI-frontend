@@ -164,14 +164,11 @@ export class PacienteComponent implements OnInit {
           if( resp.length > 0 ){      
             this.historialClinicoForm.patchValue(resp[0]);
             if( resp[0].pacienteId &&  resp[0].pacienteId ){
-              //this.historialClinicoForm.get('pacientes').patchValue(resp[0].pacienteId);
               this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
               var cedula = this.pacienteForm.get('personas').get('cedula').value;
-              //var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
               this.fileInfosHistorialClinico = this.uploadService.getFilesName(cedula + '_' + this.hcid + '_', "HC");
 
-              this.obtenerPreguntasSeleccionadas();
-              
+              this.obtenerPreguntasSeleccionadas();              
             }
           }else{
             this.listarPreguntas(); 
@@ -181,8 +178,7 @@ export class PacienteComponent implements OnInit {
       this.obtenerAntecedentesSeleccionados(id);
       this.obtenerAlergiasSeleccionados(id);
       this.obtenerAntecedentesFamiliaresSeleccionados(id);
-      this.obtenerVacunasSeleccionadas(id);
-      
+      this.obtenerVacunasSeleccionadas(id);      
 
     }else{
       this.crear = true; 
@@ -595,6 +591,7 @@ export class PacienteComponent implements OnInit {
           this.pacienteForm.get('personas').patchValue(resp[0]);
           this.pacienteForm.get('personas').disable();
           this.ageCalculator();
+          this.validarPaciente();
         }
       }, e => {
           Swal.fire({
@@ -604,6 +601,25 @@ export class PacienteComponent implements OnInit {
           this.pacienteForm.get('personas').get('personaId').setValue(null);
         }
       );
+  }
+
+  validarPaciente(){
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscadorPaciente: PacienteModelo = new PacienteModelo();
+
+    persona.cedula = this.pacienteForm.get('personas').get('cedula').value; 
+    buscadorPaciente.personas = persona;
+    
+    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    .subscribe( ( resp : PacienteModelo[] ) => {
+      if(resp && resp.length > 0){
+        Swal.fire({
+          icon: 'info',
+          title: 'Atención',
+          text: 'La persona con cédula '+ this.pacienteForm.get('personas').get('cedula').value +' ya ha sido registrada como paciente'
+        });
+      }
+    });
   }
   
   listarCarreras() {
@@ -757,7 +773,7 @@ export class PacienteComponent implements OnInit {
             if ( paciente.pacienteId ) {
               this.router.navigate(['/pacientes']);
             }else{
-              this.limpiar();
+              this.limpiar(event);
             }
           }
         });
@@ -788,7 +804,8 @@ export class PacienteComponent implements OnInit {
     }
   }
 
-  limpiar(){
+  limpiar(event){
+    event.preventDefault();
     this.pacienteForm.reset();
     this.pacienteForm.get('personas').enable();
   }

@@ -54,7 +54,7 @@
                                                       <div formGroupName="personas" class="row justify-content-center">
                                                             <div class="col-lg-5">
                                                                   <div class="form group">
-                                                                        <label><b>Persona id</b></label>
+                                                                        <!--label><b>Persona id</b></label>
                                                                         <div class="input-group mb-3">
                                                                               <input type="number" class="form-control"
                                                                                     placeholder="Persona id" formControlName="personaId"
@@ -76,7 +76,7 @@
                                                                                     [hidden]="!crear"
                                                                                     (click)="openModal(editProfileModal)"><i
                                                                                           class="fas fa-search"></i></button>
-                                                                        </div>
+                                                                        </div-->
                                                                         <!--Modal buscador de personas-->
                                                                         <ng-template #editProfileModal let-modal>
                                                                               <div class="modal-header">
@@ -525,7 +525,7 @@
                                                             <button type="submit" class="btn btn-primary ">
                                                                   <i class="fa fa-save"></i> Guardar</button>
                                                             &nbsp;
-                                                            <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning"><i
+                                                            <button (click)="limpiar($event)" [hidden]="!crear" class="btn btn-warning"><i
                                                                         class="fas fa-backspace"></i> Limpiar</button>
                                                       </div>
                                                 </form>
@@ -753,7 +753,7 @@
                                                     Guardar
                                                   </button>
                                                   &nbsp;&nbsp;
-                                                  <button (click)="limpiar()" [hidden]="!crear" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
+                                                  <button (click)="limpiar($event)" [hidden]="!crear" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
                                                 </div>
                                     
                                           </form>   

@@ -374,6 +374,7 @@ export class ProcedimientoComponent implements OnInit {
           this.procedimientosMedicamentos[k].cantidad = Number(cantidades[k].value);
         }
       }
+      this.procedimientosMedicamentos[i].insumosMedicos = null;
       procedimientoInsumo.push(this.procedimientosMedicamentos[i]);
     }
 
