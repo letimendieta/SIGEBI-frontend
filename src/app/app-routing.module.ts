@@ -46,7 +46,7 @@ import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCi
 import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
-
+import { ReportesComponent } from 'src/app/vistas/formularios/reportes/reportes.component';
 import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
 
 
@@ -208,7 +208,11 @@ const routes: Routes = [
   },{
     path: 'enfermedadCie10/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: EnfermedadCie10Component
-  }
+  },
+  {
+    path: 'reporteGeneral',canActivate: [guard], data: { expectedRol: ['admin'] },
+    component: ReportesComponent
+  },
   ]
 }];
 

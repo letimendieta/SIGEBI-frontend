@@ -93,8 +93,14 @@
    			<li>
    				<a routerLinkActive="list-item-active"  routerLink="/usuarios"(click)="toggleSideBar()"><i class="fas fa-users-cog fa-2x"></i>  Usuarios</a>
          </li>
-         <li>
-          <a routerLinkActive="list-item-active" routerLink="/" (click)="toggleSideBar()" ><i class="fas fa-file-alt fa-2x"></i> Reportes</a>
+         <li class="active">
+          <a href="#reporteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-address-book fa-2x"></i>  Reportes</a>
+          <ul class="collapse list-unstyled" id="reporteSubmenu">
+           <li>
+             <a routerLinkActive="list-item-active"  routerLink="/reporteGeneral" (click)="toggleSideBar()">Reporte Mensual</a>
+           </li>            					
+                     
+          </ul> 
         </li>
    			
    		</ul>

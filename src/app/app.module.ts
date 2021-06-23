@@ -20,11 +20,14 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import {FileUploadModule} from 'primeng/fileupload';
+import { ReportesComponent } from './vistas/formularios/reportes/reportes.component';
+
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ReportesComponent,
   ],
   imports: [
     BrowserModule,
