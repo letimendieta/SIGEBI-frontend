@@ -45,14 +45,17 @@
                                           <!-- Datos Paciente-->
                                           <div formGroupName="pacientes" class="col-lg-5">                              
                                                 <div class="form group">
-                                                      <label><b>Paciente id</b><span class="requerido"> *</span></label>
+                                                      <label><b>Paciente id</b><span class="requerido"> *</span>                                           
+                                                            <img *ngIf="loadPaciente" src="../assets/images/loading2.gif">
+                                                      </label>
                                                       <div class="input-group mb-3">
                                                             <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Paciente id"
                                                                   formControlName="pacienteId"
                                                                   [class.is-invalid]="pacienteIdNoValido"
-                                                                  name="pacienteId">
+                                                                  name="pacienteId"
+                                                                  (keyup.enter)="obtenerPaciente($event)">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" [disabled]="consultaId != null"
                                                                         (click)="obtenerPaciente($event)">
@@ -195,14 +198,17 @@
                                           <!-- Datos del Funcionario-->
                                           <div formGroupName="funcionarios" class="col-lg-5">                              
                                                 <div class="form group">
-                                                      <label><b>Funcionario id</b><span class="requerido"> *</span></label>                           
+                                                      <label><b>Funcionario id</b><span class="requerido"> *</span>
+                                                            <img *ngIf="loadFuncionario" src="../assets/images/loading2.gif">
+                                                      </label>                           
                                                       <div class="input-group mb-3">
                                                             <input type="number"
                                                                   class="form-control"
                                                                   placeholder="Funcionario id"
                                                                   formControlName="funcionarioId"
                                                                   [class.is-invalid]="funcionarioIdNoValido"
-                                                                  name="funcionarioId">
+                                                                  name="funcionarioId"
+                                                                  (keyup.enter)="obtenerFuncionario($event)">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" [disabled]="consultaId != null"
                                                                   (click)="obtenerFuncionario($event)">
@@ -412,31 +418,50 @@
                                     <div class="form-row justify-content-center">
                                           <div class="col-lg-5">
                                                 <div class="form-group">
-                                                      <label><b>Insumo m&eacute;dico id</b></label>
+                                                      <label><b>Medicamento id</b>
+                                                            <img *ngIf="loadMedicamento" src="../assets/images/loading2.gif">
+                                                      </label>
                                                       <div class="input-group mb-3">
                                                             <input type="text"
                                                                   class="form-control"
-                                                                  name="insumoId"                                     
-                                                                  placeholder="Insumo id">
-                                                                  
+                                                                  name="medicamentoId" 
+                                                                  id="medicamentoId"                                    
+                                                                  placeholder="Medicamento id"
+                                                                  (keyup.enter)="buscarMedicamento($event)">
+                                                                  <div class="input-group-append">
+                                                                        <button class="btn btn-outline-info" [disabled]="consultaId != null"
+                                                                              (click)="buscarMedicamento($event)">
+                                                                              Buscar
+                                                                        </button>
+                                                                  </div>
+
                                                                   <div class="input-group-append">
                                                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                                               <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
-                                                                                    (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
+                                                                                    (click)="openModalStock(editProfileModalStock, 'Medicamentos')"><i class="fas fa-search"></i></button>
                                                                   </div>
                                                       </div>
-
-                                                      <label><b>Medicamento id</b></label>
+                                                      <label><b>Insumo m&eacute;dico id</b>
+                                                            <img *ngIf="loadInsumo" src="../assets/images/loading2.gif">
+                                                      </label>
                                                       <div class="input-group mb-3">
                                                             <input type="text"
                                                                   class="form-control"
-                                                                  name="medicamentoId"                                     
-                                                                  placeholder="Medicamento id">
+                                                                  name="insumoId"
+                                                                  id="insumoId"                                    
+                                                                  placeholder="Insumo id"
+                                                                  (keyup.enter)="buscarInsumo($event)">
+                                                                  <div class="input-group-append">
+                                                                        <button class="btn btn-outline-info" [disabled]="consultaId != null"
+                                                                              (click)="buscarInsumo($event)">
+                                                                              Buscar
+                                                                        </button>
+                                                                  </div>
                                                                   
                                                                   <div class="input-group-append">
                                                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                                               <button type="button" class="btn btn-primary" [disabled]="consultaId != null"
-                                                                                    (click)="openModalStock(editProfileModalStock)"><i class="fas fa-search"></i></button>
+                                                                                    (click)="openModalStock(editProfileModalStock, 'Insumos')"><i class="fas fa-search"></i></button>
                                                                   </div>
                                                       </div>
                                                 </div>
@@ -449,7 +474,9 @@
                                                 <!--Modal buscador de Insumos medicos y  Medicamentos en el Stock-->
                                                 <ng-template #editProfileModalStock let-modal>
                                                       <div class="modal-header">
-                                                            <h3 class="modal-title" id="editProfileLabelStock">Buscador de Insumos m&eacute;dicos / Medicamentos</h3>
+                                                            <h3 class="modal-title" id="editProfileLabelStock">Buscador de {{buscador}}
+                                                                  <img *ngIf="loadBuscador" src="../assets/images/loading2.gif">
+                                                            </h3>
                                                             <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span> 
                                                             </button>
@@ -463,10 +490,7 @@
                                                       <div class="modal-body">
                                                             <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
                                                                   <div class="form-row justify-content-center">
-                                                                        <div>      
-                                                                              <div>                                                                                    
-                                                                                    <label><b>Medicamentos</b></label>
-                                                                              </div>
+                                                                        <div [hidden]="buscador == 'Insumos'">
                                                                               <div>                                                                                    
                                                                                     <mat-form-field appearance="legacy">
                                                                                           <mat-label>Medicamento id</mat-label>
@@ -488,10 +512,7 @@
                                                                                   
                                                                               </div>                                                
                                                                         </div>
-                                                                        <div> 
-                                                                              <div>
-                                                                                    <label><b>Insumos m&eacute;dicos</b></label>                                                                                    
-                                                                              </div>
+                                                                        <div [hidden]="buscador == 'Medicamentos'">                                                                              
                                                                               <div>
                                                                                     <mat-form-field appearance="legacy">
                                                                                           <mat-label>Insumo Medico id</mat-label>
@@ -525,7 +546,7 @@
                                                             </form>
                                                             <br>
                                                             <div [hidden]="busquedaMedicamento == false">
-                                                                  <!--Tabla vacia-->
+                                                                  <!--Tabla vacia>
                                                                   <div class="table-responsive table-hover">
                                                                         <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
                                                                         *ngIf="stocksMedicamentos.length === 0">
@@ -542,7 +563,7 @@
                                                                                     </tr>
                                                                               </thead>                                                                                    
                                                                         </table>
-                                                                  </div>
+                                                                  </div-->
                                                                   <div class="table-responsive table-hover">
                                                                         <table datatable [dtOptions]="dtOptionsStock" class="table-bordered"
                                                                               *ngIf="stocksMedicamentos.length > 0">
@@ -590,7 +611,7 @@
                                                             </div>
 
                                                             <div [hidden]="busquedaInsumoMedico == false">
-                                                                  <!--Tabla vacia-->
+                                                                  <!--Tabla vacia>
                                                                   <div class="table-responsive table-hover">
                                                                         <table datatable [dtOptions]="dtOptionsStockInsumoMedico" class="table-bordered"
                                                                         *ngIf="stocksInsumoMedico.length === 0">
@@ -605,7 +626,7 @@
                                                                                     </tr>
                                                                               </thead>                                                                                    
                                                                         </table>
-                                                                  </div>
+                                                                  </div-->
                                                                   <div class="table-responsive table-hover">
                                                                         <table datatable [dtOptions]="dtOptionsStockInsumoMedico" class="table-bordered"
                                                                               *ngIf="stocksInsumoMedico.length > 0">
@@ -702,8 +723,9 @@
                                                                               <div [hidden]="crear == false && procedimientoPendiente == false">
                                                                                     <select size="1" id="estado" name="estado">                                                                             
                                                                                           <option *ngFor="let item of listaEstadosEntrega; let i = index"
-                                                                                                value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
-                                                                                                {{item.descripcionValor}}
+                                                                                                value="{{item.valor}}" 
+                                                                                                      selected="item.valor == 'ENT'">
+                                                                                                      {{item.valor}} - {{item.descripcionValor}}
                                                                                           </option>
                                                                                     </select>
                                                                               </div>
@@ -763,26 +785,13 @@
                                                                                     {{ procedimientoInsumo.cantidad }}
                                                                               </div>
                                                                         </td>
-                                                                        <!--td>
-                                                                              <div [hidden]="!crear">
-                                                                                    <select class="form-control input-sm" name="medida" id="medida">
-                                                                                          <option value=null>Seleccionar</option>
-                                                                                          <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
-                                                                                          value="{{medida.valor}}">
-                                                                                          {{medida.descripcionValor}}
-                                                                                          </option>
-                                                                                    </select>
-                                                                              </div>
-                                                                              <div [hidden]="crear">
-                                                                                    {{ procedimientoInsumo.medida }}
-                                                                              </div>
-                                                                        </td-->
                                                                         <td>
                                                                               <div [hidden]="crear == false && procedimientoPendiente == false">
                                                                                     <select size="1" id="estado" name="estado">                                                                             
                                                                                           <option *ngFor="let item of listaEstadosEntrega; let i = index"
-                                                                                                value="{{item.valor}}" selected="{{item.valor}} == {{ procedimientoInsumo.estado }}">
-                                                                                                {{item.descripcionValor}}
+                                                                                                value="{{item.valor}}" 
+                                                                                                      selected="item.valor == 'ENT'">
+                                                                                                      {{item.valor}} - {{item.descripcionValor}}
                                                                                           </option>
                                                                                     </select>
                                                                               </div>
@@ -816,14 +825,7 @@
                                                 </div>
                                           </div>
                                     </div>
-
-                                    <!--div class="input-group mb-3">
-                                          <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile02">
-                                                <label class="custom-file-label" for="inputGroupFile02">Elegir Archivo</label>
-                                          </div>                        
-                                    </div-->
-                                    
+    
                                     <div class="form-row justify-content-center" [hidden]="crear">
                                           <div class="col-lg-5"> 
                                                 <div class="form-group">

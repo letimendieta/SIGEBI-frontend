@@ -107,9 +107,7 @@ export class StockComponent implements OnInit {
 
   selectInsumo(event, insumo: InsumoMedicoModelo){
     this.modalService.dismissAll();
-    /*if(insumo.insumoMedicoId){
-      this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(insumo.insumoMedicoId);
-    }*/
+    
     this.insumosMedicosService.getInsumo( insumo.insumoMedicoId )
       .subscribe( (resp: InsumoMedicoModelo) => {
         this.stockForm.reset();
@@ -159,7 +157,7 @@ export class StockComponent implements OnInit {
 
     this.stock = this.stockForm.getRawValue();
 
-    var cantidadModificar = ((document.getElementById("cantidadModificar") as HTMLInputElement).value);//Number(document.getElementById('cantidadModificar').innerHTML);//document.getElementById('cantidadModificar'));
+    var cantidadModificar = ((document.getElementById("cantidadModificar") as HTMLInputElement).value);
 
     if( !cantidadModificar ){
       this.alertGuardar = true;
@@ -228,7 +226,7 @@ export class StockComponent implements OnInit {
     this.stockForm.reset();
     this.stockForm.get('insumosMedicos').get('insumoMedicoId').setValue(null);
     this.stockForm.get('medicamentos').get('medicamentoId').setValue(null);
-    document.getElementById("cantidadModificar").innerHTML = null;
+    (document.getElementById("cantidadModificar") as HTMLInputElement).value = null;
   }
 
   limpiarModalMedicamento(event) {
@@ -253,10 +251,6 @@ export class StockComponent implements OnInit {
       }
     return mensaje;  
   }
-
-  /*get cantidadNoValido() {
-    return ((document.getElementById("cantidadModificar") as HTMLInputElement)).oninvalid
-  }*/
 
   crearFormulario() {
 

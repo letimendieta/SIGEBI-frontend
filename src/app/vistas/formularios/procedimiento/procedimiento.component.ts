@@ -76,6 +76,10 @@ export class ProcedimientoComponent implements OnInit {
   finalizado = false;
   busquedaMedicamento = false;
   busquedaInsumoMedico = false;
+  buscador = "";
+  loadPaciente = false; loadFuncionario = false;
+  loadMedicamento = false; loadInsumo = false;
+  loadBuscador = false;
 
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
@@ -97,7 +101,6 @@ export class ProcedimientoComponent implements OnInit {
 
   ngOnInit() {
     this.listarMotivosConsultas();
-    //this.listarMedidasMedicamentos();
     this.crearTablaInsumosMedicos();
     this.crearTablaMedicamentos();
     this.crearTablaModelFuncionarios();
@@ -133,10 +136,13 @@ export class ProcedimientoComponent implements OnInit {
     if(!id){
       return null;
     }
+    this.loadPaciente = true;
     this.pacientesService.getPaciente( id )
-        .subscribe( (resp: PacienteModelo) => {         
+        .subscribe( (resp: PacienteModelo) => {  
+          this.loadPaciente = false;       
           this.procedimientoForm.get('pacientes').patchValue(resp);         
         }, e => {
+          this.loadPaciente = false;
             Swal.fire({
               icon: 'info',
               text: this.comunes.obtenerError(e),
@@ -151,10 +157,13 @@ export class ProcedimientoComponent implements OnInit {
     if(!id){
       return null;
     }
+    this.loadFuncionario = true;
     this.funcionariosService.getFuncionario( id )
-      .subscribe( (resp: FuncionarioModelo) => {          
+      .subscribe( (resp: FuncionarioModelo) => {   
+        this.loadFuncionario = false;       
         this.procedimientoForm.get('funcionarios').patchValue(resp);
       }, e => {
+        this.loadFuncionario = false;       
           Swal.fire({
             icon: 'info',
             text: this.comunes.obtenerError(e),
@@ -190,29 +199,7 @@ export class ProcedimientoComponent implements OnInit {
       })
     });
   }
-
-  /*obtenerProcedimientoPorPaciente(pacienteId) {
-    
-    this.procedimientosService.obtenerProcedimientoPaciente(pacienteId)
-    .subscribe( resp => {
-      if( resp.length > 0 ){
-        if( resp[0].consultaId ){
-          this.procedimientoPendiente = true;
-        } 
-        this.procedimientoForm.patchValue(resp[0]);
-        this.procedimientoForm.get('funcionarios').get('funcionarioId').disable();
-        this.procedimientoForm.get('areas').get('areaId').disable();
-        this.procedimientoForm.get('fecha').disable();
-      }
-    }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-    });
-  }*/
-
+  
   listarEstadosEntrega() {
     var orderBy = "descripcion";
     var orderDir = "asc";
@@ -226,19 +213,6 @@ export class ProcedimientoComponent implements OnInit {
         this.listaEstadosEntrega = resp;
     });
   }
-
-  /*listarMedidasMedicamentos() {
-    var unidadMedidaParam = new ParametroModelo();
-    unidadMedidaParam.codigoParametro = "UNI_MEDIDA_MEDICAMENTOS";
-    unidadMedidaParam.estado = "A";
-    var orderBy = "descripcionValor";
-    var orderDir = "asc";
-
-    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
-      .subscribe( (resp: ParametroModelo) => {
-        this.listaMedidasMedicamentos = resp;
-    });
-  }*/
 
   listarMotivosConsultas() {
     var orderBy = "descripcion";
@@ -602,13 +576,13 @@ export class ProcedimientoComponent implements OnInit {
     insumoMedico.codigo = this.buscadorStockForm.get('codigoInsumo').value;
     insumoMedico.nombre = this.buscadorStockForm.get('nombre').value;
 
-    if(!medicamento.medicamentoId && !medicamento.medicamento
+    if(!medicamento.medicamentoId && !medicamento.medicamento && !medicamento.codigo
       && !insumoMedico.insumoMedicoId && !insumoMedico.codigo
       && !insumoMedico.nombre){
       this.alert=true;
       return;
     }
-    if(!medicamento.medicamentoId && !medicamento.medicamento){
+    if(!medicamento.medicamentoId && !medicamento.medicamento && !medicamento.codigo){
       medicamento = null;
     }
     if(!insumoMedico.insumoMedicoId && !insumoMedico.codigo
@@ -619,24 +593,133 @@ export class ProcedimientoComponent implements OnInit {
     buscador.medicamentos = medicamento;
     buscador.insumosMedicos = insumoMedico;
 
+    this.loadBuscador = true;
     this.stockService.buscarStocksFiltrosTabla(buscador)
     .subscribe( ( resp : StockModelo[] ) => {
+      this.loadBuscador = false;
       var stocks = resp;
 
-      for (let i = 0; i < stocks.length; i++) {
-        if(stocks[i].insumosMedicos && stocks[i].insumosMedicos.insumoMedicoId){
-          this.busquedaInsumoMedico = true;
-          this.busquedaMedicamento = false;
-          this.stocksInsumoMedico = stocks;
+      if(stocks.length > 0){
+        for (let i = 0; i < stocks.length; i++) {
+          if(stocks[i].insumosMedicos && stocks[i].insumosMedicos.insumoMedicoId){
+            this.busquedaInsumoMedico = true;
+            this.busquedaMedicamento = false;
+            this.stocksInsumoMedico = stocks;
+          }
+          if(stocks[i].medicamentos && stocks[i].medicamentos.medicamentoId){            
+            this.busquedaMedicamento = true;
+            this.busquedaInsumoMedico = false;
+            this.stocksMedicamentos = stocks;
+          }
         }
-        if(stocks[i].medicamentos && stocks[i].medicamentos.medicamentoId){
-          this.stocksMedicamentos = stocks;
-          this.busquedaMedicamento = true;
-          this.busquedaInsumoMedico = false;
-        }
-      } 
+      }else{
+        this.busquedaInsumoMedico = false;
+        this.busquedaMedicamento = false;       
+      }  
 
     }, e => {
+      this.loadBuscador = false;
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  buscarInsumo(event) {
+    event.preventDefault();
+    var buscador = new StockModelo();
+    var insumoMedico = new InsumoMedicoModelo();
+
+    var insumoIdInput = (document.getElementById("insumoId") as HTMLInputElement).value;
+
+    if( !insumoIdInput ){
+      return;
+    }
+    insumoMedico.insumoMedicoId = Number(insumoIdInput);    
+    
+    buscador.insumosMedicos = insumoMedico;
+    this.loadInsumo = true;
+    this.stockService.buscarStocksFiltrosTabla(buscador)
+    .subscribe( ( resp : StockModelo[] ) => {
+      this.loadInsumo = false;
+      var stocks = resp;
+      if( stocks.length > 0 ){ 
+        (document.getElementById("insumoId") as HTMLInputElement).value = null;
+
+        var procedimientoInsumo: ProcedimientoInsumoModelo  = new ProcedimientoInsumoModelo();
+        procedimientoInsumo.insumosMedicos = stocks[0].insumosMedicos;
+
+        if(this.procedimientosInsumosMedicos.length > 0){
+          for (let i = 0; i < this.procedimientosInsumosMedicos.length; i++) {
+            if(this.procedimientosInsumosMedicos[i].insumosMedicos.insumoMedicoId == stocks[0].insumosMedicos.insumoMedicoId){
+              this.alertInsumosMedicos=true;
+              return null;
+            }
+          }
+          $('#tableInsumosMedicos').DataTable().destroy();
+          this.procedimientosInsumosMedicos.push(procedimientoInsumo);
+          this.dtTriggerInsumosMedicos.next();
+        }else{
+          $('#tableInsumosMedicos').DataTable().destroy();
+          this.procedimientosInsumosMedicos.push(procedimientoInsumo);
+          this.dtTriggerInsumosMedicos.next();        
+        }
+      }
+    }, e => {
+      this.loadInsumo = false;
+      Swal.fire({
+        icon: 'info',
+        title: 'Algo salio mal',
+        text: this.comunes.obtenerError(e)
+      })
+    });
+  }
+
+  buscarMedicamento(event) {    
+    event.preventDefault();
+    var buscador = new StockModelo();
+    var medicamento = new MedicamentoModelo();
+
+    var medicamentoIdInput = (document.getElementById("medicamentoId") as HTMLInputElement).value;
+
+    if( !medicamentoIdInput ){
+      return;
+    }
+    medicamento.medicamentoId = Number(medicamentoIdInput);    
+    
+    buscador.medicamentos = medicamento;
+
+    this.loadMedicamento = true;
+    this.stockService.buscarStocksFiltrosTabla(buscador)
+    .subscribe( ( resp : StockModelo[] ) => {
+      this.loadMedicamento = false;
+      var stocks = resp;
+      if( stocks.length > 0 ){  
+        (document.getElementById("medicamentoId") as HTMLInputElement).value = null;
+
+        var procedimientoInsumo: ProcedimientoInsumoModelo  = new ProcedimientoInsumoModelo();
+        procedimientoInsumo.medicamentos = stocks[0].medicamentos;
+
+        if(this.procedimientosMedicamentos.length > 0){
+          for (let i = 0; i < this.procedimientosMedicamentos.length; i++) {
+            if(this.procedimientosMedicamentos[i].medicamentos.medicamentoId == stocks[0].medicamentos.medicamentoId){
+              this.alertMedicamentos=true;
+              return null;
+            }
+          }
+          $('#tableMedicamentos').DataTable().destroy();
+          this.procedimientosMedicamentos.push(procedimientoInsumo);
+          this.dtTriggerMedicamentos.next();
+        }else{
+          $('#tableMedicamentos').DataTable().destroy();
+          this.procedimientosMedicamentos.push(procedimientoInsumo);
+          this.dtTriggerMedicamentos.next();        
+        }
+      }
+    }, e => {
+      this.loadMedicamento = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
@@ -914,7 +997,8 @@ export class ProcedimientoComponent implements OnInit {
     this.funcionarios = [];
     this.alert=false;
   }
-  openModalStock(targetModal) {
+  openModalStock(targetModal, tipo) {
+    this.buscador = tipo;
     this.modalService.open(targetModal, {
      centered: true,
      backdrop: 'static',
