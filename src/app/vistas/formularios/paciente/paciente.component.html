@@ -204,16 +204,6 @@
                                                                   </div>
                                                                   
                                                                   <div class="form-group">
-                                                                        <label><b>Nombres</b><span class="requerido"> *</span></label>
-                                                                        <input type="text" class="form-control"
-                                                                              placeholder="Nombres" formControlName="nombres"
-                                                                              name="nombres" [class.is-invalid]="nombreNoValido">
-                                                                        <small *ngIf="nombreNoValido" class="text-danger">
-                                                                              Ingrese el nombre
-                                                                        </small>
-                                                                  </div>
-                                                                                                                  
-                                                                  <div class="form-group">
                                                                         <label><b>C&eacute;dula</b><span class="requerido"> *</span></label>                                                      
                                                                         <input type="text" class="form-control"
                                                                               placeholder="C&eacute;dula" name="cedula"
@@ -224,7 +214,17 @@
                                                                               Ingrese la c&eacute;dula
                                                                         </small>
                                                                   </div>
-                                                                  
+
+                                                                  <div class="form-group">
+                                                                        <label><b>Nombres</b><span class="requerido"> *</span></label>
+                                                                        <input type="text" class="form-control"
+                                                                              placeholder="Nombres" formControlName="nombres"
+                                                                              name="nombres" [class.is-invalid]="nombreNoValido">
+                                                                        <small *ngIf="nombreNoValido" class="text-danger">
+                                                                              Ingrese el nombre
+                                                                        </small>
+                                                                  </div>
+                                                                                                                                    
                                                                   <div class="form-group">
                                                                         <label><b>Fecha Nacimiento</b></label>
                                                                         <input type="date" class="form-control"
@@ -295,19 +295,7 @@
                                                             </div>
                   
                                                             <div class="col-lg-5">
-                                                                  <div>
-                                                                        <div class="form-group">
-                                                                              <label><b>Apellidos</b><span class="requerido"> *</span></label>
-                                                                              <input type="text" class="form-control"
-                                                                                    formControlName="apellidos" name="apellidos"
-                                                                                    placeholder="Apellidos"
-                                                                                    [class.is-invalid]="apellidoNoValido">
-                                                                              <small *ngIf="apellidoNoValido" class="text-danger">
-                                                                                    Ingrese el apellido
-                                                                              </small>
-                                                                        </div>
-                                                                  </div>
-                  
+
                                                                   <div class="form-group">
                                                                         <label><b>Sexo</b></label>
                                                                         <select ui-select2 class="form-control input-sm"
@@ -319,7 +307,20 @@
                                                                               </option>
                                                                         </select>
                                                                   </div>
-                  
+
+                                                                  <div>
+                                                                        <div class="form-group">
+                                                                              <label><b>Apellidos</b><span class="requerido"> *</span></label>
+                                                                              <input type="text" class="form-control"
+                                                                                    formControlName="apellidos" name="apellidos"
+                                                                                    placeholder="Apellidos"
+                                                                                    [class.is-invalid]="apellidoNoValido">
+                                                                              <small *ngIf="apellidoNoValido" class="text-danger">
+                                                                                    Ingrese el apellido
+                                                                              </small>
+                                                                        </div>
+                                                                  </div>                  
+                                                                             
                                                                   <div class="form-group">
                                                                         <label><b>Lugar nacimiento</b></label>
                                                                         <input type="text"

@@ -75,15 +75,12 @@
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <a class="nav-item nav-link active" id="nav-datosP-tab" data-toggle="tab" href="#nav-datosP" role="tab" aria-controls="nav-datosP" aria-selected="true">Datos Personales</a>
-        <!--a class="nav-item nav-link" id="nav-fichaM-tab" data-toggle="tab" href="#nav-fichaM" role="tab" aria-controls="nav-fichaM" aria-selected="false">Ficha M&eacute;dica</a-->
         <a class="nav-item nav-link" id="nav-historialC-tab" data-toggle="tab" href="#nav-historialC" role="tab" aria-controls="nav-historialC" aria-selected="false">Historial Cl&iacute;nico</a>
-        <!--a class="nav-item nav-link" id="nav-Anamnesis-tab" data-toggle="tab" href="#nav-Anamnesis" role="tab" aria-controls="nav-Anamnesis" aria-selected="false">Anamnesis</a-->
         <a class="nav-item nav-link" id="nav-tratamiento-tab" data-toggle="tab" href="#nav-tratamiento" role="tab" aria-controls="nav-tratamiento" aria-selected="false">Anamnesis, Diagn&oacute;stico y Tratamiento</a>
       </div>
     </nav>
 
     <!--Contenido de pestanas-->
-
     <div class="tab-content" id="nav-tabContent">
       <!--Datos Personales-->
       <div class="tab-pane fade show active" id="nav-datosP" role="tabpanel" aria-labelledby="nav-datosP-tab">
@@ -96,7 +93,9 @@
                   <div class="row">                
                     <ng-template #editProfileModalPacientes let-modal>
                       <div class="modal-header">
-                      <h3 class="modal-title" id="editProfileModalPacientes">Buscador Pacientes</h3>
+                      <h3 class="modal-title" id="editProfileModalPacientes">Buscador Pacientes
+                        <img *ngIf="loadBuscadorPacientes" src="../assets/images/loading2.gif">
+                      </h3>
                       <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                             <span aria-hidden="true">&times;</span> 
                       </button>
@@ -126,12 +125,14 @@
                                                     <input matInput type="text" placeholder="Apellidos" 
                                                           formControlName="apellidos" id="apellidos">
                                               </mat-form-field>
-                                        </div>
-                                        &nbsp;                                                                            
-                                        <div class="align-self-center">
-                                              <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
-                                              <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                        </div>
+                                        </div>                                        
+                                  </div>
+                                  <div class="form-row justify-content-center">
+                                    <div class="align-self-center">
+                                      <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                      &nbsp; &nbsp;
+                                      <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                    </div>
                                   </div>
                             </form>
                             <br>
@@ -327,9 +328,9 @@
                   <div class="col-lg-5"><b>Historial cl&iacute;nico id:</b></div>
                   <div class="col">{{historialClinicoForm.get('historialClinicoId').value}}</div>
                   <div class="w-100"></div>
-                  <div class="col-lg-5"><b>&Aacute;rea:</b></div>
+                  <!--div class="col-lg-5"><b>&Aacute;rea:</b></div>
                   <div class="col">{{historialClinicoForm.get('areas').get('descripcion').value}}</div>  
-                  <div class="w-100"></div>                                             
+                  <div class="w-100"></div-->                                             
                   <div class="col-lg-5"><b>Grupo Sangu&iacute;neo:</b></div>
                   <div class="col">{{pacienteForm.get('grupoSanguineo').value}}</div>
                   <div class="w-100"></div>
@@ -540,7 +541,6 @@
                   </div>
                   <hr>
                   <div class="detalleConsulta">
-                    <!--div class="col-lg-5"-->
                     <div class="card border-dark">  
                       <div class="card-header">Anamnesis</div>
                       <div class="card-body text-dark">           
@@ -878,26 +878,12 @@
           <br>
         </div>
       </div>
-      <!--Anamnesis-->
-      <!--div class="tab-pane fade" id="nav-Anamnesis" role="tabpanel" aria-labelledby="nav-Anamnesis-tab">
-        
-      </div-->
+      
       <!--Diagnostico y Tratamiento-->
-      <div class="tab-pane fade" id="nav-tratamiento" role="tabpanel" aria-labelledby="nav-tratamiento-tab">    
-        <!--br>
-        <div class="text-center">
-          <p>
-            <button class="btn btn-light" type="button" 
-              data-toggle="collapseConsulta" data-target=".multi-collapse" aria-expanded="false" 
-              aria-controls="collapseAnamnesis collapseNuevoDiagnostico collapseNuevoTratamiento">
-              <i class="fas fa-angle-double-up"></i>&nbsp;&nbsp;<i class="fas fa-angle-double-down"></i>
-              &nbsp;&nbsp; Desplegar/contraer todo
-            </button>
-          </p>
-        </div-->
+      <div class="tab-pane fade" id="nav-tratamiento" role="tabpanel" aria-labelledby="nav-tratamiento-tab">            
         <br>
         <div class="card">
-          <div class="card">
+          <div [hidden]="deshabilitarPestanhaAnamnesis" class="card">
             <h3 class="card-header" data-toggle="collapse" data-target="#collapseAnamnesis"
                   aria-expanded="true" 
                   aria-controls="collapseAnamnesis">Anamnesis
@@ -956,7 +942,7 @@
               <div class="nav nav-tabs" id="nav-tab-diagnostico" role="tablist">
                 <a class="nav-item nav-link active" id="nav-principal-tab" data-toggle="tab" href="#nav-principal" role="tab" aria-controls="nav-principal" aria-selected="true">Diagn&oacute;stico Principal</a>
                 <a class="nav-item nav-link" id="nav-secundario-tab" data-toggle="tab" href="#nav-secundario" role="tab" aria-controls="nav-secundario" aria-selected="false">Diagn&oacute;stico Secundario</a>
-                <a class="nav-item nav-link" id="nav-historialClinico-tab" data-toggle="tab" href="#nav-historialClinico" role="tab" aria-controls="nav-historialClinico" aria-selected="false">Actualizar Historial Cl&iacute;nico</a>
+                <a [hidden]="deshabilitarActualizarHC" class="nav-item nav-link" id="nav-historialClinico-tab" data-toggle="tab" href="#nav-historialClinico" role="tab" aria-controls="nav-historialClinico" aria-selected="false">Actualizar Historial Cl&iacute;nico</a>
               </div>
               <div class="tab-content" id="nav-tabContentDiagnostico">
                 <div class="tab-pane fade show active" id="nav-principal" role="tabpanel" aria-labelledby="nav-principal-tab">
@@ -1029,7 +1015,9 @@
                           <!--Modal buscador de Termino Estandar Principal-->
                           <ng-template #editProfileModalTerminoEstadndar let-modal>
                             <div class="modal-header">
-                                  <h3 class="modal-title" id="editProfileLabelTerminoEstandar">Buscador T&eacute;rmino Est&aacute;ndar</h3>
+                                  <h3 class="modal-title" id="editProfileLabelTerminoEstandar">Buscador T&eacute;rmino Est&aacute;ndar
+                                    <img *ngIf="loadBuscadorCie" src="../assets/images/loading2.gif">
+                                  </h3>
                                   <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                                   <span aria-hidden="true">&times;</span> 
                                   </button>
@@ -1042,34 +1030,37 @@
                                   </div>
                             <div class="modal-body">
                                   <form [formGroup]="buscadorEnfermedadesCie10Form" (ngSubmit)="buscadorEnfermedadCie10($event)">
-                                        <div class="form-row justify-content-center">
-                                              <div>                                           
-                                                <div>                                                   
-                                                  <mat-form-field appearance="legacy">
-                                                    <mat-label>Identificador</mat-label>
-                                                    <input matInput type="number" placeholder="Identificador" 
-                                                          formControlName="enfermedadCie10Id" id="enfermedadCie10Id">
-                                                  </mat-form-field>
-                                                  &nbsp;&nbsp;
-                                                  <mat-form-field appearance="legacy">
-                                                    <mat-label>C&oacute;digo</mat-label>
-                                                    <input matInput type="text" placeholder="C&oacute;digo" 
-                                                          formControlName="codigo" id="codigo">
-                                                  </mat-form-field>
-                                                  &nbsp;&nbsp;
-                                                  <mat-form-field appearance="legacy">
-                                                    <mat-label>Descripci&oacute;n</mat-label>
-                                                    <input matInput type="text" placeholder="Descripci&oacute;n" 
-                                                          formControlName="descripcion" id="descripcion">
-                                                  </mat-form-field>
-                                                </div>                                                
-                                              </div>
-                                              &nbsp; &nbsp; &nbsp;                                                                           
-                                              <div class="align-self-center">
-                                                    <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                                    <button (click)="limpiarModalTerminoEstandar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                              </div>
-                                        </div>
+                                    <div class="form-row justify-content-center">
+                                      <div>                                           
+                                        <div>                                                   
+                                          <mat-form-field appearance="legacy">
+                                            <mat-label>Identificador</mat-label>
+                                            <input matInput type="number" placeholder="Identificador" 
+                                                  formControlName="enfermedadCie10Id" id="enfermedadCie10Id">
+                                          </mat-form-field>
+                                          &nbsp;&nbsp;
+                                          <mat-form-field appearance="legacy">
+                                            <mat-label>C&oacute;digo</mat-label>
+                                            <input matInput type="text" placeholder="C&oacute;digo" 
+                                                  formControlName="codigo" id="codigo">
+                                          </mat-form-field>
+                                          &nbsp;&nbsp;
+                                          <mat-form-field appearance="legacy">
+                                            <mat-label>Descripci&oacute;n</mat-label>
+                                            <input matInput type="text" placeholder="Descripci&oacute;n" 
+                                                  formControlName="descripcion" id="descripcion">
+                                          </mat-form-field>
+                                        </div>                                                
+                                      </div>
+                                    </div>
+                                    <div class="form-row justify-content-center">
+                                      <div class="align-self-center">
+                                            <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                            &nbsp; &nbsp;
+                                            <button (click)="limpiarModalTerminoEstandar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                      </div>
+                                    </div>
+                                        
                                   </form>
                                   <br>
 
@@ -1128,7 +1119,7 @@
                     </div>
                   </form> 
                 </div>
-                <div class="tab-pane fade" id="nav-historialClinico" role="tabpanel" aria-labelledby="nav-historialClinico-tab">                    
+                <div [hidden]="deshabilitarActualizarHC" class="tab-pane fade" id="nav-historialClinico" role="tabpanel" aria-labelledby="nav-historialClinico-tab">                    
                   <br>                  
                   <form [formGroup]="selectFichaMedicaForm">
                     <div class="form-row" >
@@ -1236,7 +1227,7 @@
                       <div formGroupName="insumos" >
                         <br>
                         <label><b>Medicamento: </b></label>
-                        <div class="input-group mb-3"> 
+                        <div class="input-group mb-3" [hidden]="deshabilitarMedicamentos"> 
                             
                           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                               <button type="button" class="btn btn-primary" 
@@ -1247,7 +1238,9 @@
                       <!--Modal buscador de Medicamentos (Stock)-->
                       <ng-template #editProfileModalStock let-modal>
                             <div class="modal-header">
-                                  <h3 class="modal-title" id="editProfileLabelStock">Buscador de Medicamentos</h3>
+                                  <h3 class="modal-title" id="editProfileLabelStock">Buscador de Medicamentos
+                                    <img *ngIf="loadBuscadorMedicamentos" src="../assets/images/loading2.gif">
+                                  </h3>
                                   <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                                   <span aria-hidden="true">&times;</span> 
                                   </button>
@@ -1261,27 +1254,35 @@
                             <div class="modal-body">
                                   <form [formGroup]="buscadorStockForm" (ngSubmit)="buscadorStock($event)">
                                         <div class="form-row justify-content-center">
-                                              <div>                                           
-                                                <div>
-                                                  <mat-form-field appearance="legacy">
-                                                        <mat-label>Medicamento id</mat-label>
-                                                        <input matInput type="number" placeholder="Medicamento id" 
-                                                              formControlName="medicamentoId" id="medicamentoId">
-                                                  </mat-form-field>   
-                                                  &nbsp; &nbsp; &nbsp; 
-                                                  <mat-form-field appearance="legacy">
-                                                    <mat-label>Medicamento</mat-label>
-                                                    <input matInput type="text" placeholder="Medicamento" 
-                                                          formControlName="medicamento" id="medicamento">
-                                                  </mat-form-field>
-                                                
-                                                </div>                                                 
-                                              </div>
-                                              &nbsp; &nbsp; &nbsp;                                                                           
-                                              <div class="align-self-center">
-                                                    <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                                    <button (click)="limpiarModalStock($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                              </div>
+                                          <div>                                           
+                                            <div>
+                                              <mat-form-field appearance="legacy">
+                                                    <mat-label>Medicamento id</mat-label>
+                                                    <input matInput type="number" placeholder="Medicamento id" 
+                                                          formControlName="medicamentoId" id="medicamentoId">
+                                              </mat-form-field>   
+                                              &nbsp; &nbsp; 
+                                              <mat-form-field appearance="legacy">
+                                                    <mat-label>C&oacute;digo medicamento</mat-label>
+                                                    <input matInput type="text" placeholder="C&oacute;digo" 
+                                                          formControlName="codigo" id="codigo">
+                                              </mat-form-field> 
+                                              &nbsp; &nbsp; &nbsp; 
+                                              <mat-form-field appearance="legacy">
+                                                <mat-label>Medicamento</mat-label>
+                                                <input matInput type="text" placeholder="Medicamento" 
+                                                      formControlName="medicamento" id="medicamento">
+                                              </mat-form-field>
+                                            
+                                            </div>                                                 
+                                          </div>
+                                        </div>
+                                        <div class="form-row justify-content-center">
+                                          <div class="align-self-center">
+                                                <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                                &nbsp; &nbsp;
+                                                <button (click)="limpiarModalStock($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                                          </div>
                                         </div>
                                   </form>
                                   <br>
@@ -1360,7 +1361,7 @@
                       </button>
                     </div>
                     <!--Tabla medicamentos (Tratamientos insumos)-->
-                    <div class="card">
+                    <div class="card" [hidden]="deshabilitarMedicamentos">
                       <div class="table-responsive table-hover">
                         <table datatable [dtOptions]="dtOptionsMedicamentos" [dtTrigger]="dtTriggerMedicamentos"
                           id="tableMedicamentos" class="table table-sm">
@@ -1386,16 +1387,7 @@
                               <td>{{ tratamientoInsumo.medicamentos.concentracion }}</td>
                               <td>{{ tratamientoInsumo.medicamentos.forma }}</td>
                               <td>{{ tratamientoInsumo.medicamentos.presentacion }}</td>
-                              <td><input type="number" id="cantidad" name="cantidad" value="1"></td>
-                              <!--td>
-                                <select class="form-control input-sm" name="medida" id="medida">
-                                  <option value=null>Seleccionar</option>
-                                  <option *ngFor="let medida of listaMedidasMedicamentos; let i = index"
-                                    value="{{medida.valor}}">
-                                    {{medida.descripcionValor}}
-                                  </option>
-                                </select>
-                              </td-->                              
+                              <td><input type="number" id="cantidad" name="cantidad" value="1"></td>                                               
                               <td (click)="quitarMedicamento($event, tratamientoInsumo)">  
                                 <button class="btn btn-danger">
                                   <i class="fas fa-minus-circle"></i></button>
@@ -1436,8 +1428,6 @@
             <span aria-hidden="true">&times;</span>
             </button>
           </div>
-
-<!----------------------------------->
 
 <!--Modal confirmar-->
 <ng-template #editProfileModalConfirmar let-modal>
@@ -1480,7 +1470,7 @@
     <hr>
     <div class="detalleConsulta">
       <!--div class="col-lg-5"-->
-      <div class="card border-dark">  
+      <div [hidden]="deshabilitarPestanhaAnamnesis" class="card border-dark">  
         <div class="card-header">Anamnesis</div>
         <div class="card-body text-dark">           
           <div class="row">   

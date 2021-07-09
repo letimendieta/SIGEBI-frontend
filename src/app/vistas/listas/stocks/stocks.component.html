@@ -58,10 +58,8 @@
                                         <mat-label>Insumo Medico id</mat-label>
                                         <input matInput type="number" placeholder="Insumo medico id" 
                                               formControlName="insumoMedicoId" id="insumoMedicoId">
-                                  </mat-form-field>   
-                                
-                                </div>                                            
-                                <div>                                                   
+                                  </mat-form-field>  
+                                                                                                               
                                   <mat-form-field appearance="legacy">
                                     <mat-label>C&oacute;digo</mat-label>
                                     <input matInput type="text" placeholder="C&oacute;digo" 
@@ -73,12 +71,14 @@
                                           formControlName="nombre" id="nombre">
                                   </mat-form-field>
                                 </div>                                                
-                              </div>
-                                &nbsp; &nbsp; &nbsp;                                                                           
-                                <div class="align-self-center">
-                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                      <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                </div>
+                              </div>                               
+                          </div>
+                          <div class="form-row justify-content-center">                                                                                                      
+                            <div class="align-self-center">
+                                  <button type="submit" class="btn btn-success">Buscar</button>
+                                  &nbsp; &nbsp; 
+                                  <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                            </div>
                           </div>
                     </form>
                     <br>
@@ -186,22 +186,28 @@
                                         <input matInput type="number" placeholder="Medicamento id" 
                                               formControlName="medicamentoId" id="medicamentoId">
                                   </mat-form-field> 
-                                
-                                  &nbsp; &nbsp; &nbsp;                                                
-                                   
+                                  &nbsp; &nbsp; 
+                                  <mat-form-field appearance="legacy">
+                                        <mat-label>C&oacute;digo medicamento</mat-label>
+                                        <input matInput type="text" placeholder="C&oacute;digo" 
+                                              formControlName="codigo" id="codigo">
+                                  </mat-form-field> 
+                                  &nbsp; &nbsp; &nbsp; 
                                   <mat-form-field appearance="legacy">
                                     <mat-label>Medicamento</mat-label>
                                     <input matInput type="text" placeholder="Medicamento" 
                                           formControlName="medicamento" id="medicamento">
                                   </mat-form-field>
                                 </div>                                                
-                              </div>
-                                &nbsp; &nbsp; &nbsp;                                                                           
-                                <div class="align-self-center">
-                                      <button type="submit" hidden="true" class="btn btn-success">Buscar</button>
-                                      <button (click)="limpiarModalMedicamento($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                </div>
+                              </div>                                
                           </div>
+                          <div class="form-row justify-content-center">                                                                    
+                              <div class="align-self-center">
+                                    <button type="submit" class="btn btn-success">Buscar</button>
+                                    &nbsp;
+                                    <button (click)="limpiarModalMedicamento($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                              </div>
+                          </div>   
                     </form>
                     <br>
 
@@ -212,6 +218,7 @@
                                 <thead>
                                   <tr class="table-primary">
                                     <th>Id</th>
+                                    <th>C&oacute;digo</th>
                                     <th>Medicamento</th>
                                     <th>Concentraci&oacute;n</th>
                                     <th>Forma</th>
@@ -226,6 +233,7 @@
                                 <thead>
                                   <tr class="table-primary">
                                     <th>Id</th>
+                                    <th>C&oacute;digo</th>
                                     <th>Medicamento/th>
                                     <th>Concentraci&oacute;n</th>
                                     <th>Forma</th>
@@ -236,6 +244,7 @@
                                       <tr *ngFor="let medicamento of medicamentos" 
                                             (click)="selectMedicamento($event, medicamento)">                                                                                                
                                             <td>{{ medicamento.medicamentoId }}</td>
+                                            <td>{{ medicamento.codigo }}</td>
                                             <td>{{ medicamento.medicamento }}</td>
                                             <td>{{ medicamento.concentracion }}</td>
                                             <td>{{ medicamento.forma }}</td>
@@ -243,6 +252,7 @@
                                       </tr>
                                 </tbody>
                                 <tbody *ngIf="cargando">
+                                      <td></td>
                                       <td></td>
                                       <td></td>
                                       <td><h4 class="alert-heading">Cargando</h4>

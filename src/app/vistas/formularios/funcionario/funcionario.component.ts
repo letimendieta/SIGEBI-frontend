@@ -30,6 +30,7 @@ export class FuncionarioComponent implements OnInit {
   alertGuardar:boolean=false;
   cargando = false;
   dtOptions: any = {};
+  loadBuscadorPersonas = false;
 
   constructor( private funcionariosService: FuncionariosService,
                private areasService: AreasService,
@@ -269,11 +270,14 @@ export class FuncionarioComponent implements OnInit {
       return;
     }
     this.cargando = true;
+    this.loadBuscadorPersonas = true;
     this.personasService.buscarPersonasFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorPersonas = false;
       this.personas = resp;
       this.cargando = false;
     }, e => {
+      this.loadBuscadorPersonas = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',

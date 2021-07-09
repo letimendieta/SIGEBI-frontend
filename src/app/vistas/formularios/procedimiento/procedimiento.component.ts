@@ -80,6 +80,8 @@ export class ProcedimientoComponent implements OnInit {
   loadPaciente = false; loadFuncionario = false;
   loadMedicamento = false; loadInsumo = false;
   loadBuscador = false;
+  loadBuscadorPacientes = false;
+  loadBuscadorFuncionarios = false;
 
   constructor( private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
@@ -113,7 +115,7 @@ export class ProcedimientoComponent implements OnInit {
       this.procedimientosService.getProcedimiento( Number(id) )
         .subscribe( (resp: ProcedimientoModelo) => {  
           this.consultaId = resp.consultaId;   
-          if( resp && resp.consultaId ){
+          if( resp && resp.estado == GlobalConstants. PROC_PENDIENTE ){
             this.procedimientoPendiente = true;
           }  
           if( resp && resp.estado == GlobalConstants.PROC_FINALIZADO ){
@@ -293,10 +295,10 @@ export class ProcedimientoComponent implements OnInit {
     procesoProcedimientoInsumo.procedimientoInsumoList = procedimientoInsumo;
   
     if ( procedimiento.procedimientoId ) {
-      procedimiento.usuarioModificacion = 'admin';
+      procesoProcedimientoInsumo.procedimiento.usuarioModificacion = 'admin';
       peticion = this.procedimientosService.actualizarProcedimiento( procesoProcedimientoInsumo );
     } else {
-      procedimiento.usuarioCreacion = 'admin';
+      procesoProcedimientoInsumo.procedimiento.usuarioCreacion = 'admin';
       peticion = this.procedimientosService.crearProcedimiento( procesoProcedimientoInsumo );
     }
 
@@ -525,11 +527,14 @@ export class ProcedimientoComponent implements OnInit {
       return;
     }
     this.cargando = true;
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( ( resp : PacienteModelo[] )=> {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
       this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
@@ -549,11 +554,15 @@ export class ProcedimientoComponent implements OnInit {
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( ( resp : FuncionarioModelo[] )=> {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
       this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',

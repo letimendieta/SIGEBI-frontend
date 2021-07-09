@@ -140,8 +140,8 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     this.persona.nombres = this.buscadorForm.get('nombres').value;
     this.persona.apellidos = this.buscadorForm.get('apellidos').value;
     this.buscador.personas = this.persona;
-    this.buscador.usuarioId = this.buscadorForm.get('usuarioId').value;
-    this.buscador.codigoUsuario = this.buscadorForm.get('codigoUsuario').value;
+    this.buscador.id = this.buscadorForm.get('usuarioId').value;
+    this.buscador.nombreUsuario = this.buscadorForm.get('codigoUsuario').value;
     this.usuariosService.buscarUsuariosFiltros(this.buscador)
     .subscribe( resp => {      
       this.usuarios = resp;
@@ -177,7 +177,7 @@ export class UsuariosComponent implements OnDestroy, OnInit {
 
     Swal.fire({
       title: '¿Está seguro?',
-      text: `Está seguro que desea borrar a ${ usuario.codigoUsuario }`,
+      text: `Está seguro que desea borrar a ${ usuario.nombreUsuario }`,
       icon: 'question',
       showConfirmButton: true,
       showCancelButton: true
@@ -185,12 +185,12 @@ export class UsuariosComponent implements OnDestroy, OnInit {
 
       if ( resp.value ) {
         let peticion: Observable<any>;
-        peticion = this.usuariosService.borrarUsuario( usuario.usuarioId );
+        peticion = this.usuariosService.borrarUsuario( usuario.id );
 
         peticion.subscribe( resp => {
           Swal.fire({
                     icon: 'success',
-                    title: usuario.codigoUsuario,
+                    title: usuario.nombreUsuario,
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {

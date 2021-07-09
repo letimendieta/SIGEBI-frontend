@@ -276,6 +276,7 @@ export class StocksComponent implements OnDestroy, OnInit {
 
     this.buscadorMedicamentoForm = this.fb3.group({
       medicamentoId  : [null, [] ],
+      codigo  : [null, [] ],
       medicamento  : [null, [] ]
     });
   }
@@ -305,6 +306,7 @@ export class StocksComponent implements OnDestroy, OnInit {
    
     this.buscadorMedicamentoForm.patchValue({
       medicamentoId: null,
+      codigo: null,
       medicamento: null
     });
     this.medicamentos = [];
@@ -377,7 +379,7 @@ export class StocksComponent implements OnDestroy, OnInit {
     var buscador = new MedicamentoModelo();
     buscador = this.buscadorMedicamentoForm.getRawValue();
 
-    if(!buscador.medicamentoId && !buscador.medicamento){
+    if(!buscador.medicamentoId && !buscador.codigo && !buscador.medicamento){
       this.alertMedicamento=true;
       return;
     }

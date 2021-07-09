@@ -3,8 +3,8 @@ import { FuncionarioModelo } from './funcionario.modelo';
 
 export class Usuario2Modelo {
 
-    usuarioId: number;
-    codigoUsuario: string;
+    id: number;
+    nombreUsuario: string;
     password: string;
     estado: string;
     fechaCreacion: Date;

@@ -7,7 +7,9 @@
             Sistema de Gestión Departamento Bienestar Institucional - SIGEBI
         </div>
         <div class="container text-right">
-            <div *ngIf="isLogged; else loggedOut"><p>Bienvenido {{nombreUsuario}}</p></div>
+            <div *ngIf="isLogged; else loggedOut">
+                <p>Bienvenido {{nombreUsuario}}. &Aacute;rea: {{area}}</p>
+            </div>
             <ng-template #loggedOut><p>No has iniciado sesión</p></ng-template>
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">

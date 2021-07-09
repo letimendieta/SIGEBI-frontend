@@ -139,7 +139,7 @@ export class UsuarioComponent implements OnInit {
     
     this.usuario = this.usuarioForm.getRawValue();
 
-    if ( this.usuario.usuarioId ) {
+    if ( this.usuario.id ) {
       this.usuario.usuarioModificacion = 'admin';
       peticion = this.usuariosService.actualizarUsuario( this.usuario );
     } else {
@@ -151,12 +151,12 @@ export class UsuarioComponent implements OnInit {
 
       Swal.fire({
                 icon: 'success',
-                title: this.usuario.codigoUsuario ? this.usuario.codigoUsuario.toString() : '',
+                title: this.usuario.nombreUsuario ? this.usuario.nombreUsuario.toString() : '',
                 text: resp.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.usuario.usuarioId ) {
+          if ( this.usuario.id ) {
             this.router.navigate(['/usuarios']);
           }else{
             this.limpiar();

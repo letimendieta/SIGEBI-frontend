@@ -1,6 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TokenService } from 'src/app/servicios/token.service';
 import { Router } from '@angular/router';
+import { Usuario2Modelo } from 'src/app/modelos/usuario2.modelo';
+import { GlobalConstants } from 'src/app/common/global-constants';
+import { UsuariosService } from 'src/app/servicios/usuarios.service';
+import { ComunesService } from 'src/app/servicios/comunes.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -11,19 +16,42 @@ export class HeaderComponent implements OnInit {
   @Output()
   toggleSideBarForMe: EventEmitter<any>= new EventEmitter();
 
-  constructor(private tokenService: TokenService,private router:Router) { }
+  constructor(private tokenService: TokenService,
+              private router:Router,
+              private usuariosService: UsuariosService,
+              private comunes: ComunesService) { }
+
   nombreUsuario = '';
+  nombre = '';
+  apellido = '';
+  area = '';
+  usuarioActual: Usuario2Modelo;
+
   ngOnInit() {
     if (this.tokenService.getToken()) {
           this.isLogged = true;
           this.nombreUsuario = this.tokenService.getUserName();
+          this.obtenerUsuarioActual(this.nombreUsuario);
         } else {
           this.isLogged = false;
           this.nombreUsuario = '';
-        }
+        }       
+  }
 
-       
-       
+  obtenerUsuarioActual(usuario){
+    var usuarioModel = new Usuario2Modelo();
+    usuarioModel.nombreUsuario = usuario;
+    usuarioModel.estado = GlobalConstants.ACTIVO;
+    this.usuariosService.buscarUsuariosFiltros(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
+      if(resp.length > 0 ){
+        this.usuarioActual = resp[0];  
+        this.nombre = this.usuarioActual.personas.nombres;
+        this.apellido = this.usuarioActual.personas.apellidos;
+        this.area = this.usuarioActual.funcionarios.areas.descripcion;
+      }      
+    }, e => {
+       console.log(this.comunes.obtenerError(e));
+    });
   }
 
   onLogOut(): void {

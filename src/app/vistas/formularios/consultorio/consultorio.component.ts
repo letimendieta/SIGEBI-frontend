@@ -9,7 +9,6 @@ import { PacientesService } from '../../../servicios/pacientes.service';
 import { AntecedentesService } from '../../../servicios/antecedentes.service';
 import { AlergiasService } from '../../../servicios/alergias.service';
 import { HistorialesClinicosService } from '../../../servicios/historialesClinicos.service';
-import { InsumosMedicosService } from '../../../servicios/insumosMedicos.service';
 import { StocksService } from '../../../servicios/stocks.service';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -47,9 +46,12 @@ import { PreguntaModelo } from 'src/app/modelos/pregunta.modelo';
 import { PreguntaHistorialModelo } from 'src/app/modelos/preguntaHistorial.modelo';
 import { PreguntasService } from 'src/app/servicios/preguntas.service';
 import { PreguntasHistorialService } from 'src/app/servicios/preguntasHistorial.service';
-import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
+import { UsuariosService } from 'src/app/servicios/usuarios.service';
+import { TokenService } from 'src/app/servicios/token.service';
+import { GlobalConstants } from 'src/app/common/global-constants';
+import { Usuario2Modelo } from 'src/app/modelos/usuario2.modelo';
 
 @Component({
   selector: 'app-consultorio',
@@ -145,8 +147,18 @@ export class ConsultorioComponent implements OnInit {
   size:any=0;
   nombre:any = "";
   mensajeError: String;
+  usuarioActual: Usuario2Modelo;
+  rolesUsuario: Array<String> = [];
+  deshabilitarMedicamentos = true;
+  deshabilitarActualizarHC = true;
+  deshabilitarPestanhaAnamnesis = true;
+  loadBuscadorCie = false;
+  loadBuscadorMedicamentos = false;
+  loadBuscadorPacientes = false;
+  
 
   constructor( private historialClinicosService: HistorialesClinicosService,
+               private tokenService: TokenService,
                private parametrosService: ParametrosService,
                private comunes: ComunesService,
                private pacientesService: PacientesService,
@@ -156,7 +168,7 @@ export class ConsultorioComponent implements OnInit {
                private alergenosService: AlergenosService,
                private patologiasProcedimientosService: PatologiasProcedimientosService,
                private modalService: NgbModal,
-               private insumosService: InsumosMedicosService,
+               private usuariosService: UsuariosService,
                private stockService: StocksService,
                private enfermedadesCie10Service: EnfermedadesCie10Service,
                private consultasService: ConsultasService,
@@ -184,6 +196,8 @@ export class ConsultorioComponent implements OnInit {
                private fb14: FormBuilder,
                private fb15: FormBuilder) { 
     this.crearFormulario();
+    this.verificarRoles();
+    this.obtenerUsuarioActual(this.tokenService.getUserName().toString());
     this.ngOnInit();
   }              
 
@@ -256,6 +270,57 @@ export class ConsultorioComponent implements OnInit {
       .subscribe( (resp: MotivoConsultaModelo[]) => {
         this.listaMotivosConsulta = resp;
     });
+  }
+
+  obtenerUsuarioActual(usuario){
+    var usuarioModel = new Usuario2Modelo();
+    usuarioModel.nombreUsuario = usuario;
+    usuarioModel.estado = GlobalConstants.ACTIVO;
+    this.usuariosService.buscarUsuariosFiltros(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
+      if(resp.length > 0 ){
+        this.usuarioActual = resp[0];
+        if( !this.usuarioActual.funcionarios || !this.usuarioActual.funcionarios.funcionarioId ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atencion',
+            text: "El usuario " + usuario + " no es un funcionario",
+          }) 
+        }
+        if( !this.usuarioActual.funcionarios.areas || !this.usuarioActual.funcionarios.areas.areaId ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atencion',
+            text: "El usuario " + usuario + " no cuenta con un area asignada",
+          }) 
+        }        
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Atencion',
+          text: "No se encontro usuario con codigo " + usuario,
+        })  
+      }
+      
+    }, e => {
+      Swal.fire({
+          icon: 'error',
+          title: 'Algo salio mal',
+          text: this.comunes.obtenerError(e),
+        })
+    });
+  }
+
+  verificarRoles(){
+    for (let i = 0; i < this.tokenService.roles.length; i++) {
+      this.rolesUsuario.push(this.tokenService.roles[i].toString());
+    }
+
+    if(this.rolesUsuario.includes(GlobalConstants.ROLE_CLINICA_MEDICA)
+      || this.rolesUsuario.includes(GlobalConstants.ROLE_ADMIN)){
+        this.deshabilitarMedicamentos = false;
+        this.deshabilitarActualizarHC = false;
+        this.deshabilitarPestanhaAnamnesis = false;
+    }
   }
 
   buscarPaciente(event) {
@@ -341,7 +406,6 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salio mal',
         text: this.comunes.obtenerError(e)
       })
-      Swal.close();
     });   
 
   }
@@ -383,12 +447,7 @@ export class ConsultorioComponent implements OnInit {
         }
       }
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -414,11 +473,7 @@ export class ConsultorioComponent implements OnInit {
       this.dtTriggerAntecedentes.next();
      
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -436,11 +491,7 @@ export class ConsultorioComponent implements OnInit {
       this.antecedentesFamiliares = resp;
       this.dtTriggerAntecedentesFamiliares.next();
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -458,12 +509,7 @@ export class ConsultorioComponent implements OnInit {
       this.alergias = resp;
       this.dtTriggerAlergias.next();
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -481,12 +527,7 @@ export class ConsultorioComponent implements OnInit {
       this.vacunaciones = resp;
       this.dtTriggerVacunaciones.next();
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -506,11 +547,7 @@ export class ConsultorioComponent implements OnInit {
       this.listarPreguntas();
 
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -532,11 +569,7 @@ export class ConsultorioComponent implements OnInit {
           }
         }      
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -547,11 +580,7 @@ export class ConsultorioComponent implements OnInit {
 
       this.diagnosticoAlergias = resp;
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -562,11 +591,7 @@ export class ConsultorioComponent implements OnInit {
 
       this.diagnosticoAntecPatolProc = resp;
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -611,6 +636,7 @@ export class ConsultorioComponent implements OnInit {
   obtenerConsultas() {
     var consultas = new ConsultaModelo();
     consultas.pacienteId = this.paciente.pacienteId;
+    consultas.funcionarios.funcionarioId = this.usuarioActual.funcionarios.funcionarioId;
 
     this.consultas = [];
     $('#tableConsultas').DataTable().destroy();
@@ -622,12 +648,7 @@ export class ConsultorioComponent implements OnInit {
       this.dtTriggerConsultas.next();
       
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -635,7 +656,6 @@ export class ConsultorioComponent implements OnInit {
     var signoVital = new SignoVitalModelo();
     signoVital.pacientes.pacienteId = this.paciente.pacienteId;
     signoVital.funcionarios = null;
-    //signoVital.
 
     this.signosVitales = [];
     $('#tableSignosVitales').DataTable().destroy();
@@ -647,12 +667,7 @@ export class ConsultorioComponent implements OnInit {
       this.dtTriggerSignosVitales.next();
       
     }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salio mal',
-        text: this.comunes.obtenerError(e)
-      })
-      this.cargando = false;
+      console.log(this.comunes.obtenerError(e));
     });
   }
 
@@ -773,6 +788,7 @@ export class ConsultorioComponent implements OnInit {
 
     this.buscadorStockForm = this.fb6.group({
       medicamentoId  : [null, [] ],
+      codigo: [null, [] ],
       medicamento  : [null, [] ]
     });
     
@@ -1269,18 +1285,21 @@ export class ConsultorioComponent implements OnInit {
       this.alert=true;
       return;
     }
-    this.cargando = true;
+    //this.cargando = true;
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( ( resp : PacienteModelo[] ) => {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
-      this.cargando = false;
+      //this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
         text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
+      //this.cargando = false;
     });
   }
 
@@ -1313,15 +1332,18 @@ export class ConsultorioComponent implements OnInit {
     var medicamento = new MedicamentoModelo();
     medicamento = this.buscadorStockForm.getRawValue();
 
-    if(!medicamento.medicamentoId && !medicamento.medicamento){
+    if(!medicamento.medicamentoId && !medicamento.codigo && !medicamento.medicamento){
       this.alert=true;
       return;
     }
     buscador.medicamentos = medicamento;
+    this.loadBuscadorMedicamentos = true;
     this.stockService.buscarStocksFiltrosTabla(buscador)
     .subscribe( (resp : StockModelo[] )=> {
+      this.loadBuscadorMedicamentos = false;
       this.stocks = resp;
     }, e => {
+      this.loadBuscadorMedicamentos = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
@@ -1340,10 +1362,13 @@ export class ConsultorioComponent implements OnInit {
       this.alert=true;
       return;
     }
+    this.loadBuscadorCie = true;
     this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
     .subscribe( ( resp : EnfermedadCie10Modelo[] )=> {
+      this.loadBuscadorCie = false;
       this.enfermedadesCie10 = resp;
     }, e => {
+      this.loadBuscadorCie = false;
       Swal.fire({
         icon: 'info',
         title: 'Algo salio mal',
@@ -1515,6 +1540,7 @@ export class ConsultorioComponent implements OnInit {
    
     this.buscadorStockForm.patchValue({
       medicamentoId: null,
+      codigo: null,
       medicamento: null
     });
     this.stocks = [];
@@ -1626,16 +1652,18 @@ export class ConsultorioComponent implements OnInit {
       });
     }
 
-    if ( this.anamnesisForm.invalid ) {
-      this.alertGuardar = true;
-      return Object.values( this.anamnesisForm.controls ).forEach( control => {
+    if( !this.deshabilitarPestanhaAnamnesis ){
+      if ( this.anamnesisForm.invalid ) {
+        this.alertGuardar = true;
+        return Object.values( this.anamnesisForm.controls ).forEach( control => {
 
-        if ( control instanceof FormGroup ) {
-          Object.values( control.controls ).forEach( control => control.markAsTouched() );
-        } else {
-          control.markAsTouched();
-        }
-      });
+          if ( control instanceof FormGroup ) {
+            Object.values( control.controls ).forEach( control => control.markAsTouched() );
+          } else {
+            control.markAsTouched();
+          }
+        });
+      }
     }
 
     if ( this.tratamientoFarmacologicoForm.invalid ) {
@@ -1687,7 +1715,7 @@ export class ConsultorioComponent implements OnInit {
     motivoConsulta.motivoConsultaId = this.anamnesisForm.get('motivoConsultaId').value;
     motivoConsulta.descripcion = this.obtenerMotivoDescripcion(motivoConsulta.motivoConsultaId);
     anamnesis.motivoConsulta = motivoConsulta;
-    anamnesis.usuarioCreacion = 'admin';
+    anamnesis.usuarioCreacion = this.usuarioActual.nombreUsuario;
 
     diagnostico.diagnosticoPrincipal = this.diagnosticoPrimarioForm.get('diagnosticoPrincipal').value;
     diagnostico.diagnosticoSecundario = this.diagnosticoSecundarioForm.get('diagnosticoSecundario').value;
@@ -1695,42 +1723,32 @@ export class ConsultorioComponent implements OnInit {
     diagnostico.enfermedadCie10Primaria = this.enfermedadCie10PrincipalSeleccionada;
     diagnostico.enfermedadCie10SecundariaId = this.enfermedadCie10SecundariaSeleccionada.enfermedadCie10Id;
     diagnostico.enfermedadCie10Secundaria = this.enfermedadCie10SecundariaSeleccionada;
-    diagnostico.usuarioCreacion = 'admin';
+    diagnostico.usuarioCreacion = this.usuarioActual.nombreUsuario;
 
     tratamiento.prescripcionFarm = this.tratamientoFarmacologicoForm.get('prescripcionFarm').value;
     tratamiento.descripcionTratamiento = this.tratamientoNoFarmacologicoForm.get('descripcionTratamiento').value;
     tratamiento.descripcionPlanTrabajo = this.planTrabajoForm.get('descripcionPlan').value;
-    tratamiento.usuarioCreacion = 'admin';
+    tratamiento.usuarioCreacion = this.usuarioActual.nombreUsuario;
 
     var rows =  $('#tableMedicamentos').DataTable().rows().data();  
     var cantidades = rows.$('input').serializeArray();
-    //var medidas = rows.$('select').serializeArray();
 
     for (let i = 0; i < cantidades.length; i++) {
       this.tratamientosInsumos[i].cantidad = Number(cantidades[i].value);
     }   
-    /*for (let i = 0; i < medidas.length; i++) {
-      if(medidas[i].value == "null"){
-        this.alertGuardar = true;
-        Swal.close();
-        this.mensajeError = "Debe seleccionar la medida de los medicamentos. ";
-        return;
-      }
-      this.tratamientosInsumos[i].medida = medidas[i].value;
-    }   */
-
+    
     tratamientoInsumoList = this.tratamientosInsumos;
     fichaMedicaList = this.fichaMedica;
 
     consulta.pacienteId = this.paciente.pacienteId;
-    consulta.areas.areaId = 83;//cambiar por el area del funcionario
-    consulta.funcionarios.funcionarioId = 3; //cambiar por el id del funcionario
-    consulta.usuarioCreacion = 'admin';
+    consulta.areas.areaId = this.usuarioActual.funcionarios.areas.areaId;
+    consulta.funcionarios.funcionarioId = this.usuarioActual.funcionarios.funcionarioId;
+    consulta.usuarioCreacion = this.usuarioActual.nombreUsuario;
 
     historialClinico.historialClinicoId = this.historialClinicoForm.get('historialClinicoId').value;
     historialClinico.patologiaActual = this.selectFichaMedicaForm.get('patologiaActual').value;
     historialClinico.tratamientoActual = this.selectFichaMedicaForm.get('tratamientoActual').value;
-    historialClinico.usuarioModificacion = 'admin';
+    historialClinico.usuarioModificacion = this.usuarioActual.nombreUsuario;
 
     this.procesoDiagnosticoTratamiento.diagnostico = diagnostico;
     this.procesoDiagnosticoTratamiento.tratamiento = tratamiento;
@@ -1798,7 +1816,6 @@ export class ConsultorioComponent implements OnInit {
           title: 'Algo salio mal',
           text: this.comunes.obtenerError(e),
         })
-      Swal.close();
     });
   }
 
@@ -1855,7 +1872,6 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salio mal',
         text: this.comunes.obtenerError(e)
       })
-      Swal.close();
     });
   }
 
@@ -1889,7 +1905,6 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salio mal',
         text: this.comunes.obtenerError(e)
       })
-      Swal.close();
     });
   }
 

@@ -286,6 +286,7 @@ export class StockComponent implements OnInit {
 
     this.buscadorMedicamentoForm = this.fb3.group({
       medicamentoId  : [null, [] ],
+      codigo  : [null, [] ],
       medicamento  : [null, [] ]
     });
 
@@ -331,7 +332,7 @@ export class StockComponent implements OnInit {
     var buscador = new MedicamentoModelo();
     buscador = this.buscadorMedicamentoForm.getRawValue();
 
-    if(!buscador.medicamentoId && !buscador.medicamento){
+    if(!buscador.medicamentoId && !buscador.codigo && !buscador.medicamento){
       this.alertMedicamento=true;
       return;
     }
@@ -409,6 +410,7 @@ export class StockComponent implements OnInit {
    
     this.buscadorMedicamentoForm.patchValue({
       medicamentoId: null,
+      codigo: null,
       medicamento: null
     });
     this.medicamentos = [];
